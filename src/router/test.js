@@ -12,14 +12,48 @@ export default {
     meta: {
         name: '测试页面'
     },
-    children: [{
-        path: 'test-sub-page',
-        name: 'TestSubPage',
-        component: TestSubPage,
-        meta: {
-            name: '模板管理',
-            parents: 'TestIndex',
-            icon: 'el-icon-document-copy'
+    children: [
+        {
+            path: 'test-sub-page',
+            name: 'TestSubPage',
+            component: TestSubPage,
+            meta: {
+                name: '模板管理',
+                parents: 'TestIndex',
+                icon: 'el-icon-document-copy'
+            },
+            children: [
+                {
+                    path: 'test-sub-page',
+                    name: 'TestSubPage',
+                    component: TestSubPage,
+                    meta: {
+                        name: '模板管理',
+                        parents: 'TestIndex',
+                        icon: 'el-icon-document-copy'
+                    }
+                },
+                {
+                    path: 'test-sub-page',
+                    name: 'TestSubPage',
+                    component: TestSubPage,
+                    meta: {
+                        name: '模板管理1',
+                        parents: 'TestIndex',
+                        icon: 'el-icon-document-copy'
+                    }
+                }
+            ]
+        },
+        {
+            path: 'test-sub-page',
+            name: 'TestSubPage',
+            component: TestSubPage,
+            meta: {
+                name: '模板管理1',
+                parents: 'TestIndex',
+                icon: 'el-icon-document-copy'
+            }
         }
-    }]
+    ]
 }

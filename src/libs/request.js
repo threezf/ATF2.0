@@ -19,17 +19,21 @@ import ElementUI from "element-ui"
 import axios from 'axios'
 import ErrorCode from '../const/errorCode'
 
-axios.interceptors.response.use(function (response) {
-    if (response.data && response.data.errcode !== 0) {
-        let message = `【${response.data.errcode}】${ErrorCode[response.data.errcode] || response.data.errmsg}`
-        ElementUI.Message.warning(message)
-        return Promise.reject(message)
-    }
-    return response
-}, function (error) {
-    ElementUI.Message.error('请求失败，请重试')
-    return Promise.reject(error)
-})
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+axios.defaults.paramsSerializer = (params) => {
+	return Qs.stringify(params, {arrayFormat: 'brackets'});
+}
+// axios.interceptors.response.use(function (response) {
+//     if (response.data && response.data.errcode !== 0) {
+//         let message = `【${response.data.errcode}】${ErrorCode[response.data.errcode] || response.data.errmsg}`
+//         ElementUI.Message.warning(message)
+//         return Promise.reject(message)
+//     }
+//     return response
+// }, function (error) {
+//     ElementUI.Message.error('请求失败，请重试')
+//     return Promise.reject(error)
+// })
 
 //扩展Promise的finally方法
 Promise.prototype.finally = function (callback) {
@@ -44,7 +48,7 @@ Promise.prototype.finally = function (callback) {
 
 const Request = function (options) {
     return new Promise((resolve, reject) => {
-        let headerUrl = ''
+        let headerUrl = 'http://10.101.167.184:8080/atfcloud2.0a'
         let axiosParams = {
             url: headerUrl + options.url,
             method: options.method,
@@ -56,7 +60,7 @@ const Request = function (options) {
         }
         axios(axiosParams).then((res) => {
             res = res.data
-            if (res.errcode === 0) {
+            if (res.respCode.toString() === '0000') {
                 resolve(res)
             } else {
                 reject(res)
