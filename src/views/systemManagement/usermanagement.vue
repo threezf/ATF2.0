@@ -10,26 +10,28 @@
                 </el-button>
             </el-header>
             <el-main>
-                <el-col :span="3">
-                    <el-select v-model="selectValue" placeholder="请选择">
-                        <el-option
-                        v-for="item in selectOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4" :offset='1'>
-                    <el-input :disabled='disabled'  v-model="selectInfo" placeholder="请输入内容"></el-input>
-                </el-col>
-                <el-col :span="4" :offset='1'>
-                    <el-button 
-                        @click='getUsers(1)'
-                        type="primary">
-                        搜索
-                    </el-button>
-                </el-col>
+                <el-row>
+                    <el-col :span="3">
+                        <el-select v-model="selectValue" placeholder="请选择">
+                            <el-option
+                            v-for="item in selectOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="4" :offset='1'>
+                        <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="4" :offset='1'>
+                        <el-button 
+                            @click='getUsers(1)'
+                            type="primary">
+                            搜索
+                        </el-button>
+                    </el-col>
+                </el-row>
                 <el-table
                     stripe
                     :data="tableData"
@@ -88,6 +90,7 @@
                 <el-dialog
                     :title="modelName"
                     :visible.sync="dialogVisible"
+                    :before-close="handleClose"
                     width="30%">
                     <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
                         <el-form-item   label="用户名" prop="username"  >
@@ -137,7 +140,6 @@
                 </el-dialog>
             </el-main>
             <el-footer>
-                底部
             </el-footer>
         </el-container>
     </div>
@@ -147,27 +149,27 @@
     import Request from '@/libs/request.js'
     import VueMixins from '@/libs/vueMixins.js'
     export default {
-        mixins: [VueMixins],
+        mixins: [VueMixins], // 混入
         data() {
-                const validatePass = (rule, value, callback) => {
-                    if (value === '') {
-                    callback(new Error('请输入密码'));
-                    } else {
-                    if (this.form.checkPassword !== '') {
-                        this.$refs.form.validateField('checkPassword');
-                    }
-                    callback();
-                    }
-                };
-                const validatePass2 = (rule, value, callback) => {
-                    if (value === '') {
-                    callback(new Error('请再次输入密码'));
-                    } else if (value !== this.form.password) {
-                    callback(new Error('两次输入密码不一致!'));
-                    } else {
-                    callback();
-                    }
-                };
+            const validatePass = (rule, value, callback) => {
+                if (value === '') {
+                callback(new Error('请输入密码'));
+                } else {
+                if (this.form.checkPassword !== '') {
+                    this.$refs.form.validateField('checkPassword');
+                }
+                callback();
+                }
+            };
+            const validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                callback(new Error('请再次输入密码'));
+                } else if (value !== this.form.password) {
+                callback(new Error('两次输入密码不一致!'));
+                } else {
+                callback();
+                }
+            };
             return {
                 form: {
                     username: "",
@@ -198,10 +200,10 @@
                         { required: true, message: '请选择用户状态', trigger: 'change' }
                     ],
                     password: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { validator: validatePass,  message: '请输入密码', trigger: 'blur' }
                     ],
                     checkPassword: [
-                        { validator: validatePass2, trigger: 'blur' }
+                        { validator: validatePass2, message: '请再次输入密码', trigger: 'blur' }
                     ],
                     dept: [
                         { required: false, message: '请选择用户状态', trigger: 'blur' }
@@ -235,7 +237,7 @@
                     },
                     {
                         label:'角色',
-                        value:'role'
+                        value:'rolecn'
                     },
                     {
                         label:'固定电话',
@@ -259,6 +261,7 @@
             }
         },
         computed:{
+            // 发送的 查询用户的接口参数，因为受搜索条件影响，所以使用computed属性
             params() {
                 let obj = {
                 currentPage: this.currentPage,
@@ -276,6 +279,7 @@
                 }
                 return obj
             },
+            //根据modelFlag 展示弹窗的名字
             modelName(){
                 var obj ={
                     0: '用户',
@@ -285,6 +289,7 @@
                 }
                 return obj[this.modelFlag]
             },
+            //用于展示弹窗按钮的文字
             buttonName(){
                 var obj ={
                     0: '确认',
@@ -301,9 +306,20 @@
         mounted() {
         },
         methods: {
+            handleClose(done){
+                if(this.modelFlag ==1){
+                    done()
+                    return true
+                }
+                this.$refs['form'].resetFields()
+                done()
+                return true
+            },
+            // 提交表单进行验证
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    // 如果是修改则调用 updateUser 方法 否则调用 addUser
                     if(this.modelFlag === 3){
                         this.updateUser()
                     }
@@ -316,11 +332,12 @@
                 }
                 });
             },
+            // 清空form表单
             resetForm(formName) {
-                this.$refs[formName].resetFields();
+                 this.$refs[formName].resetFields();
             },
+            // 掉起form表单 并将modelFlag标志置为2 且将选中的一列数据存放于
             handleDetail(index, row) {
-                console.log(row)
                 this.disabled = true
                 this.modelFlag = 2
                 const {
@@ -351,15 +368,18 @@
                 }
                 this.dialogVisible = true
             },
+            // 掉起form表单 并将modelFlag标志置为 3
             handleEdit(index, row) {
                 this.handleDetail(index, row);
                 this.modelFlag = 3
                 this.disabled = false
                 this.selectedId = row.id
             },
+            //角色一栏处理函数
             roleSwitch(row, column) {
                 return row.role && this.roles[row.role];
             },
+            //状态一栏处理函数
             statusSwitch(row, column) {
                 return  this.status[row.status];
             },
@@ -371,6 +391,7 @@
                 this.currentPage = val
                 this.getUsers()
             },
+            // 查询用户函数 type时 为点击查询按钮调用 此时将当前页置为一
             getUsers(type){
                 if(type === 1){
                     this.currentPage = 1
@@ -383,17 +404,18 @@
                     this.tableData = res.list
                     this.totalCount = res.totalCount
                 },(err) => {
-                    console.log('-*-*-*-*-*-')
                     console.log(err)
                 }).catch((err) => {
                     console.log(err)
                 })
             },
+            // 掉起form表单 并将modelFlag标志置为 1
             addUserButtom(){
-                this.dialogVisible=true
-                this.resetForm('form')
                 this.modelFlag=1
+                this.dialogVisible=true
+                this.disabled = false
             },
+            // 添加用户
             addUser(){
                 Request({
                     url: '/userController/insert',
@@ -411,6 +433,7 @@
                     console.log(err)
                 })
             },
+            // 修改用户
             updateUser(){
                 delete this.form.checkPassword
                 Request({
