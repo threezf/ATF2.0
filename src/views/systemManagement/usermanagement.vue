@@ -237,7 +237,7 @@
                     },
                     {
                         label:'角色',
-                        value:'rolecn'
+                        value:'roleCn'
                     },
                     {
                         label:'固定电话',
