@@ -13,7 +13,8 @@ export default {
         return {
             verifyId: SessionStorage.get('unigroupuid'),
             rtx: SessionStorage.get('unigrouprtx'),
-            componentAppId: 'wx1ec08a99274a048d'
+            componentAppId: 'wx1ec08a99274a048d',
+            address4:' http://10.101.167.184:8080/'
         }
     }
 }
