@@ -16,5 +16,11 @@ export default {
             componentAppId: 'wx1ec08a99274a048d',
             address4:' http://10.101.167.184:8080/'
         }
+    },
+    methods:{
+        transTime(row, column, cellValue) {
+            console.log(cellValue)
+            return TimeUtils.timestampToTime(cellValue, 'yyyy-MM-dd hh:mm:ss')
+        }
     }
 }

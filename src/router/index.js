@@ -6,6 +6,7 @@ import Index from '@/views/index'
 
 import Test from './test.js'
 import SystemManagement from './systemManagement.js'
+import TestProject from './testProject.js'
 
 Vue.use(Router)
 
@@ -33,6 +34,7 @@ export default new Router({
                 name: '首页'
             }
         },
-        SystemManagement
+        SystemManagement,
+        TestProject
     ]
 })

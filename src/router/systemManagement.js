@@ -1,5 +1,5 @@
 /**
- * 测试页面路由
+ * 系统管理页面路由
  */
 import SystemManagementIndex from '@/views/systemManagement/index'
 import UserManagement from '@/views/systemManagement/userManagement'
