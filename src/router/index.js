@@ -5,8 +5,10 @@ import Login from '@/views/login/index'
 import Index from '@/views/index'
 
 import Test from './test.js'
+import TestedSystemManagement from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
+import RecordFunction from './recordFunction'
 
 Vue.use(Router)
 
@@ -35,6 +37,8 @@ export default new Router({
             }
         },
         SystemManagement,
-        TestProject
+		TestedSystemManagement,
+        TestProject,
+		RecordFunction
     ]
 })
