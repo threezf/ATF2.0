@@ -1,7 +1,7 @@
 # Vue-webpack-basic-fe
 
 > 种子工程
-
+>> fushoudong本地库
 ## 构建及运行
 
 ``` bash
@@ -34,3 +34,9 @@ npm run build
 
 #### src/views
 页面文件，按功能模块分
+
+### 提交日期及修改内容——commit：fushoudong
+#### 2019-12-07
+- 新建登录界面
+- 新建功能点管理界面
+- 测试基础设施——被测系统管理优化

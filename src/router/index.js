@@ -5,8 +5,11 @@ import Login from '@/views/login/index'
 import Index from '@/views/index'
 
 import Test from './test.js'
+import TestInfrastructure from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
+import RecordFunction from './recordFunction'
+
 
 Vue.use(Router)
 
@@ -17,7 +20,7 @@ export default new Router({
             component: Login,
             meta: {
                 name: '登录',
-                hide: true, //在目录结构上隐藏，不在菜单栏外显
+                hide: false, //在目录结构上隐藏，不在菜单栏外显
             },
         }, {
             path: '/index',
@@ -35,6 +38,9 @@ export default new Router({
             }
         },
         SystemManagement,
-        TestProject
+		TestInfrastructure,
+        TestProject,
+		RecordFunction,
+		Test
     ]
 })
