@@ -1,7 +1,8 @@
 <template>
     <div class="page-inner">
         <el-container>
-            <el-header>
+            <el-main>
+            <el-row>
                 <el-button
                     size="small"
                     @click='addUserButtom'
@@ -9,8 +10,7 @@
                     icon="el-icon-plus">
                     添加用户
                 </el-button>
-            </el-header>
-            <el-main>
+            </el-row>
                 <el-row>
                     <el-col :span="3">
                         <el-select v-model="selectValue" placeholder="请选择">

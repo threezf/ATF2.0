@@ -3,6 +3,7 @@
  */
 import testProjectIndex from '@/views/testProject/index'
 import scene from '@/views/testProject/scene'
+import transactDetail from '@/views/testProject/transactDetail'
 
 export default {
     path: '/testProjectIndext',
@@ -19,6 +20,16 @@ export default {
             component: scene,
             meta: {
                 name: '场景管理',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-view'
+            }
+        },
+        {
+            path: 'transactDetail',
+            name: 'transactDetail',
+            component: transactDetail,
+            meta: {
+                name: '功能点管理',
                 parents: 'TestProjectIndex',
                 icon: 'el-icon-view'
             }
