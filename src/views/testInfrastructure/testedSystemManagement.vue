@@ -3,65 +3,64 @@
 		<el-container>
 			<el-header>
 				<el-button
-					@click="addButton"
 					type="primary"
-					icon='el-icon-plus'>
-					添加
-				</el-button>
+					icon='el-icon-plus'
+					size="small"
+					@click="addButton"
+				>添加</el-button>
 				<el-button
-					@click="updateButton"
 					type='primary'
-					icon='el-icon-edit'>
-					修改
-				</el-button>
+					icon='el-icon-edit'
+					size="small"
+					@click="updateButton"
+				>修改</el-button>
 				<el-panel
-					style="margin-left: 10px; cursor: pointer;color: gray"
 					id='advancedFunctions'
 					type='primary'
+					class="highFunction"
 					v-if="!highIsActive"
-					@click='showHighFunction'>
-					>> 展示高级功能
-				</el-panel>
+					@click='showHighFunction'
+				> {{'>> 展示高级功能'}}</el-panel>
 				<span class='high' v-if="highIsActive">
 					<el-button
 						type='primary'
 						icon='el-icon-s-tools'
-						plain>
-						管理功能点
-					</el-button>
+						size="small"
+						plain
+						@click='manageFunction'
+					>管理功能点</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-edit-outline'
-						plain>
-						配置系统数据
-					</el-button>
+						size="small"
+						plain
+					>配置系统数据</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-s-tools'
-						plain>
-						自动化构件维护
-					</el-button>
+						size="small"
+						plain
+					>自动化构件维护</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-s-management'
-						plain>
-						执行代码管理
-					</el-button>
+						size="small"
+						plain
+					>执行代码管理</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-setting'
-						plain>
-						移动端设备配置
-					</el-button>
+						size="small"
+						plain
+					>移动端设备配置</el-button>
 				</span>
 				<el-panel
 					id="el-panelHidden"
-					style="margin-left: 10px; cursor: pointer;color: gray"
+					class="highFunction"
 					type='primary'
 					v-if="highIsActive"
-					@click='showHighFunction'>
-					<< 隐藏高级功能
-				</el-panel>
+					@click='showHighFunction'
+				>{{'<< 隐藏高级功能'}}</el-panel>
 			</el-header>
 			<el-main class="el-main-base-inner">
 				<el-row>
@@ -70,7 +69,6 @@
 							<span class="spanRow">测试系统</span>
 						</el-row>
 					</div>
-
 					<el-row>
 						<el-col span="3" offset="1">
 							<el-input
@@ -81,39 +79,47 @@
 						<el-col span="1" offset="1">
 							<el-button
 								size="small"
+								class='search'
 								@click="getAllSystem(1)"
-								style="margin: 4px 0px 0px -40px;">搜索</el-button>
+							>搜索</el-button>
 						</el-col>
 					</el-row>
 				</el-row>
 				<el-table
 					ref="singleTable"
-					style="width:fit-content; margin-top: 10px"
+					class='tableStyle'
 					border
 					stripe
 					highlight-current-row
 					:default-sort="{prop:'createTime',order:'descending'}"
-					:data="tableData"><!--highlight-current-row:当前选中行保持高亮-->
+					:data="tableData"><!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
 					<el-table-column
 						label="选择"
 						width="55">
 						<template slot-scope="scope">
-<!--							<el-checkbox v-model="scope.row.checked">-->
-<!--								-->
-<!--							</el-checkbox>-->
-							<el-radio class="radio"  v-model="radio"  :label="scope.$index">&nbsp;</el-radio>
+							<el-radio
+								class="radio"
+								v-model="radio"
+								:label='scope.$index'
+								@change='handleRadioChange(scope.$index)'
+							>&nbsp;</el-radio>
 						</template>
 					</el-table-column>
 					<el-table-column
 						sortable
-						prop="id"
+						type='index'
 						label="序号"
-						width="80">
+						width="80"
+						align='center'>
 					</el-table-column>
 					<el-table-column
 						prop="code"
 						label="测试系统编号"
-						width="230">
+						width="209"
+						align="center">
+						<template slot-scope="scope">
+							<a @click='toTransact' class='link' target=_self>{{scope.row.code}}</a>
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="nameMedium"
@@ -145,7 +151,7 @@
 						:formatter="transTime">
 					</el-table-column>
 				</el-table>
-				<div style="width: 1300px; float: left">
+				<div>
 					<div class="footSelect">
 						<el-col :span="10" :offset="4">
 							<el-pagination
@@ -187,10 +193,9 @@
 						</el-form-item>
 						<el-form-item>
 							<div style="width: fit-content;float: right; margin-right: 20px">
-								<el-button type="primary" size="small">新增</el-button>
-								<el-button size="small">取消</el-button>
+								<el-button type="primary" size="small" @click='sureButtonClicked'>新增</el-button>
+								<el-button size="small" @click='cancelButtonClicked'>取消</el-button>
 							</div>
-
 						</el-form-item>
 					</el-form>
 				</el-dialog>
@@ -221,7 +226,7 @@
 				totalCount: 50,
 				//表格数据渲染
 				tableData: [],
-				radio: "",	// 单选框默认
+				radio: false,	// 单选框默认
 				//搜索相关
 				selectInfo: "", //搜索输入内容
 				//对话框及相关内容
@@ -264,16 +269,9 @@
 
 		},
 		methods: {
+			//点击展示和隐藏高级功能
 			showHighFunction: function () {
 				this.highIsActive = !this.highIsActive;
-			},
-			handleBeforeClose(done){
-				if (this.dialogModelFlag == 1){
-					done();
-					return true;
-				}
-				done();
-				return true;
 			},
 			//添加按钮
 			addButton(){
@@ -282,9 +280,47 @@
 			},
 			//修改按钮
 			updateButton(){
-				this.dialogModelFlag = 1;
-				this.dialogVisible = true;
+				if (this.radio === false) {
+					this.$message.warning('请选择一条数据！！')
+				}else {
+					this.dialogModelFlag = 1;
+					this.dialogVisible = true;
+				}
 			},
+			manageFunction(){
+				if (this.radio === false) {
+					this.$message.warning('请选择一条数据！！')
+				}else {
+					// sessionStorage.setItem('value','this.currentPage');
+					this.$router.push({path: 'transact',query:{id:'1',name:'小青'}});
+				}
+			},
+			/**
+			 * 表格事件处理
+			 * handleRadioChange：监听Radio变化处理事件
+			 * toTransact：选择系统编号跳转
+
+			 */
+			handleRadioChange(value){
+				this.$message.success('Radio改变' + (value));
+			},
+			toTransact(){
+				// sessionStorage.setItem('case')
+				this.$router.push({path:'transact',query:{id:'1',name:'小青'}});//界面跳转
+			},
+			//对话框处理事件，非区域隐藏
+			handleBeforeClose(done){
+				if (this.dialogModelFlag == 1){
+					done();
+					return true;
+				}
+				done();
+				return true;
+			},
+
+			/**
+			 * 处理底部换页标记
+			 */
 			handleSizeChange(val) {
 				console.log(`每页 ${{val}}条`);
 				this.pageSize = val;
@@ -315,6 +351,17 @@
 				).catch((err) =>{
 					console.log(err);
 				})
+			},
+			/**
+			 * 对话框事件
+			 * sureButtonClicked：点击确定按钮
+			 * cancelButtonClicked：点击取消按钮
+			 */
+			sureButtonClicked(){
+				this.$message.info('点击确认按钮')
+			},
+			cancelButtonClicked(){
+				this.dialogVisible = false;
 			}
 		}
     }
@@ -327,7 +374,7 @@
 	.footSelect{
 		text-align: center;
 		overflow: hidden;
-		margin: 30px auto 10px auto;
+		margin: 30px auto 10px 9%;
 	}
 	span.spanRow{
 		margin-left: 10px;
@@ -339,5 +386,31 @@
 		width: 100%;
 		height: 35px;
 		margin-bottom: 10px;
+	}
+	/*表格相关样式*/
+	.tableStyle{
+		margin-left: 10px;
+		width:fit-content;
+		margin-top: 15px
+	}
+	/*搜索按钮*/
+	.search{
+		margin: 4px 0px 0px -40px;
+	}
+	/*高级功能样式*/
+	.highFunction{
+		font-size: 13px;
+		margin-left: 10px;
+		cursor: pointer;
+		color: gray
+	}
+	/*链接样式*/
+	.link{
+		color: #3e61aa;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.link:hover{
+		color: blue;
 	}
 </style>
