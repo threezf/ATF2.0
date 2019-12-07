@@ -23,17 +23,18 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.paramsSerializer = (params) => {
 	return Qs.stringify(params, {arrayFormat: 'brackets'});
 }
-// axios.interceptors.response.use(function (response) {
-//     if (response.data && response.data.errcode !== 0) {
-//         let message = `【${response.data.errcode}】${ErrorCode[response.data.errcode] || response.data.errmsg}`
-//         ElementUI.Message.warning(message)
-//         return Promise.reject(message)
-//     }
-//     return response
-// }, function (error) {
-//     ElementUI.Message.error('请求失败，请重试')
-//     return Promise.reject(error)
-// })
+axios.interceptors.response.use(function (response) {
+    if (response.data && response.data.respCode !== '0000') {
+        let message = `【${response.data.errcode}】${ErrorCode[response.data.errcode] || response.data.errmsg}`
+        ElementUI.Message.warning(message)
+        return Promise.reject(message)
+    }
+    console.log('response',response)
+    return response
+}, function (error) {
+    ElementUI.Message.error('请求失败，请重试')
+    return Promise.reject(error)
+})
 
 //扩展Promise的finally方法
 Promise.prototype.finally = function (callback) {
@@ -48,9 +49,9 @@ Promise.prototype.finally = function (callback) {
 
 const Request = function (options) {
     return new Promise((resolve, reject) => {
-        let headerUrl = 'http://10.101.167.184:8080/atfcloud2.0a'
+        // let headerUrl = 'http://10.101.167.184:8080/atfcloud2.0a'
         let axiosParams = {
-            url: headerUrl + options.url,
+            url:  options.url,
             method: options.method,
         }
         if (options.method == 'get') {

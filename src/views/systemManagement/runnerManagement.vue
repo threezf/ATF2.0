@@ -3,15 +3,17 @@
         <el-container>
             <el-header>
                 <el-button
-                    @click='reFresh'
+                    size="small"
                     type="primary"
-                    icon="el-icon-refresh">
+                    icon="el-icon-refresh"
+                    @click='reFresh'>
                     刷新
                 </el-button>
                 <el-button
-                    @click='downloadRunner'
+                    size="small"
                     type="primary"
-                    icon="el-icon-download">
+                    icon="el-icon-download
+                    @click='downloadRunner'">
                     执行机安装包下载
                 </el-button>
             </el-header>
@@ -39,24 +41,31 @@
                     <el-table-column label="日志查看">
                     <template slot-scope="scope">
                         <el-button
-                        size="mini"
-                        @click="handleDetail(scope.$index, scope.row)">日志查看</el-button>
+                            size="mini"
+                            @click="handleDetail(scope.$index, scope.row)">日志查看
+                        </el-button>
                     </template>
                     </el-table-column>
                 </el-table>
                 <el-card class="box-card"  shadow="always" v-show='logVisible'>
                     <div slot="header" class="clearfix">
                         <span>执行机日志</span>
-                        <el-button style="float: right; padding: 3px 0" type="text" @click="logVisible=false">隐藏</el-button>
+                        <el-button 
+                            style="float: right; padding: 3px 0" 
+                            type="text" 
+                            @click="logVisible=false">
+                            隐藏
+                        </el-button>
                     </div>
                     <div  class="text item">
                         <el-input
                             id='textarea_id'
                             type="textarea"
-                            :rows="15"
                             placeholder="请输入内容"
+                            disabled
                             v-model="log"
-                            disabled>
+                            :rows="15"
+                            >
                         </el-input>
                     </div>
                 </el-card>
@@ -84,7 +93,6 @@
             
         },
         created(){
-            this.getRunners()
         },
         mounted() {
             this.getRunners()
@@ -166,7 +174,7 @@
 <style lang="less" scoped>
 .box-card{
     z-index: 10;
-    width:500px;
+    width: 480px;
     position: absolute;
     top:170px;
     right:10px
@@ -186,9 +194,5 @@
 }
 .clearfix:after {
     clear: both
-}
-
-.box-card {
-    width: 480px;
 }
 </style>

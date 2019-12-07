@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         // 配置代理转发,具体配置看相关文档
-        '/wxa': {
-            target: 'https://api.weixin.qq.com',
+        '/': {
+            target: 'http://10.101.167.184:8080/atfcloud2.0a',
             changeOrigin: true
         }
     },

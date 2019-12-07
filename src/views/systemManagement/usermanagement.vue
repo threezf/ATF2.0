@@ -3,6 +3,7 @@
         <el-container>
             <el-header>
                 <el-button
+                    size="small"
                     @click='addUserButtom'
                     type="primary"
                     icon="el-icon-plus">
@@ -25,7 +26,8 @@
                         <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
                     <el-col :span="4" :offset='1'>
-                        <el-button 
+                        <el-button
+                            size="small" 
                             @click='getUsers(1)'
                             type="primary">
                             搜索
@@ -34,6 +36,7 @@
                 </el-row>
                 <el-table
                     stripe
+                    border
                     :data="tableData"
                     class='table'>
                     <el-table-column
@@ -307,7 +310,7 @@
         },
         methods: {
             handleClose(done){
-                if(this.modelFlag ==1){
+                if(this.modelFlag === 1){
                     done()
                     return true
                 }
@@ -401,6 +404,7 @@
                     method: 'post',
                     params: this.params
                 }).then((res) => {
+                    console.log(res)
                     this.tableData = res.list
                     this.totalCount = res.totalCount
                 },(err) => {
