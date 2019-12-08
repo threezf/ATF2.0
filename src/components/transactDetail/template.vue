@@ -162,7 +162,10 @@ export default {
       handleCurrentChange(val) {
           console.log(val)
         this.currentRow = val;
-      }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
     },
     created() {},
     mounted() {

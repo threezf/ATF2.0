@@ -10,7 +10,6 @@ import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
 
-
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
