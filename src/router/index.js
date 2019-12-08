@@ -7,6 +7,7 @@ import Index from '@/views/index'
 import Test from './test.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
+import TestInfrastructure from './testInfrastructure.js'
 
 Vue.use(Router)
 
@@ -35,6 +36,7 @@ export default new Router({
             }
         },
         SystemManagement,
-        TestProject
+        TestProject,
+		TestInfrastructure
     ]
 })

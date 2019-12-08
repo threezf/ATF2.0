@@ -2,7 +2,7 @@
     <div class="page-inner">
         <el-container>
             <el-header>
-                <el-button  
+                <el-button
                     @click='addSceneButtom'
                     type="primary"
                     icon="el-icon-plus">
@@ -27,7 +27,7 @@
                         <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
                     <el-col :span="4"  :offset='1'>
-                        <el-button 
+                        <el-button
                             @click='selectScene(1)'
                             type="primary">
                             搜索
