@@ -62,7 +62,7 @@ const Request = function (options) {
         axios(axiosParams).then((res) => {
             res = res.data
             if (res.respCode.toString() === '0000') {
-                ElementUI.Message.info(res.respMsg)
+                // ElementUI.Message.info(res.respMsg)
                 resolve(res)
             } else {
                 reject(res)

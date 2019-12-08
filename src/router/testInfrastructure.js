@@ -8,6 +8,8 @@ import AutomatedComponentManagement from '@/views/testInfrastructure/automatedCo
 import MockApi from '@/views/testInfrastructure/mockApi';
 import Transact from '@/views/testInfrastructure/transact';
 
+import TransactDetail from '@/views/testInfrastructure/transactDetail';
+
 export default {
 	path: '/testInfrastructure',
 	name: 'TestInfrastructure',
@@ -26,7 +28,6 @@ export default {
 				parent: 'TestInfrastructure',
 				icon: 'el-icon-view'
 			},
-			//考虑此处添加功能点管理路由
 		},
 		{
 			path: 'transact',
@@ -57,6 +58,16 @@ export default {
 				name: "Mock API",
 				parent: "TestInfrastructure",
 				icon: "el-icon-setting"
+			}
+		},
+		{
+			path: 'transactDetail',
+			name: 'TransactDetail',
+			component: TransactDetail,
+			meta: {
+				name: 'UI管理',
+				parents: 'TestedSystemManagement',
+				icon: 'el-icon-document-copy'
 			}
 		}
 	]

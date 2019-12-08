@@ -1,6 +1,7 @@
 <template>
     <div class="page-inner">
         hello sub-page-test
+            <router-view />
     </div>
 </template>
 

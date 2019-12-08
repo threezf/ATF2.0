@@ -43,7 +43,7 @@ export default {
                     meta: {
                         name: '模板管理12',
                         parents: 'TestSubPage1',
-                        icon: 'el-icon-document-copy'
+                        icon: 'el-icon-document-copy',
                     }
                 }
             ]
