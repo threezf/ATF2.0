@@ -58,29 +58,33 @@
                 <div>
                     <el-row>
                         <span>
-                            元素名称
+                            {{infoCardName}}
                         </span>
                     </el-row>
                 </div>
                 <div class='content'>
                     <el-row>
                         <el-col :offset="2" :span="4">
-                            <span>
+                            <span v-if='infoCardType'>
                                 元素名称 ：
                             </span>
+                            <span v-else>
+                                UI名称 ：
+                            </span>
+
                         </el-col>
                         <el-col :span="5" class='rightLable'>
                             <el-input 
                                 v-model="input" 
                                 placeholder="请输入内容"></el-input>
                         </el-col>
-                        <el-col :span="4" class='rightLable'>
+                        <el-col :span="4" class='rightLable'  v-if='infoCardType'>
                             <span>
                                 类型 ：
                             </span>
                         </el-col>
-                        <el-col :span="5" >
-                            <el-select filterable v-model="tranSelectValue" placeholder="请选择">
+                        <el-col :span="5"  v-if='infoCardType'>
+                            <el-select filterable v-model="tranSelectValue" placeholder="请选择" >
                                 <el-option
                                 v-for="item in classselectOptions"
                                 :key="item.value"
@@ -91,7 +95,7 @@
                         </el-col>
                     </el-row>
                     
-                    <el-row>
+                    <el-row  v-if='infoCardType'>
                         <el-col :span="4" :offset="2">
                             <span>
                                 属性
@@ -99,6 +103,7 @@
                         </el-col>
                     </el-row>
                      <el-table
+                        v-if='infoCardType'
                         border
                         ref="multipleTable"
                         :data="tableData3"
@@ -135,42 +140,15 @@ export default {
   mixins: [VueMixins],
   data() {
     return {
+        infoCardName:'',//信息详情的卡片名称
+        infoCardType:false,//信息详情的卡片种类：true?"ele":"UI"
         classselectOptions:[],
         selectOptions:[],
         tranSelectValue:'',
         autoSelectValue:'',
         filterText: '',
         input:'',
-        treeData: [
-            {
-          id: "lfl",
-          label: '百度搜索UI',
-          children: [{
-            id: "ly",
-            label: '输入框'
-          }]
-        }, {
-          id: 2,
-          label: '北邮搜索界面',
-          children: [{
-            id: 5,
-            label: '条目一'
-          }, {
-            id: 6,
-            label: '确认按钮'
-          }]
-        }, {
-          id: 3,
-          label: '北邮主页',
-          children: [{
-            id: 7,
-            label: '信息门户'
-          }, {
-            id: 8,
-            label: '图书馆'
-          }]
-        }
-        ],
+        treeData: [],
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -193,10 +171,12 @@ export default {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
-      handleNodeClick(data, checked, indeterminate) {
+      handleNodeClick(data, node, indeterminate) {
         console.log(data);
         console.log(data.id);
         console.log(data.label);
+        this.infoCardName = data.label
+        node.isLeaf ? (this.infoCardType = true) : (this.infoCardType = false)
         this.input = data.label
         this.tableData3 = []
         this.tableData3.push({
@@ -204,13 +184,14 @@ export default {
           name: data.label,
           desc: "//id="+data.id
         })
-        console.log( checked);
+        console.log( node);
         console.log(indeterminate);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
       getEleTree(tranId){
+          const _this = this
             Request({
                 url: '/elementRepository/queryAllElementsForATransact',
                 method: 'post',
@@ -220,9 +201,9 @@ export default {
                 this.tranSelectValue = ''
                 for (let i = 0 ;i < res.uis.length;i++){
                     let node = {
-                    id: res.uis[i].uiId,
-                    label: res.uis[i].uiName,
-                    children: []
+                        id: res.uis[i].uiId,
+                        label: res.uis[i].uiName,
+                        children: []
                     }
                     for(let j = 0;j < res.uis[i].elements.length;j++){
                         let child={
@@ -231,10 +212,10 @@ export default {
                         }
                         node.children.push(child)
                     }
-                    tree.children.push(node)
+                    tree.push(node)
                 }
-                this.treeData = tree
-                console.log(res)
+                _this.treeData = tree
+                console.log('_this.treeData',_this.treeData)
             },(err) => {
                 console.log(err)
             }).catch((err) => {
@@ -264,8 +245,8 @@ export default {
                     }
                     tree.children.push(node)
                 }
-                this.treeData = tree
-                console.log(res)
+                _this.treeData = tree
+                console.log(this.treeData,'this.treeData')
             },(err) => {
                 console.log(err)
             }).catch((err) => {
@@ -276,6 +257,7 @@ export default {
   created() {},
   mounted() {
       this.getEleTree('1707')
+      this.getClass()
   }
 };
 </script>
