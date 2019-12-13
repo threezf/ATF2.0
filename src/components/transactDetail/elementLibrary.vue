@@ -14,27 +14,32 @@
                     <el-row>
                         <el-button
                             size="mini" 
-                            type="primary">
+                            type="primary"
+                            @click="addUIShow">
                             添加UI
                         </el-button>
                         <el-button
                             size="mini" 
-                            type="primary">
+                            type="primary"
+                            @click="deleteUIShow">
                             删除UI
                         </el-button>
                         <el-button
                             size="mini" 
-                            type="primary">
+                            type="primary"
+                            @click="addEleShow">
                             添加元素
                         </el-button>
                         <el-button
                             size="mini" 
-                            type="primary">
+                            type="primary"
+                            @click="deleteEleShow">
                             删除元素
                         </el-button>
                         <el-button
                             size="mini" 
-                            type="primary">
+                            type="primary"
+                            @click="branchAddEleShow">
                             批量添加
                         </el-button>
                     </el-row>
@@ -64,16 +69,19 @@
                 </div>
                 <div class='content'>
                     <el-row>
-                        <el-col :offset="2" :span="4">
-                            <span v-if='infoCardType'>
+                        <el-col :offset="2" :span="5">
+                            <span v-if='infoCardType === true'>
                                 元素名称 ：
                             </span>
-                            <span v-else>
+                            <span v-else-if='infoCardType === false'>
                                 UI名称 ：
+                            </span>
+                            <span v-else>
+                                请选择UI或元素
                             </span>
 
                         </el-col>
-                        <el-col :span="5" class='rightLable'>
+                        <el-col :span="5" class='rightLable' v-if='infoCardType !== undefined'>
                             <el-input 
                                 v-model="input" 
                                 placeholder="请输入内容"></el-input>
@@ -129,6 +137,27 @@
             </div>
         </div>
     </div>
+    <el-dialog title="添加UI" :visible.sync="addUIDialogFlag">
+        <el-form :model="form">
+            <el-row>
+                <el-col :span='5'>
+                    <el-form-item label="活动名称" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item label="活动区域" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="addUIDialogFlag = false">取 消</el-button>
+            <el-button type="primary" @click="addUIDialogFlag = false">确 定</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -141,7 +170,7 @@ export default {
   data() {
     return {
         infoCardName:'',//信息详情的卡片名称
-        infoCardType:false,//信息详情的卡片种类：true?"ele":"UI"
+        infoCardType:undefined,//信息详情的卡片种类： undifinde是未选择初始状态  true?"ele":"UI"
         classselectOptions:[],
         selectOptions:[],
         tranSelectValue:'',
@@ -149,15 +178,20 @@ export default {
         filterText: '',
         input:'',
         treeData: [],
+        addUIDialogFlag: false,
         defaultProps: {
           children: 'children',
           label: 'label'
         },
-         tableData3: [{
+        tableData3: [{
           date: '2016-05-03',
           name: 'xpath',
           desc: "//id='key'"
-        },]
+        },],
+        form: {
+          name: '',
+          region: ''
+        },
     }
   },
     watch: {
@@ -252,6 +286,22 @@ export default {
             }).catch((err) => {
                 console.log(err)
             })
+      },
+      // 以下为点击按钮时，清空弹框 并再次展示弹窗
+      addUIShow(){
+          this.addUIDialogFlag = true
+      },
+      deleteUIShow(){
+          
+      },
+      addEleShow(){
+          
+      },
+      deleteEleShow(){
+          
+      },
+      branchAddEleShow(){
+          
       }
   },
   created() {},
