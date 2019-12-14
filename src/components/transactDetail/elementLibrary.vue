@@ -3,12 +3,10 @@
     <div class="page-inner">
         <div class='ele-container'>
             <div class="ele-left">
-                <div>
-                    <el-row>
-                        <span>
-                            元素列表
-                        </span>
-                    </el-row>
+                
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>元素列表</span>
                 </div>
                 <div class='content'>
                     <el-row>
@@ -58,82 +56,79 @@
                         ref="tree2">
                     </el-tree>
                 </div>
+            </el-card>
             </div>
             <div class="ele-right">
-                <div>
-                    <el-row>
-                        <span>
-                            {{infoCardName}}
-                        </span>
-                    </el-row>
-                </div>
-                <div class='content'>
-                    <el-row>
-                        <el-col :offset="2" :span="5">
-                            <span v-if='infoCardType === true'>
-                                元素名称 ：
-                            </span>
-                            <span v-else-if='infoCardType === false'>
-                                UI名称 ：
-                            </span>
-                            <span v-else>
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>{{infoCardName}}</span>
+                    </div>
+                    <div class='content'>
+                        <el-row>
+                            <el-col :offset="2" :span="4">
+                                <span v-if='infoCardType === true'>
+                                    元素名称 ：
+                                </span>
+                                <span  v-else-if='infoCardType === false'>
+                                    UI名称 ：
+                                </span>                            
+                                <span v-else>
                                 请选择UI或元素
-                            </span>
-
-                        </el-col>
+                                </span>
+                            </el-col>
                         <el-col :span="5" class='rightLable' v-if='infoCardType !== undefined'>
-                            <el-input 
-                                v-model="input" 
-                                placeholder="请输入内容"></el-input>
-                        </el-col>
-                        <el-col :span="4" class='rightLable'  v-if='infoCardType'>
-                            <span>
-                                类型 ：
-                            </span>
-                        </el-col>
-                        <el-col :span="5"  v-if='infoCardType'>
-                            <el-select filterable v-model="tranSelectValue" placeholder="请选择" >
-                                <el-option
-                                v-for="item in classselectOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
-                    
-                    <el-row  v-if='infoCardType'>
-                        <el-col :span="4" :offset="2">
-                            <span>
-                                属性
-                            </span>
-                        </el-col>
-                    </el-row>
-                     <el-table
-                        v-if='infoCardType'
-                        border
-                        ref="multipleTable"
-                        :data="tableData3"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                        <el-table-column
-                        type="selection"
-                        width="55">
-                        </el-table-column>
-                        <el-table-column
-                        prop="name"
-                        label="主属性"
-                        width="120">
-                        </el-table-column>
-                        <el-table-column
-                        prop="desc"
-                        label="属性值"
-                        width="120">
-                        </el-table-column>
-                    </el-table>
-                </div>
+                                <el-input 
+                                    v-model="input" 
+                                    placeholder="请输入内容"></el-input>
+                            </el-col>
+                            <el-col :span="4" class='rightLable'  v-if='infoCardType'>
+                                <span>
+                                    类型 ：
+                                </span>
+                            </el-col>
+                            <el-col :span="5"  v-if='infoCardType'>
+                                <el-select filterable v-model="tranSelectValue" placeholder="请选择" >
+                                    <el-option
+                                    v-for="item in classselectOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                        </el-row>
+                        <el-row  v-if='infoCardType'>
+                            <el-col :span="4" :offset="2">
+                                <span>
+                                    属性
+                                </span>
+                            </el-col>
+                        </el-row>
+                        <el-table
+                            v-if='infoCardType'
+                            border
+                            ref="multipleTable"
+                            :data="tableData3"
+                            tooltip-effect="dark"
+                            style="width: 100%"
+                            @selection-change="handleSelectionChange">
+                            <el-table-column
+                            type="selection"
+                            width="55">
+                            </el-table-column>
+                            <el-table-column
+                            prop="name"
+                            label="主属性"
+                            width="120">
+                            </el-table-column>
+                            <el-table-column
+                            prop="desc"
+                            label="属性值"
+                            width="120">
+                            </el-table-column>
+                        </el-table>
+                    </div> 
+                </el-card>
             </div>
         </div>
     </div>
@@ -318,20 +313,20 @@ export default {
 .ele-left{
     width:40%;
     padding:10px;
-    background: #f4f5f7;
     margin-right:10px;
 }
 .ele-right{
     width:60%;
     padding:10px;
-    background: #f4f5f7;
 }
 .keywords{
     margin-bottom: 10px
 }
 .content{
-    border: 1px solid #c0c4cc;  
     padding: 0px 5px;
     min-height: 450px;
+}
+.page-inner{
+    padding-top: 0px;
 }
 </style>
