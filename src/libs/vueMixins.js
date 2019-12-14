@@ -19,7 +19,7 @@ export default {
     },
     methods:{
         transTime(row, column, cellValue) {
-            console.log(cellValue)
+            // console.log(cellValue)
             return TimeUtils.timestampToTime(cellValue, 'yyyy-MM-dd hh:mm:ss')
         }
     }

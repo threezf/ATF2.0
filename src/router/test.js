@@ -4,13 +4,13 @@
 import TestIndex from '@/views/test/index'
 import TestSubPage1 from '@/views/test/test-sub-page'
 import TestSubPage2 from '@/views/test/test-sub-page2'
-import TestSubPage11 from '@/views/test/test-sub-page12'
+import TestSubPage11 from '@/views/test/test-sub-page-two'
 import TestSubPage12 from '@/views/test/test-sub-page22'
 export default {
     path: '/test',
     name: 'TestIndex',
     component: TestIndex,
-    redirect: '/test/test-sub-page1',
+    redirect: '/test/test-sub-page1/test-sub-page-two',
     meta: {
         name: '测试页面'
     },
@@ -27,7 +27,7 @@ export default {
             },
             children: [
                 {
-                    path: 'test-sub-page11',
+                    path: 'test-sub-page-two',
                     name: 'TestSubPage11',
                     component: TestSubPage11,
                     meta: {

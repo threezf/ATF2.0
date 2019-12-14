@@ -25,7 +25,7 @@
                         <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
                     <el-col :span="4" :offset='1'>
-                        <el-button 
+                        <el-button
                             @click='getUsers(1)'
                             type="primary">
                             搜索
@@ -219,10 +219,10 @@
                     ],
                 },
                 roles : {
-                    1: "测试主管", 
-                    2: "测试经理", 
-                    3: "测试组长", 
-                    4: "自动化技术人员", 
+                    1: "测试主管",
+                    2: "测试经理",
+                    3: "测试组长",
+                    4: "自动化技术人员",
                     5: "功能测试人员"
                     }, // 角色类型
                 status : {0: '正常', 1: '异常'},// 角色状态

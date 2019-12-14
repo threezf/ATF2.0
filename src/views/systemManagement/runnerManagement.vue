@@ -1,6 +1,7 @@
 <template>
     <div class="page-inner">
         <el-container>
+
             <el-header>
                 <el-button
                     @click='reFresh'
@@ -81,7 +82,7 @@
             }
         },
         computed:{
-            
+
         },
         created(){
             this.getRunners()
@@ -119,10 +120,10 @@
                     url: '/executeController/syncQueryLog',
                     method: 'post',
                     params: {
-                    "logType": 1, 
+                    "logType": 1,
                     "identifiableName":row.identifiableName+'/'+ row.runnerIp +':'+ row.runnerPort,
 					"reqSyncNo": null,
-					"sessionId":null, 
+					"sessionId":null,
                     "latestLineNum":50,
 				}
                 }).then((res) => {
@@ -142,10 +143,10 @@
                     url: '/executeController/syncQueryLog',
                     method: 'post',
                     params: {
-                    "logType": 1, 
+                    "logType": 1,
                     "identifiableName":data.identifiableName+'/'+ data.runnerIp +':'+ data.runnerPort,
 					"reqSyncNo": null,
-					"sessionId":null, 
+					"sessionId":null,
                     "latestLineNum":50,
 				}
                 }).then((res) => {

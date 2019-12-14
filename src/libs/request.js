@@ -1,18 +1,18 @@
 /**
  * 公共请求
  * 返回值为Promise
- * 
+ *
  * 使用方式
  * import Request from '{pwd}/libs/request'
- * 
+ *
  * Request({
       url: '/cgi-bin/poisearch',
       method: 'get',
       params: {}
     }).then((res) => {
-    	
+
   	}).catch((err) => {
-	
+
   	})
  */
 import ElementUI from "element-ui"
@@ -59,11 +59,15 @@ const Request = function (options) {
             axiosParams.data = options.params
         }
         axios(axiosParams).then((res) => {
-            res = res.data
-            if (res.respCode.toString() === '0000') {
+        	console.log('request',res)
+            res = res.data;
+			if(res.msg === ""){
+				ElementUI.Message.info(res.obj);
+				resolve(res)
+			}else if (res.respCode.toString() === '0000') {
                 ElementUI.Message.info(res.respMsg)
                 resolve(res)
-            } else {
+            }else {
                 reject(res)
             }
         }).catch((err) => {
