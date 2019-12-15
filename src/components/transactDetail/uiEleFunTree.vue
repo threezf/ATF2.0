@@ -6,8 +6,26 @@
  * 点击确认触发事件  throwInfo  向父组件传选择元素及方法的lsit
  */
 <template>
-    <el-dialog :title=title :visible.sync="showFlag" width	="50%">
-        <span :offset="2">确定要删除该脚本吗？</span>
+    <el-dialog :title=title :visible.sync="sonShowFlag" width	="50%">
+        <el-row>
+            <el-col :span="5">
+                <span>
+                    Ui与元素
+                </span>
+            </el-col>
+        </el-row>
+        <el-tree 
+            :data="data" 
+            :props="defaultProps" 
+            @node-click="handleNodeClick">
+        </el-tree>
+        <el-row>
+            <el-col :span="5">
+                <span>
+                    公共函数集
+                </span>
+            </el-col>
+        </el-row>
         <div slot="footer" class="dialog-footer">
             <el-button @click="closeDialog">取 消</el-button>
             <el-button type="primary" @click="throwInfo">确 定</el-button>
@@ -42,17 +60,72 @@ export default {
     },
   data() {
     return {
+        data: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        sonShowFlag :this.showFlag
     }
   },
-  watch: {},
-  computed: {},
+    watch: {
+        sonShowFlag(newName, oldName) { 
+          if(newName == false){
+              console.log('close UI and ele')
+            this.$emit("closeDialog",123)
+          }  
+        },
+        showFlag(newName, oldName){
+            this.sonShowFlag = this.showFlag
+        }
+  },
+  computed: {
+  },
   methods: {
+      handleNodeClick(data) {
+        console.log(data);
+      },
       closeDialog(){
           this.$emit("closeDialog",123)
       },
       throwInfo(){
           this.$emit("closeDialog")
       }
+      
   },
   created() {},
   mounted() {

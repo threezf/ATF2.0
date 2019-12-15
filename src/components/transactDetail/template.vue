@@ -135,6 +135,84 @@
                         <el-table-column
                             prop="arguments"
                             label="参数">
+                            <template slot-scope="scope">
+                                <div v-if='scope.row.arguShow'>
+                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                        <el-col :span="5">
+                                            <span>
+                                                名称
+                                            </span>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <span>
+                                                参数值
+                                            </span>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                        <el-col :span="5">
+                                            <span>
+                                                 {{ item.name }} 
+                                            </span>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <span>
+                                                 {{ item.value }} 
+                                            </span>
+                                        </el-col>
+                                    </el-row>
+                                    <el-button 
+                                        size="mini" 
+                                        type="primary"
+                                        icon="el-icon-edit" 
+                                        @click='scope.row.arguShow = false'>
+                                        编辑
+                                    </el-button>
+                                </div>
+                                <div v-else>
+                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                        <el-col :span="5">
+                                            <span>
+                                                名称
+                                            </span>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <span>
+                                                参数值
+                                            </span>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                        <el-col :span="5">
+                                            <span>
+                                                 {{ item.name }} 
+                                            </span>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-input 
+                                                @dragenter.stop=""
+                                                v-model="item.newvalue" ></el-input>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                        <el-col :span="5">
+                                            <el-button  
+                                                @click='item.newvalue = item.value;scope.row.arguShow = true'
+                                                size="small">
+                                                 取消
+                                            </el-button>
+                                        </el-col>
+                                        <el-col :span="5">
+                                            <el-button 
+                                                type="primary" 
+                                                size="small"  
+                                                @click='item.value = item.newvalue;scope.row.arguShow = true'>
+                                                确认
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </template>
                         </el-table-column>
                         <div slot="empty">
                             暂无数据,请选择脚本
@@ -318,12 +396,22 @@ export default {
             let list = res.data
             for(let i = 0;i<list.length;i++){
                 this.getMethods(list[i].elementWidget)
+                for(let j = 0 ; j< list[i].arguments.length; j++){
+                list[i].arguments[j].index = i
+                list[i].arguments[j].newvalue = list[i].arguments[j].value
+                }
+                // let argunmen
+                // for(let i = 0 ; i < list[i].arguments.length ; i++){
+
+                // }
+                console.log('list[i].arguments',list[i].arguments)
                 this.templateInfo.push({
                     sortid:i,
-                    name:'UI:'+list[i].uiname+" 元素:"+list[i].elementName,
-                    elementWidget:list[i].elementWidget,
-                    methodName:list[i].methodName,
-                    arguments:list[i].arguments,
+                    name: 'UI:'+list[i].uiname+" 元素:"+list[i].elementName,
+                    elementWidget: list[i].elementWidget,
+                    methodName: list[i].methodName,
+                    arguments: list[i].arguments,
+                    arguShow: true,// 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
                 })
             }
         },(err) => {
@@ -331,11 +419,11 @@ export default {
         })
       },
       // 获取控件方法
-      getMethods(classname){
-          if(this.methods[classname]){
-              //如果存在 则返回
-              return
-          }
+    getMethods(classname){
+        if(this.methods[classname]){
+            //如果存在 则返回
+            return
+        }
         Request({
             url: '/aut/selectMethod',
             method: 'post',
