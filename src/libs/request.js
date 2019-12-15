@@ -28,17 +28,16 @@ axios.defaults.paramsSerializer = (params) => {
 // 如果判断条件不通过就直接return Promise.reject(message) 不执行后边的内容
 axios.interceptors.response.use(function (response) {
     console.log('response1111111111111',response)
-    if (!response.data) {
-        let message = `网络开小差！`
+    if (! +response.status === 200) {
+        let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
-    // if (response.data.respCode !== '0000') {
-    //     let message = `【${response.data.respCode} || ${response.data.respMsg} }`
-    //     return Promise.reject(message)
-    // }
-    return response
+    if (response.data.respCode === '0000') {
+        return response
+    }
+    let message =  `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}` 
+    return Promise.reject(message)
 }, function (error) {
-    ElementUI.Message.warning(error)
     return Promise.reject(error)
 })
 
@@ -68,8 +67,12 @@ const Request = function (options) {
             res = res.data
             resolve(res)
         },(err)=>{
+            this.$message({
+                showClose: true,
+                message: err,
+                type: 'error'
+              });
             reject(err)
-
         })
     })
 }
