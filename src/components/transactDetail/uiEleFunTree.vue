@@ -6,7 +6,10 @@
  * 点击确认触发事件  throwInfo  向父组件传选择元素及方法的lsit
  */
 <template>
-    <el-dialog :title=title :visible.sync="sonShowFlag" width	="50%">
+    <el-dialog 
+      :title=title 
+      :visible.sync="sonShowFlag" 
+      width	="50%">
         <el-row>
             <el-col :span="5">
                 <span>
@@ -15,7 +18,8 @@
             </el-col>
         </el-row>
         <el-tree 
-            :data="data" 
+            :show-checkbox='multiselection'
+            :data="UITree" 
             :props="defaultProps" 
             @node-click="handleNodeClick">
         </el-tree>
@@ -26,6 +30,12 @@
                 </span>
             </el-col>
         </el-row>
+        <el-tree 
+            :show-checkbox='multiselection'
+            :data="funTree" 
+            :props="defaultProps" 
+            @node-click="handleNodeClick">
+        </el-tree>
         <div slot="footer" class="dialog-footer">
             <el-button @click="closeDialog">取 消</el-button>
             <el-button type="primary" @click="throwInfo">确 定</el-button>
@@ -60,41 +70,8 @@ export default {
     },
   data() {
     return {
-        data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
+        UITree: [],
+        funTree: [],
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -124,11 +101,72 @@ export default {
       },
       throwInfo(){
           this.$emit("closeDialog")
-      }
-      
+      },
+      getEleTree(){
+          const _this = this
+            Request({
+                url: '/elementRepository/queryAllElementsForATransact',
+                method: 'post',
+                params:{'transactId':this.transId}
+            }).then((res) => {
+                let tree =[]
+                for (let i = 0 ;i < res.uis.length;i++){
+                    let node = {
+                        id: res.uis[i].uiId,
+                        label: res.uis[i].uiName,
+                        children: []
+                    }
+                    if(!res.uis[i].elements){
+                        tree.push(node)
+                        break
+                    }
+                    for(let j = 0;j < res.uis[i].elements.length;j++){
+                        let child={
+                            id: res.uis[i].elements[j].elementId,
+                            label: res.uis[i].elements[j].elementName,
+                            classType: res.uis[i].elements[j].classType,
+                            mainProperties:res.uis[i].elements[j]. mainProperties
+                        }
+                        node.children.push(child)
+                    }
+                    tree.push(node)
+                }
+                _this.UITree = tree
+                console.log('_this.UITree',_this.UITree)
+            },(err) => {
+                console.log(err)
+            }).catch((err) => {
+                console.log(err)
+            })
+      },
+      getFunTree(){
+          const _this = this
+            Request({
+                url: '/aut/selectFunctionSet',
+                method: 'post',
+                params:{'id':this.autId}
+            }).then((res) => {
+                let tree =[]
+                for (let i = 0 ;i < res.omMethodRespDTOList.length;i++){
+                    let node = {
+                        id: res.omMethodRespDTOList[i].id,
+                        label: res.omMethodRespDTOList[i].name,
+                    }
+                    tree.push(node)
+                }
+                _this.funTree = tree
+                console.log('_this.funTree',_this.funTree)
+            },(err) => {
+                console.log(err)
+            }).catch((err) => {
+                console.log(err)
+            })
+      },
   },
   created() {},
   mounted() {
+      this.getEleTree()
+      this.getFunTree()
       console.log(this.showFlag)
   }
 };

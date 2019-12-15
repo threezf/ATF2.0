@@ -245,7 +245,8 @@
     </el-dialog>
     <uiEleFunTree 
         @closeDialog = "addItemShow = false"
-        :show-flag='addItemShow'>
+        :show-flag='addItemShow'
+        :multiselection='true'>
     </uiEleFunTree>
   </div>
 </template>
