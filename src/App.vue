@@ -30,9 +30,13 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
-      this.activeMenu = to.meta.parents || to.name;
-    }
+    '$route': {
+    	handler (to, from) {
+    		console.log('to.meta.parent',to.meta.parent)
+			this.activeMenu = to.meta.parent || to.name;
+		},
+		immediate: true
+	}
   },
   computed: {
     menuList() {

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-	import SideBar from "../../components/side-bar";
+	import SideBar from "@/components/side-bar";
     export default {
         name: "index",
 		components: {

@@ -1,18 +1,18 @@
 /**
  * 公共请求
  * 返回值为Promise
- * 
+ *
  * 使用方式
  * import Request from '{pwd}/libs/request'
- * 
+ *
  * Request({
       url: '/cgi-bin/poisearch',
       method: 'get',
       params: {}
     }).then((res) => {
-    	
+
   	}).catch((err) => {
-	
+
   	})
  */
 import ElementUI from "element-ui"
@@ -67,7 +67,7 @@ const Request = function (options) {
             res = res.data
             resolve(res)
         },(err)=>{
-            this.$message({
+            Vue.$message({
                 showClose: true,
                 message: err,
                 type: 'error'
