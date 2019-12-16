@@ -50,7 +50,6 @@
                         class="filter-tree"
                         :data="treeData"
                         :props="defaultProps"
-                        default-expand-all
                         :filter-node-method="filterNode"
                         @node-click="handleNodeClick"
                         ref="tree2">
@@ -79,7 +78,8 @@
                         <el-col :span="5" class='rightLable' v-if='infoCardType !== undefined'>
                                 <el-input 
                                     v-model="input" 
-                                    placeholder="请输入内容"></el-input>
+                                    placeholder="请输入内容"
+                                    :disabled="editFlag"></el-input>
                             </el-col>
                             <el-col :span="4" class='rightLable'  v-if='infoCardType'>
                                 <span>
@@ -87,7 +87,7 @@
                                 </span>
                             </el-col>
                             <el-col :span="5"  v-if='infoCardType'>
-                                <el-select filterable v-model="classType" placeholder="请选择" >
+                                <el-select filterable v-model="classType" placeholder="请选择"  :disabled="editFlag">
                                     <el-option
                                     v-for="item in classselectOptions"
                                     :key="item.id"
@@ -102,7 +102,7 @@
                                 <span>
                                     属性
                                 </span>
-                            </el-col>
+                            </el-col> 
                         </el-row>
                         <el-table
                             v-if='infoCardType'
@@ -117,31 +117,65 @@
                                 width="55">
                             </el-table-column>
                             <el-table-column
-                                prop="name"
                                 label="主属性"
                                 width="">
+                                <template slot-scope="scope">
+                                    <div v-if='editFlag'>
+                                        {{scope.row.name}}
+                                    </div>
+                                    <div v-else>
+                                        <el-col :span="24">
+                                            <el-input 
+                                                v-model="scope.row.name" ></el-input>
+                                        </el-col>
+                                    </div>
+                                </template>
                             </el-table-column>
                             <el-table-column
-                                prop="value"
                                 label="属性值"
                                 width="">
+                                <template slot-scope="scope">
+                                    <div v-if='editFlag'>
+                                        {{scope.row.value}}
+                                    </div>
+                                    <div v-else>
+                                        <el-col :span="24">
+                                            <el-input 
+                                                v-model="scope.row.value" ></el-input>
+                                        </el-col>
+                                    </div>
+                                </template>
                             </el-table-column>
                         </el-table>
-                        <el-row >
-                            <el-col :span="3" :offset='14'>
-                                <el-button  
-                                    size="small">
-                                        取消
-                                </el-button>
-                            </el-col>
-                            <el-col :span="5">
-                                <el-button 
-                                    type="primary" 
-                                    size="small" >
-                                    保存
-                                </el-button>
-                            </el-col>
-                        </el-row>
+                        <div v-if='infoCardType !== undefined'>
+                            <el-row v-if=' editFlag '>
+                                <el-col :span="5" :offset='17'>
+                                    <el-button 
+                                        @click='editFlag = false'
+                                        type="primary" 
+                                        size="small" >
+                                        编辑
+                                    </el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row v-else>
+                                <el-col :span="3" :offset='14'>
+                                    <el-button  
+                                        @click='editFlag = true'
+                                        size="small">
+                                            取消
+                                    </el-button>
+                                </el-col>
+                                <el-col :span="5">
+                                    <el-button 
+                                        @click='modifySingleElement'
+                                        type="primary" 
+                                        size="small" >
+                                        保存
+                                    </el-button>
+                                </el-col>
+                            </el-row>
+                        </div> 
                     </div> 
                 </el-card>
             </div>
@@ -188,6 +222,25 @@
             <el-button type="primary" @click=" addEle">确 定</el-button>
         </div>
     </el-dialog>
+    <el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width='30%'>
+        <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="/elementRepository/batchImportElementAndUi"
+            :multiple='false'
+            :on-preview="handlePreview"
+            :file-list="fileList"
+            :limit="1"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">批量导入</el-button>
+            <div slot="tip" class="el-upload__tip">请下载模板，填写后上传。</div>
+        </el-upload>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="addUIDialogFlag = false">取 消</el-button>
+            <el-button type="primary" @click=" addUI">确 定</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -209,18 +262,21 @@ export default {
     },
   data() {
     return {
+        branchAddEleDialogFlag:false,// 批量添加的dialog
+        fileList: [], // 上传文件列表
+        editFlag:true, // 元素信息编辑的状态
         infoCardName:'',//信息详情的卡片名称
         infoCardType:undefined,//信息详情的卡片种类： undifinde是未选择初始状态  true?"ele":"UI"
         classselectOptions:[],
         selectOptions:[],
-        classType:'',//当前选中的元素的控件id
+        classType:'',//当前选中的元素的控件类型
         selectedUI:'',//当前选中的UI 
         selectedEle:[],//当前选中的元素
         repositoryId:'1588',//元素库Id
         mainProperties:'',
         autoSelectValue:'',
         filterText: '',
-        input:'',
+        input:'',//当前选中的元素的名称
         treeData: [],
         addUIDialogFlag: false,
         addEleDialogFlag:false,
@@ -228,11 +284,6 @@ export default {
           children: 'children',
           label: 'label'
         },
-        tableData3: [{
-          date: '2016-05-03',
-          name: 'xpath',
-          desc: "//id='key'"
-        },],
         addUIform: {
           name: '',
           desc: ''
@@ -252,26 +303,29 @@ export default {
     },
   computed: {},
   methods: {
+      // 以下是三个函数是上传组件用到的
+      submitUpload() {
+        this.$refs.upload.submit();
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
       filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
+      // 树被点击时，触发事件
       handleNodeClick(data, node, indeterminate) {
-        console.log(data);
+        this.editFlag = true // 信息编辑状态置为不可编辑
         this.infoCardName = data.label
         this.classType = data.classType
         this.mainProperties = data.mainProperties;
+        // 根据传入的节点所带信息中是否有classtype属性 判断 点击的是元素还是UI
         ('classType' in data) ?(this.infoCardType = true) : (this.infoCardType = false)
         this.input = data.label
-        this.tableData3 = []
-        this.tableData3.push({
-          date: '2016-05-03',
-          name: data.label,
-          desc: "//id="+data.id
-        })
         console.log( node);
         if('classType' in data){
-            this.selectedEle.push(this.selectedUI,data.id)
+            this.selectedEle.push(node.parent.data.id,data.id,data)
             this.selectedUI = ''
         }
         else{
@@ -284,6 +338,7 @@ export default {
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      // 获取元素UI树
       getEleTree(){
           const _this = this
             Request({
@@ -393,7 +448,11 @@ export default {
         })
       },
       branchAddEleShow(){
-          
+          if(this.selectedUI === ''){
+              this.$message('请选择UI，再进行添加')
+              return
+          }
+          this.branchAddEleDialogFlag = true
       },
       addUI(){
         this.addUIDialogFlag = false
@@ -407,13 +466,8 @@ export default {
                 ]
             }
         }).then((res) => {
-            if(res.respCode=='0000'){
                 this.getEleTree()
                 this.$message('添加成功'+ res.respMsg )
-            }
-            else{
-                this.$message( '添加失败'+ rres.respMsg )
-            }
         },(err) => {
             console.log(err)
         })
@@ -452,6 +506,42 @@ export default {
             console.log(err)
         })
       },
+      // 修改单个元素信息
+      modifySingleElement(){
+        const _this = this
+
+        console.log(this.mainProperties)
+        Request({
+            url: '/elementRepository/modifySingleElement',
+            method: 'post',
+            params:{
+                "repositoryId":_this.repositoryId,
+                "uiId":_this.selectedEle[0],
+                "element":{
+                    "elementId": _this.selectedEle[2].id,
+                    "elementName": _this.input,
+                    "classType": _this.classType,
+                    "relateIdentifyObjectId": "",
+                    "relateParentIdentifyObjectId": "",
+                    "mainProperties": [{
+                        "name": _this.mainProperties[0].name,
+                        "value": _this.mainProperties[0].value,
+                        "method": "",
+                        "isRelative": null,
+                        "toolName": ""
+                    }],
+                    "additionalProperties": [],
+                    "assistantProperties": [],
+                    "relateProperties": []
+                }
+            }
+        }).then((res) => {
+            this.getEleTree()
+            this.$message( res.respMsg )
+        },(err) => {
+            console.log(err)
+        })
+      }
   },
   created() {},
   mounted() {

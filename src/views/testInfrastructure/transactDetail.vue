@@ -30,10 +30,14 @@
                         </span>
                     </el-col>
                     <el-col :span="3" >
-                        <el-select filterable v-model="tranSelectValue" placeholder="请选择">
+                        <el-select 
+                        filterable 
+                        v-model="tranSelectValue" 
+                        placeholder="请选择"
+                        @change='transChange'>
                             <el-option
-                            v-for="item in tranSelectOptions"
-                            :key="item.id"
+                            v-for="(item,index) in tranSelectOptions"
+                            :key="index"
                             :label="item.code"
                             :value="item.id">
                             </el-option>
@@ -43,7 +47,7 @@
                         <el-button
                             icon="el-icon-edit-outline"
                             size="small" 
-                            @click='getUsers(1)'
+                            @click='copySingleUITransact()'
                             type="primary">
                             复制功能点
                         </el-button>
@@ -75,31 +79,34 @@
         },
         data() {
             return {
+                autId:'61',
+                transId:'115',
+                userId:'3',
                 autSelectValue:'',
                 tranSelectValue:'',
                 activeName: 'elementLibrary',
                 autSelectOptions:[],
                 tranSelectOptions:[],
+                transSelected:{} //当前被选中的功能点的数据
             }
         },
         mounted(){
             this.getAuts();
-            this.getTran(61);
-            this.tranSelectValue = 115
+            this.getTran(this.autId);
+            this.transChange(this.transId)
         },
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
             },
             getAuts(){
-                console.log('1111111111')
                 Request({
                     url: '/aut/queryListAut',
                     method: 'post',
                 }).then((res) => {
                     console.log(res)
                     this.autSelectOptions = res.autRespDTOList
-                    this.autSelectValue = 61
+                    this.autSelectValue = this.autId
                 },(err) => {
                     console.log(err)
                 }).catch((err) => {
@@ -107,7 +114,6 @@
                 })
             },
             getTran(id){
-                console.log('1111111111')
                 Request({
                     url: '/transactController/queryTransactsByAutId',
                     method: 'post',
@@ -115,6 +121,7 @@
                 }).then((res) => {
                     this.tranSelectValue = ''
                     this.tranSelectOptions = res.transactRespDTOs
+                    this.tranSelectValue = res.transactRespDTOs[0].id
                     console.log(res)
                 },(err) => {
                     console.log(err)
@@ -124,6 +131,26 @@
             },
             autChange(data){
                 this.getTran(data)
+            },
+            transChange(transId){
+                this.transSelected = this.tranSelectOptions.filter(v=>(transId === v.id))[0]
+            },
+            copySingleUITransact(){
+                Request({
+                    url: '/transactController/copySingleUITransact',
+                    method: 'post',
+                    params:{
+                        "autId": this.autSelectValue,
+                        "transId": this.tranSelectValue,
+                        "elementRepositoryId": this.transSelected.elementRepositoryId,
+                        "objectRepositoryId":this.transSelected.objectRepositoryId,
+                        "creatorId": this.userId
+                    }
+                }).then((res) => {
+                    this.$message('复制成功')
+                },(err) => {
+                    
+                })
             }
         }
     }

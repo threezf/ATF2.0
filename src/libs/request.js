@@ -17,7 +17,12 @@
  */
 import ElementUI from "element-ui"
 import axios from 'axios'
+import Vue from 'vue'
 import ErrorCode from '../const/errorCode'
+
+const _Vue = new Vue({
+    el: "#app",
+  })
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.paramsSerializer = (params) => {
@@ -67,11 +72,11 @@ const Request = function (options) {
             res = res.data
             resolve(res)
         },(err)=>{
-            Vue.$message({
+            _Vue.$message({
                 showClose: true,
                 message: err,
                 type: 'error'
-              });
+            })
             reject(err)
         })
     })
