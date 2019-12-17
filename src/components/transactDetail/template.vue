@@ -23,6 +23,7 @@
                 ref="singleTable"
                 :data="templateList"
                 highlight-current-row
+                row-key="id"
                 @row-click='chooseTemplate'
                 style="width: 100%">
                 <el-table-column
@@ -52,7 +53,7 @@
                 </el-row>
                 <hr>
                 <div>
-                    <el-row>
+                    <el-row v-if='templateRadio !== ""'>
                         <el-button
                             size="small" 
                             type="primary"
@@ -63,31 +64,36 @@
                         <el-button
                             icon="el-icon-delete"
                             size="small" 
-                            type="primary">
+                            type="primary"
+                            @click='deleteTemplateInfo'>
                             删除
                         </el-button>
                         <el-button
                             icon="el-icon-arrow-up"
                             size="small" 
-                            type="primary">
+                            type="primary"
+                            @click='eleUp'>
                             上移
                         </el-button>
                         <el-button
                             icon="el-icon-arrow-down"
                             size="small" 
-                            type="primary">
+                            type="primary"
+                            @click='eleDown'>
                             下移
                         </el-button>
                         <el-button
                             icon="el-icon-document"
                             size="small" 
-                            type="primary">
+                            type="primary"
+                            @click='saveInfo'>
                             保存
                         </el-button>
                         <el-button
                             icon="el-icon-printer"
                             size="small" 
-                            type="primary">
+                            type="primary"
+                            @click='giveParam'>
                             参数化
                         </el-button>
                     </el-row>
@@ -98,7 +104,7 @@
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
-                        row-key="sortid"
+                        row-key="name"
                         class="sortable">
                         <el-table-column
                             label="排序"
@@ -118,11 +124,13 @@
                             prop="name">
                         </el-table-column>
                         <el-table-column
-                            prop="methodName"
                             label="方法"
                             width="180">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.methodName" placeholder="请选择">
+                                <el-select 
+                                    v-model="scope.row.methodName" 
+                                    placeholder="请选择"
+                                    @change="changeMethod(scope.row)">
                                     <el-option
                                     v-for="item in methods[scope.row.elementWidget]"
                                     :key="item.id"
@@ -149,8 +157,8 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
-                                        <el-col :span="5">
+                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                        <el-col :span="5" class='fixedHeight'>
                                             <span>
                                                  {{ item.name }} 
                                             </span>
@@ -161,13 +169,15 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-button 
-                                        size="mini" 
-                                        type="primary"
-                                        icon="el-icon-edit" 
-                                        @click='scope.row.arguShow = false'>
-                                        编辑
-                                    </el-button>
+                                    <el-row >
+                                        <el-button 
+                                            size="mini" 
+                                            type="primary"
+                                            icon="el-icon-edit" 
+                                            @click='scope.row.arguShow = false'>
+                                            编辑
+                                        </el-button>
+                                    </el-row>
                                 </div>
                                 <div v-else>
                                     <el-row v-for='item in scope.row.arguments' :key='item.index'>
@@ -182,31 +192,33 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
-                                        <el-col :span="5">
+                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                        <el-col :span="5" class='fixedHeight'>
                                             <span>
                                                  {{ item.name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
                                             <el-input 
-                                                @dragenter.stop=""
+                                                size="mini"
+                                                @dragenter.stop.prevent="return false"
+                                                @dragover.stop.prevent="return false"
                                                 v-model="item.newvalue" ></el-input>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row >
                                         <el-col :span="5">
                                             <el-button  
-                                                @click='item.newvalue = item.value;scope.row.arguShow = true'
-                                                size="small">
+                                                @click='scope.row.arguments.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
+                                                size="mini">
                                                  取消
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5">
                                             <el-button 
                                                 type="primary" 
-                                                size="small"  
-                                                @click='item.value = item.newvalue;scope.row.arguShow = true'>
+                                                size="mini"  
+                                                @click=' scope.row.arguments.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
                                                 确认
                                             </el-button>
                                         </el-col>
@@ -243,11 +255,13 @@
             <el-button type="primary" @click="deleteTemplate">确 定</el-button>
         </div>
     </el-dialog>
-    <uiEleFunTree 
-        @closeDialog = "addItemShow = false"
-        :show-flag='addItemShow'
-        :multiselection='true'>
-    </uiEleFunTree>
+    <el-dialog title="添加多项" :visible.sync="addItemShow" width	="30%">
+        <uiEleFunTree 
+            @closeDialog = "addItemShow = false"
+            @throwTreeInfo = "addTreeInfo"
+            :multiselection='true'>
+        </uiEleFunTree>
+    </el-dialog>
   </div>
 </template>
 
@@ -276,6 +290,7 @@ export default {
     },
     data() {
         return {
+            sortidNum:0,//每个脚本数据中 脚本的唯一标志
             methods:{},//用于存放查询出的控件方法 { 控件名1：{信息}[，控件名2：{信息}]}
             addTemplateForm:{
                 name:'',
@@ -296,11 +311,164 @@ export default {
     watch: {},
     computed: {},
     methods: {
+        log(info){
+            console.log(info)
+        },
+        changeMethod(row){
+            console.log('row',row)
+            for(let i = 0 ;i < this.templateInfo.length ; i++){
+                if(this.templateInfo[i].sortid === row.sortid){
+                    let arguString = this.methods[row.elementWidget].filter(v=>(
+                            v.name === row.methodName
+                    ))[0].arguments
+                    let arguObj = JSON.parse(arguString)
+                    this.templateInfo[i].arguments = []
+                    for(let j = 0 ; j < arguObj.length ; j++){
+                        this.templateInfo[i].arguments.push({
+                            index:0,
+                            name:arguObj[j].name ,
+                            newvalue:"",
+                            value:""
+                        })
+                    }
+                }
+            }
+        },
+        // 接受添加多项的
+        async addTreeInfo(treeInfo){
+            console.log('treeInfo',treeInfo)
+
+            for(let i = 0;i<treeInfo.length;i++){
+                const a = await this.getMethods(treeInfo[i].elementWidget)
+                console.log("this.methods[treeInfo[i].elementWidget]",this.methods[treeInfo[i].elementWidget])
+                console.log("this.methods[treeInfo[i].elementWidget]",a)
+                let arguString = this.methods[treeInfo[i].elementWidget][0].arguments
+                let arguObj = JSON.parse(arguString)
+                let argu = []
+                for(let j = 0 ; j < arguObj.length ; j++){
+                    argu.push({
+                        index:0,
+                        name:arguObj[j].name ,
+                        newvalue:"",
+                        value:""
+                    })
+                }
+                console.log('list[i].arguments',treeInfo[i].arguments)
+                this.templateInfo.push({
+                    sortid:this.sortidNum++,
+                    name: 'UI:'+treeInfo[i].uiname+" 元素:"+treeInfo[i].elementName,
+                    uiname: treeInfo[i].uiname,
+                    elementName: treeInfo[i].elementName,
+                    elementWidget: treeInfo[i].elementWidget,
+                    methodName: this.methods[treeInfo[i].elementWidget][0].name,
+                    arguments: argu,
+                    arguShow: true,// 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
+                })
+            }
+        },
+        // 删除脚本
+        deleteTemplateInfo(){
+            this.templateInfo = this.templateInfo.filter(templateInfo=>(
+                !this.multipleSelection.some(selected=>(templateInfo.sortid === selected.sortid))
+            ))
+        },
+        //保存脚本
+        saveInfo(){
+            Request({
+                url: '/scriptTemplate/saveScriptTemplate',
+                method: 'post',
+                params: {
+                    scriptId:this.templateRadio,
+                    content: this.generateScriptString()
+                }
+            }).then((res) => {
+                this.$message(res.respMsg)
+            },(err) => {
+                this.$message(err)
+            })
+        },
+        //遍历数据 生成保存脚本内容传参
+        generateScriptString(){
+            let sendDataArray = [];
+            console.log('111')
+            for(let i = 0 ; i < this.templateInfo.length ; i++){
+                console.log('___'+i)
+                let template = this.templateInfo[i]
+                let UI = template.uiname.replace(/^\"+|\"+$/g, "\"")
+                let element = template.elementName.replace(/^\"+|\"+$/g, "\"")
+                let classType = template.elementWidget
+                let method = template.methodName
+                let parguments = template.arguments
+                if (!UI && !method) {
+                    console.log('_UI__'+UI)
+                    console.log('method'+method)
+                    continue
+                }
+                let paramValues = []
+                let type = 1; // record the type  --  1: normal  2: canshuhua biaozhu
+                for (var paramRow of parguments) {
+                    var paramName = paramRow.name;
+                    if (paramName.includes('参数化标注')) {
+                        type = 2;
+                    }
+                    var paramTr = paramRow.value;
+                    if (paramTr !== "") {
+                        paramValues.push(`${paramTr}`);
+                    }  else {
+                        // paramValues.push(`"${paramTr.innerHTML}"`);
+                        paramValues.push(`""`);
+                    }
+                }
+                if (paramValues.length === 0) {
+                    paramValues = ["\"\""]
+                }
+                let parameterString = paramValues.toString();
+                console.log('parameterString'+parameterString)
+                let string = ""
+                if (type === 1) {
+                    if (UI == '' && classType == '' && element == '') {
+                        string = `${method}(${parameterString});\n`;
+                        // string = `${method}();\n`;
+                    } else {
+                        string = `UI("${UI}").${classType}("${element}").${method}(${parameterString});\n`;
+                        // string = `UI("${UI}").${classType}("${element}").${method}();\n`;
+                    }
+                } else {
+                    if (UI == '' && classType == '' && element == '') {
+                        string = `${method}();#${parameterString}\n`;
+                    } else {
+                        string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                        // string = `UI("${UI}").${classType}("${element}").${method}();#${parameterString}\n`;
+                    }
+                }
+                sendDataArray.push(string);
+            }
+            console.log('sendDataArray'+sendDataArray)
+            return sendDataArray.join('');
+        },
+        giveParam(){
+            Request({
+                url: '/scriptTemplate/scriptParameterized',
+                method: 'post',
+                params: {
+                    autId: this.autId,
+                    scriptId: this.templateRadio,
+                    content: this.generateScriptString()
+                }
+            }).then((res) => {
+                this.$message(res.respMsg)
+                this.getTemplateInfo()
+            },(err) => {
+                this.$message(err)
+            })
+        },
         //行拖拽
         rowDrop() {
         const tbody = document.querySelector('.sortable tbody')
         const _this = this
         Sortable.create(tbody, {
+            filter: ".el-input__inner",  // 不需要拖动的元素
+            preventOnFilter: false, //默认true 是否禁用默认绑定的方法
             animation: 180,// 0.18s 动画时间
             delay: 0,// 按住、松开0毫秒后触发效果
             onEnd({ newIndex, oldIndex }) {
@@ -313,6 +481,36 @@ export default {
       handleSelectionChange(val) {
         this.multipleSelection = val;
         console.log('multipleSelection',this.multipleSelection)
+      },
+      // 表格中选中元素的上移
+      eleUp(){
+          let flag = false
+          for(let i = 0 ; i < this.templateInfo.length ; i++){
+              if(this.multipleSelection.some( v => (v.sortid === this.templateInfo[i].sortid)) ){
+                  if(flag){
+                      let tmp = this.templateInfo.splice(i,1)[0]
+                      this.templateInfo.splice(i-1,0,tmp)
+                  }
+              }
+              else{
+                  flag = true
+              }
+          }
+      },
+      eleDown(){
+          let flag = false
+          for(let i = this.templateInfo.length-1 ; i >-1 ; i--){
+              
+              if(this.multipleSelection.some( v =>(v.sortid === this.templateInfo[i].sortid)) ){
+                  if(flag){
+                      let tmp = this.templateInfo.splice(i,1)[0]
+                      this.templateInfo.splice(i+1,0,tmp)
+                  }
+              }
+              else{
+                  flag = true
+              }
+          }
       },
       //各个模态框的展示
       addTemplateShow(){
@@ -389,11 +587,6 @@ export default {
             }
         }).then((res) => {
             this.templateInfo = []
-            if (res.respCode !== '0000') {
-                let message = `返回码:【${res.respCode}】 || 返回信息:${res.respMsg} }`
-                this.$message(message)
-                return
-            }
             let list = res.data
             for(let i = 0;i<list.length;i++){
                 this.getMethods(list[i].elementWidget)
@@ -401,14 +594,12 @@ export default {
                 list[i].arguments[j].index = i
                 list[i].arguments[j].newvalue = list[i].arguments[j].value
                 }
-                // let argunmen
-                // for(let i = 0 ; i < list[i].arguments.length ; i++){
-
-                // }
                 console.log('list[i].arguments',list[i].arguments)
                 this.templateInfo.push({
-                    sortid:i,
+                    sortid:this.sortidNum++,
                     name: 'UI:'+list[i].uiname+" 元素:"+list[i].elementName,
+                    uiname: list[i].uiname,
+                    elementName: list[i].elementName,
                     elementWidget: list[i].elementWidget,
                     methodName: list[i].methodName,
                     arguments: list[i].arguments,
@@ -416,7 +607,7 @@ export default {
                 })
             }
         },(err) => {
-            this.$message(err)
+            this.templateInfo = []
         })
       },
       // 获取控件方法
@@ -425,17 +616,11 @@ export default {
             //如果存在 则返回
             return
         }
-        Request({
+        return Request({
             url: '/aut/selectMethod',
             method: 'post',
             params: {id: this.autId,classname:classname}
         }).then((res) => {
-            if (res.respCode !== '0000') {
-                let message = `返回码:【${res.respCode}】 || 返回信息:${res.respMsg} }`
-                this.$message(message)
-                return
-            }
-            console.log('getMethods',res)
             let list = res.omMethodRespDTOList
             this.$set(this.methods, classname, list)
         },(err) => {
@@ -474,5 +659,8 @@ export default {
 }
 .el-radio__label{
     margin-left: -40px;
+}
+.fixedHeight{
+    height:28px
 }
 </style>

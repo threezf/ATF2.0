@@ -59,7 +59,7 @@
             </div>
             <div class="ele-right">
                 <el-card class="box-card">
-                    <div slot="header" class="clearfix">
+                    <div slot="header" class="clearfix headerHeight" >
                         <span>{{infoCardName}}</span>
                     </div>
                     <div class='content'>
@@ -537,6 +537,7 @@ export default {
             }
         }).then((res) => {
             this.getEleTree()
+            this.editFlag = true
             this.$message( res.respMsg )
         },(err) => {
             console.log(err)
@@ -575,5 +576,9 @@ export default {
 }
 .el-select{
     width:100%
+}
+//统一header高度
+.headerHeight{
+    min-height: 20.8px;
 }
 </style>

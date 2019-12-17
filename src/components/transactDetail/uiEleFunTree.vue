@@ -6,41 +6,49 @@
  * 点击确认触发事件  throwInfo  向父组件传选择元素及方法的lsit
  */
 <template>
-    <el-dialog 
-      :title=title 
-      :visible.sync="sonShowFlag" 
-      width	="50%">
-        <el-row>
-            <el-col :span="5">
-                <span>
-                    Ui与元素
-                </span>
-            </el-col>
-        </el-row>
-        <el-tree 
-            :show-checkbox='multiselection'
-            :data="UITree" 
-            :props="defaultProps" 
-            @node-click="handleNodeClick">
-        </el-tree>
-        <el-row>
-            <el-col :span="5">
-                <span>
-                    公共函数集
-                </span>
-            </el-col>
-        </el-row>
-        <el-tree 
-            :show-checkbox='multiselection'
-            :data="funTree" 
-            :props="defaultProps" 
-            @node-click="handleNodeClick">
-        </el-tree>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">取 消</el-button>
-            <el-button type="primary" @click="throwInfo">确 定</el-button>
+    <div>
+        <div>
+            <el-row>
+                <el-col :span="5">
+                    <span>
+                        Ui与元素
+                    </span>
+                </el-col>
+            </el-row>
+            <el-tree 
+                default-expand-all
+                :show-checkbox='multiselection'
+                :data="UITree" 
+                :props="defaultProps" 
+                check-on-click-node	
+                @check-change="eleCheckChange">
+            </el-tree>
         </div>
-    </el-dialog>
+        <div>
+            <el-row>
+                <el-col :span="5">
+                    <span>
+                        公共函数集
+                    </span>
+                </el-col>
+            </el-row>
+            <el-tree 
+                :show-checkbox='multiselection'
+                :data="funTree"  
+                check-on-click-node
+                :props="defaultProps" 
+                @check-change="funCheckChange">
+            </el-tree>
+        </div>
+        <el-row>
+            <el-col :span="5" :offset='6'>
+                <el-button @click="closeDialog">取 消</el-button>
+            </el-col>
+            <el-col :span="5">
+                <el-button type="primary" @click="throwInfo">确 定</el-button>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>
@@ -59,10 +67,6 @@ export default {
             type: String,
             default: '选择操作项'
         },
-        showFlag:{
-            type: Boolean,
-            default: false
-        },
         multiselection:{
             type: Boolean,
             default: false
@@ -72,6 +76,8 @@ export default {
     return {
         UITree: [],
         funTree: [],
+        eleSelected: [],
+        funSelected: [],
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -80,27 +86,42 @@ export default {
     }
   },
     watch: {
-        sonShowFlag(newName, oldName) { 
-          if(newName == false){
-              console.log('close UI and ele')
-            this.$emit("closeDialog",123)
-          }  
-        },
-        showFlag(newName, oldName){
-            this.sonShowFlag = this.showFlag
-        }
   },
   computed: {
   },
   methods: {
-      handleNodeClick(data) {
+      eleCheckChange(data,status){
+        if('children' in data){
+            return
+        }
+        if(!status){
+            this.eleSelected = this.eleSelected.filter(v=>(
+                v.id !== data.id
+            ))
+            return
+        }
+        this.eleSelected.push({
+            "id": data.id ,
+            "name": data.label ,
+            "uiname": data.uiName ,
+            "elementName": data.label ,
+            "elementWidget": data.classType,
+            "methodName": "",
+            "arguments": data.mainProperties,
+        })
+        console.log('eleCheckChangedata');
         console.log(data);
+        console.log(status);
+      },
+      funCheckChange(data,status){
+
       },
       closeDialog(){
           this.$emit("closeDialog",123)
       },
       throwInfo(){
           this.$emit("closeDialog")
+          this.$emit("throwTreeInfo",this.eleSelected)
       },
       getEleTree(){
           const _this = this
@@ -123,6 +144,7 @@ export default {
                     for(let j = 0;j < res.uis[i].elements.length;j++){
                         let child={
                             id: res.uis[i].elements[j].elementId,
+                            uiName: res.uis[i].uiName,
                             label: res.uis[i].elements[j].elementName,
                             classType: res.uis[i].elements[j].classType,
                             mainProperties:res.uis[i].elements[j]. mainProperties
