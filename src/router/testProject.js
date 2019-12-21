@@ -4,8 +4,9 @@
 import testProjectIndex from '@/views/testProject/index'
 import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
-import testCaseManagement from "../views/testProject/testCaseManagement";
-
+import testCaseManagement from "../views/testProject/testCaseManagement"
+import datatable from "../views/testProject/datatable"
+ 
 export default {
     path: '/testProjectIndext',
     name: 'TestProject',
@@ -41,6 +42,16 @@ export default {
             component: scene,
             meta: {
                 name: '场景管理',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-edit'
+            }
+        },
+        {
+            path: 'datatable',
+            name: 'datatable',
+            component: datatable,
+            meta: {
+                name: '测试资源管理管理',
                 parents: 'TestProjectIndex',
                 icon: 'el-icon-edit'
             }
