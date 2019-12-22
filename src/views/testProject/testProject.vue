@@ -35,27 +35,22 @@
 <!--							width="180"/>-->
 						<el-table-column
 							label="测试项目编号"
-							property="codeLong"
-							width="180"/>
+							property="codeLong"/>
 						<el-table-column
 							label="测试项目名称"
-							property="nameMedium"
-							width="180"/>np
+							property="nameMedium"/>np
 						<el-table-column
 							label="测试项目描述"
-							property='descMedium'
-							width="180"/>
+							property='descMedium'/>
 						<el-table-column
 							label="创建时间"
 							property="createTime"
-							:formatter="transTime"
-							width="180"/>
+							:formatter="transTime"/>
 						<el-table-column
 							label="修改时间"
 							property='modifiedTime'
-							:formatter="transTime"
-							width="180"/>
-						<el-table-column label="操作">
+							:formatter="transTime"/>
+						<el-table-column label="操作" width="200">
 							<template slot-scope="scope">
 								<el-button
 									size="mini"
