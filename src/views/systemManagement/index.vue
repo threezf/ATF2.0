@@ -13,6 +13,7 @@
 <script>
     import SideBar from '@/components/side-bar'
     export default {
+    	name: 'index',
         components: {
             SideBar
         },

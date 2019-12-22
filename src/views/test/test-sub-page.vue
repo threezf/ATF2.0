@@ -1,7 +1,7 @@
 <template>
     <div class="page-inner">
-        hello sub-page-test
-            <router-view />
+        hello sub-page-test1
+		<router-view />
     </div>
 </template>
 
@@ -22,5 +22,5 @@
 </script>
 
 <style lang="less" scoped>
-    
+
 </style>

@@ -34,13 +34,13 @@
 					</div>
 
 					<el-row>
-						<el-col span="3" offset="1">
+						<el-col :span="3" :offset="1">
 							<el-input
 								placeholder="请输入系统编号"
 								style="margin:0px 0px 0px -20px"
 								v-model="selectInfo"></el-input>
 						</el-col>
-						<el-col span="1" offset="1">
+						<el-col :span="1" :offset="1">
 							<el-button
 								size="small"
 								@click="getAllSystem(1)"
