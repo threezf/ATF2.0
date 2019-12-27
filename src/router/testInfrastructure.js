@@ -11,6 +11,9 @@ import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
 import AutomatedComponentMaintenance from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
 import PerformCodeManagement from '@/views/testInfrastructure/subFunction/performCodeManagement';
+import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
+import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
+import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 
 export default {
 	path: '/testInfrastructure',
@@ -89,7 +92,6 @@ export default {
 					},
 				}
 			]
-			//考虑此处添加功能点管理路由
 		},
 		{
 			path: 'automatedComponentManagement',
@@ -109,7 +111,36 @@ export default {
 				name: "Mock API",
 				parent: "TestInfrastructure",
 				icon: "el-icon-setting"
-			}
+			},
+			children: [
+				{
+					path: 'preview',
+					name: 'Preview',
+					component: Preview,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'edit',
+					name: 'Edit',
+					component: Edit,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'run',
+					name: 'Run',
+					component: Run,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				}
+			]
 		}
 	]
 }
