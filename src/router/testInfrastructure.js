@@ -114,7 +114,7 @@ export default {
 			},
 			children: [
 				{
-					path: 'preview',
+					path: 'preview/:id',
 					name: 'Preview',
 					component: Preview,
 					meta: {
@@ -123,7 +123,7 @@ export default {
 					},
 				},
 				{
-					path: 'edit',
+					path: 'edit/:id',
 					name: 'Edit',
 					component: Edit,
 					meta: {
@@ -132,7 +132,7 @@ export default {
 					},
 				},
 				{
-					path: 'run',
+					path: 'run/:id',
 					name: 'Run',
 					component: Run,
 					meta: {

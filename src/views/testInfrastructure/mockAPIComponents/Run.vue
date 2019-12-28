@@ -292,7 +292,12 @@
             
         },
         created() {
-            
+            this.id = this.$route.query.id;
+            console.log('id：',this.id)
+        },
+        mounted() {
+            this.id = this.$route.query.id;
+            console.log('id：',this.id)
         },
         methods: {
             handleTitleChange(requestParamsTitle) {
