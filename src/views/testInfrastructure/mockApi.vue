@@ -244,7 +244,7 @@
             changeRadioButton(option,getId){
                 console.log('调用changeRadioButton',this.id)
                 let _this = this;
-                _this.$message.success('点击'+option)
+                // _this.$message.success('点击'+option)
                 if(_this.option === '预览'){
                     console.log('id改变',getId)
                     _this.previewCard = true
@@ -328,7 +328,8 @@
     }
     /* 每一行内容 */
     .cardTableStyle {
-        margin: auto 10px auto 10px
+        margin: auto 10px auto 10px;
+        cursor: pointer;
     }
     .addSpan {
         margin-left: 44px; 
@@ -363,6 +364,7 @@
     }
     .buttonGroupStyle {
         margin-bottom: 1px;
+        margin-left: 3px;
     }
     .dialogInput {
         width: 240px;

@@ -11,8 +11,9 @@
                 <el-button 
                     type='primary'
                     size='mini'
-                    icon='el-icon-check'
+                    icon='el-icon-upload'
                     plain
+                    @click='submitInfo'
                     >提交
                 </el-button >
             </el-col>
@@ -277,7 +278,7 @@
                 class="formRow">
                 <el-form>
                     <el-col
-                        :span='8'>
+                        :span='10'>
                         <el-form-item
                             label='状态码'
                             label-width='100px'>
@@ -295,10 +296,18 @@
                             <el-input
                                 v-model='delayTime'>
                             </el-input>
-                            <label>ms</label>
                         </el-form-item>
                     </el-col>
-                </el-form>      
+                    <el-col
+                        :span='1'
+                        style="margin-left: 3px">
+                        <el-form-item
+                            label='ms'>
+
+                        </el-form-item>
+                    </el-col>
+                    
+                </el-form>     
             </el-row>
               <!--body-->
             <div
@@ -306,19 +315,38 @@
                 v-if="returnBodyVisible">
                 <el-row 
                     class="radioButtonRow">
-                    <el-radio-group
-                        v-model="messageFormat"
-                        @change="printFormat">
-                        <el-radio
-                            label='JSON'>
-                        </el-radio>
-                        <el-radio
-                            label='XML'>
-                        </el-radio>
-                        <el-radio
-                            label='STRING'>
-                        </el-radio>
-                    </el-radio-group>
+                    <el-form>
+                        <el-col
+                            :span='10'>
+                            <el-radio-group
+                                class="radioGroupStyle"
+                                v-model="returnDataType"
+                                @change="printFormat">
+                                <el-radio
+                                    label='JSON'>
+                                </el-radio>
+                                <el-radio
+                                    label='XML'>
+                                </el-radio>
+                                <el-radio
+                                    label='STRING'>
+                                </el-radio>
+                            </el-radio-group>
+                        </el-col>
+                        <el-col
+                            :span='8'>
+                            <el-form-item
+                                class="Error"
+                                label='报错信息：'
+                                label-width='100px'>
+                                <el-input
+                                    class="expectInput"
+                                    v-model='reasonPhrase'>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                        
+                    </el-form>
                 </el-row>
                 <textarea
                     class="textareaStyle"
@@ -400,19 +428,20 @@
                 ],//接口解析方法
                 selectedParseMethod: 'POST',//默认选中的接口解析方法
                 path:'',//接口路径
-                requestParamsTitle: '',
+                requestParamsTitle: 'body',
                 bodyVisible: true,
                 queryVisible: false,
                 headersVisible: false,
                 cookiesVisible: false,
                 highVisible: false,
-                returnDataTitle:'',//底部返回数据设置的标题
+                returnDataTitle:'body',//底部返回数据设置的标题
                 returnBodyVisible: true,
                 returnQueryVisible: false,
                 returnHeadersVisible: false,
                 messageFormat: 'JSON',//报文体格式
+                returnDataType: 'JSON',//返回数据报文形式
                 messageInfo: '',//报文体内容
-                hostContent: 'host',//host
+                hostContent: 'localhost',//host
                 protocols:[
                     'HTTP',
                     'HTTPS'
@@ -431,6 +460,17 @@
                 selectedKeepalive: '',//选择的keepalive
                 type: '',//返回的动作类型
                 statusCode: '200',//状态码
+                delayTime: '0',//延误时间
+                creator: '',//创建者
+                httpRequest:'',//解析得到的httpRequest
+                httpResponse:'',//解析得到的httpResponse
+                httpForwardEntity: {
+                    id: '',
+                    host: '',
+                    port: '',
+                    scheme: ''
+                },//请求时所需要的httpForwardEntity
+                reasonPhrase: '',//错误原因
             }
         },
         computed: {
@@ -463,10 +503,55 @@
                     _this.selectedParseMethod = res.httpRequest.method;
                     _this.messageInfo = res.httpRequest.body;
                     _this.type = res.type;
-                    console.log('获取的type类型', _this.type)
+                    _this.creator = res.creator;
+                    _this.httpRequest = res.httpRequest;
+                    _this.httpResponse = res.httpResponse;
+                    _this.reasonPhrase = res.httpResponse.reasonPhrase;
+                    _this.statusCode = res.httpResponse.statusCode;
+                    _this.delayTime = res.httpResponse.delayTime;
+                    _this.messageFormat = res.httpRequest.type;
+                    _this.returnDataType = res.httpResponse.type;
+                    console.log('获取的type类型', _this.httpRequest)
                 }).catch(err=>{
                     console.log('getExpectationById失败',err)
                 });
+            },
+            submitInfo(){
+                let result = 'expectationName = ' + this.expectationName
+                           + '\nselectedParseMethod = ' + this.selectedParseMethod
+                           + '\npath = ' + this.path
+                           + '\nid = ' + this.id
+                           + '\ncreator = ' + this.creator
+                           + '\nhttpRequest = ' + this.httpRequest
+                           + '\nhttpResponse = ' + this.httpResponse;
+                this.httpRequest.path = this.path;
+                this.httpRequest.method = this.selectedParseMethod;
+                this.httpRequest.type = this.messageFormat;
+                this.httpRequest.body = this.messageInfo;
+
+                this.httpForwardEntity.host = this.hostContent;
+                this.httpForwardEntity.port = this.portContent;
+                this.httpForwardEntity.scheme = this.selectedProtocol;
+                console.log('需要提交的信息(除httpRequest)',result)
+                console.log('需要提交的httpRequest:', this.httpRequest)
+                console.log('httpForwardEntity:' ,this.httpForwardEntity)
+                // Request({
+                //     url: '/mockServer/updateExpectation',
+                //     method: 'POST',
+                //     params: {
+                //         creator: this.creator,
+                //         expectationName: this.expectationName,
+                //         httpForwardEntity: this.httpForwardEntity,
+                //         httpRequest: this.httpRequest,
+                //         httpResponse: this.httpResponse,
+                //         id: this.id,
+                //         type: this.type
+                //     }
+                // }).then(res => {
+                //     console.log('提交成功',res)
+                // }).catch(err => {
+                //     console.log('提交出现错误',err)
+                // });
             },
             handleTitleChange(requestParamsTitle) {
                 let _this = this;
@@ -522,6 +607,7 @@
             },
             printFormat() {
                 console.log('报文体格式',this.messageFormat);
+                console.log('返回数据格式',this.returnDataType);
             }
         },
     }
@@ -534,7 +620,7 @@
         width: 100px;
         height: 34px;
         display: inline-block;
-        background: #8175c7;
+        background: #409eff;
         padding-top:5px; 
         font-size: 18px;
         font-weight: bolder;
@@ -576,6 +662,9 @@
     .radioButtonRowHigh{
         margin: 20px auto 0px 20px
     }
+    .Error{
+         margin-bottom: -15px
+    }
     .formRow {
         margin: 10px auto
     }
@@ -592,4 +681,11 @@
 		font-size: 17px;
         font-family: 'Times New Roman'
 	}
+    .msLabel {
+        height: 40px;
+        padding-top: 10px
+    }
+    .radioGroupStyle {
+        margin-top: 13px
+    }
 </style>

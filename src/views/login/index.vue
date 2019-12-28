@@ -73,6 +73,7 @@
 				}
 			};
         	let checkPassword = (rule,value,callback) =>{
+				let qs = require('qs');
         		if (String(value) === ''){
         			return callback(new Error('请输入密码'));
 				}else if (this.uid === '1'){
@@ -81,7 +82,7 @@
         			Request({
 						url: '/userController/login',
 						method: 'post',
-						params: this.loginParams
+						params: qs.stringify(this.loginParams)
 					}).then(res =>{
 						console.log('登录成功',res);
 					}).catch(e=>{
