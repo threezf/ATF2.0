@@ -100,22 +100,43 @@
             v-if="queryVisible">
             <el-row 
                 class="radioButtonRowHigh">
-                <el-form>
-                    <el-form-item
-                        label='请求参数'
-                        label-width='100px'>
-                        <el-input
-                            style="width: 200px"
-                            placeholder='参数名称'>
+                <el-col
+                    :span='15'>
+                    <el-form>
+                        <el-form-item
+                            label='请求参数'
+                            label-width='100px'>
+                            <el-input
+                                style="width: 200px"
+                                placeholder='参数名称'>
 
-                        </el-input>
-                        <el-input
-                            style="width: 400px;margin-left: 10px"
-                            placeholder='参数值'>
+                            </el-input>
+                            <el-input
+                                style="width: 400px;margin-left: 10px"
+                                placeholder='参数值'>
 
-                        </el-input>
-                    </el-form-item>
-                </el-form>
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col
+                    :span='2'
+                    style='margin-left:10px;margin-top:4px'>
+                    <el-button
+                        type='primary'
+                        size='mini'
+                        icon='el-icon-plus'
+                        circle>
+
+                    </el-button>
+                    <el-button
+                        type='danger'
+                        size='mini'
+                        icon='el-icon-delete'
+                        circle>
+
+                    </el-button>
+                </el-col>
             </el-row>
            
         </div>
@@ -126,20 +147,43 @@
             <el-row 
                 class="radioButtonRowHigh">
                 <el-form>
-                    <el-form-item
-                        label='请求头部'
-                        label-width='100px'>
-                        <el-input
-                            style="width: 200px"
-                            placeholder='头部名称'>
+                    <el-col
+                        :span='15'>
+                        <el-form>
+                            <el-form-item
+                                label='请求头部'
+                                label-width='100px'>
+                                <el-input
+                                    style="width: 200px"
+                                    placeholder='参数名称'>
 
-                        </el-input>
-                        <el-input
-                            style="width: 400px;margin-left: 10px"
-                            placeholder='参数值'>
+                                </el-input>
+                                <el-input
+                                    style="width: 400px;margin-left: 10px"
+                                    placeholder='参数值'>
 
-                        </el-input>
-                    </el-form-item>
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                    <el-col
+                        :span='2'
+                        style='margin-left:10px;margin-top:4px'>
+                        <el-button
+                            type='primary'
+                            size='mini'
+                            icon='el-icon-plus'
+                            circle>
+
+                        </el-button>
+                        <el-button
+                            type='danger'
+                            size='mini'
+                            icon='el-icon-delete'
+                            circle>
+
+                        </el-button>
+                    </el-col>
                 </el-form>
             </el-row>
         </div>
@@ -150,19 +194,43 @@
             <el-row 
                 class="radioButtonRowHigh">
                 <el-form>
-                    <el-form-item
-                        label='cookie'
-                        label-width='100px'>
-                        <el-input
-                            style="width: 200px"
-                            placeholder='cookie名称'>
-                        </el-input>
-                        <el-input
-                            style="width: 400px;margin-left: 10px"
-                            placeholder='参数值'>
+                    <el-col
+                        :span='15'>
+                        <el-form>
+                            <el-form-item
+                                label='cookies'
+                                label-width='100px'>
+                                <el-input
+                                    style="width: 200px"
+                                    placeholder='参数名称'>
 
-                        </el-input>
-                    </el-form-item>
+                                </el-input>
+                                <el-input
+                                    style="width: 400px;margin-left: 10px"
+                                    placeholder='参数值'>
+
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                    <el-col
+                        :span='2'
+                        style='margin-left:10px;margin-top:4px'>
+                        <el-button
+                            type='primary'
+                            size='mini'
+                            icon='el-icon-plus'
+                            circle>
+
+                        </el-button>
+                        <el-button
+                            type='danger'
+                            size='mini'
+                            icon='el-icon-delete'
+                            circle>
+
+                        </el-button>
+                    </el-col>
                 </el-form>
             </el-row>
         </div>
@@ -350,7 +418,7 @@
                 </el-row>
                 <textarea
                     class="textareaStyle"
-                    v-model="messageInfo">
+                    v-model="returnDataInfo">
                 </textarea>
             </div>
             <!--query-->
@@ -389,12 +457,10 @@
                             <el-input
                                 style="width: 200px"
                                 placeholder='头部名称'>
-
                             </el-input>
                             <el-input
                                 style="width: 400px;margin-left: 10px"
                                 placeholder='参数值'>
-
                             </el-input>
                         </el-form-item>
                     </el-form>
@@ -441,6 +507,7 @@
                 messageFormat: 'JSON',//报文体格式
                 returnDataType: 'JSON',//返回数据报文形式
                 messageInfo: '',//报文体内容
+                returnDataInfo: '',//返回数据报文体内容
                 hostContent: 'localhost',//host
                 protocols:[
                     'HTTP',
@@ -510,7 +577,12 @@
                     _this.statusCode = res.httpResponse.statusCode;
                     _this.delayTime = res.httpResponse.delayTime;
                     _this.messageFormat = res.httpRequest.type;
+                    //返回数据内容
+                    _this.returnDataInfo = res.httpResponse.body;
                     _this.returnDataType = res.httpResponse.type;
+                    //高级部分数据
+                    _this.selectedKeepalive = res.httpRequest.keepAlive;
+                    _this.selectedSecure = res.httpRequest.secure;
                     console.log('获取的type类型', _this.httpRequest)
                 }).catch(err=>{
                     console.log('getExpectationById失败',err)
@@ -555,7 +627,7 @@
             },
             handleTitleChange(requestParamsTitle) {
                 let _this = this;
-                 _this.$message.success('handle：' + requestParamsTitle)
+                //  _this.$message.success('handle：' + requestParamsTitle)
                 if (requestParamsTitle === 'body') {
                     _this.bodyVisible = true;
                     _this.queryVisible = false;
@@ -590,7 +662,7 @@
             },
             handleReturnDataTitleChange(returnDataTitle){
                 let _this = this;
-                _this.$message.success('handle：' + returnDataTitle)
+                // _this.$message.success('handle：' + returnDataTitle)
                 if (returnDataTitle === 'body') {
                     _this.returnBodyVisible = true;
                     _this.returnQueryVisible = false;
@@ -646,7 +718,7 @@
         width: 230px;
     }
     .path {
-        width: 330px
+        width: 400px
     }
     .basicSettingRow {
         margin-top: 30px;

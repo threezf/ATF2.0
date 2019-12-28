@@ -10,6 +10,7 @@
                         size='small'
                         icon='el-icon-plus'
                         class='btn-top-margin'
+                        circle
                         @click="addNewRule">
                     </el-button>
                 </div>
@@ -31,6 +32,7 @@
                                 type='danger'
                                 size='mini'
                                 icon='el-icon-delete'
+                                circle
                                 @click.stop="deleteExpectation(scope.$index)">
                             </el-button>
                         </template>
