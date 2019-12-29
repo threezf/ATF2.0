@@ -88,7 +88,7 @@ const Request = function (options) {
                     reject(res)
                 }
             }
-        },(err) => {
+        }).catch((err) => {
             reject(err)
         })
     })

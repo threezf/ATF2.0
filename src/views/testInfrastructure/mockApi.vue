@@ -181,7 +181,7 @@
              loadExpectation(){
                 let _this = this;
                 Request({
-                    url: '//mockServer/getAllExpectation',
+                    url: '/mockServer/getAllExpectation',
                     method: 'POST',
                     params:{}
                 }).then(res=>{
@@ -199,7 +199,7 @@
             //获取全部的映射规则列表
             getAllExpectation(){
                 Request({
-                    url: '//mockServer/getAllExpectation',
+                    url: '/mockServer/getAllExpectation',
                     method: 'POST',
                     params:{}
                 }).then(res=>{
@@ -220,7 +220,7 @@
                     console.log('id',_this.expectation[index].id);
                     let qs = require('qs');
                     Request({
-                        url: '//mockServer/deleteExpectation',
+                        url: '/mockServer/deleteExpectation',
                         method: 'POST',
                         params: qs.stringify({
                             'id': _this.expectation[index].id
@@ -285,7 +285,7 @@
             sureButton() {
                 let _this = this;
                 Request({
-                    url: '//mockServer/addBaseInfo',
+                    url: '/mockServer/addBaseInfo',
                     method: 'POST',
                     params: {
                         creator: _this.creatorName,
