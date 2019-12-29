@@ -57,5 +57,5 @@ export default {
 </script>
 
 <style lang="less">
-@import './styles/base.less';
+  @import './styles/base.less';
 </style>

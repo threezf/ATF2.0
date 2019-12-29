@@ -21,7 +21,8 @@
 			</el-main>
 			<el-footer>
 				<p class='footParagraph'>Copyright © 1998－2019 BUPT All Rights Reserved</p>
-				<p class='footParagraph'>教育部信息网络工程研究中心 版权所有</p></el-footer>
+				<p class='footParagraph'>教育部信息网络工程研究中心 版权所有</p>
+			</el-footer>
 		</el-container>
 	</div>
 </template>

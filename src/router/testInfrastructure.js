@@ -11,6 +11,9 @@ import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
 import AutomatedComponentMaintenance from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
 import PerformCodeManagement from '@/views/testInfrastructure/subFunction/performCodeManagement';
+import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
+import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
+import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 
 import TransactDetail from '@/views/testInfrastructure/transactDetail';
 
@@ -91,7 +94,6 @@ export default {
 					},
 				}
 			]
-			//考虑此处添加功能点管理路由
 		},
 		{
 			path: 'automatedComponentManagement',
@@ -104,16 +106,6 @@ export default {
 			}
 		},
 		{
-			path: 'mockApi',
-			name: "MockApi",
-			component: MockApi,
-			meta: {
-				name: "Mock API",
-				parent: "TestInfrastructure",
-				icon: "el-icon-setting"
-			}
-		},
-		{
 			path: 'transactDetail',
 			name: 'TransactDetail',
 			component: TransactDetail,
@@ -122,6 +114,45 @@ export default {
 				parents: 'TestedSystemManagement',
 				icon: 'el-icon-document-copy'
 			}
+		},
+		{
+			path: 'mockApi',
+			name: "MockApi",
+			component: MockApi,
+			meta: {
+				name: "Mock API",
+				parent: "TestInfrastructure",
+				icon: "el-icon-setting"
+			},
+			children: [
+				{
+					path: 'preview/:id',
+					name: 'Preview',
+					component: Preview,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'edit/:id',
+					name: 'Edit',
+					component: Edit,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'run/:id',
+					name: 'Run',
+					component: Run,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				}
+			]
 		}
 	]
 }

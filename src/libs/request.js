@@ -69,14 +69,26 @@ const Request = function (options) {
             axiosParams.data = options.params
         }
         axios(axiosParams).then((res) => {
-            res = res.data
-            resolve(res)
-        },(err)=>{
-            _Vue.$message({
-                showClose: true,
-                message: err,
-                type: 'error'
-            })
+        	console.log('request',res)
+            res = res.data;
+            //修改部分request内容，用于Mock API获取
+            console.log('res',res instanceof Array)
+            if(res instanceof Array){
+                ElementUI.Message.info('获取成功');
+                resolve(res)
+            }else{
+                if(res.msg === ""){
+                    ElementUI.Message.info(res.obj);
+                    resolve(res)
+                }else if (res.respCode.toString() === '0000') {
+                    ElementUI.Message.info(res.respMsg)
+                    resolve(res)
+                }
+                else {
+                    reject(res)
+                }
+            }
+        },(err) => {
             reject(err)
         })
     })
