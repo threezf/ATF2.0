@@ -34,12 +34,15 @@ axios.defaults.paramsSerializer = (params) => {
 axios.interceptors.response.use(function (response) {
     console.log('response1111111111111',response)
     if (! +response.status === 200) {
+        console.log('11111111111')
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
     if (response.data.respCode === '0000') {
+        console.log('222222222222')
         return response
     }
+    console.log('3333333333333')
     let message =  `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}` 
     return Promise.reject(message)
 }, function (error) {
