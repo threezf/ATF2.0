@@ -17,23 +17,37 @@
  */
 import ElementUI from "element-ui"
 import axios from 'axios'
+import Vue from 'vue'
 import ErrorCode from '../const/errorCode'
+
+const _Vue = new Vue({
+    el: "#app",
+  })
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.paramsSerializer = (params) => {
 	return Qs.stringify(params, {arrayFormat: 'brackets'});
 }
-// axios.interceptors.response.use(function (response) {
-//     if (response.data && response.data.errcode !== 0) {
-//         let message = `【${response.data.errcode}】${ErrorCode[response.data.errcode] || response.data.errmsg}`
-//         ElementUI.Message.warning(message)
-//         return Promise.reject(message)
-//     }
-//     return response
-// }, function (error) {
-//     ElementUI.Message.error('请求失败，请重试')
-//     return Promise.reject(error)
-// })
+// interceptors 执行时间：在axios().then(f,f)  之前
+// api文档 : You can intercept requests or responses before they are handled by then or catch.
+// 如果判断条件不通过就直接return Promise.reject(message) 不执行后边的内容
+axios.interceptors.response.use(function (response) {
+    console.log('response1111111111111',response)
+    if (! +response.status === 200) {
+        console.log('11111111111')
+        let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
+        return Promise.reject(message)
+    }
+    if (response.data.respCode === '0000') {
+        console.log('222222222222')
+        return response
+    }
+    console.log('3333333333333')
+    let message =  `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}` 
+    return Promise.reject(message)
+}, function (error) {
+    return Promise.reject(error)
+})
 
 //扩展Promise的finally方法
 Promise.prototype.finally = function (callback) {
@@ -48,19 +62,9 @@ Promise.prototype.finally = function (callback) {
 
 const Request = function (options) {
     return new Promise((resolve, reject) => {
-        let headerUrl = 'http://10.101.167.184:8080/atfcloud2.0a'
-        let axiosParams;
-        console.log('url:',options.url)
-        if(options.url.substring(0,4) === 'http'){
-            axiosParams = {
-                url: options.url,
-                method: options.method,
-            }
-        }else{
-            axiosParams = {
-                url: headerUrl + options.url,
-                method: options.method,
-            }
+        let axiosParams = {
+            url:  options.url,
+            method: options.method,
         }
         
         if (options.method == 'get') {

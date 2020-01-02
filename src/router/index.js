@@ -10,8 +10,12 @@ import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
 
-
 Vue.use(Router)
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 export default new Router({
     routes: [

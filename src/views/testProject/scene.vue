@@ -2,23 +2,12 @@
     <div class="page-inner">
         <el-container>
             <el-header>
-                <el-button
+                <el-button  
+                    size="small"
                     @click='addSceneButtom'
                     type="primary"
                     icon="el-icon-plus">
                     添加
-                </el-button>
-                <el-button
-                    @click='deleteScenceButtom'
-                    type="primary"
-                    icon="el-icon-delete">
-                    删除
-                </el-button>
-                <el-button
-                    @click='midifyScenceButtom'
-                    type="primary"
-                    icon="el-icon-edit">
-                    修改
                 </el-button>
             </el-header>
             <el-main>
@@ -28,6 +17,7 @@
                     </el-col>
                     <el-col :span="4"  :offset='1'>
                         <el-button
+                            size="small"
                             @click='selectScene(1)'
                             type="primary">
                             搜索
@@ -64,6 +54,10 @@
                             <el-button
                             size="mini"
                             type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button
+                            size="mini"
+                            type="danger"
                             @click="handleEdit(scope.$index, scope.row)">修改</el-button>
                         </template>
                     </el-table-column>
@@ -94,7 +88,7 @@
                             <el-input   v-model="form.senceDesc"></el-input>
                         </el-form-item>
                         <el-form-item >
-                            <el-button    type="primary" @click="submitForm('form')">{{buttonName}}</el-button>
+                            <el-button    type="primary" @click="submitForm()">{{buttonName}}</el-button>
                             <el-button   @click="resetForm('form')">重置</el-button>
                         </el-form-item>
                     </el-form>
@@ -117,32 +111,36 @@
                     senceName: "",
                     senceDesc: ""
                 },
-                selectInfo:'', // 搜索输入
+                selectInfo: '', // 搜索输入
                 tableData: [],
                 totalCount: 0,
-                currentPage:1,
-                pageSize:5,
-                dialogVisible:false,
-                modelFlag:0,
-                selectedId:-1
+                currentPage: 1,
+                pageSize: 5,
+                dialogVisible: false,
+                modelFlag: 0,
+                //场景ID
+                selectedId: -1,
+                // 用例库ID
+                caseLibId: "1269",
+                currentUserId: "3",
             }
         },
         computed:{
-            // 发送的 查询用户的接口参数，因为受搜索条件影响，所以使用computed属性
+            // 发送的 查询场景的接口参数，因为受搜索条件影响，所以使用computed属性
             params() {
                 let obj = {
                 currentPage: this.currentPage,
                 pageSize: this.pageSize,
                 orderColumns: "modified_time",
                 orderType: "DESC",
-                caseLibId: "1269"
+                caseLibId: this.caseLibId
                 }
                 return obj
             },
             //根据modelFlag 展示弹窗的名字
             modelName(){
                 var obj ={
-                    0: '用户',
+                    0: '场景',
                     1: '添加场景',
                     2: '修改场景信息'
                 }
@@ -174,21 +172,19 @@
                 return true
             },
             // 提交表单进行验证
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                if (valid) {
+            submitForm() {
+                if (this.form.senceName.trim() !=='' ) {
                     // 如果是修改则调用 updateScene 方法 否则调用 addScene
-                    if(this.modelFlag === 3){
+                    if(this.modelFlag === 2){
                         this.updateScene()
                     }
                     else{
                         this.addScene()
                     }
                 } else {
-                    this.$message('信息格式有误，请检查')
+                    this.$message('场景名称不能为空')
                     return false;
                 }
-                });
             },
             // 清空form表单
             resetForm(formName) {
@@ -210,7 +206,6 @@
             },
             // 掉起form表单 并将modelFlag标志置为 3
             handleEdit(index, row) {
-
                 this.form = {
                     senceName : row.nameMedium,
                     senceDesc : row.descShort
@@ -218,6 +213,21 @@
                 this.dialogVisible = true
                 this.modelFlag = 2
                 this.selectedId = row.id
+            },
+            handleDelete(index,row){
+                this.selectedId = row.id
+                this.$confirm('此操作将永久删除该场景, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteScene()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
             },
             //角色一栏处理函数
             roleSwitch(row, column) {
@@ -235,7 +245,7 @@
                 this.currentPage = val
                 this.getScenes()
             },
-            // 查询用户函数 type时 为点击查询按钮调用 此时将当前页置为一
+            // 查询场景函数 type时 为点击查询按钮调用 此时将当前页置为一
             getScenes(type){
                 if(type === 1){
                     this.currentPage = 1
@@ -259,12 +269,17 @@
                 this.dialogVisible=true
                 this.disabled = false
             },
-            // 添加用户
+            // 添加场景
             addScene(){
                 Request({
-                    url: '/userController/insert',
+                    url: '/sceneController/insertScene',
                     method: 'post',
-                    params: this.form
+                    params: {
+                        nameMedium:this.form.senceName ,
+                        descShort: this.form.senceDesc,
+                        caseLibId: this.caseLibId,
+                        creatorId: this.currentUserId
+                    }
                 }).then((res) => {
                     this.$message(res.respMsg)
                     this.dialogVisible = false
@@ -274,19 +289,42 @@
                     this.dialogVisible = false;
                     console.log('error occur')
                     console.log(err)
+                    this.$message(err.respMsg)
+                    this.dialogVisible = false
                 }).catch((err) => {
                     console.log(err)
                 })
             },
-            // 修改用户
+            // 修改场景
             updateScene(){
-                delete this.form.checkPassword
                 Request({
-                    url: '/userController/updateByPrimaryKey',
+                    url: '/sceneController/updateScene',
                     method: 'post',
                     params: {
+                        modifierId: this.currentUserId,
                         id: this.selectedId,
                         ...this.form
+                        }
+                }).then((res) => {
+                    this.$message(res.respMsg)
+                    this.dialogVisible = false
+                    this.getScenes()
+                },(err) => {
+                    this.$message(res.respMsg)
+                    this.dialogVisible = false
+                    console.log(err)
+                }).catch((err) => {
+                    console.log(err)
+                })
+                this.form.checkPassword=''
+            },
+            // 删除场景
+            deleteScene(){
+                Request({
+                    url: '/sceneController/deleteScene',
+                    method: 'post',
+                    params: {
+                        id: this.selectedId
                         }
                 }).then((res) => {
                     this.$message(res.respMsg)

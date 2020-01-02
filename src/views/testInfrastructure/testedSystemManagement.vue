@@ -6,59 +6,70 @@
 					type="primary"
 					icon='el-icon-plus'
 					size="small"
-					@click="addButton"
-				>添加</el-button>
+					@click="addButton">
+					添加
+				</el-button>
 				<el-button
 					type='primary'
 					icon='el-icon-edit'
 					size="small"
-					@click="updateButton"
-				>修改</el-button>
-				<span
+					@click="updateButton">
+					修改
+				</el-button>
+				<el-panel
 					id='advancedFunctions'
 					type='primary'
 					class="highFunction"
 					v-if="!highIsActive"
-					@click='showHighFunction'
-				> {{'>> 展示高级功能'}}</span>
+					@click='showHighFunction'>
+					>> 展示高级功能
+				</el-panel>
 				<span class='high' v-if="highIsActive">
 					<el-button
 						type='primary'
 						icon='el-icon-s-tools'
 						size="small"
-						@click='manageFunction'
-					>管理功能点</el-button>
+						plain>
+						管理功能点
+					</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-edit-outline'
 						size="small"
-						@click='configureData'
-					>配置系统数据</el-button>
+						plain>
+						配置系统数据
+					</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-s-tools'
 						size="small"
-						@click='automatedComponentMaintenance'
-					>自动化构件维护</el-button>
+						plain>
+						自动化构件维护
+					</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-s-management'
 						size="small"
-						@click='codeManagement'
-					>执行代码管理</el-button>
+						plain>
+						执行代码管理
+					</el-button>
 					<el-button
 						type='primary'
 						icon='el-icon-setting'
 						size="small"
-					>移动端设备配置</el-button>
+						plain>
+						移动端设备配置
+					</el-button>
 				</span>
 				<span
 					id="el-panelHidden"
 					class="highFunction"
 					type='primary'
 					v-if="highIsActive"
-					@click='showHighFunction'
-				>{{'<< 隐藏高级功能'}}</span>
+					icon='el-icon-d-arrow-left'
+					@click='showHighFunction'>
+					隐藏高级功能
+				</span>
 			</el-row>
 			<el-main class="el-main-base-inner">
 				<el-row>

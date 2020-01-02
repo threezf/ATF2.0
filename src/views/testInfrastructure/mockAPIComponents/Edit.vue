@@ -692,7 +692,7 @@
                 let _this = this;
                 let qs = require('qs');
                 Request({
-                    url: '//mockServer/getExpectationById',
+                    url: '/mockServer/getExpectationById',
                     method: 'POST',
                     params: qs.stringify({
                         id: this.id

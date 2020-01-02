@@ -13,7 +13,7 @@
                     size='mini'
                     icon='el-icon-video-play'
                     plain
-                    @click='submitInfo'
+                    @click='runMock'
                     >运行
                 </el-button >
             </el-col>
@@ -485,7 +485,7 @@
                     console.log('getExpectationById失败',err)
                 });
             },
-            submitInfo(){
+            runMock(){
                 let result = 'expectationName = ' + this.expectationName
                            + '\nselectedParseMethod = ' + this.selectedParseMethod
                            + '\npath = ' + this.path

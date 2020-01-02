@@ -15,6 +15,8 @@ import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
 import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 
+import TransactDetail from '@/views/testInfrastructure/transactDetail';
+
 export default {
 	path: '/testInfrastructure',
 	name: 'TestInfrastructure',
@@ -101,6 +103,16 @@ export default {
 				name: '自动化构件管理',
 				parent: 'TestInfrastructure',
 				icon: "el-icon-setting"
+			}
+		},
+		{
+			path: 'transactDetail',
+			name: 'TransactDetail',
+			component: TransactDetail,
+			meta: {
+				name: 'UI管理',
+				parents: 'TestedSystemManagement',
+				icon: 'el-icon-document-copy'
 			}
 		},
 		{
