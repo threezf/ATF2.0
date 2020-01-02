@@ -49,10 +49,20 @@ Promise.prototype.finally = function (callback) {
 const Request = function (options) {
     return new Promise((resolve, reject) => {
         let headerUrl = 'http://10.101.167.184:8080/atfcloud2.0a'
-        let axiosParams = {
-            url: headerUrl + options.url,
-            method: options.method,
+        let axiosParams;
+        console.log('url:',options.url)
+        if(options.url.substring(0,4) === 'http'){
+            axiosParams = {
+                url: options.url,
+                method: options.method,
+            }
+        }else{
+            axiosParams = {
+                url: headerUrl + options.url,
+                method: options.method,
+            }
         }
+        
         if (options.method == 'get') {
             axiosParams.params = options.params
         } else {
@@ -63,20 +73,17 @@ const Request = function (options) {
             res = res.data;
             //修改部分request内容，用于Mock API获取
             console.log('res',res instanceof Array)
-            if(res instanceof Array){
-                ElementUI.Message.info('获取成功');
+            if(res.msg === ""){
+                // ElementUI.Message.info(res.obj);
                 resolve(res)
-            }else{
-                if(res.msg === ""){
-                    ElementUI.Message.info(res.obj);
-                    resolve(res)
-                }else if (res.respCode.toString() === '0000') {
-                    ElementUI.Message.info(res.respMsg)
-                    resolve(res)
-                }
-                else {
-                    reject(res)
-                }
+            }else if(res.msg === '验证码正确'){
+                resolve(res)
+            }else if (res.respCode.toString() === '0000') {
+                // ElementUI.Message.info(res.respMsg)
+                resolve(res)
+            }
+            else {
+                reject(res)
             }
         }).catch((err) => {
             reject(err)

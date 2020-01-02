@@ -186,7 +186,7 @@
                     params:{}
                 }).then(res=>{
                     console.log('获取映射规则列表成功',res)
-                    _this.expectation = res
+                    _this.expectation = res.expectationEntityList
                     _this.id = _this.expectation[0].id
                     _this.$router.push({
                         path: _this.previewPath + _this.id,
@@ -204,7 +204,7 @@
                     params:{}
                 }).then(res=>{
                     console.log('获取映射规则列表成功',res)
-                    this.expectation = res
+                    this.expectation = res.expectationEntityList
                 }).catch(err=>{
                     console.log('获取映射规则列表失败',err)
                 });
@@ -317,7 +317,7 @@
 
 <style scoped>
     .box-card {
-        width: 16.5%;
+        width: 16.3%;
         margin-top: 30px;
         margin-left: 30px;
         height: fit-content;

@@ -212,13 +212,15 @@
 		border: 1px solid gray;
 		border-radius: 8px;
         background:#f5f5f5;
-		width: 94%;
+		width: 1000px;
 		height: 337px;
 		margin: 10px auto 10px auto;
 		display: block;
 		padding: 6px 12px;
 		font-size: 17px;
         line-height: 22px;
-        font-family: 'Times New Roman'
+        font-family: 'Times New Roman';
+        resize: none;
+        white-space: pre-wrap; 
 	}
 </style>
