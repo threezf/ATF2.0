@@ -715,6 +715,18 @@
                         _this.headersReturnObj = JSON.parse(_this.headersReturn);
                         _this.cookiesReturn = res.httpResponse.cookies;
                         _this.cookiesReturnObj = JSON.parse(_this.cookiesReturn);
+                        if(res.httpResponse.headers === null
+                            || res.httpResponse.headers === '{}'){
+                            this.returnHeaders[0] = ""
+                            this.returnHeadersKey[0] = ''
+                            this.returnHeadersValue[0] = ''
+                        }
+                        if(res.httpResponse.cookies === null
+                            || res.httpResponse.cookies === '{}'){
+                            this.returnCookies[0] = ""
+                            this.returnCookiesKey[0] = ''
+                            this.returnCookiesValue[0] = ''
+                        }
                         console.log('headersReturn',res.httpResponse.headers);
                         console.log('cookiesReturn',res.httpResponse.cookies);
                     }
@@ -728,6 +740,24 @@
                     _this.headersParametersObj = JSON.parse(_this.headersParameters);
                     _this.cookiesParameters = res.httpRequest.cookies;
                     _this.cookiesParametersObj = JSON.parse(_this.cookiesParameters);
+                    if(res.httpRequest.queryParameters === null
+                        || res.httpRequest.queryParameters === '{}'){
+                        this.paramsQuery[0] = ""
+                        this.paramsQueryKey[0] = ''
+                        this.paramsQueryValue[0] = ''
+                    }
+                    if(res.httpRequest.headers === null
+                        || res.httpRequest.headers === '{}'){
+                        this.paramsHeaders[0] = ""
+                        this.paramsHeadersKey[0] = ''
+                        this.paramsHeadersValue[0] = ''
+                    }
+                    if(res.httpRequest.cookies === null
+                        || res.httpRequest.cookies === '{}'){
+                        this.paramsCookies[0] = ""
+                        this.paramsCookiesKey[0] = ''
+                        this.paramsCookiesValue[0] = ''
+                    }
 
                     //高级部分数据
                     _this.selectedKeepalive = res.httpRequest.keepAlive;
@@ -791,13 +821,6 @@
                 });
             },
             submitInfo(){
-                let result = 'expectationName = ' + this.expectationName
-                           + '\nselectedParseMethod = ' + this.selectedParseMethod
-                           + '\npath = ' + this.path
-                           + '\nid = ' + this.id
-                           + '\ncreator = ' + this.creator
-                           + '\nhttpRequest = ' + this.httpRequest
-                           + '\nhttpResponse = ' + this.httpResponse;
                 //请求参数query
                 let paramsQueryObj = new Object();
                 //请求参数headers
@@ -857,26 +880,7 @@
                 console.log('httpResponse',this.httpResponse)
                 console.log('id',this.id)
                 console.log('type',this.type)
-                // console.log('获取的type类型', this.httpRequest)
-                // console.log('所需的数据query：',this.queryParameters)
-                // console.log('数据类型：',typeof this.queryParameters)
-                // console.log('所需的数据headers：',this.headers)
-                // console.log('所需的数据cookies：',this.cookies)
-                // console.log('需要提交的信息(除httpRequest)',result)
-                // console.log('需要提交的httpRequest:', this.httpRequest)
-                // console.log('httpForwardEntity:' ,this.httpForwardEntity)
-                // console.log('paramsQueryKey',this.paramsQueryKey)
-                // console.log('paramsQueryValue',this.paramsQueryValue)
-                // console.log('paramsHeadersKey',this.paramsHeadersKey)
-                // console.log('paramsHeadersValue',this.paramsHeadersValue)
-                // console.log('paramsCookiesKey',this.paramsCookiesKey)
-                // console.log('paramsCookiesValue',this.paramsCookiesValue)
-                // console.log('returnHeadersKey',this.returnHeadersKey)
-                // console.log('returnHeadersValue',this.returnHeadersValue)
-                // console.log('returnCookiesKey',this.returnCookiesKey)
-                // console.log('returnCookiesValue',this.returnCookiesValue)
-                
-                
+
                 Request({
                     url: '/mockServer/updateExpectation',
                     method: 'POST',
