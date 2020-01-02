@@ -66,6 +66,7 @@ const Request = function (options) {
             url:  options.url,
             method: options.method,
         }
+        
         if (options.method == 'get') {
             axiosParams.params = options.params
         } else {
@@ -74,7 +75,20 @@ const Request = function (options) {
         axios(axiosParams).then((res) => {
         	console.log('request',res)
             res = res.data;
-            resolve(res)
+            //修改部分request内容，用于Mock API获取
+            console.log('res',res instanceof Array)
+            if(res.msg === ""){
+                // ElementUI.Message.info(res.obj);
+                resolve(res)
+            }else if(res.msg === '验证码正确'){
+                resolve(res)
+            }else if (res.respCode.toString() === '0000') {
+                // ElementUI.Message.info(res.respMsg)
+                resolve(res)
+            }
+            else {
+                reject(res)
+            }
         }).catch((err) => {
             reject(err)
         })

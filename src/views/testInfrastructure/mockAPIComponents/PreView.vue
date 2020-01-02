@@ -112,7 +112,8 @@
                 let _this = this;
                 let qs = require('qs');
                 Request({
-                    url: '//mockServer/getExpectationById',
+                    url: '/mockServer/getExpectationById',
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
                     method: 'POST',
                     params: qs.stringify({
                         id: this.id
@@ -212,13 +213,15 @@
 		border: 1px solid gray;
 		border-radius: 8px;
         background:#f5f5f5;
-		width: 94%;
+		width: 1000px;
 		height: 337px;
 		margin: 10px auto 10px auto;
 		display: block;
 		padding: 6px 12px;
 		font-size: 17px;
         line-height: 22px;
-        font-family: 'Times New Roman'
+        font-family: 'Times New Roman';
+        resize: none;
+        white-space: pre-wrap; 
 	}
 </style>
