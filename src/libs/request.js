@@ -74,23 +74,7 @@ const Request = function (options) {
         axios(axiosParams).then((res) => {
         	console.log('request',res)
             res = res.data;
-            //修改部分request内容，用于Mock API获取
-            console.log('res',res instanceof Array)
-            if(res instanceof Array){
-                ElementUI.Message.info('获取成功');
-                resolve(res)
-            }else{
-                if(res.msg === ""){
-                    ElementUI.Message.info(res.obj);
-                    resolve(res)
-                }else if (res.respCode.toString() === '0000') {
-                    ElementUI.Message.info(res.respMsg)
-                    resolve(res)
-                }
-                else {
-                    reject(res)
-                }
-            }
+            resolve(res)
         }).catch((err) => {
             reject(err)
         })
