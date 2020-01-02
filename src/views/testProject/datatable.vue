@@ -81,8 +81,10 @@
                         border
                         highlight-current-row
                         :data="tableData"
+                        :cell-class-name='cellClassName'
                         @row-contextmenu="rightMenu"
                         @cell-dblclick='tdedit'
+                        @cell-click='tdchoose'
                         style="width: 100%">
                         <el-table-column
                             type="index"
@@ -136,7 +138,18 @@
                             :label="item[0] + item[1]"
                             width="180">
                             <template slot-scope="scope">
-                                {{ scope.row['data_'+item[1]] }}
+                                <div v-if='scope.row.index === rowIndex && scope.column.index === columnIndex && dbeditFlag'>
+                                    <el-input
+                                        class='editArea'
+                                        type="textarea"
+                                        @blur='loseblur'
+                                        @click.stop.prevent="return false"
+                                        :autosize="{ minRows: 2, maxRows: 5}"
+                                         v-model="scope.row['data_'+item[1]]">
+                                    </el-input>
+                                </div>
+                                <div v-else>{{ scope.row['data_'+item[1]] }}</div>
+
                             </template>
                         </el-table-column>
                     </el-table>
@@ -228,6 +241,9 @@
         },
         data() {
             return {
+                rowIndex:-1, //选中的行
+                columnIndex:-1, //选中的列
+                dbeditFlag:false, //双击可编辑标志
                 executorId: 3,// 用户Id
                 caseLibId: 1241,// 用例库Id
                 menuVisible:false,// 右击菜单弹窗弹窗
@@ -289,12 +305,31 @@
             this.getFilterTree()
         },
         methods: {
-            //双击编辑数据
+            loseblur(){
+                console.log("this.dbeditFlag = false")
+                this.dbeditFlag = false
+            },
+            // 给row 和 column 添加数据
+            cellClassName({row, column, rowIndex, columnIndex}){
+                row.index = rowIndex
+                column.index = columnIndex
+                if (rowIndex === this.rowIndex && columnIndex === this.columnIndex) {
+                    return 'choosed'
+                }
+            },
             tdedit(row, column, cell, event){
+                console.log("dbclick")
+                this.dbeditFlag = true
+            },
+            //单击选中单元格
+            tdchoose(row, column, cell, event){
                 console.log(row)
                 console.log(column)
                 console.log(cell)
                 console.log(event)
+                this.rowIndex = row.index
+                this.columnIndex = column.index
+                this.dbeditFlag = false
             },
             // 编辑数据弹框
             editData(){
@@ -418,9 +453,9 @@
             },
             // 右键事件
             rightMenu(	row, column, event){
-                console.log( row )
-                console.log( column )
-                console.log( event )
+                this.rowIndex = row.index
+                this.columnIndex = column.index
+                this.dbeditFlag = false
                 this.menuVisible = false; // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
                 this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
                 var menu = document.querySelector('#menu');
@@ -502,5 +537,19 @@
 li:hover {
   background-color: #E0E0E2;
   color: white;
+}
+</style>
+
+
+<style>
+.choosed{
+    background: #aad2fb!important;
+}
+.editArea{
+    position: absolute;
+    top: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 </style>
