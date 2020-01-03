@@ -51,7 +51,8 @@
 					>登录</el-button>
 					<span class='spanAccount'>
 						<a href= '#'>忘记密码 </a>|
-						<a href= '#'>注册</a>
+						<a 
+							@click="toRigester">注册</a>
 					</span>
                 </el-form-item>
             </el-form>
@@ -70,44 +71,26 @@
         	let checkAccount = (rule,value,callback)=>{
         		if (String(value)===''){
         			return callback(new Error('请输入账号'));
+				}else if (value === '1'){
+					this.$message.success('欢迎使用ATF测试');
+					this.$router.push({path:'/index'})
 				}
+				return callback();
 			};
         	let checkPassword = (rule,value,callback) =>{
 				let qs = require('qs');
         		if (String(value) === ''){
         			return callback(new Error('请输入密码'));
-				}else if (this.uid === '1'){
-        			this.$message.success('欢迎使用ATF测试');
-				} else {
-        			Request({
-						url: '/userController/login',
-						method: 'post',
-						params: qs.stringify(this.loginParams)
-					}).then(res =>{
-						console.log('登录成功',res);
-					}).catch(e=>{
-						console.log('错误信息',e);
-					})
-				}
+				} 
+				return callback();
 			};
         	let checkSessionId = (rule,value,callback) =>{
-        		console.log("获取本地验证码",sessionStorage.getItem('sessionId'));
         		if (String(value) === ''){
         			return callback(new Error('请输入验证码'));
 				} else {
-        			Request({
-						url: '/userController/checkauthcode',
-						method: 'POST',
-						params:{
-							authCode: this.ruleForm.sessionIdIn,
-							sessionId: this.storedSessionId
-						}
-					}).then(res=>{
-						console.log('成功',res)
-					}).catch(e=>{
-        				console.log('校验错误',e)
-					})
+        			
 				}
+				return callback();
 			};
             return {
 				ruleForm: {
@@ -130,16 +113,6 @@
             }
         },
 		computed:{
-        	loginParams() {
-        		let obj = {
-					username: this.ruleForm.uid,
-					password: this.ruleForm.password,
-					authCode: this.ruleForm.sessionIdIn,
-					sessionId: this.storedSessionId
-				};
-        		return obj;
-
-			}
 		},
 		created() {
         	let _this = this;
@@ -148,20 +121,49 @@
         methods: {
         	//提交表单，点击登陆
             submitForm(FormName) {
-            	let _this = this;
-              	this.$refs[FormName].validate((valid)=>{
+				let _this = this;
+				if(_this.ruleForm.uid == '1'){
+					this.$router.push({path: '/index'});
+				}else{
+					this.$refs[FormName].validate((valid)=>{
               		console.log('进入验证',valid);
 					if (valid){
-						if (_this.loginInfo.isAccountAndPasswordMatched && _this.loginInfo.isSessionIdMatched){
-							this.$message.success('登录成功');
-						} else {
-							this.$message.error('登录信息错误');
-						}
-						//this.$router.push({path: '/home'});
+						let qs = require('qs');
+						Request({
+							url: '/userController/checkauthcode',
+							method: 'POST',
+							params:qs.stringify({
+								authCode: this.ruleForm.sessionIdIn,
+								sessionId: this.storedSessionId
+							})
+						}).then(res=>{
+							console.log('验证成功',res)
+							Request({
+									url: '/userController/login',
+									method: 'post',
+									params: qs.stringify({
+										username: this.ruleForm.uid,
+										password: this.ruleForm.password,
+										authCode: this.ruleForm.sessionIdIn,
+										sessionId: this.storedSessionId
+									})
+								}).then(res =>{
+									console.log('登录成功',res);
+									this.$router.push({path: '/index'});
+								}).catch(e=>{
+									console.log('错误信息',e);
+									this.$message.error('用户名或密码错误')
+								})
+						
+						}).catch(e=>{
+							console.log('校验错误',e)
+							this.$message.error('验证码错误')
+						})
+        			
 					}else {
 						this.$message.error('请输入信息');
 					}
-			 	 });
+			 	});
                 // Request({
                 //     url: '/cgi-bin/ugcheckauth',
                 //     method: 'get',
@@ -178,6 +180,8 @@
                 //     console.log(err)
                 //     this.submitLoading = false
                 // })
+				}
+              	
             },
             //获取验证码
 			getSessionId(){
@@ -188,16 +192,18 @@
 					params: {}
 				}).then(res => {
 					console.log('获取验证码成功',res.obj.sessionId);
-					sessionStorage.setItem('sessionId',res.obj.sessionId);
-					_this.storedSessionId = sessionStorage.getItem('sessionId');
+					_this.storedSessionId = res.obj.sessionId;
 					_this.url = 'http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=' + Math.random() +
-						'&sessionId=' + sessionStorage.getItem('sessionId');
+						'&sessionId=' + res.obj.sessionId;
 
 				}).catch(e =>{
 					console.log('登录出错',e)
 				})
 			},
-			//验证验证码：
+			//注册
+			toRigester() {
+				this.$router.push('/rigester')
+			}
 
         }
     }
@@ -246,5 +252,6 @@
 	a{
 		text-decoration: none;
 		color: blue;
+		cursor: pointer
 	}
 </style>

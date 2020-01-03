@@ -317,7 +317,7 @@
 
 <style scoped>
     .box-card {
-        width: 16.3%;
+        width: 16.5%;
         margin-top: 30px;
         margin-left: 30px;
         height: fit-content;
@@ -334,19 +334,19 @@
         cursor: pointer;
     }
     .addSpan {
-        margin-left: 44px; 
+        margin-left: 52px; 
         margin-right: -30px
     }
     /* content相关内容 */
     .content {
-        width: 75%;
+        width: 80%;
         height: 100%;
         float: left;
-        margin-left: 70px;
+        margin-left: 50px;
     }
     .mainCardPreview {
         width: 100%;
-        height: 770px;
+        height: 748px;
     }
     .mainCard { 
         width: 100%;
@@ -365,7 +365,8 @@
         margin-bottom: -30px;
     }
     .buttonGroupStyle {
-        margin-bottom: 1px;
+        margin-bottom: -9px;
+        margin-top: 10px;
         margin-left: 3px;
     }
     .dialogInput {

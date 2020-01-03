@@ -38,7 +38,7 @@ axios.interceptors.response.use(function (response) {
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
-    if (response.data.respCode === '0000') {
+    if (response.data.respCode === '0000'||response.statusText==='OK') {
         console.log('222222222222')
         return response
     }
@@ -73,14 +73,12 @@ const Request = function (options) {
             axiosParams.data = options.params
         }
         axios(axiosParams).then((res) => {
-        	console.log('request',res)
+            console.log('request',res.data)
             res = res.data;
+            console.log('type',typeof res)
             //修改部分request内容，用于Mock API获取
-            console.log('res',res instanceof Array)
-            if(res.msg === ""){
+            if(res.msg === ""||res.msg === '验证码正确'||res.success === true){
                 // ElementUI.Message.info(res.obj);
-                resolve(res)
-            }else if(res.msg === '验证码正确'){
                 resolve(res)
             }else if (res.respCode.toString() === '0000') {
                 // ElementUI.Message.info(res.respMsg)
@@ -89,6 +87,8 @@ const Request = function (options) {
             else {
                 reject(res)
             }
+            
+            
         }).catch((err) => {
             reject(err)
         })

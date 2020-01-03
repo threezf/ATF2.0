@@ -10,7 +10,7 @@
             <el-col :span='1' :offset='0'>
                 <el-button 
                     type='primary'
-                    size='mini'
+                    size='small'
                     icon='el-icon-upload'
                     plain
                     @click='submitInfo'
@@ -127,7 +127,7 @@
                         </el-col>
                         <el-col
                             :span='2'
-                            style='margin-left:10px;margin-top:4px'>
+                            style='margin-left:-10px;margin-top:-25px'>
                             <el-button
                                 type='primary'
                                 size='mini'
@@ -161,7 +161,8 @@
                     :key="index">
                     <el-row 
                         class="liRadioButtonRow">
-                        <el-form>
+                        <el-form
+                            class="paramsForm">
                             <el-col
                                 :span='15'>
                                 <el-form>
@@ -185,7 +186,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                                style='margin-left:0px;margin-top:5px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -219,7 +220,8 @@
                     :key="index">
                     <el-row 
                         class="liRadioButtonRow">
-                        <el-form>
+                        <el-form
+                            class="paramsForm">
                             <el-col
                                 :span='15'>
                                 <el-form>
@@ -243,7 +245,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                                style='margin-left:0px;margin-top:5px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -311,9 +313,10 @@
                     转发数据设置
                 </span>
             </el-row>
-            <div class='contentDiv'>
+            <div class='dataSetting'>
                 <el-form>
-                    <el-row>
+                    <el-row
+                    class="rowForward">
                         <el-col :span='11'>
                             <el-form-item 
                                 class='basicSettingRow' 
@@ -411,13 +414,13 @@
             </el-row>
               <!--body-->
             <div
-                class="contentDiv" 
+                class="returnDataDiv" 
                 v-if="returnBodyVisible">
                 <el-row 
-                    class="radioButtonRow">
+                    class="returnDataRadioButtonRow">
                     <el-form>
                         <el-col
-                            :span='10'>
+                            :span='12'>
                             <el-radio-group
                                 class="radioGroupStyle"
                                 v-model="returnDataType"
@@ -455,7 +458,7 @@
             </div>
             <!--headers-->
             <div
-                class="contentDiv" 
+                class="returnDataDiv" 
                 v-if="returnHeadersVisible">
                 <ul
                     class="ulRadioButton">
@@ -487,7 +490,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                                style='margin-left:-10px;margin-top:-25px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -511,7 +514,7 @@
             </div>
             <!--cookies-->
             <div
-                class="contentDiv" 
+                class="returnDataDiv" 
                 v-if="returnCookiesVisible">
                 <ul
                     class="ulRadioButton">
@@ -543,7 +546,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                               style='margin-left:-10px;margin-top:-25px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -631,7 +634,7 @@
                 httpRequest:'',//解析得到的httpRequest
                 httpResponse:'',//解析得到的httpResponse
                 httpForwardEntity: {
-                    id: '',
+                    id: 5,
                     host: '',
                     port: '',
                     scheme: ''
@@ -676,9 +679,6 @@
         computed: {
         },
         created() {
-            // this.id = this.$route.query.id;
-            // console.log('id：',this.id)
-            // this.getExpectationById(this.id)
 
         },
         mounted() {
@@ -898,6 +898,7 @@
                     this.$message.success(res.respMsg);
                 }).catch(err => {
                     console.log('提交出现错误',err)
+                    this.$message.error('提交错误');
                 });
             },
             handleTitleChange(requestParamsTitle) {
@@ -1043,30 +1044,38 @@
         padding: 5px
     }
     .baseInfo, .requestParams, .forwardSetting {
-        width: 100px;
-        height: 34px;
+        width: 110px;
+        height: 38px;
+        margin-top: -10px;
         display: inline-block;
         background: #409eff;
-        padding-top:5px; 
+        padding-top:6px; 
         font-size: 18px;
         font-weight: bolder;
         border-radius: .25em;
         white-space: nowrap;
         color: #fff;
         text-align: center;
-        margin-bottom: 10px
+        margin-bottom: -10px
     }
     .requestParams, .forwardSetting {
         width: 130px;
         margin-top: 20px;
     }
-    .contentDiv {
+    .contentDiv,.returnDataDiv,.dataSetting {
         width: 99%;
         height: fit-content;
-        margin: 10px auto 10px auto;
+        padding: 10px;
+        margin: 10px auto auto auto;
         border: 1px solid lightgrey;
         border-radius: 8px;
         background: #f5f5f5;
+    }
+    .returnDataDiv {
+        margin-top: -15px;
+    }
+    .dataSetting {
+        height: 140px;
     }
     .expectInput {
         width: 230px;
@@ -1075,31 +1084,35 @@
         width: 400px
     }
     .basicSettingRow {
-        margin-top: 30px;
+        margin-top: 15px;
         font-size: 17px;
     }
     .settingTitleRow {
-        margin: 0px auto;
+        margin: -10px auto;
         width: fit-content
     }
     .radioButtonRow{
-        margin: 15px auto 15px 20px
+        margin: 0px auto 10px 20px;
+    }
+    .returnDataRadioButtonRow{
+        margin: -10px auto 10px 20px;
     }
     .radioButtonRowHigh{
-        margin: 20px auto 0px 20px
+        margin: 0px auto -20px 20px
     }
-    .liRadioButtonRow　{
-        margin: 0px auto 0px 20px
+    .liRadioButtonRow{
+        margin: 0px auto -20px 0px;
+        width: 99%
     }
-    .ulRadioButton {
-        margin-top: 20px;
-        margin-left: 20px;
+    .ulRadioButton{
+        margin-top: 10px;
+        margin-left: 10px;
     }
     .Error{
          margin-bottom: -15px
     }
     .formRow {
-        margin: 10px auto
+        margin: 5px auto;
     }
     /* 控制文字域样式 */
     .textareaStyle {
@@ -1120,5 +1133,11 @@
     }
     .radioGroupStyle {
         margin-top: 13px
+    }
+    .paramsForm{
+        width: 99%
+    }
+    .rowForward{
+        margin: -15px auto
     }
 </style>

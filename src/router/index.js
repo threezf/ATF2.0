@@ -34,7 +34,7 @@ export default new Router({
             component: Rigester,
             meta: {
                 name: '注册',
-                hide: false
+                hide: true
             }
         },
         {

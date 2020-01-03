@@ -10,7 +10,7 @@
             <el-col :span='1' :offset='0'>
                 <el-button 
                     type='primary'
-                    size='mini'
+                    size='small'
                     icon='el-icon-video-play'
                     plain
                     @click='runMock'
@@ -80,10 +80,10 @@
                     </el-radio>
                 </el-radio-group>
             </el-row>
-            <textarea
+            <pre
                 class="textareaStyle"
-                v-model="messageInfo">
-            </textarea>
+                >{{messageInfo}}
+            </pre>
         </div>
         <!--query-->
         <div
@@ -118,7 +118,7 @@
                         </el-col>
                         <el-col
                             :span='2'
-                            style='margin-left:10px;margin-top:4px'>
+                            style='margin-left:-10px;margin-top:-25px'>
                             <el-button
                                 type='primary'
                                 size='mini'
@@ -152,7 +152,8 @@
                     :key="index">
                     <el-row 
                         class="liRadioButtonRow">
-                        <el-form>
+                        <el-form
+                            class="paramsForm">
                             <el-col
                                 :span='15'>
                                 <el-form>
@@ -176,7 +177,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                                style='margin-left:0px;margin-top:5px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -210,7 +211,8 @@
                     :key="index">
                     <el-row 
                         class="liRadioButtonRow">
-                        <el-form>
+                        <el-form
+                            class="paramsForm">
                             <el-col
                                 :span='15'>
                                 <el-form>
@@ -234,7 +236,7 @@
                             </el-col>
                             <el-col
                                 :span='2'
-                                style='margin-left:10px;margin-top:4px'>
+                                style='margin-left:0px;margin-top:5px'>
                                 <el-button
                                     type='primary'
                                     size='mini'
@@ -305,14 +307,12 @@
             <div class='contentDiv'>
                 <pre
                     class="beforeRunStyle" 
-                    v-if="runResult === ''">
-                    请运行后查看结果
+                    v-if="runResult === ''">请运行后查看结果
                 </pre>
                 <pre
-                    class="textareaStyle"
+                    class="runResultStyle"
                     disabled
-                    v-else>
-                    {{runResult}}
+                    v-else>{{runResult}}
                 </pre>
             </div>
         </div>
@@ -388,7 +388,11 @@
                 paramsCookiesKey: [],//请求参数的cookies
                 paramsCookiesValue :[],//请求参数的cookies
                 paramsCookies:[],//请求参数的cookies
+                runRequestId: '',//运行时的请求id
+                methodType: '',//getRunRequest获取的methodType
+                pathType: '',//getRequest获取的pathType
                 runResult:'',//运行返回结果
+                expectationId: '',//runRequest获取的expectationId
             }
         },
         computed: {
@@ -404,95 +408,130 @@
         methods: {
             //根据id获取信息
             getExpectationById(id){
-                let _this = this;
                 let qs = require('qs');
                 Request({
-                    url: '//mockServer/getExpectationById',
+                    url: '/mockServer/getExpectationById',
                     method: 'POST',
                     params: qs.stringify({
                         id: this.id
                     })
                 }).then(res=>{
                     console.log('res',res)
-                    _this.expectationName = res.expectationName;
-                    _this.type = res.type;
-                    _this.creator = res.creator;
-                    _this.httpRequest = res.httpRequest;
-                    _this.httpResponse = res.httpResponse;
-                    if(_this.httpResponse !== null){
-                        _this.reasonPhrase = res.httpResponse.reasonPhrase;
-                        _this.statusCode = res.httpResponse.statusCode;
-                        _this.delayTime = res.httpResponse.delayTime;
-                        //返回数据内容
-                        _this.returnDataInfo = res.httpResponse.body;
-                        _this.returnDataType = res.httpResponse.type;
-                        _this.headersReturn = res.httpResponse.headers;
-                        _this.headersReturnObj = JSON.parse(_this.headersReturn);
-                        _this.cookiesReturn = res.httpResponse.cookies;
-                        _this.cookiesReturnObj = JSON.parse(_this.cookiesReturn);
-                        console.log('headersReturn',res.httpResponse.headers);
-                        console.log('cookiesReturn',res.httpResponse.cookies);
+                    let _this = this;
+                    _this.runRequestId = res.runRequestId;
+                    if (_this.runRequestId != null) {
+                        console.log('runRequestId',_this.runRequestId)
+                        Request({
+                            url:'/mockServer/getRunRequest',
+                            method: 'POST',
+                            params: qs.stringify({
+                                id: this.runRequestId
+                            })
+                        }).then(res =>{
+                            console.log('获取成功',res)
+                            _this.messageInfo = res.body;
+                            _this.selectedParseMethod = res.method;
+                            _this.methodType = res.methodType;
+                            _this.path = res.path;
+                            _this.pathType = res.pathType;
+                            _this.queryParameters = res.queryParameters;
+                            _this.queryParametersObj = JSON.parse(_this.queryParameters);
+                            _this.headersParameters = res.headers;
+                            _this.headersParametersObj = JSON.parse(_this.headersParameters);
+                            _this.cookiesParameters = res.cookies;
+                            _this.cookiesParametersObj = JSON.parse(_this.cookiesParameters);
+                            _this.messageFormat = res.type;
+                            _this.selectedKeepalive = res.keepAlive;
+                            _this.selectedSecure = res.secure;
+                            _this.expectationId = res.expectationId;
+                            console.log('res.queryParameters',this.queryParametersObj);
+                            console.log('res.headers',this.headersParametersObj);
+                            console.log('res.cookies', this.cookiesParametersObj);
+                            this.setDatas();
+                        }).catch(error => {
+                            console.log('出现错误',error)
+                        });
+                    }else{
+                        console.log('id为空')
+                        _this.expectationName = res.expectationName;
+                        _this.type = res.type;
+                        _this.creator = res.creator;
+                        _this.httpRequest = res.httpRequest;
+                        _this.httpResponse = res.httpResponse;
+                        _this.path = res.httpRequest.path;
+                        _this.selectedParseMethod = res.httpRequest.method;
+                        _this.messageInfo = res.httpRequest.body;
+                        _this.messageFormat = res.httpRequest.type;
+                        _this.queryParameters = res.httpRequest.queryParameters;
+                        _this.queryParametersObj = JSON.parse(_this.queryParameters);
+                        _this.headersParameters = res.httpRequest.headers;
+                        _this.headersParametersObj = JSON.parse(_this.headersParameters);
+                        _this.cookiesParameters = res.httpRequest.cookies;
+                        _this.cookiesParametersObj = JSON.parse(_this.cookiesParameters);
+                        //高级部分数据
+                        _this.selectedKeepalive = res.httpRequest.keepAlive;
+                        _this.selectedSecure = res.httpRequest.secure;
+                        _this.setDatas();
                     }
-                    _this.path = res.httpRequest.path;
-                    _this.selectedParseMethod = res.httpRequest.method;
-                    _this.messageInfo = res.httpRequest.body;
-                    _this.messageFormat = res.httpRequest.type;
-                    _this.queryParameters = res.httpRequest.queryParameters;
-                    _this.queryParametersObj = JSON.parse(_this.queryParameters);
-                    _this.headersParameters = res.httpRequest.headers;
-                    _this.headersParametersObj = JSON.parse(_this.headersParameters);
-                    _this.cookiesParameters = res.httpRequest.cookies;
-                    _this.cookiesParametersObj = JSON.parse(_this.cookiesParameters);
+                   
 
-                    //高级部分数据
-                    _this.selectedKeepalive = res.httpRequest.keepAlive;
-                    _this.selectedSecure = res.httpRequest.secure;
-
-                    /**
-                     * 数据初始化
-                     */
-                    //queryParams
-                    for(let key in this.queryParametersObj){
-                        console.log(key,this.queryParametersObj[key])
-                        this.paramsQueryKey.push(key);
-                        this.paramsQueryValue.push(this.queryParametersObj[key]);
-                        let getObj = new Object();
-                        getObj[key] = this.queryParametersObj[key];
-                        this.paramsQuery.push(getObj);
-                    }
-                    console.log('数组转换',this.paramsQuery)
-                    //headersParams
-                    for(let key in this.headersParametersObj){
-                        console.log(key,this.headersParametersObj[key])
-                        this.paramsHeadersKey.push(key);
-                        this.paramsHeadersValue.push(this.headersParametersObj[key]);
-                        let getObj = new Object();
-                        getObj[key] = this.headersParametersObj[key];
-                        this.paramsHeaders.push(getObj);
-                    }
-                    console.log('数组转换',this.paramsHeaders)
-                    //queryParams
-                    for(let key in this.cookiesParametersObj){
-                        console.log(key,this.cookiesParametersObj[key])
-                        this.paramsCookiesKey.push(key);
-                        this.paramsCookiesValue.push(this.cookiesParametersObj[key]);
-                        let getObj = new Object();
-                        getObj[key] = this.cookiesParametersObj[key];
-                        this.paramsCookies.push(getObj);
-                    }
-                    console.log('数组转换',this.paramsCookies)
                 }).catch(err=>{
                     console.log('getExpectationById失败',err)
                 });
             },
+            setDatas() {
+                let _this = this;
+                if(_this.queryParameters === null
+                    || _this.queryParameters === '{}'){
+                    this.paramsQuery[0] = ""
+                    this.paramsQueryKey[0] = ''
+                    this.paramsQueryValue[0] = ''
+                }
+                if(_this.headers === null
+                    || _this.headers === '{}'){
+                    this.paramsHeaders[0] = ""
+                    this.paramsHeadersKey[0] = ''
+                    this.paramsHeadersValue[0] = ''
+                }
+                if(_this.cookies === null
+                    || _this.cookies === '{}'){
+                    this.paramsCookies[0] = ""
+                    this.paramsCookiesKey[0] = ''
+                    this.paramsCookiesValue[0] = ''
+                }
+                
+                /**
+                 * 数据初始化
+                 */
+                //queryParams
+                for(let key in _this.queryParametersObj){
+                    console.log(key,this.queryParametersObj[key])
+                    this.paramsQueryKey.push(key);
+                    this.paramsQueryValue.push(this.queryParametersObj[key]);
+                    let getObj = new Object();
+                    getObj[key] = this.queryParametersObj[key];
+                    this.paramsQuery.push(getObj);
+                }
+                //headersParams
+                for(let key in this.headersParametersObj){
+                    console.log(key,this.headersParametersObj[key])
+                    this.paramsHeadersKey.push(key);
+                    this.paramsHeadersValue.push(this.headersParametersObj[key]);
+                    let getObj = new Object();
+                    getObj[key] = this.headersParametersObj[key];
+                    this.paramsHeaders.push(getObj);
+                }
+                //queryParams
+                for(let key in this.cookiesParametersObj){
+                    console.log(key,this.cookiesParametersObj[key])
+                    this.paramsCookiesKey.push(key);
+                    this.paramsCookiesValue.push(this.cookiesParametersObj[key]);
+                    let getObj = new Object();
+                    getObj[key] = this.cookiesParametersObj[key];
+                    this.paramsCookies.push(getObj);
+                }
+            },
             runMock(){
-                let result = 'expectationName = ' + this.expectationName
-                           + '\nselectedParseMethod = ' + this.selectedParseMethod
-                           + '\npath = ' + this.path
-                           + '\nid = ' + this.id
-                           + '\ncreator = ' + this.creator
-                           + '\nhttpRequest = ' + this.httpRequest
-                           + '\nhttpResponse = ' + this.httpResponse;
                 //请求参数query
                 let paramsQueryObj = new Object();
                 //请求参数headers
@@ -508,76 +547,54 @@
                 for(let i = 0;i< this.paramsCookiesKey.length;i++){
                     paramsCookiesObj[this.paramsCookiesKey[i]] = this.paramsCookiesValue[i];
                 }
-                this.httpRequest.body = this.messageInfo;
-                this.httpRequest.cookies = JSON.stringify(paramsCookiesObj)
-                this.httpRequest.headers = JSON.stringify(paramsHeadersObj)
-                this.httpRequest.queryParameters = JSON.stringify(paramsQueryObj)
-                this.httpRequest.keepAlive = this.selectedKeepalive
-                this.httpRequest.secure = this.selectedSecure
-                this.httpRequest.path = this.path;
-                this.httpRequest.method = this.selectedParseMethod;
-                this.httpRequest.type = this.messageFormat;
-
-                if(this.httpResponse != null){
-                    this.httpResponse.body = this.returnDataInfo
-                    this.httpResponse.cookies = JSON.stringify(returnCookiesObj)
-                    this.httpResponse.headers = JSON.stringify(returnHeadersObj)
-                    this.httpResponse.statusCode = this.statusCode
-                    this.httpResponse.delayTime = this.delayTime
-                    this.httpResponse.type = this.returnDataType
-                    this.httpResponse.reasonPhrase = this.reasonPhrase
-
-                }
-                if(this.httpForwardEntity!=null){
-                    this.httpForwardEntity.host = this.hostContent;
-                    this.httpForwardEntity.port = this.portContent;
-                    this.httpForwardEntity.scheme = this.selectedProtocol;
-                }
-                console.log('creator',this.creator)
-                console.log('expectationName',this.expectationName)
-                console.log('httpForwardEntity',this.httpForwardEntity)
-                console.log('httpRequest',this.httpRequest)
-                console.log('httpResponse',this.httpResponse)
-                console.log('id',this.id)
-                console.log('type',this.type)
-                // console.log('获取的type类型', this.httpRequest)
-                // console.log('所需的数据query：',this.queryParameters)
-                // console.log('数据类型：',typeof this.queryParameters)
-                // console.log('所需的数据headers：',this.headers)
-                // console.log('所需的数据cookies：',this.cookies)
-                // console.log('需要提交的信息(除httpRequest)',result)
-                // console.log('需要提交的httpRequest:', this.httpRequest)
-                // console.log('httpForwardEntity:' ,this.httpForwardEntity)
-                // console.log('paramsQueryKey',this.paramsQueryKey)
-                // console.log('paramsQueryValue',this.paramsQueryValue)
-                // console.log('paramsHeadersKey',this.paramsHeadersKey)
-                // console.log('paramsHeadersValue',this.paramsHeadersValue)
-                // console.log('paramsCookiesKey',this.paramsCookiesKey)
-                // console.log('paramsCookiesValue',this.paramsCookiesValue)
-                // console.log('returnHeadersKey',this.returnHeadersKey)
-                // console.log('returnHeadersValue',this.returnHeadersValue)
-                // console.log('returnCookiesKey',this.returnCookiesKey)
-                // console.log('returnCookiesValue',this.returnCookiesValue)
-                
-                
-                // Request({
-                //     url: '/mockServer/updateExpectation',
-                //     method: 'POST',
-                //     params: {
-                //         creator: this.creator,
-                //         expectationName: this.expectationName,
-                //         httpForwardEntity: this.httpForwardEntity === null? null:this.httpForwardEntity,
-                //         httpRequest: this.httpRequest,
-                //         httpResponse: this.httpResponse === null? null: this.httpResponse,
-                //         id: this.id,
-                //         type: this.type
-                //     }
-                // }).then(res => {
-                //     console.log('提交成功',res)
-                //     this.$message.success(res.respMsg);
-                // }).catch(err => {
-                //     console.log('提交出现错误',err)
-                // });
+                Request({
+                    url: '/mockServer/runExpectation',
+                    method: 'POST',
+                    params: {
+                        body: this.messageInfo,
+                        cookies: JSON.stringify(paramsCookiesObj),
+                        expectationId: this.expectationId,
+                        headers: JSON.stringify(paramsHeadersObj),
+                        id: this.runRequestId,
+                        keepAlive: this.selectedKeepalive,
+                        method: this.selectedParseMethod,
+                        methodType: this.methodType,
+                        path: this.path,
+                        pathType: this.pathType,
+                        queryParameters: JSON.stringify(paramsQueryObj),
+                        secure: this.selectedSecure,
+                        type: this.messageFormat
+                    }
+                }).then(res => {
+                    console.log('运行成功',res)
+                    this.runResult = res;
+                    Request({
+                        url: '/mockServer/saveRunRequest',
+                        method: 'POST',
+                        params: {
+                            body: this.messageInfo,
+                            cookies: JSON.stringify(paramsCookiesObj),
+                            expectationId: this.expectationId,
+                            headers: JSON.stringify(paramsHeadersObj),
+                            id: this.runRequestId,
+                            keepAlive: this.selectedKeepalive,
+                            method: this.selectedParseMethod,
+                            methodType: this.methodType,
+                            path: this.path,
+                            pathType: this.pathType,
+                            queryParameters: JSON.stringify(paramsQueryObj),
+                            secure: this.selectedSecure,
+                            type: this.messageFormat
+                        }
+                    }).then(res => {
+                        console.log('保存成功',res)
+                        
+                    }).catch(err => {
+                        console.log('保存错误',err)
+                    });
+                }).catch(err => {
+                    console.log('提交出现错误',err)
+                });
             },
             handleTitleChange(requestParamsTitle) {
                 let _this = this;
@@ -675,30 +692,38 @@
         padding: 5px
     }
     .baseInfo, .requestParams, .forwardSetting {
-        width: 100px;
-        height: 34px;
+        width: 110px;
+        height: 38px;
+        margin-top: -10px;
         display: inline-block;
         background: #409eff;
-        padding-top:5px; 
+        padding-top:6px; 
         font-size: 18px;
         font-weight: bolder;
         border-radius: .25em;
         white-space: nowrap;
         color: #fff;
         text-align: center;
-        margin-bottom: 10px
+        margin-bottom: -10px
     }
     .requestParams, .forwardSetting {
         width: 130px;
         margin-top: 20px;
     }
-    .contentDiv {
+    .contentDiv,.returnDataDiv,.dataSetting {
         width: 99%;
         height: fit-content;
-        margin: 10px auto 10px auto;
+        padding: 10px;
+        margin: 10px auto auto auto;
         border: 1px solid lightgrey;
         border-radius: 8px;
         background: #f5f5f5;
+    }
+    .returnDataDiv {
+        margin-top: -15px;
+    }
+    .dataSetting {
+        height: 140px;
     }
     .expectInput {
         width: 230px;
@@ -707,34 +732,38 @@
         width: 400px
     }
     .basicSettingRow {
-        margin-top: 30px;
+        margin-top: 15px;
         font-size: 17px;
     }
     .settingTitleRow {
-        margin: 0px auto;
+        margin: -10px auto;
         width: fit-content
     }
     .radioButtonRow{
-        margin: 15px auto 15px 20px
+        margin: 0px auto 10px 20px;
+    }
+    .returnDataRadioButtonRow{
+        margin: -10px auto 10px 20px;
     }
     .radioButtonRowHigh{
-        margin: 20px auto 0px 20px
+        margin: 0px auto -20px 20px
     }
-    .liRadioButtonRow　{
-        margin: 0px auto 0px 20px
+    .liRadioButtonRow{
+        margin: 0px auto -20px 0px;
+        width: 99%
     }
-    .ulRadioButton {
-        margin-top: 20px;
-        margin-left: 20px;
+    .ulRadioButton{
+        margin-top: 10px;
+        margin-left: 10px;
     }
     .Error{
          margin-bottom: -15px
     }
     .formRow {
-        margin: 10px auto
+        margin: 5px auto;
     }
     /* 控制文字域样式 */
-    .textareaStyle {
+    .textareaStyle,.runResultStyle {
 		border: 1px solid gray;
 		border-radius: 8px;
         background: #ffffff;
@@ -742,16 +771,12 @@
 		height: 300px;
 		margin: 10px auto 10px auto;
 		display: block;
-		padding: 6px 12px;
+		padding: 15px 12px 5px 12px;
 		font-size: 17px;
         font-family: 'Times New Roman'
 	}
-    .beforeRunStyle {
-        height: 30px;
-        margin-top: 15px;
-        margin-left: -80px;
-        font-size: 13px;
-        font-family:'Courier New', Courier, monospace
+    .runResultStyle {
+        height: fit-content
     }
     .msLabel {
         height: 40px;
@@ -759,5 +784,16 @@
     }
     .radioGroupStyle {
         margin-top: 13px
+    }
+    .paramsForm{
+        width: 99%
+    }
+    .rowForward{
+        margin: -15px auto
+    }
+    .beforeRunStyle {
+        margin-left: 20px;
+        padding-top: 10px;
+        font-size: 14px;
     }
 </style>
