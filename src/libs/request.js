@@ -18,6 +18,7 @@
 import ElementUI from "element-ui"
 import axios from 'axios'
 import Vue from 'vue'
+import Qs from 'qs'
 import ErrorCode from '../const/errorCode'
 
 const _Vue = new Vue({
