@@ -6,16 +6,17 @@ import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
- 
+import uploadRecord from '@/views/testProject/subFunction/uploadRecord'
+
 export default {
-    path: '/testProjectIndext',
-    name: 'TestProject',
-    component: testProjectIndex,
-    redirect: '/testProjectIndext/testProject',
-    meta: {
-        name: '项目测试'
-    },
-    children: [
+	path: '/testProjectIndext',
+	name: 'TestProject',
+	component: testProjectIndex,
+	redirect: '/testProjectIndext/testProject',
+	meta: {
+		name: '项目测试'
+	},
+	children: [
 		{
 			path: 'testProject',
 			name: 'testProject',
@@ -34,27 +35,49 @@ export default {
 				name: '测试用例管理',
 				parents: 'TestProjectIndex',
 				icon: 'el-icon-star-off'
+			},
+			// children:[
+			// 	{
+			// 		path: 'uploadRecord',
+			// 		name: 'uploadRecord',
+			// 		component: uploadRecord,
+			// 		meta: {
+			// 			name: '导入记录',
+			// 			parents: 'testCaseManagement',
+			// 			icon: 'el-icon-star-off'
+			// 		},
+			// 	},
+			// ]
+		},
+		{
+			path: 'uploadRecord',
+			name: 'uploadRecord',
+			component: uploadRecord,
+			meta: {
+				name: '导入记录',
+				parents: 'TestProjectIndex',
+				icon: 'el-icon-star-off'
+			},
+		},
+		{
+			path: 'scene',
+			name: 'scene',
+			component: scene,
+			meta: {
+				name: '场景管理',
+				parents: 'TestProjectIndex',
+				icon: 'el-icon-edit'
 			}
 		},
-        {
-            path: 'scene',
-            name: 'scene',
-            component: scene,
-            meta: {
-                name: '场景管理',
-                parents: 'TestProjectIndex',
-                icon: 'el-icon-edit'
-            }
-        },
-        {
-            path: 'datatable',
-            name: 'datatable',
-            component: datatable,
-            meta: {
-                name: '测试资源管理管理',
-                parents: 'TestProjectIndex',
-                icon: 'el-icon-edit'
-            }
-        }
-    ]
+		{
+			path: 'datatable',
+			name: 'datatable',
+			component: datatable,
+			meta: {
+				name: '测试资源管理管理',
+				parents: 'TestProjectIndex',
+				icon: 'el-icon-edit'
+			}
+		}
+	]
 }
