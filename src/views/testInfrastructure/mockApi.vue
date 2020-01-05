@@ -40,7 +40,7 @@
                 </el-table>
             </el-card>
             <div class="content">
-                <el-radio-group
+                <!-- <el-radio-group
                     class="buttonGroupStyle"
                     v-model='option'
                     @change="changeRadioButton(option,id)">
@@ -53,7 +53,24 @@
                     <el-radio-button
                         label='运行'>
                     </el-radio-button>
-                </el-radio-group>
+                </el-radio-group> -->
+                <el-tabs
+                    type='card'
+                    v-model="selectName"
+                    @tab-click='handleRabClick'>
+                    <el-tab-pane
+                        label='preview'
+                        name='preview'>
+                    </el-tab-pane>
+                    <el-tab-pane
+                        label='edit'
+                        name='edit'>
+                    </el-tab-pane>
+                    <el-tab-pane
+                        label='run'
+                        name='run'>
+                    </el-tab-pane>
+                </el-tabs>
                 <el-card 
                     :key='count'
                     :class="previewCard? 'mainCardPreview': 'mainCard'">
@@ -143,6 +160,7 @@
 		mixins: [VueMixins], // 混入
         data() {
             return{
+                selectName: 'preview',//el-tabs被选中的名称
                 expectation: [],//完整列表数据
                 showHeader: false,//通过设置:show-header为false，隐藏表头
                 option: '预览',
@@ -177,6 +195,34 @@
             next();
         },
         methods: {
+            //处理tabs点击事件
+            handleRabClick(tab,event){
+                let _this = this;
+                console.log(tab.name);
+                if(tab.name === 'preview'){
+                    this.$router.push(
+                        {
+                            path: _this.previewPath + _this.id,
+                            query: {id:_this.id}
+                        }
+                    )
+                }else if(tab.name === 'edit'){
+                     this.$router.push(
+                        {
+                            path: _this.editPath + _this.id,
+                            query: {id:_this.id}
+                        }
+                    )
+                }else{
+                     this.$router.push(
+                        {
+                            path: _this.runPath + _this.id,
+                            query: {id:_this.id}
+                        }
+                    )
+                }
+                
+            },
             //加载时传递数据
              loadExpectation(){
                 let _this = this;
@@ -345,6 +391,7 @@
         margin-left: 50px;
     }
     .mainCardPreview {
+        margin-top: -16px;
         width: 100%;
         height: 748px;
     }

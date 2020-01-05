@@ -508,7 +508,7 @@
 					for(let i = 0; i < needData.length;i++){
 						// let obj = new Object();
 						// obj.id = needData[i].id;
-						// obj.name = needData[i].name;
+						// obj.name = needData[i].name; 
 						let id = needData[i].id;
 						let name1 = needData[i].name;
 						_this.abstractArchitectureInfo[id] = name1;
