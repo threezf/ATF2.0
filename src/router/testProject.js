@@ -6,6 +6,7 @@ import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
+import BatchExecutionQuery from "@/views/testProject/batchExecutionQuery"
  
 export default {
     path: '/testProjectIndext',
@@ -55,6 +56,17 @@ export default {
                 parents: 'TestProjectIndex',
                 icon: 'el-icon-edit'
             }
+        },
+        {
+            path: 'batchexecutionquery',
+            name: 'BatchExecutionQuery',
+            component: BatchExecutionQuery,
+            meta: {
+                name: '批次执行查询',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-search'
+            }
+
         }
     ]
 }

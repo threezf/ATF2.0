@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VCharts from 'v-charts'
 
 Vue.config.productionTip = false
 import ElementUI from "element-ui"
@@ -12,6 +13,7 @@ import {SessionStorage} from 'wii-fe-utils'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(VCharts)
 window.activeMenu;
 
 // 路由钩子
