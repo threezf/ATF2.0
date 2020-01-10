@@ -71,7 +71,7 @@
 							class='table'
 							@expand-change="subShow"
 							@selection-change="handleSelectionChange">
-							<el-table-column type="expand"  v-if="">
+							<el-table-column type="expand" >
 								<template slot-scope="scope">
 									<div class="scrollbar" v-if="scope.row.caseCompositeType=='2'">
 										<el-scrollbar style="width:100%">

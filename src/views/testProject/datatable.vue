@@ -2,6 +2,14 @@
     <div class="page-inner">
         <el-row class="border">
             <el-col :span="3">
+                <el-button v-popover:showSearch>筛选用例</el-button>
+                <el-popover
+                ref="showSearch"
+                placement="right"
+                width="800"
+                trigger="click">
+                    <searchtestcase></searchtestcase>
+                </el-popover>
                 <el-button
                     size="small" 
                     @click='search'
@@ -21,15 +29,23 @@
         </el-row>
         
         <div class='ele-container'>
-            <div class="ele-left">
+            <div :class="'ele-left '+(saidBarShow?'':'narrow-ele-left')">
+                <div class='treeDiv' v-show = 'saidBarShow'>
                 <el-tree 
                     accordion
                     :data="filterTree" 
                     :props="defaultProps"
                     @node-click="handleNodeClick">
                 </el-tree>
+                </div>
+                <div class='treeHideIcon'  v-if="saidBarShow"> 
+                    <el-button size="mini" @click="saidBarShow=!saidBarShow"><i class="el-icon-d-arrow-left"></i></el-button>
+                </div>
+                <div class='treeShowIcon' v-else> 
+                    <el-button size="mini"  @click="saidBarShow=!saidBarShow"><i class="el-icon-d-arrow-right"></i></el-button>
+                </div>
             </div>
-            <div class="ele-right">
+            <div :class="'ele-right '+(saidBarShow?'':'wide-ele-right')">
                 <el-row class="itemCenter">
                     <el-col :span="3">
                         <el-button
@@ -765,9 +781,14 @@
 <script>
     import Request from '@/libs/request.js'
     import VueMixins from '@/libs/vueMixins.js'
-    import templateManage from '@/components/transactDetail/uiEleFunTree'
+    import uiEleFunTree from '@/components/transactDetail/uiEleFunTree'
+    import searchtestcase from '@/components/searchTestcase'
     export default {
         mixins: [VueMixins],
+        components: {
+            uiEleFunTree,
+            searchtestcase,
+        },
         computed:{
             searchInfo(){
                 return this.searchFlag?"收起筛选":"显示筛选"
@@ -842,7 +863,8 @@
                 dataType:'1',
                 addItemShow:false,
                 input4:'',
-                input1:''
+                input1:'',
+                saidBarShow:true
             }
         },
         mounted(){
@@ -1312,5 +1334,31 @@ li:hover {
     left: 0;
     right: 0;
     bottom: 0;
+}
+.treeDiv{
+    width:80%;
+    display: inline-block;
+}
+.treeHideIcon{
+    width: 10%;
+    display: inline-block;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+}
+.treeShowIcon{
+    width: 100%;
+    display: inline-block;
+    position: absolute;
+    right: -3px;
+}
+.ele-left{
+    position: relative;
+}
+.narrow-ele-left{
+    width: 3%!important;
+}
+.wide-ele-right{
+    width: 96%!important;
 }
 </style>

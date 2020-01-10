@@ -1,6 +1,10 @@
 <template>
-    <div class="side-bar">
-        <el-menu router :default-active="this.$route.path" class="side-bar-menu">
+    <div :class="isCollapse?'narrow-side-bar':'side-bar'">
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;"  size="small">
+            <el-radio-button :label="true"><i class="el-icon-d-arrow-left"></i></el-radio-button>
+            <el-radio-button :label="false"><i class="el-icon-d-arrow-right"></i></el-radio-button>
+        </el-radio-group>
+        <el-menu router :default-active="this.$route.path" class="side-bar-menu"  :collapse="isCollapse">
             <!-- 一级导航 -->
             <template v-for="(menu, index) in menuList">
                 <el-submenu :index="fullPath + '/' + menu.path" :key="index" v-if="(menu.children && !needHideAllChildren(menu)) && !menu.meta.hide">
@@ -31,7 +35,8 @@
         data() {
             return {
                 menuList: [],
-                fullPath: ''
+                fullPath: '',
+                isCollapse: true
             }
         },
         watch: {
@@ -79,6 +84,15 @@
 <style lang="less" scoped>
     .side-bar {
         width: 240px;
+        flex-shrink: 0;
+
+        .side-bar-menu {
+            background: #f4f5f7;
+            height: 100%;
+        }
+    }
+    .narrow-side-bar{
+        width: 90px;
         flex-shrink: 0;
 
         .side-bar-menu {
