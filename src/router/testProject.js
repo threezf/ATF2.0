@@ -7,6 +7,7 @@ import testProject from '@/views/testProject/testProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
 import BatchExecutionQuery from "@/views/testProject/batchExecutionQuery"
+import TestRecord from '@/views/testProject/testRecord';
  
 export default {
     path: '/testProjectIndext',
@@ -67,6 +68,16 @@ export default {
                 icon: 'el-icon-search'
             }
 
+        },
+        {
+            path: 'testrecord',
+            name: 'TestRecord',
+            component: TestRecord,
+            meta: {
+                name:'执行记录查询',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-search'
+            }
         }
     ]
 }

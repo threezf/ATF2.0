@@ -1,78 +1,43 @@
 <template>
-    <div class="cardPreview">
-        <el-row>
-            <span 
-                class="baseInfo"
-                >基本信息
-            </span>
-        </el-row>
-        <el-row
-            class='rowStyle'>
-            <el-col :span='12' :offset='0'>
-                <span class="detailInfoTitle">
-                    接口名称
-                </span>
-                <label class="labelContent">
-                    {{expectationName}}
-                </label>
-            </el-col>
-            <el-col :span='10' :offset='0'>
-                <span class="detailInfoTitle">
-                    创建人
-                </span>
-                <label class="labelContent">
-                    {{creator}}
-                </label>
-            </el-col>
-        </el-row>
-        <el-row
-            class='rowStyle'>
-            <el-col :span='12' :offset='0'>
-                <span class="detailInfoTitle">
-                    更新时间
-                </span>
-                <label class="labelContent">
-                    {{updateTime}}
-                </label>
-            </el-col>
-        </el-row>
-        <el-row
-            class='rowStyle'>
-            <el-col :span='12' :offset='0'>
-                <span class="detailInfoTitle">
-                    接口路径
-                </span>
-                <span class="mothodStyle">
-                    {{method}}
-                </span>
-                <label class="labelContent">
-                    {{expectationName}}
-                </label>
-            </el-col>
-        </el-row>
-        <el-row
-            class='rowStyle'>
-            <el-col :span='12' :offset='0'>
-                <span class="detailInfoTitle">
-                    Mock地址
-                </span>
-                <label class="labelContent">
-                    {{path}}
-                </label>
-            </el-col>
-        </el-row>
-        <el-row>
-            <span 
-                class="returnData"
-                >返回数据
-            </span>
-        </el-row>
-        <pre 
-            class='textareaStyle' 
-            onresize 
-            disabled>{{httpForwardEntity}}
+  <div class="cardPreview">
+    <el-row>
+      <span class="baseInfo">基本信息</span>
+    </el-row>
+    <el-row class="rowStyle">
+      <el-col :span="12" :offset="0">
+        <span class="detailInfoTitle">接口名称</span>
+        <label class="labelContent">{{expectationName}}</label>
+      </el-col>
+      <el-col :span="10" :offset="0">
+        <span class="detailInfoTitle">创建人</span>
+        <label class="labelContent">{{creator}}</label>
+      </el-col>
+    </el-row>
+    <el-row class="rowStyle">
+      <el-col :span="12" :offset="0">
+        <span class="detailInfoTitle">更新时间</span>
+        <label class="labelContent">{{updateTime}}</label>
+      </el-col>
+    </el-row>
+    <el-row class="rowStyle">
+      <el-col :span="12" :offset="0">
+        <span class="detailInfoTitle">接口路径</span>
+        <span class="mothodStyle">{{method}}</span>
+        <label class="labelContent">{{expectationName}}</label>
+      </el-col>
+    </el-row>
+    <el-row class="rowStyle">
+      <el-col :span="12" :offset="0">
+        <span class="detailInfoTitle">Mock地址</span>
+        <label class="labelContent">{{path}}</label>
+      </el-col>
+    </el-row>
+    <el-row>
+      <span class="returnData">返回数据</span>
+    </el-row>
+    <pre class="textareaStyle" onresize disabled>{{httpForwardEntity}}
         </pre>
-    </div>
+  </div>
 </template>
 
 <<script>
@@ -153,76 +118,77 @@
     }
 </script>
 <style scoped>
-    .cardPreview {
-        padding: 5px;
-    }
-    .baseInfo, .returnData {
-        width: 110px;
-        height: 38px;
-        margin-top: -10px;
-        display: inline-block;
-        background: #409eff;
-        padding-top:6px; 
-        font-size: 18px;
-        font-weight: bolder;
-        border-radius: .25em;
-        white-space: nowrap;
-        color: #fff;
-        text-align: center;
-        margin-bottom: -10px
-    }
-    .returnData{
-        margin-top: 30px;
-    }
-    .detailInfoTitle {
-        width: 80px;
-        height: 30px;
-        display: inline-block;
-        background: #bebec2;
-        padding-top:4px; 
-        font-size: 14px;
-        font-weight: 400;
-        border-radius: .25em;
-        white-space: nowrap;
-        color: #fff;
-        text-align: center;
-        margin-left: 20px
-    }
-    .mothodStyle {
-        width: 70px;
-        height: 28px;
-        display: inline-block;
-        background: rgb(45, 231, 144);
-        padding-top:5px; 
-        font-size: 14px;
-        font-weight: bolder;
-        border-radius: .25em;
-        white-space: nowrap;
-        color: #fff;
-        text-align: center;
-        margin-left: 10px
-    }
-    .rowStyle{
-        margin-top: 15px;
-    }
-    .labelContent{
-        margin-left: 5px;
-        font-size: 15px;
-    }
-    /* 控制文字域样式 */
-    .textareaStyle {
-		border: 1px solid gray;
-		border-radius: 8px;
-        background:#f5f5f5;
-		width: 99%;
-		height: 300px;
-		margin: 10px auto 10px auto;
-		display: block;
-		padding: 15px 20px;
-		font-size: 17px;
-        line-height: 22px;
-        font-family: 'Times New Roman';
-        resize: none;
-        white-space: pre-wrap; 
-	}
+.cardPreview {
+  padding: 5px;
+}
+.baseInfo,
+.returnData {
+  width: 110px;
+  height: 38px;
+  margin-top: -10px;
+  display: inline-block;
+  background: #409eff;
+  padding-top: 6px;
+  font-size: 18px;
+  font-weight: bolder;
+  border-radius: 0.25em;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+  margin-bottom: -10px;
+}
+.returnData {
+  margin-top: 30px;
+}
+.detailInfoTitle {
+  width: 80px;
+  height: 30px;
+  display: inline-block;
+  background: #bebec2;
+  padding-top: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 0.25em;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+  margin-left: 20px;
+}
+.mothodStyle {
+  width: 70px;
+  height: 28px;
+  display: inline-block;
+  background: rgb(45, 231, 144);
+  padding-top: 5px;
+  font-size: 14px;
+  font-weight: bolder;
+  border-radius: 0.25em;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+  margin-left: 10px;
+}
+.rowStyle {
+  margin-top: 15px;
+}
+.labelContent {
+  margin-left: 5px;
+  font-size: 15px;
+}
+/* 控制文字域样式 */
+.textareaStyle {
+  border: 1px solid gray;
+  border-radius: 8px;
+  background: #f5f5f5;
+  width: 99%;
+  height: 300px;
+  margin: 10px auto 10px auto;
+  display: block;
+  padding: 15px 20px;
+  font-size: 17px;
+  line-height: 22px;
+  font-family: "Times New Roman";
+  resize: none;
+  white-space: pre-wrap;
+}
 </style>

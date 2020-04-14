@@ -1,322 +1,209 @@
 <template>
-    <div class="cardEdit">
-        <el-row>
-            <el-col :span='20' :offset='0'>
-                <span 
-                    class="baseInfo"
-                    >基本设置
-                </span>
-            </el-col>
-            <el-col :span='1' :offset='0'>
-                <el-button 
-                    type='primary'
-                    size='small'
-                    icon='el-icon-video-play'
-                    plain
-                    @click='runMock'
-                    >运行
-                </el-button >
-            </el-col>
-        </el-row>
-        <div class="contentDiv">
-            <el-form>
-                <el-form-item 
-                    class="basicSettingRow" 
-                    label='接口路径' 
-                    label-width='100px'>
-                    <el-select
-                        v-model="selectedParseMethod">
-                        <el-option 
-                            v-for="(item,index) in parseMethods" 
-                            :key="index" 
-                            :value='item'
-                            >
-                        </el-option>
-                    </el-select>
-                    <el-input 
-                        class="path"
-                        v-model='path'>
-                    </el-input>
-                </el-form-item>
-            </el-form>
-        </div>
-        <el-row>
-            <span class="requestParams">
-                请求参数设置
-            </span>
-        </el-row>
-        <el-row
-            class="settingTitleRow">
-            <div>
-                <el-radio-group 
-                    size="small"
-                    v-model="requestParamsTitle" 
-                    @change="handleTitleChange(requestParamsTitle)">
-                    <el-radio-button label='body'></el-radio-button>
-                    <el-radio-button label='query'></el-radio-button>
-                    <el-radio-button label='headers'></el-radio-button>
-                    <el-radio-button label='cookies'></el-radio-button>
-                    <el-radio-button label='高级'></el-radio-button>
-                </el-radio-group>
-            </div>
-        </el-row>
-        <!--body-->
-        <div
-            class="contentDiv" 
-            v-if="bodyVisible">
-            <el-row 
-                class="radioButtonRow">
-                <el-radio-group
-                    v-model="messageFormat"
-                    @change="printFormat">
-                    <el-radio
-                        label='JSON'>
-                    </el-radio>
-                    <el-radio
-                        label='XML'>
-                    </el-radio>
-                    <el-radio
-                        label='STRING'>
-                    </el-radio>
-                </el-radio-group>
-            </el-row>
-            <pre
-                class="textareaStyle"
-                >{{messageInfo}}
-            </pre>
-        </div>
-        <!--query-->
-        <div
-            class="contentDiv" 
-            v-if="queryVisible">
-            <ul
-                class="ulRadioButton">
-                <li 
-                    v-for='(item,index) in paramsQuery'
-                    :key="index">
-                    <el-row 
-                        class="liRadioButtonRow">
-                        <el-col
-                            :span='15'>
-                            <el-form>
-                                <el-form-item
-                                    label='请求参数'
-                                    label-width='100px'>
-                                    <el-input
-                                        style="width: 200px"
-                                        placeholder='参数名称'
-                                        v-model="paramsQueryKey[index]">
-                                    </el-input>
-                                    <el-input
-                                        style="width: 400px;margin-left: 10px"
-                                        placeholder='参数值'
-                                        v-model="paramsQueryValue[index]">
-
-                                    </el-input>
-                                </el-form-item>
-                            </el-form>
-                        </el-col>
-                        <el-col
-                            :span='2'
-                            style='margin-left:-10px;margin-top:-25px'>
-                            <el-button
-                                type='primary'
-                                size='mini'
-                                icon='el-icon-plus'
-                                circle
-                                @click='addParamsQueryNewRow'>
-
-                            </el-button>
-                            <el-button
-                                type='danger'
-                                size='mini'
-                                icon='el-icon-delete'
-                                circle
-                                @click="deleteParamsQueryNewRow">
-
-                            </el-button>
-                        </el-col>
-                    </el-row>
-                </li>
-            </ul>
-           
-        </div>
-        <!--headers-->
-        <div
-            class="contentDiv" 
-            v-if="headersVisible">
-            <ul
-                class="ulRadioButton">
-                <li 
-                    v-for='(item,index) in paramsHeaders'
-                    :key="index">
-                    <el-row 
-                        class="liRadioButtonRow">
-                        <el-form
-                            class="paramsForm">
-                            <el-col
-                                :span='15'>
-                                <el-form>
-                                    <el-form-item
-                                        label='请求头部'
-                                        label-width='100px'>
-                                        <el-input
-                                            style="width: 200px"
-                                            placeholder='参数名称'
-                                            v-model="paramsHeadersKey[index]">
-
-                                        </el-input>
-                                        <el-input
-                                            style="width: 400px;margin-left: 10px"
-                                            placeholder='参数值'
-                                            v-model="paramsHeadersValue[index]">
-
-                                        </el-input>
-                                    </el-form-item>
-                                </el-form>
-                            </el-col>
-                            <el-col
-                                :span='2'
-                                style='margin-left:0px;margin-top:5px'>
-                                <el-button
-                                    type='primary'
-                                    size='mini'
-                                    icon='el-icon-plus'
-                                    circle
-                                    @click="addParamsHeadersNewRow">
-
-                                </el-button>
-                                <el-button
-                                    type='danger'
-                                    size='mini'
-                                    icon='el-icon-delete'
-                                    circle
-                                    @click='deleteParamsHeadersNewRow'>
-
-                                </el-button>
-                            </el-col>
-                        </el-form>
-                    </el-row>
-                </li>
-            </ul>
-        </div>
-        <!--cookies-->
-        <div
-            class="contentDiv" 
-            v-if="cookiesVisible">
-            <ul
-                class="ulRadioButton">
-                <li 
-                    v-for='(item,index) in paramsCookies'
-                    :key="index">
-                    <el-row 
-                        class="liRadioButtonRow">
-                        <el-form
-                            class="paramsForm">
-                            <el-col
-                                :span='15'>
-                                <el-form>
-                                    <el-form-item
-                                        label='cookies'
-                                        label-width='100px'>
-                                        <el-input
-                                            style="width: 200px"
-                                            placeholder='参数名称'
-                                            v-model="paramsCookiesKey[index]">
-
-                                        </el-input>
-                                        <el-input
-                                            style="width: 400px;margin-left: 10px"
-                                            placeholder='参数值'
-                                            v-model="paramsCookiesValue[index]">
-
-                                        </el-input>
-                                    </el-form-item>
-                                </el-form>
-                            </el-col>
-                            <el-col
-                                :span='2'
-                                style='margin-left:0px;margin-top:5px'>
-                                <el-button
-                                    type='primary'
-                                    size='mini'
-                                    icon='el-icon-plus'
-                                    circle
-                                    @click="addParamsCookiesNewRow">
-
-                                </el-button>
-                                <el-button
-                                    type='danger'
-                                    size='mini'
-                                    icon='el-icon-delete'
-                                    circle
-                                    @click="deleteParamsCookiesNewRow">
-
-                                </el-button>
-                            </el-col>
-                        </el-form>
-                    </el-row>
-                </li>
-            </ul>
-        </div>
-         <!--高级-->
-        <div
-            class='contentDiv' 
-            v-if='highVisible'>
-            <el-row
-                class="radioButtonRowHigh">
-                <el-form>
-                    <el-col :span='11'>
-                        <el-form-item 
-                            label='secure'
-                            label-width='100px'>
-                            <el-select
-                                v-model='selectedSecure'>
-                                <el-option
-                                    v-for='(item,index) in secures'
-                                    :key='index'
-                                    :value='item'>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span='10'>
-                        <el-form-item 
-                            label='keepalive'
-                            label-width='100px'>
-                            <el-select
-                                v-model='selectedKeepalive'>
-                                <el-option
-                                    v-for='(item,index) in keepalives'
-                                    :key='index'
-                                    :value='item'>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-form>
-            </el-row>
-        </div>
-        <div>
-            <el-row>
-                <span
-                    class='forwardSetting'>
-                    返回结果
-                </span>
-            </el-row>
-            <div class='contentDiv'>
-                <pre
-                    class="beforeRunStyle" 
-                    v-if="runResult === ''">请运行后查看结果
-                </pre>
-                <pre
-                    class="runResultStyle"
-                    disabled
-                    v-else>{{runResult}}
-                </pre>
-            </div>
-        </div>
+  <div class="cardEdit">
+    <el-row>
+      <el-col :span="20" :offset="0">
+        <span class="baseInfo">基本设置</span>
+      </el-col>
+      <el-col :span="1" :offset="0">
+        <el-button type="primary" size="small" icon="el-icon-video-play" plain @click="runMock">运行</el-button>
+      </el-col>
+    </el-row>
+    <div class="contentDiv">
+      <el-form>
+        <el-form-item class="basicSettingRow" label="接口路径" label-width="100px">
+          <el-select v-model="selectedParseMethod">
+            <el-option v-for="(item,index) in parseMethods" :key="index" :value="item"></el-option>
+          </el-select>
+          <el-input class="path" v-model="path"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
+    <el-row>
+      <span class="requestParams">请求参数设置</span>
+    </el-row>
+    <el-row class="settingTitleRow">
+      <div>
+        <el-radio-group
+          size="small"
+          v-model="requestParamsTitle"
+          @change="handleTitleChange(requestParamsTitle)"
+        >
+          <el-radio-button label="body"></el-radio-button>
+          <el-radio-button label="query"></el-radio-button>
+          <el-radio-button label="headers"></el-radio-button>
+          <el-radio-button label="cookies"></el-radio-button>
+          <el-radio-button label="高级"></el-radio-button>
+        </el-radio-group>
+      </div>
+    </el-row>
+    <!--body-->
+    <div class="contentDiv" v-if="bodyVisible">
+      <el-row class="radioButtonRow">
+        <el-radio-group v-model="messageFormat" @change="printFormat">
+          <el-radio label="JSON"></el-radio>
+          <el-radio label="XML"></el-radio>
+          <el-radio label="STRING"></el-radio>
+        </el-radio-group>
+      </el-row>
+      <pre class="textareaStyle">{{messageInfo}}
+            </pre>
+    </div>
+    <!--query-->
+    <div class="contentDiv" v-if="queryVisible">
+      <ul class="ulRadioButton">
+        <li v-for="(item,index) in paramsQuery" :key="index">
+          <el-row class="liRadioButtonRow">
+            <el-col :span="15">
+              <el-form>
+                <el-form-item label="请求参数" label-width="100px">
+                  <el-input style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
+                  <el-input
+                    style="width: 400px;margin-left: 10px"
+                    placeholder="参数值"
+                    v-model="paramsQueryValue[index]"
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :span="2" style="margin-left:-10px;margin-top:-25px">
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-plus"
+                circle
+                @click="addParamsQueryNewRow"
+              ></el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                icon="el-icon-delete"
+                circle
+                @click="deleteParamsQueryNewRow"
+              ></el-button>
+            </el-col>
+          </el-row>
+        </li>
+      </ul>
+    </div>
+    <!--headers-->
+    <div class="contentDiv" v-if="headersVisible">
+      <ul class="ulRadioButton">
+        <li v-for="(item,index) in paramsHeaders" :key="index">
+          <el-row class="liRadioButtonRow">
+            <el-form class="paramsForm">
+              <el-col :span="15">
+                <el-form>
+                  <el-form-item label="请求头部" label-width="100px">
+                    <el-input
+                      style="width: 200px"
+                      placeholder="参数名称"
+                      v-model="paramsHeadersKey[index]"
+                    ></el-input>
+                    <el-input
+                      style="width: 400px;margin-left: 10px"
+                      placeholder="参数值"
+                      v-model="paramsHeadersValue[index]"
+                    ></el-input>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="2" style="margin-left:0px;margin-top:5px">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-plus"
+                  circle
+                  @click="addParamsHeadersNewRow"
+                ></el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  circle
+                  @click="deleteParamsHeadersNewRow"
+                ></el-button>
+              </el-col>
+            </el-form>
+          </el-row>
+        </li>
+      </ul>
+    </div>
+    <!--cookies-->
+    <div class="contentDiv" v-if="cookiesVisible">
+      <ul class="ulRadioButton">
+        <li v-for="(item,index) in paramsCookies" :key="index">
+          <el-row class="liRadioButtonRow">
+            <el-form class="paramsForm">
+              <el-col :span="15">
+                <el-form>
+                  <el-form-item label="cookies" label-width="100px">
+                    <el-input
+                      style="width: 200px"
+                      placeholder="参数名称"
+                      v-model="paramsCookiesKey[index]"
+                    ></el-input>
+                    <el-input
+                      style="width: 400px;margin-left: 10px"
+                      placeholder="参数值"
+                      v-model="paramsCookiesValue[index]"
+                    ></el-input>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="2" style="margin-left:0px;margin-top:5px">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-plus"
+                  circle
+                  @click="addParamsCookiesNewRow"
+                ></el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  circle
+                  @click="deleteParamsCookiesNewRow"
+                ></el-button>
+              </el-col>
+            </el-form>
+          </el-row>
+        </li>
+      </ul>
+    </div>
+    <!--高级-->
+    <div class="contentDiv" v-if="highVisible">
+      <el-row class="radioButtonRowHigh">
+        <el-form>
+          <el-col :span="11">
+            <el-form-item label="secure" label-width="100px">
+              <el-select v-model="selectedSecure">
+                <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="keepalive" label-width="100px">
+              <el-select v-model="selectedKeepalive">
+                <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+    </div>
+    <div>
+      <el-row>
+        <span class="forwardSetting">返回结果</span>
+      </el-row>
+      <div class="contentDiv">
+        <pre class="beforeRunStyle" v-if="runResult === ''">请运行后查看结果
+                </pre>
+        <pre class="runResultStyle" disabled v-else>{{runResult}}
+                </pre>
+      </div>
+    </div>
+  </div>
 </template>
 
 <<script>
@@ -688,112 +575,118 @@
     }
 </script>
 <style scoped>
-    .cardEdit {
-        padding: 5px
-    }
-    .baseInfo, .requestParams, .forwardSetting {
-        width: 110px;
-        height: 38px;
-        margin-top: -10px;
-        display: inline-block;
-        background: #409eff;
-        padding-top:6px; 
-        font-size: 18px;
-        font-weight: bolder;
-        border-radius: .25em;
-        white-space: nowrap;
-        color: #fff;
-        text-align: center;
-        margin-bottom: -10px
-    }
-    .requestParams, .forwardSetting {
-        width: 130px;
-        margin-top: 20px;
-    }
-    .contentDiv,.returnDataDiv,.dataSetting {
-        width: 99%;
-        height: fit-content;
-        padding: 10px;
-        margin: 10px auto auto auto;
-        border: 1px solid lightgrey;
-        border-radius: 8px;
-        background: #f5f5f5;
-    }
-    .returnDataDiv {
-        margin-top: -15px;
-    }
-    .dataSetting {
-        height: 140px;
-    }
-    .expectInput {
-        width: 230px;
-    }
-    .path {
-        width: 400px
-    }
-    .basicSettingRow {
-        margin-top: 15px;
-        font-size: 17px;
-    }
-    .settingTitleRow {
-        margin: -10px auto;
-        width: fit-content
-    }
-    .radioButtonRow{
-        margin: 0px auto 10px 20px;
-    }
-    .returnDataRadioButtonRow{
-        margin: -10px auto 10px 20px;
-    }
-    .radioButtonRowHigh{
-        margin: 0px auto -20px 20px
-    }
-    .liRadioButtonRow{
-        margin: 0px auto -20px 0px;
-        width: 99%
-    }
-    .ulRadioButton{
-        margin-top: 10px;
-        margin-left: 10px;
-    }
-    .Error{
-         margin-bottom: -15px
-    }
-    .formRow {
-        margin: 5px auto;
-    }
-    /* 控制文字域样式 */
-    .textareaStyle,.runResultStyle {
-		border: 1px solid gray;
-		border-radius: 8px;
-        background: #ffffff;
-		width: 96%;
-		height: 300px;
-		margin: 10px auto 10px auto;
-		display: block;
-		padding: 15px 12px 5px 12px;
-		font-size: 17px;
-        font-family: 'Times New Roman'
-	}
-    .runResultStyle {
-        height: fit-content
-    }
-    .msLabel {
-        height: 40px;
-        padding-top: 10px
-    }
-    .radioGroupStyle {
-        margin-top: 13px
-    }
-    .paramsForm{
-        width: 99%
-    }
-    .rowForward{
-        margin: -15px auto
-    }
-    .beforeRunStyle {
-        margin-left: 20px;
-        padding-top: 10px;
-        font-size: 14px;
-    }
+.cardEdit {
+  padding: 5px;
+}
+.baseInfo,
+.requestParams,
+.forwardSetting {
+  width: 110px;
+  height: 38px;
+  margin-top: -10px;
+  display: inline-block;
+  background: #409eff;
+  padding-top: 6px;
+  font-size: 18px;
+  font-weight: bolder;
+  border-radius: 0.25em;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+  margin-bottom: -10px;
+}
+.requestParams,
+.forwardSetting {
+  width: 130px;
+  margin-top: 20px;
+}
+.contentDiv,
+.returnDataDiv,
+.dataSetting {
+  width: 99%;
+  height: fit-content;
+  padding: 10px;
+  margin: 10px auto auto auto;
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+.returnDataDiv {
+  margin-top: -15px;
+}
+.dataSetting {
+  height: 140px;
+}
+.expectInput {
+  width: 230px;
+}
+.path {
+  width: 400px;
+}
+.basicSettingRow {
+  margin-top: 15px;
+  font-size: 17px;
+}
+.settingTitleRow {
+  margin: -10px auto;
+  width: fit-content;
+}
+.radioButtonRow {
+  margin: 0px auto 10px 20px;
+}
+.returnDataRadioButtonRow {
+  margin: -10px auto 10px 20px;
+}
+.radioButtonRowHigh {
+  margin: 0px auto -20px 20px;
+}
+.liRadioButtonRow {
+  margin: 0px auto -20px 0px;
+  width: 99%;
+}
+.ulRadioButton {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.Error {
+  margin-bottom: -15px;
+}
+.formRow {
+  margin: 5px auto;
+}
+/* 控制文字域样式 */
+.textareaStyle,
+.runResultStyle {
+  border: 1px solid gray;
+  border-radius: 8px;
+  background: #ffffff;
+  width: 96%;
+  height: 300px;
+  margin: 10px auto 10px auto;
+  display: block;
+  padding: 15px 12px 5px 12px;
+  font-size: 17px;
+  font-family: "Times New Roman";
+}
+.runResultStyle {
+  height: fit-content;
+}
+.msLabel {
+  height: 40px;
+  padding-top: 10px;
+}
+.radioGroupStyle {
+  margin-top: 13px;
+}
+.paramsForm {
+  width: 99%;
+}
+.rowForward {
+  margin: -15px auto;
+}
+.beforeRunStyle {
+  margin-left: 20px;
+  padding-top: 10px;
+  font-size: 14px;
+}
 </style>
