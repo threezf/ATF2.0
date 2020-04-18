@@ -8,14 +8,14 @@
                     size="small" 
                     type="primary"
                     @click='addTemplateShow'>
-                    添加脚本
+                    添加{{name}}
                 </el-button>
                 <el-button
                     icon="el-icon-delete"
                     size="small" 
                     type="primary"
                     @click='deleteTemplateShow'>
-                    删除脚本
+                    删除{{name}}
                 </el-button>
             </el-row>
              <el-table
@@ -38,7 +38,7 @@
                 </el-table-column>
                 <el-table-column
                 property="name"
-                label="脚本名称">
+                :label="name + '名称'">
                 </el-table-column>
                 <el-table-column
                 property="desc"
@@ -48,7 +48,7 @@
             <div class = "templatInfo">
                 <el-row>
                     <span>
-                        脚本数据
+                        {{name}}数据
                     </span>
                 </el-row>
                 <hr>
@@ -227,19 +227,19 @@
                             </template>
                         </el-table-column>
                         <div slot="empty">
-                            暂无数据,请选择脚本
+                            暂无数据,请选择{{name}}
                         </div>
                     </el-table>
                 </div>
             </div>
         </div>
     </div>
-    <el-dialog title="新增脚本" :visible.sync="addTemplateDialog" width	="30%">
+    <el-dialog :title="'新增'+name" :visible.sync="addTemplateDialog" width	="30%">
         <el-form :model="addTemplateForm"  label-width="80px">
-            <el-form-item label="脚本名称">
+            <el-form-item :label="name+'名称'">
             <el-input v-model="addTemplateForm.name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="脚本描述">
+            <el-form-item :label="name+'描述'">
             <el-input v-model="addTemplateForm.description" autocomplete="off"></el-input>
             </el-form-item>
         </el-form>
@@ -248,18 +248,20 @@
             <el-button type="primary" @click="addTemplate">确 定</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="删除脚本" :visible.sync="deleteTemplateDialog" width	="30%">
-        <span :offset="2">确定要删除该脚本吗？</span>
+    <el-dialog :title="'删除'+name" :visible.sync="deleteTemplateDialog" width	="30%">
+        <span :offset="2">确定要删除该{{name}}吗？</span>
         <div slot="footer" class="dialog-footer">
             <el-button @click="deleteTemplateDialog = false">取 消</el-button>
             <el-button type="primary" @click="deleteTemplate">确 定</el-button>
         </div>
     </el-dialog>
     <el-dialog title="添加多项" :visible.sync="addItemShow" width	="30%">
-        <uiEleFunTree 
+        <uiEleFunTree
             @closeDialog = "addItemShow = false"
             @throwTreeInfo = "addTreeInfo"
-            :multiselection='true'>
+            :multiselection='true'
+            :transId='transId'
+            :autId='autId'>
         </uiEleFunTree>
     </el-dialog>
   </div>
@@ -286,7 +288,12 @@ export default {
         autId:{ 
             type: String,
             default: '1574'
-        }
+        },
+        // 因为在快速开始时，脚本称之为用例，因此使用变量控制其显示
+        name:{ 
+            type: String,
+            default: '脚本'
+        },
     },
     data() {
         return {
@@ -345,13 +352,15 @@ export default {
                 let arguString = this.methods[treeInfo[i].elementWidget][0].arguments
                 let arguObj = JSON.parse(arguString)
                 let argu = []
-                for(let j = 0 ; j < arguObj.length ; j++){
-                    argu.push({
-                        index:0,
-                        name:arguObj[j].name ,
-                        newvalue:"",
-                        value:""
-                    })
+                if(arguObj != undefined){
+                    for(let j = 0 ; j < arguObj.length ; j++){
+                        argu.push({
+                            index:j,
+                            name:arguObj[j].name ,
+                            newvalue:"",
+                            value:""
+                        })
+                    }
                 }
                 console.log('list[i].arguments',treeInfo[i].arguments)
                 this.templateInfo.push({
@@ -518,7 +527,7 @@ export default {
       },
       deleteTemplateShow(){
           if( !this.templateRadio ){
-              this.$message('请选择要删除的脚本')
+              this.$message('请选择要删除的'+this.name)
               return
           }
         this.deleteTemplateDialog = true

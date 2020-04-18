@@ -58,4 +58,7 @@ export default {
 
 <style lang="less">
   @import './styles/base.less';
+  .el-menu.el-menu--horizontal {
+     border-bottom: solid 0px ;
+}
 </style>
