@@ -76,8 +76,12 @@
 							:row-class-name="tableRowClassName"
 							class="table"
 							@expand-change="subShow"
+<<<<<<< HEAD
 							@selection-change="handleSelectionChange"
 						>
+=======
+							@selection-change="handleSelectionChange">
+>>>>>>> 098279507d39306e9b472e87b4cc3bb00dff9307
 							<el-table-column type="expand" >
 								<template slot-scope="scope">
 									<div

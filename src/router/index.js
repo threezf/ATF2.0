@@ -9,6 +9,7 @@ import TestInfrastructure from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
+import QuicklyStart from './quicklyStart'
 
 Vue.use(Router)
 
@@ -34,7 +35,7 @@ export default new Router({
             component: Rigester,
             meta: {
                 name: '注册',
-                hide: false
+                hide: true
             }
         },
         {
@@ -57,6 +58,7 @@ export default new Router({
 		TestInfrastructure,
         TestProject,
 		RecordFunction,
-		Test
+        Test,
+        QuicklyStart
     ]
 })

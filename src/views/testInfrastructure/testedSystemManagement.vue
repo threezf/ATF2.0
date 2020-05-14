@@ -504,20 +504,16 @@
 					method: 'POST',
 					params: {}
 				}).then(res => {
-					if(res.respCode == '0000'){
-						let needData = res.architectureRespDTOList;
-						for(let i = 0; i < needData.length;i++){
-							// let obj = new Object();
-							// obj.id = needData[i].id;
-							// obj.name = needData[i].name;
-							let id = needData[i].id;
-							let name = needData[i].name;
-							_this.abstractArchitectureInfo[id] = name;
-						}
-						// console.log('全局信息',_this.abstractArchitectureInfo)
-					}else {
-						console.log('unknown error!')
+					let needData = res.architectureRespDTOList;
+					for(let i = 0; i < needData.length;i++){
+						// let obj = new Object();
+						// obj.id = needData[i].id;
+						// obj.name = needData[i].name;
+						let id = needData[i].id;
+						let name1 = needData[i].name;
+						_this.abstractArchitectureInfo[id] = name1;
 					}
+					console.log('全局信息',res.architectureRespDTOList)
 				}).catch(err => {
 					console.log('查询开发架构失败',err);
 				})

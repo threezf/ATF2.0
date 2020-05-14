@@ -572,7 +572,7 @@ export default {
     min-height: 450px;
 }
 .page-inner{
-    padding-top: 0px;
+    padding-top: 0px!important
 }
 .el-select{
     width:100%
@@ -580,5 +580,8 @@ export default {
 //统一header高度
 .headerHeight{
     min-height: 20.8px;
+}
+.el-row{
+    padding:10px 0px
 }
 </style>

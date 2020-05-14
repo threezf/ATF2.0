@@ -187,7 +187,7 @@
                     完成注册,点击
                     <a
                         class="finishedA"
-                        href="#">这里</a>
+                        @click="toLogin">这里</a>
                     进入
                 </span>
             </el-row>
@@ -335,8 +335,30 @@
             commitEvent(formName) {
                 this.$refs[formName].validate((valid) => {
                     if(valid){
-                        this.$message.success('表单验证通过')
                         let qs = require('qs');
+                        Request({
+                            url: '/userController/register',
+                            method: 'POST',
+                            params: qs.stringify({
+                                username: this.ruleForm.username,
+                                reallyname: this.ruleForm.name,
+                                password: this.ruleForm.password,
+                                repassword: this.ruleForm.surePassword,
+                                dept: this.depart,
+                                tel: this.phone,
+                                phone: this.fixedPhone,
+                                email: this.email,
+                                authCode: this.authCode,
+                                sessionId: this.sessionId
+                            })
+                        }).then(res => {
+                            console.log('注册成功',res);
+                            this.$message.success('注册成功')
+                            this.currentStep = 2;
+                        }).catch(err => {
+                            console.log('注册失败',err)
+                            this.$message.error(err.msg)
+                        });
                         //用户名验证(存在问题)
                         // Request({
                         //     url: 'http://10.108.226.152:8080/ATFCloud/userController/checkUser',
@@ -350,28 +372,8 @@
                         // }).catch(err => {
                         //     console.log('用户名校验失败',err)
                         // })
-                        Request({
-                            url: '/userController/register',
-                            method: 'POST',
-                            parms: {
-                                username: this.ruleForm.username,
-                                reallyname: this.ruleForm.name,
-                                password: this.ruleForm.password,
-                                repassword: this.ruleForm.surePassword,
-                                department: this.depart,
-                                phonenumber: this.phone,
-                                phone: this.fixedPhone,
-                                email: this.email,
-                                authCode: this.authCode,
-                                sessionId: this.sessionId
-                                
-                            }
-                        }).then(res => {
-                            console.log('注册成功',res)
-                        }).catch(err => {
-                            console.log('注册失败',err)
-                        });
-                        this.currentStep = 2;
+                        
+                        
                     }else {
                         this.$message.error('表单验证失败')
                     }
@@ -403,6 +405,9 @@
                    this.passw = "text";
                    this.icon="el-input__icon el-icon-loading";
                }
+            },
+            toLogin() {
+                this.$router.push({path:'/login'});
             }
         },
     }
@@ -474,6 +479,7 @@
         font-size: 18px
     }
     .finishedA {
-        color: rgb(0, 102, 255)
+        color: rgb(0, 102, 255);
+        cursor: pointer;
     }
 </style>

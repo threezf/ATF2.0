@@ -157,25 +157,26 @@
         padding: 5px;
     }
     .baseInfo, .returnData {
-        width: 100px;
-        height: 34px;
+        width: 110px;
+        height: 38px;
+        margin-top: -10px;
         display: inline-block;
         background: #409eff;
-        padding-top:5px; 
+        padding-top:6px; 
         font-size: 18px;
         font-weight: bolder;
         border-radius: .25em;
         white-space: nowrap;
         color: #fff;
         text-align: center;
-        margin-bottom: 10px
+        margin-bottom: -10px
     }
     .returnData{
-        margin-top: 60px;
+        margin-top: 30px;
     }
     .detailInfoTitle {
         width: 80px;
-        height: 28px;
+        height: 30px;
         display: inline-block;
         background: #bebec2;
         padding-top:4px; 
@@ -185,10 +186,10 @@
         white-space: nowrap;
         color: #fff;
         text-align: center;
-        margin-left: 10px
+        margin-left: 20px
     }
     .mothodStyle {
-        width: 60px;
+        width: 70px;
         height: 28px;
         display: inline-block;
         background: rgb(45, 231, 144);
@@ -202,22 +203,22 @@
         margin-left: 10px
     }
     .rowStyle{
-        margin-top: 20px;
+        margin-top: 15px;
     }
     .labelContent{
         margin-left: 5px;
-        font-size: 16px;
+        font-size: 15px;
     }
     /* 控制文字域样式 */
     .textareaStyle {
 		border: 1px solid gray;
 		border-radius: 8px;
         background:#f5f5f5;
-		width: 1000px;
-		height: 337px;
+		width: 99%;
+		height: 300px;
 		margin: 10px auto 10px auto;
 		display: block;
-		padding: 6px 12px;
+		padding: 15px 20px;
 		font-size: 17px;
         line-height: 22px;
         font-family: 'Times New Roman';

@@ -1,8 +1,12 @@
 <template>
     <div>
         <div  id = "quicklyStart">
-            <el-tooltip content="体验最简洁的测试流程" placement="top">
-                <el-button>快速开始</el-button>
+            <el-tooltip content="体验最简洁的测试流程" placement="top"  href="./quicklyTransact.html">
+                <el-button>
+                    <router-link :to="{name:'QuicklyStart'}">
+                        快速开始
+                    </router-link>
+                </el-button>
             </el-tooltip>
             <!-- <a class="btn btn-white" type="button" href="/quicklyTransact" value="">
                 快速开始 <i class="icon-question-sign"></i>
@@ -15,7 +19,7 @@
         </div>
         <img  src="../assets/Operationflow.png" width="68%"  usemap="#Map" style="margin: -35px 220px 0 220px;">
         <map name="Map" id = "CribMap">
-            <area shape="rect" coords="590,280,705,310"  href="./architecture.html"> <!--编写自动化构件库-->
+            <area shape="rect" coords="590,280,705,310" href="./architecture.html"> <!--编写自动化构件库-->
             <area shape="rect" coords="450,280,550,310" href="./aut.html"> <!--被测系统管理-->
             <area shape="rect" coords="450,328,550,357" href="./aut.html" onclick="goHere('newfunpoint')"> <!--新建功能点-->
             <area shape="rect" coords="450,374,550,405" href="./aut.html" onclick="goHere('elelibrary')"> <!--配置元素库-->
@@ -53,10 +57,10 @@
         margin: 0 auto;
         padding-top: 25px;
     }
-    .quicklyStart{
-        position:absolute;
+    #quicklyStart{
+        position: relative;;
         top:30px;
-        left:30px;
+        left:40px;
 
     }
 </style>
