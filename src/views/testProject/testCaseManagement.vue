@@ -67,7 +67,7 @@
 						更改多种用例信息
 					</el-button>
 				</el-row>
-				<div class="scrollbar">
+		
 					<el-scrollbar style="width:100%">
 						<el-table
 							stripe
@@ -76,12 +76,8 @@
 							:row-class-name="tableRowClassName"
 							class="table"
 							@expand-change="subShow"
-<<<<<<< HEAD
 							@selection-change="handleSelectionChange"
 						>
-=======
-							@selection-change="handleSelectionChange">
->>>>>>> 098279507d39306e9b472e87b4cc3bb00dff9307
 							<el-table-column type="expand" >
 								<template slot-scope="scope">
 									<div
@@ -344,7 +340,7 @@
 							</el-table-column>
 						</el-table>
 					</el-scrollbar>
-				</div>
+				
 				<div class="block">
 					<el-col :span="10" :offset="4">
 						<el-pagination
@@ -3066,7 +3062,7 @@ export default {
 			radio: "1",
 			// apiUrl: '',
 			tt: 0, //总条数
-			pageSize: 8, //页面大小
+			pageSize: 5, //页面大小
 			currentPage: 1, //当前页
 			totalPage: 1, //总页数
 			listnum: 5, //页面大小
@@ -3754,7 +3750,7 @@ export default {
 </script>
 <style>
 .scrollbar {
-	width: calc(100vw - 320px);
+	width: calc(100vw );
 }
 
 .inline-block {
