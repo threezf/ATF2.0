@@ -121,6 +121,7 @@ export default {
       },
       throwInfo(){
           this.$emit("closeDialog")
+          console.log(this.eleSelected)
           this.$emit("throwTreeInfo",this.eleSelected)
       },
       getEleTree(){
