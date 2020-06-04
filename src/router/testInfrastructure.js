@@ -14,8 +14,10 @@ import PerformCodeManagement from '@/views/testInfrastructure/subFunction/perfor
 import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
 import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
+import TransactDetail from '@/views/testInfrastructure/transactDetail'
+import InterfacesManagement from '@/views/testInfrastructure/subFunction/interfacesManagement'
+import ProductLine from '@/views/testInfrastructure/subFunction/productLine'
 
-import TransactDetail from '@/views/testInfrastructure/transactDetail';
 
 export default {
 	path: '/testInfrastructure',
@@ -60,6 +62,18 @@ export default {
 						hide: true
 					}
 				},
+				// // 接口管理
+				// {
+				// 	path: 'interfacesManagement',
+				// 	name: 'InterfacesManagement',
+				// 	component: InterfacesManagement,
+				// 	meta: {
+				// 		name: '被测系统管理1',
+				// 		parent: 'TestInfrastructure',
+				// 		icon: 'el-icon-view',
+				// 		// hide: true
+				// 	}
+				// },
 				{
 					path: 'autData',
 					name: 'ConfigureSystemData',
@@ -153,6 +167,29 @@ export default {
 					},
 				}
 			]
-		}
+		},
+		// 接口管理
+		{
+			path: 'interfacesManagement',
+			name: 'InterfacesManagement',
+			component: InterfacesManagement,
+			meta: {
+				name: '接口管理',
+				parent: 'TestInfrastructure',
+				icon: 'el-icon-view',
+				// hide: true
+			}
+		},
+		{
+			path: 'productLine',
+			name: 'ProductLine',
+			component: ProductLine,
+			meta: {
+				name: '产品线',
+				parent: 'TestInfrastructure',
+				icon: 'el-icon-view',
+				// hide: true
+			}
+		},
 	]
 }

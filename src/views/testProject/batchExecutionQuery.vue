@@ -3,10 +3,17 @@
     <el-container>
       <el-main>
         <el-row>
-          <el-col class="timeCol" :span="1.2" :offset="0">
+          <el-col 
+            class="timeCol" 
+            :span="1" 
+            :offset="0">
             <span>起始日期:</span>
           </el-col>
-          <el-col style="margin-right:10px" class="timePicker" :span="3.5" :offset="0">
+          <el-col 
+            style="margin-right:10px" 
+            class="timePicker" 
+            :span="3.5" 
+            :offset="0">
             <el-date-picker
               v-model="startTime"
               type="datetime"

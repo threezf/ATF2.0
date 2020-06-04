@@ -2,12 +2,11 @@
   <div class="page-base-inner">
     <el-container>
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div slot="header" class="list-header">
           <span>映射规则列表</span>
-          <span class="addSpan">添加</span>
           <el-button
             type="primary"
-            size="small"
+            size="mini"
             icon="el-icon-plus"
             class="btn-top-margin"
             circle
@@ -21,9 +20,11 @@
           highlight-current-row
           :data="expectation"
           :show-header="showHeader"
-          @row-click="handleRowClick"
-        >
-          <el-table-column width="185px" prop="expectationName"></el-table-column>
+          @row-click="handleRowClick">
+          <el-table-column 
+            width="185px"
+            prop="expectationName">
+          </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
               <el-button
@@ -311,32 +312,29 @@ export default {
 
 <style scoped>
 .box-card {
-  width: 16.5%;
-  margin-top: 30px;
-  margin-left: 30px;
+  width: 270px;
+  margin-top: 0px;
+  margin-left: 10px;
   height: fit-content;
+  box-sizing: border-box;
 }
-.clearfix {
-  clear: both;
-}
-.btn-top-margin {
-  margin: 0px 3px 0px 30px;
+.list-header {
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  justify-content: space-between;
 }
 /* 每一行内容 */
 .cardTableStyle {
-  margin: auto 10px auto 10px;
+  margin: auto 5px;
   cursor: pointer;
-}
-.addSpan {
-  margin-left: 52px;
-  margin-right: -30px;
 }
 /* content相关内容 */
 .content {
   width: 80%;
   height: 100%;
   float: left;
-  margin-left: 50px;
+  margin-left: 20px;
 }
 .mainCardPreview {
   margin-top: -16px;

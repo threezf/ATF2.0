@@ -203,6 +203,9 @@
                     senceDesc
                 }
                 this.dialogVisible = true
+                const sceneId = row.id;
+                console.log('管理',sceneId);
+                this.$router.push({path: 'sceneSetting',query: {id: sceneId}})
             },
             // 掉起form表单 并将modelFlag标志置为 3
             handleEdit(index, row) {

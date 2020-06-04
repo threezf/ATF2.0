@@ -1,224 +1,300 @@
 <template>
   <div class="page-base-inner">
+    <!--<el-breadcrumb
+      separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item>被测系统管理</el-breadcrumb-item>
+      <el-breadcrumb-item>功能点</el-breadcrumb-item>
+    </el-breadcrumb>-->
     <el-container>
-      <el-header class="headerRow">
-        <el-button type="primary" icon="el-icon-plus" size="small" @click="addFunctionButton">添加</el-button>
+      <el-row class="buttonsRow">
+        <el-button 
+          type="primary"
+					icon='el-icon-plus'
+					size="small" 
+          @click="addFunctionButton">添加</el-button>
         <el-button
           type="primary"
           icon="el-icon-folder-add"
           size="small"
           @click="importFunctionButton"
-        >批量导入</el-button>
+          >批量导入
+        </el-button>
         <el-button
           type="primary"
           icon="el-icon-document-copy"
           size="small"
           @click="copyFunction"
-        >复制功能点</el-button>
+          >复制功能点
+        </el-button>
         <el-button
           type="primary"
           icon="el-icon-edit-outline"
           size="small"
           @click="updateFunctionButton"
-        >修改</el-button>
-        <br />
-      </el-header>
-      <el-main class="el-main-base-inner">
-        <div class="row">
-          <span class="spanRow">功能点</span>
-        </div>
-        <el-row>
-          <el-col class="systemCol">
-            <span class="ownedSystem">所属被测系统</span>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
-              <el-option
-                v-for="(item,key) in autRespDTOList"
-                :key="key"
-                :value="item.nameMedium"
-              >{{item.nameMedium}}</el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <!--表格-->
-        <el-table
-          ref="singleTable"
-          style="width:fit-content; margin-top: 15px"
-          :data="tableData"
-          :default-sort="{prop:'modifiedTime',order:'descending'}"
-          stripe
-          highlight-current-row
-          border
-        >
-          <el-table-column label="选择" width="50px" align="center">
-            <template slot-scope="scope">
-              <el-radio
-                v-model="selectedRowIndex"
-                :label="scope.$index"
-                @change="selectRow(scope.$index,scope.row)"
-              >&nbsp;</el-radio>
-            </template>
-          </el-table-column>
-          <el-table-column label="行号" width="80px" align="center" type="index"></el-table-column>
-          <el-table-column prop="code" label="编码" width="370px" align="center"></el-table-column>
-          <el-table-column prop="nameMedium" label="名称" width="370px" align="center"></el-table-column>
-          <el-table-column prop="transType" label="类型" width="100px" align="center"></el-table-column>
-          <el-table-column prop="descShort" label="描述" width="200px" align="center"></el-table-column>
-          <el-table-column
-            prop="createTime"
-            label="创建时间"
-            width="200px"
-            align="center"
-            :formatter="transTime"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="modifiedTime"
-            label="修改时间"
-            width="200px"
-            align="center"
-            :formatter="transTime"
-            sortable
-          ></el-table-column>
-        </el-table>
-        <!--底部换页-->
-        <div>
-          <el-col class="footSelect">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :page-sizes="[5,10,20,50]"
-              :current-page="currentPage"
-              :page-size="pageSize"
-              :total="totalCount"
-              layout="total, sizes, prev ,pager ,next, jumper"
-            ></el-pagination>
-          </el-col>
-        </div>
-
-        <!--新增和修改对话框-->
-        <el-dialog
-          width="27%"
-          :title="dialogTitle"
-          :visible.sync="dialogVisible"
-          :before-close="handleBeforeClose"
-        >
-          <el-form :model="ruleForm" ref="ruleForm" :rules="rules" status-icon>
-            <el-form-item class="formItem" label="名称" label-width="110px" prop="nameMedium">
-              <el-input class="formInput" placeholder="必输项" v-model.lazy="ruleForm.nameMedium"></el-input>
-              <span class="spanTextColor">*</span>
-            </el-form-item>
-            <el-form-item
-              class="formItem"
-              label="类型"
-              label-width="110px"
-              prop="functionType"
-              v-if="isAdded"
-            >
-              <el-select class="formInput" v-model="ruleForm.functionType">
-                <el-option value="UI" selected="true"></el-option>
-                <el-option value="接口"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item class="formItem" label="编码" label-width="110px" prop="code">
-              <el-input class="formInput" placeholder="为空时自动生成" v-model="ruleForm.code"></el-input>
-            </el-form-item>
-            <el-form-item class="formItem" label="描述" label-width="110px" prop="descShort">
-              <textarea class="formInput" cols="5" rows="5" v-model="ruleForm.descShort"></textarea>
-            </el-form-item>
-            <hr color="#F5F5F5" />
-            <el-form-item>
-              <div class="dialogBottom">
-                <el-button
-                  id="buttonName"
-                  type="primary"
-                  size="small"
-                  @click="submitForm("ruleForm")"
-                >{{dialogOperateButton}}</el-button>
-                <el-button type="danger" size="small" plain @click="cancelButton">取消</el-button>
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
-        <!--导入对话框-->
-        <el-dialog
-          width="27%"
-          :title="dialogTitle"
-          :before-close="handleBeforeClose"
-          :visible.sync="dialogImportVisible"
-        >
-          <el-form>
-            <el-upload
-              ref="upload"
-              :limit="1"
-              :auto-upload="false"
-              :file-list="fileList"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :on-exceed="handleExceed"
-              :on-change="handleOnChange"
-            >
-              <el-button class="btnSelectFile" type="success" size="small" slot="trigger" plain>选择文件</el-button>
-              <el-input class="formInput" placeholder="请选择导入的文件" disabled="true" v-model="fileName"></el-input>
-            </el-upload>
-            <hr color="#F5F5F5" />
-            <el-form-item>
-              <div class="dialogImportBottom">
-                <el-button
-                  type="primary"
-                  icon="el-icon-download"
-                  size="small"
-                  style="margin-right: 225px"
-                  @click="downloadTemplate"
-                >模板下载</el-button>
-                <el-button type="primary" size="small">导入</el-button>
-                <el-button size="small" @click="cancelButton">取消</el-button>
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
-        <!--操作失败-->
-        <el-dialog
-          width="27%"
-          :title="dialogTitle"
-          :visible.sync="dialogFailVisible"
-          :before-close="handleBeforeClose"
-        >
-          <el-form>
-            <el-form>
-              <el-form-item label-width="10px">
-                <p class="failContent">请选择一个功能点</p>
-              </el-form-item>
-            </el-form>
-            <hr width="100%" color="#F5F5F5" />
-            <el-form-item>
-              <div class="dialogFailBottom">
-                <el-button type="success" size="small" @click="cancelButton">确定</el-button>
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
-        <!--添加成功对话框-->
-        <el-dialog
-          width="25%"
-          title="添加成功"
-          :visible.sync="successDialogVisible"
-          :before-close="handleBeforeClose"
-        >
-          <el-form>
-            <el-form-item label-width="50px">
-              <h3>操作成功</h3>
-            </el-form-item>
-            <hr width="100%" color="#F5F5F5" />
-            <el-form-item label-width="200px" class="formFoot">
-              <el-button type="primary" size="small" @click="cancelButtonClicked">确定</el-button>
-              <el-button type="primary" size="small">进入功能点</el-button>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
-      </el-main>
+          >修改
+        </el-button>
+      </el-row>
     </el-container>
+    <el-main class="el-main-base-inner">
+      <el-row>
+        <el-col :span="8">
+          <span class="ownedSystem">所属被测系统：</span>
+          <el-select 
+            class="selectName"
+            v-model="ownedSystem" 
+            placeholder="所属被测系统"
+            @change="changeAutId">
+            <el-option
+              v-for="(item,key) in autRespDTOList"
+              :key="key"
+              :value="item.nameMedium"
+            ></el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+      <!--表格-->
+      <el-table
+        class="tableStyle"
+        ref="singleTable"
+        style="width:fit-content; margin-top: 15px"
+        :data="tableData"
+        :default-sort="{prop:'modifiedTime',order:'descending'}"
+        stripe
+        highlight-current-row
+        border>
+        <el-table-column 
+          label="选择" 
+          min-width="5%" 
+          align="center">
+          <template slot-scope="scope">
+            <el-radio
+              v-model="selectedRowIndex"
+              :label="scope.$index"
+              @change="selectRow(scope.$index,scope.row)"
+            >&nbsp;</el-radio>
+          </template>
+        </el-table-column>
+        <el-table-column 
+          label="行号" 
+          width="50px" 
+          align="center" 
+          type="index">
+        </el-table-column>
+        <el-table-column 
+          prop="code" 
+          label="编码" 
+          min-width="10%" 
+          align="center">
+        </el-table-column>
+        <el-table-column 
+          prop="nameMedium" 
+          label="名称" 
+          min-width="15%"
+          align="center">
+          </el-table-column>
+        <el-table-column 
+          prop="transType" 
+          label="类型" 
+          width="80px" 
+          align="center">
+        </el-table-column>
+        <el-table-column 
+          prop="descShort" 
+          label="描述" 
+          min-width="20%" 
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          width="200px"
+          align="center"
+          :formatter="transTime"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="modifiedTime"
+          label="修改时间"
+          width="200px"
+          align="center"
+          :formatter="transTime"
+          sortable
+        ></el-table-column>
+      </el-table>
+      <!--底部换页-->
+      <div>
+        <el-col class="footSelect">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[5,10,20,50]"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalCount"
+            layout="total, sizes, prev ,pager ,next, jumper"
+          ></el-pagination>
+        </el-col>
+      </div>
+
+      <!--新增和修改对话框-->
+      <el-dialog
+        width="24%"
+        :title="dialogTitle"
+        :visible.sync="dialogVisible"
+        :before-close="handleBeforeClose">
+        <el-form 
+          ref="ruleForm"
+          label-width="40px"
+          :model="ruleForm" 
+          :rules="rules"
+          status-icon>
+          <el-form-item 
+            label="名称" 
+            prop="nameMedium">
+            <el-input 
+              placeholder="必输项" 
+              v-model.lazy="ruleForm.nameMedium">
+            </el-input>
+          </el-form-item>
+          <el-form-item
+            label="类型"
+            prop="functionType"
+            v-if="isAdded">
+            <el-select
+              class="addSelect"
+              v-model="ruleForm.functionType">
+              <el-option 
+                value="UI" 
+                selected="true">
+              </el-option>
+              <el-option 
+                value="接口">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item 
+            label="编码"
+            prop="code">
+            <el-input 
+              placeholder="为空时自动生成" 
+              v-model="ruleForm.code">
+            </el-input>
+          </el-form-item>
+          <el-form-item 
+            label="描述" 
+            prop="descShort">
+            <el-input 
+              cols="5" 
+              rows="5"
+              type="textarea" 
+              v-model="ruleForm.descShort">
+            </el-input>
+          </el-form-item>
+          <hr color="#F5F5F5" />
+          <el-form-item>
+            <div class="dialogBottom">
+              <el-button
+                id="buttonName"
+                type="primary"
+                size="small"
+                @click="submitForm('ruleForm')"
+                >{{dialogOperateButton}}
+              </el-button>
+              <el-button 
+                type="danger" 
+                size="small" 
+                plain 
+                @click="cancelButton"
+                >取消
+              </el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!--导入对话框-->
+      <el-dialog
+        width="27%"
+        :title="dialogTitle"
+        :before-close="handleBeforeClose"
+        :visible.sync="dialogImportVisible">
+        <el-form>
+          <el-upload
+            ref="upload"
+            :limit="1"
+            :auto-upload="false"
+            :file-list="fileList"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-exceed="handleExceed"
+            :on-change="handleOnChange">
+            <el-button 
+              class="btnSelectFile" 
+              type="success" 
+              size="small" 
+              slot="trigger" 
+              plain
+              >选择文件
+            </el-button>
+            <el-input class="formInput" placeholder="请选择导入的文件" disabled="true" v-model="fileName"></el-input>
+          </el-upload>
+          <hr color="#F5F5F5" />
+          <el-form-item>
+            <el-col
+              class="buttonDownload"
+              :span="12">
+              <el-button
+                type="primary"
+                icon="el-icon-download"
+                size="small"
+                @click="downloadTemplate"
+              >模板下载</el-button>
+            </el-col>
+            <el-col
+              class="buttonGroup"
+              :span="12">
+              <el-button 
+                type="primary" 
+                size="small"
+                >导入
+              </el-button>
+              <el-button 
+                size="small" 
+                @click="cancelButton"
+                >取消
+              </el-button>
+            </el-col>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!--添加成功对话框-->
+      <el-dialog
+        width="25%"
+        title="添加成功"
+        :visible.sync="successDialogVisible"
+        :before-close="handleBeforeClose">
+        <el-form>
+          <el-form-item 
+            label-width="20px">
+            <h3>操作成功</h3>
+          </el-form-item>
+          <hr width="100%" color="#F5F5F5" />
+          <el-form-item 
+            class="formFoot">
+            <el-button 
+              type="primary" 
+              size="small" 
+              @click="cancelButtonClicked"
+              >确定
+            </el-button>
+            <el-button 
+              type="primary" 
+              size="small"
+              >进入功能点
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </el-main>
   </div>
 </template>
 
@@ -403,8 +479,7 @@ export default {
     //操作失败对话框
     failedOperation() {
       let _this = this;
-      _this.dialogModelFlag = 3;
-      _this.dialogFailVisible = true;
+      _this.$message.error('请选择功能点')
     },
     /**
      * 更换选择id
@@ -639,81 +714,89 @@ export default {
 </script>
 
 <style scoped>
-.formFoot {
-  text-align: center;
-  overflow: hidden;
-  margin: 20px auto -15px 13%;
-}
-
-.spanTextColor {
-  color: red;
-  font-size: 25px;
-  margin-top: 10px;
-}
-.spanRow {
-  margin-left: 10px;
-}
-.headerRow {
-  margin: 0px auto -8px 0px;
-  clear: both;
-}
-.ownedSystem {
-  height: fit-content;
-  color: gray;
-  font-size: 15px;
-}
-.systemCol {
-  width: fit-content;
-  height: fit-content;
-  margin: 9px 30px 9px 45px;
-}
-.row {
-  border-color: lightgray;
-  border-width: 1px;
-  border-bottom-style: solid;
-  width: 100%;
-  height: 35px;
-  margin-bottom: 10px;
-}
-.footSelect {
-  text-align: center;
-  overflow: hidden;
-  margin: 30px auto 10px auto;
-}
-.formInput {
-  width: 250px;
-  margin-left: 20px;
-}
-.formItem {
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-.dialogBottom,
-.dialogImportBottom,
-.dialogFailBottom {
-  width: fit-content;
-  float: right;
-  margin-right: 10px;
-  margin-top: 15px;
-  margin-bottom: -20px;
-}
-.dialogImportBottom {
-  overflow: hidden;
-  width: 97%;
-  margin-bottom: -30px;
-  margin-left: 10px;
-}
-.failContent {
-  height: fit-content;
-  font-size: 16px;
-  margin: -10px auto;
-  font-weight: bold;
-}
-.dialogFailBottom {
-  height: fit-content;
-  margin-bottom: -40px;
-}
-.btnSelectFile {
-  margin: 5px -5px 20px 10px;
-}
+  /** 顶部按钮组 */
+  .buttonsRow {
+    margin: 0px auto 0px 20px;
+    width: 100%;
+  }
+  /* 下拉框 */
+  .selectName {
+    width: 250px;
+  }
+  .tableStyle {
+    width: 100%!important;
+  }
+  .formFoot {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px auto -15px 13%;
+  }
+  .spanTextColor {
+    color: red;
+    font-size: 25px;
+    margin-top: 10px;
+  }
+  .spanRow {
+    margin-left: 10px;
+  }
+  .headerRow {
+    margin: 0px auto -8px 0px;
+    clear: both;
+  }
+  .ownedSystem {
+    height: fit-content;
+    color: gray;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  .row {
+    border-color: lightgray;
+    border-width: 1px;
+    border-bottom-style: solid;
+    width: 100%;
+    height: 35px;
+    margin-bottom: 10px;
+  }
+  .footSelect {
+    text-align: center;
+    overflow: hidden;
+    margin: 30px auto 10px auto;
+  }
+  .addSelect {
+    width: 100%;
+  }
+  .dialogBottom,
+  .dialogImportBottom,
+  .dialogFailBottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-bottom: -35px;
+  }
+  .buttonDownload,.buttonGroup {
+    margin: 15px 0px -35px 0px;
+    display: flex;
+  }
+  .buttonGroup {
+    justify-content: flex-end;
+  }
+  .dialogImportBottom {
+    overflow: hidden;
+    width: 97%;
+    margin-bottom: -30px;
+    margin-left: 10px;
+  }
+  .failContent {
+    height: fit-content;
+    font-size: 16px;
+    margin: -10px auto;
+    font-weight: bold;
+  }
+  .dialogFailBottom {
+    height: fit-content;
+    margin-bottom: -40px;
+  }
+  .btnSelectFile {
+    margin: -10px -5px 10px 0px;
+  }
 </style>

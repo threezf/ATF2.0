@@ -22,7 +22,7 @@
 								<el-select v-model="classValue" filterable placeholder="请选择控件" size="small"
 										   @change="classSelect($event)">
 									<el-option
-										v-for="(item,index) in classList"
+										v-for="(item) in classList"
 										:key="item.id"
 										:label="item.name"
 										:value="item">

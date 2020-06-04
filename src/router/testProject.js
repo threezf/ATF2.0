@@ -6,9 +6,12 @@ import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
+import DatatableFlowcase from '@/views/testProject/datatableFlowcase'
 import BatchExecutionQuery from "@/views/testProject/batchExecutionQuery"
-import TestRecord from '@/views/testProject/testRecord';
- 
+import TestRecord from '@/views/testProject/testRecord'
+import SceneSetting from '@/views/testProject/sceneSetting'
+import InsertSceneCase from '@/views/testProject/insertSceneCase'
+import CaseOperation from '@/views/testProject/subFunction/caseOperation'
 export default {
     path: '/testProjectIndext',
     name: 'TestProject',
@@ -18,26 +21,26 @@ export default {
         name: '项目测试'
     },
     children: [
-		{
-			path: 'testProject',
-			name: 'testProject',
-			component: testProject,
-			meta: {
-				name: '测试项目管理',
-				parents: 'TestProjectIndex',
-				icon: 'el-icon-view'
-			}
-		},
-		{
-			path: 'testCase',
-			name: 'testCase',
-			component: testCaseManagement,
-			meta: {
-				name: '测试用例管理',
-				parents: 'TestProjectIndex',
-				icon: 'el-icon-star-off'
-			}
-		},
+				{
+						path: 'testProject',
+						name: 'testProject',
+						component: testProject,
+						meta: {
+								name: '测试项目管理',
+								parents: 'TestProjectIndex',
+								icon: 'el-icon-view'
+						}
+				},
+				{
+						path: 'testCase',
+						name: 'testCase',
+						component: testCaseManagement,
+						meta: {
+								name: '测试用例管理',
+								parents: 'TestProjectIndex',
+								icon: 'el-icon-star-off'
+						}
+				},
         {
             path: 'scene',
             name: 'scene',
@@ -45,7 +48,20 @@ export default {
             meta: {
                 name: '场景管理',
                 parents: 'TestProjectIndex',
-                icon: 'el-icon-edit'
+                icon: 'el-icon-edit',
+                children: [
+                ]
+            }
+        },
+        {
+            path: 'sceneSetting',
+            name: 'sceneSetting',
+            component: SceneSetting,
+            meta: {
+                name: '场景设置',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-setting',
+                hide: false
             }
         },
         {
@@ -53,11 +69,21 @@ export default {
             name: 'datatable',
             component: datatable,
             meta: {
-                name: '测试资源管理管理',
+                name: '测试资源管理单用例',
                 parents: 'TestProjectIndex',
                 icon: 'el-icon-edit'
             }
         },
+				{
+						path: 'datatable_flowcase',
+						name: 'DatatableFlowcase',
+						component: DatatableFlowcase,
+						meta: {
+							name: '测试资源管理流程用例',
+							parents: 'TestProjectIndex',
+							icon: 'el-icon-edit'
+						},
+				},
         {
             path: 'batchexecutionquery',
             name: 'BatchExecutionQuery',
@@ -78,6 +104,27 @@ export default {
                 parents: 'TestProjectIndex',
                 icon: 'el-icon-search'
             }
-        }
+        },
+        {
+            path: 'insertSceneCase',
+            name: 'InsertSceneCase',
+            component: InsertSceneCase,
+            meta: {
+                name: '添加场景用例',
+                parents: 'TestProjectIndex',
+                icon: 'el-icon-search'
+            }
+        },
+				{
+						path: 'caseOperation',
+						name: 'CaseOperation',
+						component: CaseOperation,
+						meta: {
+								name: '用例执行结果查询',
+								parents: 'TestProjectIndex',
+								icon: 'el-icon-info'
+						}
+				}
+
     ]
 }
