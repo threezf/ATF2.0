@@ -7,6 +7,7 @@ import testProject from '@/views/testProject/testProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
 import uploadRecord from '@/views/testProject/subFunction/uploadRecord'
+import testplanExecute from '@/views/testProject/testplanExecute'
 
 export default {
 	path: '/testProjectIndext',
@@ -77,6 +78,16 @@ export default {
 				name: '测试资源管理管理',
 				parents: 'TestProjectIndex',
 				icon: 'el-icon-edit'
+			}
+		},
+		{
+			path: 'testplanExecute',
+			name: 'testplanExecute',
+			component: testplanExecute,
+			meta: {
+				name: '测试计划及执行',
+				parents: 'TestProjectIndex',
+				icon: 'el-icon-cpu'
 			}
 		}
 	]

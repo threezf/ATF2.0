@@ -3,12 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import $ from 'jquery'
+import Vac from './libs/vac-functions.es'
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min'
 Vue.config.productionTip = false
 import ElementUI from "element-ui"
 import 'element-ui/lib/theme-chalk/index.css'
 
 import {SessionStorage} from 'wii-fe-utils'
+
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
