@@ -98,16 +98,16 @@ export default {
                 hide: false
             }
         },
-        {
-            path: 'datatable',
-            name: 'datatable',
-            component: datatable,
-            meta: {
-                name: '测试资源管理单用例',
-                parents: 'TestProjectIndex',
-                icon: 'el-icon-edit'
-            }
-        },
+        // {
+        //     path: 'datatable',
+        //     name: 'datatable',
+        //     component: datatable,
+        //     meta: {
+        //         name: '测试资源管理单用例',
+        //         parents: 'TestProjectIndex',
+        //         icon: 'el-icon-edit'
+        //     }
+        // },
 				{
 						path: 'datatable_flowcase',
 						name: 'DatatableFlowcase',
@@ -169,6 +169,7 @@ export default {
 						icon: 'el-icon-edit'
 					}
 				},{
+					path: 'testplanExecute',
 					name: 'testplanExecute',
 					component: testplanExecute,
 					meta: {

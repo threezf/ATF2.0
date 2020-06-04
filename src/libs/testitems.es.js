@@ -22,7 +22,7 @@ var sendData = {
     missionCode:"",
     testProjectId:""
 };
-
+/*
 $(document).ready(function(){
     //页面的初始化操作
     // 立即执行函数，获取服务器全部数据
@@ -202,7 +202,7 @@ $(document).ready(function(){
     document.getElementById("showRows") && (document.getElementById("showRows").onchange = changeShowRows);
     $("#btn-search").click(search);
 })
-
+*/
 //初始化table
 function initialTable() {
     createTable(dataSet);
