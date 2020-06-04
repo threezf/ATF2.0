@@ -15,6 +15,7 @@
 					修改
 				</el-button>
 				<el-button
+				    @click="toFuncPoint"
 					type='primary'
 					icon='el-icon-s-tools'>
 					管理功能点
@@ -54,6 +55,7 @@
 					:data="tableData"
 					stripe
 					highlight-current-row
+					@current-change="handleCurrentChange1"
 					style="width:100%; margin-top: 10px"><!--highlight-current-row:当前选中行保持高亮-->
 					<el-table-column
 						label="选择"
@@ -148,6 +150,7 @@
 				selectInfo: "", //搜索输入内容
 				dialogModelFlag: 0,
 				dialogVisible: false,
+				selectSystem: {}
 			}
 		},
 		computed:{
@@ -187,6 +190,19 @@
 				}
 				done();
 				return true;
+			},
+			//选择表格
+			handleCurrentChange1(val) {
+			    this.selectSystem = val;
+				
+			},
+			//管理功能点按钮
+			toFuncPoint(){
+				console.log(this.selectSystem)
+				   sessionStorage.setItem("autId", this.selectSystem.id);
+                   sessionStorage.setItem("autName",this.selectSystem.nameMedium); 
+                   this.$router.push({ path: "recordTransact" });
+				
 			},
 			//添加按钮
 			addButton(){

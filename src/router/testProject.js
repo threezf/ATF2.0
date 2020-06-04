@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-12-22 09:48:55
+ * @LastEditTime: 2020-05-18 10:48:22
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ATF2.0\src\router\testProject.js
+ */
 /**
  * 测试项目管理页面路由
  */
@@ -8,6 +16,7 @@ import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
 import uploadRecord from '@/views/testProject/subFunction/uploadRecord'
 import testplanExecute from '@/views/testProject/testplanExecute'
+import testRecord_of_runId from '@/views/testProject/testRecord_of_runId'
 
 export default {
 	path: '/testProjectIndext',
@@ -57,7 +66,8 @@ export default {
 			meta: {
 				name: '导入记录',
 				parents: 'TestProjectIndex',
-				icon: 'el-icon-star-off'
+				icon: 'el-icon-star-off',
+				hide: true
 			},
 		},
 		{
@@ -79,15 +89,24 @@ export default {
 				parents: 'TestProjectIndex',
 				icon: 'el-icon-edit'
 			}
-		},
-		{
-			path: 'testplanExecute',
+		},{
 			name: 'testplanExecute',
 			component: testplanExecute,
 			meta: {
 				name: '测试计划及执行',
 				parents: 'TestProjectIndex',
 				icon: 'el-icon-cpu'
+			}
+		},
+		{
+			path: 'testRecord_of_runId',
+			name: 'testRecord_of_runId',
+			component: testRecord_of_runId,
+			meta: {
+				name: '测试记录单',
+				parents: 'TestProjectIndex',
+				icon: 'el-icon-edit',
+				hide: true
 			}
 		}
 	]
