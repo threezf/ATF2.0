@@ -12,13 +12,14 @@
 import RecordFunctionIndex from '@/views/recordFunction/index';
 import RecordManagementRouter from '@/views/recordFunction/recordManagementRouter'
 import RecordManagement from '@/views/recordFunction/recordManagement';
-import RuleExecution from '@/views/recordFunction/ruleExecution';
+import RuleExecution from '@/views/recordFunction/ruleExecute';
 import QueryRuleExecution from '@/views/recordFunction/queryRuleExecution';
 import QueryExecutionRecord from '@/views/recordFunction/queryExecutionRecord';
 import RecordTransact from '@/views/recordFunction/subFunction/recordTransact';
 import RecordDetail from '@/views/recordFunction/subFunction/recordDetail'
 // import RecordTransact from '@/views/recordFunction/recordTransact';
 import RuleInput from '@/views/recordFunction/ruleInput';
+
 
 export default {
 	path:'/recordFunction',

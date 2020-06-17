@@ -1,6 +1,6 @@
 <template>
     <div :class="isCollapse?'narrow-side-bar':'side-bar'">
-        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;"  size="small">
+        <el-radio-group v-model="isCollapse" style=""  size="small">
             <el-radio-button :label="true"><i class="el-icon-d-arrow-left"></i></el-radio-button>
             <el-radio-button :label="false"><i class="el-icon-d-arrow-right"></i></el-radio-button>
         </el-radio-group>
