@@ -125,7 +125,7 @@ export default {
 			component: TransactDetail,
 			meta: {
 				name: 'UI管理',
-				parents: 'TestedSystemManagement',
+				parent: 'TestedSystemManagement',
 				icon: 'el-icon-document-copy'
 			}
 		},

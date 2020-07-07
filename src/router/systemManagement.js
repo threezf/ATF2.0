@@ -20,7 +20,7 @@ export default {
             component: UserManagement,
             meta: {
                 name: '用户管理',
-                parents: 'SystemManagement',
+                parent: 'SystemManagement',
                 icon: 'el-icon-view'
             }
         },
@@ -30,7 +30,7 @@ export default {
             component: RunnerMnagement,
             meta: {
                 name: '执行机管理',
-                parents: 'SystemManagement',
+                parent: 'SystemManagement',
                 icon: 'el-icon-setting'
             }
         }

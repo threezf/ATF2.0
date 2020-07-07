@@ -27,7 +27,7 @@ window.activeMenu;
 // 路由钩子
 let loadingInstance = null
 router.beforeEach((to, from, next) => {
-  window.activeMenu = (to.meta && to.meta.parents) ? to.meta.parents : to.name;
+  window.activeMenu = (to.meta && to.meta.parent) ? to.meta.parent : to.name;
 
   if(to.meta && to.meta.requiresAuth) {//如果需要登录校验，在路由处配置
     if(SessionStorage.get('xxx')) { //需要校验的key

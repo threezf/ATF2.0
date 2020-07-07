@@ -22,7 +22,7 @@ export default {
             component: quicklyTransact,
             meta: {
                 name: '添加功能点',
-                parents: 'QuicklyStart'
+                parent: 'QuicklyStart'
             }
         },
         {
@@ -31,7 +31,7 @@ export default {
             component: quicklyElement,
             meta: {
                 name: '维护元素库',
-                parents: 'QuicklyStart'
+                parent: 'QuicklyStart'
             }
         },
         {
@@ -40,7 +40,7 @@ export default {
             component: quicklyTemplate,
             meta: {
                 name: '配置用例',
-                parents: 'QuicklyStart'
+                parent: 'QuicklyStart'
             }
         }
     ]
