@@ -126,7 +126,8 @@ export default {
 			meta: {
 				name: 'UI管理',
 				parent: 'TestedSystemManagement',
-				icon: 'el-icon-document-copy'
+				icon: 'el-icon-document-copy',
+				hide: true
 			}
 		},
 		{
@@ -177,7 +178,7 @@ export default {
 				name: '接口管理',
 				parent: 'TestInfrastructure',
 				icon: 'el-icon-view',
-				// hide: true
+				hide: true
 			}
 		},
 		{
@@ -188,7 +189,7 @@ export default {
 				name: '产品线',
 				parent: 'TestInfrastructure',
 				icon: 'el-icon-view',
-				// hide: true
+				hide: true
 			}
 		},
 	]
