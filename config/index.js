@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
         // 配置代理转发,具体配置看相关文档
         '/': {
-            target: 'http://10.101.167.184:8080/atfcloud2.0a',
+            target: 'http://10.101.167.184:8080/',
             changeOrigin: true
         }
     },
@@ -47,7 +47,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/index/',
 
     /**
      * Source Maps
