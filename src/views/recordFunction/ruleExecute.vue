@@ -872,8 +872,8 @@
             //     console.log('asdasdasdasdasdasdas')
             //     console.log(this.exeImgs)
             // }
-            var tempTestPlanId = sessionStorage.getItem('testPlanId') || 1210;
-            _this.caselibId = sessionStorage.getItem('caselibId') || 1241;
+            var tempTestPlanId = sessionStorage.getItem('testPlanId');
+            _this.caselibId = 82;
             var getPlans = new Promise((resolve, reject) => {
                 console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                 Vac.ajax({
