@@ -222,7 +222,7 @@ export default {
     this.selectAllTestPlan();
     this.params.queryEndTime = Date.now();
     this.params.queryStartTime =
-      this.params.queryEndTime - 30 * 24 * 60 * 60 * 1000;
+      this.params.queryEndTime - 1 * 24 * 60 * 60 * 1000;
     this.startTime = new Date(this.params.queryStartTime);
     this.endTime = new Date(this.params.queryEndTime);
     this.executeQuery();
