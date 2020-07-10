@@ -758,7 +758,7 @@
                 runnerselected: [],
                 runnerExecuteType: "appointed",
                 caselibIds: [],			
-                caselibId: 3,			// caselibId 
+                caselibId: 82,			// caselibId 
                 executionround: '1',		// 执行轮次 
                 recordflag: 2,			// 记录单
                 exeScope: '1',			// 执行范围
@@ -873,7 +873,6 @@
             //     console.log(this.exeImgs)
             // }
             var tempTestPlanId = sessionStorage.getItem('testPlanId');
-            _this.caselibId = 82;
             var getPlans = new Promise((resolve, reject) => {
                 console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                 Vac.ajax({
