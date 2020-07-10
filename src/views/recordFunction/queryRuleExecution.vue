@@ -2,7 +2,7 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-row>
+        <el-row :gutter="20">
           <el-col class="timeCol" :span="1.2" :offset="0">
             <span>起始日期:</span>
           </el-col>
@@ -25,7 +25,7 @@
               :disabled="dateDisabled"
             ></el-date-picker>
           </el-col>
-          <el-col class="timeRange" :span="1" :offset="0">
+          <el-col class="timeRange" :span="1.2" :offset="0">
             <span>时间段</span>
           </el-col>
           <el-col class="timePicker" :span="6" :offset="0">
@@ -37,7 +37,7 @@
             </el-select>
           </el-col>
         </el-row>
-        <el-row class="rowStyle">
+        <el-row class="rowStyle" :gutter="20">
           <el-col class="timeCol" :span="1.2" :offset="0">
             <span>用例来源:</span>
           </el-col>
@@ -46,8 +46,8 @@
               <el-option v-for="(item,index) in caseSources" :key="index" :value="item"></el-option>
             </el-select>
           </el-col>
-          <el-col class="timeCol" :span="1" :offset="0">
-            <span>测试计划</span>
+          <el-col class="timeCol" :span="1.2">
+            <span>测试计划:</span>
           </el-col>
           <el-col class="timePicker" :span="4" :offset="0">
             <el-select v-model="params.testPlanId" @change="handleTestPlanChange">
@@ -58,7 +58,7 @@
               >{{item.nameMedium}}</el-option>
             </el-select>
           </el-col>
-          <el-col class="executionStatus" :span="1" :offset="0">
+          <el-col class="executionStatus" :span="1.2" :offset="0">
             <span>执行状态</span>
           </el-col>
           <el-col class="timePicker" :span="4" :offset="0">
@@ -72,7 +72,6 @@
           <el-table-column align="center" width="162px" label="操作">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="queryRecord(scope.row)">查看记录单</el-button>
-              <el-button type="primary" size="mini" @click="archive(scope.row)">归档</el-button>
             </template>
           </el-table-column>
           <el-table-column align="center" width="90px" label="发起用户" prop="startUser"></el-table-column>
@@ -227,7 +226,7 @@ export default {
     //获取测试计划
     selectAllTestPlan() {
       Request({
-        url: "testPlanController/selectAllTestPlan",
+        url: "/testPlanController/selectAllTestPlan",
         method: "POST",
         params: {}
       })
@@ -316,7 +315,14 @@ export default {
     handleTestPlanChange() {},
     //查询记录单
     queryRecord(row) {
-      this.$message.success(`查询:${row.testPlanName}`);
+      console.log(row)
+      this.$router.push({
+        name: 'QueryExecutionRecord',
+        query: {
+          batchId: row.batchId,
+          testPlan: row.testPlan
+        }
+      })
     },
     //归档
     archive(row) {

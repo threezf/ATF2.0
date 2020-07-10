@@ -122,19 +122,6 @@
             <el-col 
               :span="5">
               <el-form-item
-                label="场景列表(选)">
-                <el-select 
-                  v-model="selectedSceneList">
-                  <el-option 
-                    v-for="(item,index) in sceneList" :key="index" 
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col 
-              :span="5">
-              <el-form-item
                 label="用例编号(选)">
                 <el-input 
                   placeholder="填写用例编号" 
@@ -266,12 +253,12 @@ export default {
   mixins: [VueMixins],
   data() {
     return {
-      queryMethods: ["按测试轮次", "按批量执行"], //查询方式
-      selectedQueryMethod: "按测试轮次", //选中的查询方式
+      queryMethods: ["按批量执行"], //查询方式
+      selectedQueryMethod: "按批量执行", //选中的查询方式
       testRounds: [], //测试轮次
       selectedTestRound: "", //选中的测试轮次
       testPlans: [], //测试计划
-      selectedTestPlan: "", //选择的测试计划
+      selectedTestPlan: sessionStorage.getItem('testPlanId'), //选择的测试计划
       recordStatus: [
         {label:"全部",value:""}, 
         {label:"激活",value:"2"}, 
@@ -290,28 +277,39 @@ export default {
         {label:"部分成功",value:'4'}
       ], //(选)执行状态
       selectedExecutionStatus: "", //选择
-      sceneList: [], //场景列表
-      selectedSceneList: "", //选择的场景
       tableData: [], //表格数据
       casecode: "", //用例编号
       pageSize: 20, //页面数
       currentPage: 1, //当前页面
       totalCount: 0, //总数
-      dialogVisible: true, //对话框是否可视
+      dialogVisible: false, //对话框是否可视
       formByBatch: {},//批量执行查询的表单 
+      batchId: undefined
     };
   },
-  created() {
+  async mounted() {
+    if(!(this.$route.query.batchId && this.$route.query.testPlan)){
+      
+      this.$message({
+        type: 'warning',
+        message: '请选择执行单！'
+      })
+      setTimeout(_=>{
+        this.$router.push({
+          name: 'QueryRuleExecution'
+        })
+      },0)
+      return
+    }
+    this.batchId = this.$route.query.batchId
+    this.selectedTestPlan = this.$route.query.testPlan
     this.selectAllTestround();
     this.selectAllScene();
-    this.selectAllTestPlan();
     this.pagedBatchQueryScene();
-    this.checkTableData();
+    await this.selectAllTestPlan();
+    this.getRecord(this.currentPage, this.pageSize, 'casecode', 'asc');
   },
   methods: {
-    checkTableData() {
-      this.dialogVisible = (this.tableData.length === 0)
-    },
     //测试轮次查询更新数据
     queryByTestRound() {
       Request({
@@ -345,6 +343,39 @@ export default {
           this.tableData = []
           this.totalCount = 0
         });
+    },
+    //
+    getRecord(page=1, listnum=10, order='id', sort='asc') {
+      console.log('111111111111111')
+        Request({
+            url: '/testRecordController/pagedBatchQueryTestRecordByRunId',
+            method: 'POST',
+            params: {
+                "runId":this.batchId,
+                "testPlanId": this.selectedTestPlan,
+                "pageSize":listnum,
+                "currentPage":page,
+                "orderType":sort,
+                "orderColumns":order
+            },
+        }).then(data => {
+          if (data.respCode === '0000') {
+              this.tableData = data.list;
+              this.totalCount = data.totalCount;
+              this.pageSize = listnum;
+          } else {
+            this.$message({
+              type: 'error',
+              message: data.respMsg
+            })
+          }
+        }).catch(error=>{
+          console.log(error)
+            this.$message({
+              type: 'error',
+              message: error
+            })
+        })
     },
     // 按批量执行查询
     queryByBatch() {
@@ -426,14 +457,14 @@ export default {
     },
     //查询所有的测试计划
     selectAllTestPlan() {
-      Request({
+      return Request({
         url: "/testPlanController/selectAllTestPlan",
         method: "POST",
         params: {}
-      })
-        .then(res => {
+      }).then(res => {
           console.log("测试计划列表获取成功", res);
           this.testPlans = res.testPlanEntityList;
+          this.selectedTestPlan || (this.selectedTestPlan = res.testPlanEntityList[0].id)
         })
         .catch(error => {
           // console.log("测试计划列表获取失败", error);
@@ -444,7 +475,7 @@ export default {
         url: "/sceneController/pagedBatchQueryScene",
         method: "POST",
         params: {
-          caseLibId: "1241",
+          caseLibId: 82,
           currentPage: this.currentPage,
           orderColumns: "modified_time",
           orderType: "DESC",

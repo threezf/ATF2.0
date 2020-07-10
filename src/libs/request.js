@@ -33,18 +33,15 @@ axios.defaults.paramsSerializer = (params) => {
 // api文档 : You can intercept requests or responses before they are handled by then or catch.
 // 如果判断条件不通过就直接return Promise.reject(message) 不执行后边的内容
 axios.interceptors.response.use(function (response) {
-    console.log('response1111111111111',response)
     if (! +response.status === 200) {
-        console.log('11111111111')
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
-    if (response.data.respCode === '0000'||response.statusText==='OK') {
-        console.log('222222222222')
+    if (response.data.respCode === '0000' && response.statusText === 'OK') {
         return response
     }
-    console.log('3333333333333')
-    let message =  `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}` 
+    let message = `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}`
+    console.log('拦截器捕获了错误' + message)
     return Promise.reject(message)
 }, function (error) {
     return Promise.reject(error)
@@ -76,19 +73,7 @@ const Request = function (options) {
         axios(axiosParams).then((res) => {
             console.log('request',res.data)
             res = res.data;
-            console.log('type',typeof res)
-            //修改部分request内容，用于Mock API获取
-            if(res.msg === ""||res.msg === '验证码正确'||res.success === true){
-                // ElementUI.Message.info(res.obj);
-                resolve(res)
-            }else if (res.respCode.toString() === '0000') {
-                // ElementUI.Message.info(res.respMsg)
-                resolve(res)
-            }
-            else {
-                reject(res)
-            }
-            
+            resolve(res)
             
         }).catch((err) => {
             reject(err)
