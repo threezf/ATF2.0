@@ -4,7 +4,7 @@
             <el-radio-button :label="true"><i class="el-icon-d-arrow-left"></i></el-radio-button>
             <el-radio-button :label="false"><i class="el-icon-d-arrow-right"></i></el-radio-button>
         </el-radio-group>
-        <el-menu router :default-active="this.$route.path" class="side-bar-menu"  :collapse="isCollapse">
+        <el-menu ref="menu" router :default-active="activedPath" class="side-bar-menu"  :collapse="isCollapse">
             <!-- 一级导航 -->
             <template v-for="(menu, index) in menuList">
                 <el-submenu :index="fullPath + '/' + menu.path" :key="index" v-if="(menu.children && !needHideAllChildren(menu)) && !menu.meta.hide">
@@ -36,12 +36,13 @@
             return {
                 menuList: [],
                 fullPath: '',
-                isCollapse: true
+                isCollapse: true,
+                activedPath: this.$route.path
             }
         },
         watch: {
         	'$route'(newVal, oldVal){
-        		console.log(newVal.path)
+        		this.activedPath = this.$route.path
 			}
 		},
         computed: {},

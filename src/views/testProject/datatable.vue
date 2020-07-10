@@ -1,26 +1,23 @@
 <template>
     <div class="page-inner">
         <el-row class="border">
-            <el-col :span="3">
+            <el-col :span="4">
                 <el-button v-popover:showSearch>筛选用例</el-button>
                 <el-popover
                 ref="showSearch"
                 placement="right"
                 width="800"
                 trigger="click">
-                    <searchtestcase></searchtestcase>
+                    <searchtestcase @condition-list='changeCondition'></searchtestcase>
                 </el-popover>
                 <el-button
-                    size="small" 
                     @click='search'
-                    type="primary" 
-                    :icon="'el-icon-arrow-'+(searchFlag?'up':'down')">
-                    {{searchInfo}}
+                    type="primary" >
+                    查询
                 </el-button>
             </el-col>
-            <el-col :span="4" :offset='1'>
+            <el-col :span="4" >
                 <el-button
-                    size="small" 
                     @click='checkout'
                     type="primary">
                     切换流程用例展示
@@ -46,8 +43,8 @@
                 </div>
             </div>
             <div :class="'ele-right '+(saidBarShow?'':'wide-ele-right')">
-                <el-row class="itemCenter">
-                    <el-col :span="3">
+                <el-row class="itemCenter" :gutter="20">
+                    <el-col :span="8">
                         <el-button
                             size="small" 
                             @click='save'
@@ -55,16 +52,12 @@
                             icon="el-icon-document">
                             保存
                         </el-button>
-                    </el-col>
-                    <el-col :span="3">
                         <el-button
                             size="small" 
                             @click='dataTemplate'
                             type="primary">
                             下载数据模板
                         </el-button>
-                    </el-col>
-                    <el-col :span="3">
                         <el-button
                             size="small" 
                             @click='exportData'
@@ -72,7 +65,7 @@
                             导入数据
                         </el-button>
                     </el-col>
-                    <el-col :span="7" :offset='1'>
+                    <el-col :span="8" >
                         <el-select multiple v-model="columnHidden" placeholder="请选择隐藏列">
                             <el-option
                                 v-for="item in selectOptions"
@@ -81,8 +74,6 @@
                                 :value="item.label">
                             </el-option>
                         </el-select>
-                    </el-col>
-                    <el-col :span="3" :offset='1'>
                         <el-button
                             size="small" 
                             @click='searchTemplate'
@@ -775,6 +766,9 @@
                 :multiselection='true'>
             </uiEleFunTree>
         </el-dialog>
+        <el-dialog title="用例筛选" :visible.sync="searchTemplateDailog" width	="30%">
+            <searchtestcase @condition-list='changeCondition'></searchtestcase>
+        </el-dialog>
     </div>
 </template>
 
@@ -782,7 +776,7 @@
     import Request from '@/libs/request.js'
     import VueMixins from '@/libs/vueMixins.js'
     import uiEleFunTree from '@/components/transactDetail/uiEleFunTree'
-    import searchtestcase from '@/components/searchTestcase'
+    import searchtestcase from '@/components/searchTestcase/index'
     export default {
         mixins: [VueMixins],
         components: {
@@ -795,6 +789,7 @@
             }
         },
         data() {
+            let caseLibId = sessionStorage.getItem('caselibId')
             return {
                 columnHidden:[], // 隐藏的列
                 selectedTemplate: -1 , // 选中的行
@@ -803,7 +798,7 @@
                 columnIndex:-1, //选中的列
                 dbeditFlag:false, //双击可编辑标志
                 executorId: 3,// 用户Id
-                caseLibId: 1241,// 用例库Id
+                caseLibId: caseLibId,// 用例库Id
                 menuVisible:false,// 右击菜单弹窗弹窗
                 templateInfoFlag: false,// 查看脚本弹窗
                 editDataFlag: false,// 编辑数据弹窗
@@ -854,7 +849,7 @@
                 }, {
                     "propertyName": "caseLibId",
                     "compareType": "=",
-                    "propertyValueList": ["1241"]
+                    "propertyValueList": [caseLibId]
                 }],
                 rowdata:{},
                 rowColumn:'',
@@ -864,10 +859,24 @@
                 addItemShow:false,
                 input4:'',
                 input1:'',
-                saidBarShow:true
+                saidBarShow:true,
+                searchTemplateDailog: false,
             }
         },
         mounted(){
+            if(!sessionStorage.getItem('caselibId')){
+                console.log('123')
+                this.$message({
+                    type: 'warning',
+                    message: '请选择测试项目！'
+                })
+                setTimeout(_=>{
+                    this.$router.push({
+                        name: 'testProject'
+                    })
+                },0)
+                return
+            }
             this.getFilterTree()
         },
         methods: {
@@ -1132,7 +1141,7 @@
             exportData(){
             },
             searchTemplate(){
-
+                this.searchTemplateDailog = true
             },
             showScript(id,caseCompositeType){
                 this.templateInfoFlag = true
@@ -1162,10 +1171,12 @@
                     })
             },
             search(){
-                this.searchFlag = !this.searchFlag
+                this.getFilterTree()
             },
             checkout(){
-
+                this.$router.push({
+                    name: 'DatatableFlowcase'
+                })
             },
             handleNodeClick(data) {
                 if(data.flag){
@@ -1267,6 +1278,11 @@
                 this.menuVisible = false;
                 document.removeEventListener('click', this.noclick); // 要及时关掉监听，不关掉的是一个坑，不信你试试，虽然前台显示的时候没有啥毛病，加一个alert你就知道了
             },
+            changeCondition(conditionlist){
+                console.log(conditionlist)
+                this.conditionList.splice(4)
+                this.conditionList = this.conditionList.concat(conditionlist)
+            },
         }
     }
 </script>
@@ -1320,6 +1336,10 @@
 li:hover {
   background-color: #E0E0E2;
   color: white;
+}
+.el-col{
+    height: 40px;
+    line-height: 40px;
 }
 </style>
 

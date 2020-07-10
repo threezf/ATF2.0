@@ -215,7 +215,9 @@
 			},
     	//切换单用例显示
 			toggleSingle() {
-
+                this.$router.push({
+                    name: 'datatable'
+                })
 			},
 			//编辑事件
 			edit() {
