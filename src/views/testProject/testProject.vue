@@ -8,7 +8,7 @@
 					</el-col>
 					<el-col :span="8"  :offset='1'>
 						<el-button
-							@click=''
+							@click='getTestProject(1)'
 							icon="el-icon-setting"
 							size="small"
 							type="primary">
@@ -35,7 +35,8 @@
 <!--							width="180"/>-->
 						<el-table-column
 							label="测试项目编号"
-							property="codeLong"/>
+							property="codeLong">
+						</el-table-column>
 						<el-table-column
 							label="测试项目名称"
 							property="nameMedium"/>np
@@ -59,10 +60,10 @@
 									size="mini"
 									type="info"
 									@click="updateProjectButton(scope.$index, scope.row)">修改</el-button>
-								<el-button
+								<!-- <el-button
 									size="mini"
 									type="danger"
-									@click="">删除</el-button>
+									@click="">删除</el-button>-->
 							</template>
 						</el-table-column>
 					</el-table>
@@ -122,6 +123,7 @@
 				currentPage: 1, //当前页
 				totalPage: 1, //总页数
 				listnum: 5, //页面大小
+                codeLongAndName:'codeLongAndName',
 				addForm: {
 					codeLong:"",
 					nameMedium:"",
@@ -165,8 +167,13 @@
 				let obj = {
 					currentPage: this.currentPage,
 					pageSize: this.pageSize,
+					codeLongAndName: "",
 					orderColumns: "modified_time",
 					orderType: "DESC",
+				   
+				}
+				if(this.searchInput !== ''){
+                    obj[this.codeLongAndName] = this.searchInput
 				}
 				return obj
 			},
@@ -222,7 +229,7 @@
 			// 清空form表单
 			resetForm() {
 				this.$refs.addForm.resetFields();
-			},
+			},			
 
 			//添加测试项目表单
 			addProjectButton() {

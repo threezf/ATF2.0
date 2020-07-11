@@ -54,7 +54,7 @@ export default {
 					name: 'Transact',
 					component: Transact,
 					meta:{
-						name: '被测系统管理',
+						name: '功能点管理',
 						parent: 'TestInfrastructure',
 						icon: 'el-icon-view',
 						hide: true
@@ -72,11 +72,11 @@ export default {
 					},
 				},
 				{
-					path: 'component',
+					path: 'automatedComponentMaintenance',
 					name: 'AutomatedComponentMaintenance',
 					component: AutomatedComponentMaintenance,
 					meta: {
-						name: "被测系统管理",
+						name: "自动化构件维护",
 						parent: 'TestInfrastructure',
 						icon: 'el-icon-view',
 						hide: true

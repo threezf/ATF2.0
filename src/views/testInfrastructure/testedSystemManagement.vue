@@ -43,6 +43,7 @@
 						type='primary'
 						icon='el-icon-s-tools'
 						size="small"
+						@click="toComponent"
 						plain>
 						自动化构件维护
 					</el-button>
@@ -340,6 +341,12 @@
 			//点击展示和隐藏高级功能
 			showHighFunction: function () {
 				this.highIsActive = !this.highIsActive;
+			},
+			//自动化构件维护
+			toComponent(){
+				sessionStorage.setItem("inheriteArcName", this.row.inheriteArcName)    //存储选中行信息到sessionstorage
+				sessionStorage.setItem("inheriteArcId", this.row.inheriteArcId) 
+				this.$router.push({path:'automatedComponentMaintenance'})
 			},
 			//添加按钮
 			addButton(){

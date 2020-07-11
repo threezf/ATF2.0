@@ -239,24 +239,22 @@
 					:visible.sync="drawer"
 					:direction="direction"
 					:before-close="handleClose1">
-					<div class="scrollbar">
-						<el-scrollbar style="height:100%">
 							<el-form ref="thirdForm" :model="thirdForm">
 								<el-row>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="名字" prop="name" label-width="40%">
+										<el-form-item label="名字" prop="name" label-width="50%">
 											<el-input v-model="thirdForm.name" size="small"></el-input>
 										</el-form-item>
 									</el-col>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="描述" prop="chsName" label-width="40%">
+										<el-form-item label="描述" prop="chsName" label-width="50%">
 											<el-input v-model="thirdForm.descShort" size="small"></el-input>
 										</el-form-item>
 									</el-col>
 								</el-row>
 								<el-row>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="继承关系" prop="overideFlagM" label-width="40%">
+										<el-form-item label="继承关系" prop="overideFlagM" label-width="50%">
 											<el-select v-model="overideValueM" class="selectWidthM" placeholder="-请选择-"
 													   size="small">
 												<el-option
@@ -269,7 +267,7 @@
 										</el-form-item>
 									</el-col>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="继承可见性" prop="visibilityM" label-width="40%">
+										<el-form-item label="继承可见性" prop="visibilityM" label-width="50%">
 											<el-select v-model="visibilityValueM" class="selectWidthM"
 													   placeholder="-选择默认方法-"
 													   size="small">
@@ -285,24 +283,24 @@
 								</el-row>
 								<el-row>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="标志参数化列" prop="labelArgument" label-width="40%">
+										<el-form-item label="标志参数化列" prop="labelArgument" label-width="50%">
 											<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 										</el-form-item>
 									</el-col>
 								</el-row>
-								<el-row></el-row>
 								<el-row>
 									<el-col :span="20">
-										<el-form-item label="参数列表" prop="arguments" label-width="23%">
+										<el-form-item label="参数列表" prop="arguments" label-width="23%">	</el-form-item>
 											<el-table
 												stripe
 												border
 												:data="thirdForm.arguments"
+												style="margin-left:30px"
 												class='table'>
 												<el-table-column
 													label=""
 													property="check"
-													width="70"/>
+													/>
 												<el-table-column
 													label="参数名称"
 													property="name"
@@ -320,30 +318,28 @@
 													property="desc"
 													/>
 											</el-table>
-										</el-form-item>
+									
 									</el-col>
 								</el-row>
-								<el-row></el-row>
 								<el-row>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="等待时间" prop="waittime" label-width="40%">
+										<el-form-item label="等待时间" prop="waittime" label-width="50%">
 											<el-input v-model="thirdForm.waittime" size="small"></el-input>
 										</el-form-item>
 									</el-col>
 									<el-col :span="9" :offset="1">
-										<el-form-item label="超过时间" prop="timeout" label-width="40%">
+										<el-form-item label="超过时间" prop="timeout" label-width="50%">
 											<el-input v-model="thirdForm.timeout" size="small"></el-input>
 										</el-form-item>
 									</el-col>
 								</el-row>
-								<el-row></el-row>
 								<el-row>
 									<el-col :span="20">
 										<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
 											<el-input
 												type="textarea"
 												v-model="textarea"
-												maxlength="500"
+												maxlength="1000"
 												rows="5"
 												show-word-limit>
 											</el-input>
@@ -362,8 +358,7 @@
 									</el-col>
 								</el-row>
 							</el-form>
-						</el-scrollbar>
-					</div>
+				
 				</el-drawer>
 				<el-dialog
 					title="选择自动化架构"
@@ -768,7 +763,7 @@
 	}
 
 	.drawer .el-row {
-		margin: 15px 0;
+		margin: 10px 0;
 	}
 	.scrollbar {
 		height: 1000px;
