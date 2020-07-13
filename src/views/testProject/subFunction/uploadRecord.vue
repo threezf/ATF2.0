@@ -192,12 +192,12 @@
 			},
 			
             downloadError(ID) {
-          	 var url = "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/errorFile/";
+          	 var url = "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/errorFile/";
 			       window.location.href = url+ID;
 		 	       
            },
 			 downloadFile (ID) {
-          	 var url = "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/uploadFile/";
+          	 var url = "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/uploadFile/";
 			         window.location.href = url+ID;
            },
 			//实际导入函数
@@ -251,11 +251,11 @@
 		    downloadTemplate(val) {
 		    	if (val == 0) {
 		    		let url =
-		    			"http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
+		    			"http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
 		    		window.location.href = url;
 		    	} else {
 		    		let url =
-		    			"http://10.101.167.184:8080/atfcloud2.0a/testcase/getStandardExcelTemporary";
+		    			"http://140.143.16.21:8080/atfcloud2.0a/testcase/getStandardExcelTemporary";
 		    		window.location.href = url;
 		    	}
 		    }
