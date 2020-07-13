@@ -183,7 +183,7 @@ export default {
           console.log("获取验证码成功", res.obj.sessionId);
           _this.storedSessionId = res.obj.sessionId;
           _this.url =
-            "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
+            "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
             Math.random() +
             "&sessionId=" +
             res.obj.sessionId;

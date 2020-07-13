@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
         // 配置代理转发,具体配置看相关文档
         '/': {
-            target: 'http://10.101.167.184:8080/',
+            target: 'http://140.143.16.21:8080/',
             changeOrigin: true
         }
     },
