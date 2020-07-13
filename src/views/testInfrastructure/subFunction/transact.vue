@@ -1,10 +1,5 @@
 <template>
   <div class="page-base-inner">
-    <!--<el-breadcrumb
-      separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item>被测系统管理</el-breadcrumb-item>
-      <el-breadcrumb-item>功能点</el-breadcrumb-item>
-    </el-breadcrumb>-->
     <el-container>
       <el-row class="buttonsRow">
         <el-button 
@@ -217,9 +212,10 @@
         :title="dialogTitle"
         :before-close="handleBeforeClose"
         :visible.sync="dialogImportVisible">
-        <el-form>
+        <el-form :action="importURL" enctype="multipart/form-data" method='post' id="uploadForm">
           <el-upload
             ref="upload"
+            :action="importURL"
             :limit="1"
             :auto-upload="false"
             :file-list="fileList"
@@ -228,18 +224,16 @@
             :on-exceed="handleExceed"
             :on-change="handleOnChange">
             <el-button 
-              class="btnSelectFile" 
-              type="success" 
-              size="small" 
-              slot="trigger" 
-              plain
-              >选择文件
+              class="btnSelectFile"
+              type="success"
+              slot="trigger"
+              plain>上传文件
             </el-button>
-            <el-input class="formInput" placeholder="请选择导入的文件" disabled="true" v-model="fileName"></el-input>
+            <el-input class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
           </el-upload>
-          <hr color="#F5F5F5" />
+          <hr color="#F5F5F5" />
           <el-form-item>
-            <el-col
+            <el-col
               class="buttonDownload"
               :span="12">
               <el-button
@@ -252,13 +246,14 @@
             <el-col
               class="buttonGroup"
               :span="12">
-              <el-button 
-                type="primary" 
+              <el-button
+                type="primary"
                 size="small"
+                @click="importTemplate"
                 >导入
               </el-button>
-              <el-button 
-                size="small" 
+              <el-button
+                size="small"
                 @click="cancelButton"
                 >取消
               </el-button>
@@ -269,17 +264,17 @@
       <!--添加成功对话框-->
       <el-dialog
         width="25%"
-        title="添加成功"
+        title="提示"
         :visible.sync="successDialogVisible"
         :before-close="handleBeforeClose">
         <el-form>
           <el-form-item 
             label-width="20px">
-            <h3>操作成功</h3>
+            <h4 class="transactSuccessTitle">操作成功</h4>
           </el-form-item>
           <hr width="100%" color="#F5F5F5" />
           <el-form-item 
-            class="formFoot">
+            class="formFoot transactDialogButtonRow">
             <el-button 
               type="primary" 
               size="small" 
@@ -287,7 +282,7 @@
               >确定
             </el-button>
             <el-button 
-              type="primary" 
+              type="success" 
               size="small"
               >进入功能点
             </el-button>
@@ -318,6 +313,7 @@ export default {
       //初始渲染需要的数据
       autId: "", //被测系统管理界面传递过来的值
       autRespDTOList: [], //所有测试系统列表
+      creatorId: 3, // 用户ID
       ownedSystem: "", //被测系统
       //换页相关信息
       currentPage: 1,
@@ -343,14 +339,15 @@ export default {
         nameMedium: [{ validator: checkNameMedium, trigger: "blur" }]
       }, //表单验证数据
       //文件上传
-      fileList: {},
+      fileList: [],
       fileName: "",
       rowInfo: {}, //行信息
       updateId: "", //修改/复制功能点时传递的id
       isAdded: true, //点击修改时隐藏，添加时显示
       //复制功能的数据
       elementRepositoryId: "",
-      objectRepositoryId: ""
+      objectRepositoryId: "",
+      
     };
   },
   created() {
@@ -360,7 +357,6 @@ export default {
     this.getAllFunction();
     this.getAllSystem();
   },
-  mounted() {},
   computed: {
     changedParams() {
       let obj = {
@@ -385,6 +381,9 @@ export default {
     dialogOperateButton() {
       let buttonArray = ["新增", "确定", "修改", "确定", "新增"];
       return buttonArray[this.dialogModelFlag];
+    },
+    importURL() {
+      return 'http://10.101.167.184:8080/atfcloud2.0a/transactController/batchImportTransact' // 上传的URL
     }
   },
   methods: {
@@ -708,6 +707,26 @@ export default {
     cancelButtonClicked() {
       this.dialogVisible = false;
       this.successDialogVisible = false;
+    },
+    // 导入模板
+    importTemplate() {
+      console.log('importTemplate',this.autId)
+      let formData = new FormData(document.getElementById('uploadForm'))
+      formData.append('autId', this.autId)
+      formData.append('creatorId', this.creatorId)
+      Request({
+        url: 'transactController/batchImportTransact',
+        method: 'POST',
+        params: formData
+      }).then(res => {
+        this.$message.success(res.respMsg)
+        this.dialogImportVisible = false
+        this.getAllFunction()
+        this.fileList = []
+        this.fileName = ""
+      }).catch(res => {
+        this.$message.error('上传失败')
+      })
     }
   }
 };
@@ -773,12 +792,19 @@ export default {
     margin-top: 15px;
     margin-bottom: -35px;
   }
+  .formInput {
+    width: 300px;
+    margin-left: 20px;
+  }
   .buttonDownload,.buttonGroup {
     margin: 15px 0px -35px 0px;
     display: flex;
   }
   .buttonGroup {
     justify-content: flex-end;
+  }
+  .uploadFile {
+    display: none;
   }
   .dialogImportBottom {
     overflow: hidden;
@@ -798,5 +824,13 @@ export default {
   }
   .btnSelectFile {
     margin: -10px -5px 10px 0px;
+  }
+  .transactSuccessTitle {
+    margin-top: -20px;
+    margin-bottom: -10px;
+  }
+  .transactDialogButtonRow {
+    margin-top: -5px;
+    margin-bottom: -20px;
   }
 </style>

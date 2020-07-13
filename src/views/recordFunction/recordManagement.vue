@@ -26,7 +26,7 @@
           >管理功能点
         </el-button>
 
-        <el-button 
+        <el-button
           type="primary" 
           icon="el-icon-download" 
           size="small"
@@ -60,6 +60,7 @@
           ref="singleTable"
           :data="tableData"
           stripe
+					border
           highlight-current-row>
           <!--highlight-current-row:当前选中行保持高亮-->
           <el-table-column
@@ -187,14 +188,14 @@
 							v-if="titleIndex === 0"
 							type="primary"
 							size="small"
-							@click.once="addSure"
+							@click="addSure"
 							>添加
 						</el-button>
 						<el-button
 							v-else
 							type="primary"
 							size="small"
-							@click.once="editSure"
+							@click="editSure"
 							>修改
 						</el-button>
 					</div>
@@ -345,23 +346,10 @@ export default {
 		// 跳转到录制功能点管理
 		toTransact(id) {
 			this.$router.push({
-				path: '/recordFunction/RecordManagementRouter/recordDetail',
+				path: '/recordFunction/RecordManagementRouter/recordTransact',
 				query: {
 					'autId': id
 				}
-			})
-		},
-		// 下载录制工具
-		downloadTools() {
-    	Request({
-				url: '',
-				method: '',
-				params: {}
-			}).then(res => {
-    		this.$message.success('开始下载')
-    		console.log('下载成功',res)
-			}).catch(err => {
-    		this.$message.error('发生未知错误，下载失败')
 			})
 		},
 		// 清空对话框表单
@@ -374,7 +362,7 @@ export default {
 		},
 		// 更改radio的选项
 		selectRadio(row,index) {
-    	console.log('radio',row,index)
+    	console.log('radio',row,row.id)
 			this.selectedRow = row
 			// this.radio = true
 			console.log('radio' + this.radio);
@@ -417,8 +405,11 @@ export default {
         ).catch(err => {
           console.log(err);
         });
-    },
-
+		},
+		// 录制工具下载
+		downloadTools() {
+			window.location = "http://10.101.167.184:8080/atf-data/atf-recorder.zip"
+		}
   }
 };
 </script>

@@ -168,12 +168,12 @@
               label="开发状态">
               <el-select
                 class="mainSelect"
-                v-model="manageInfo.selectedStatus">
+                v-model="manageInfo.status">
                 <el-option
-                  v-for="(item,index) in statusList"
-                  :key="index"
-                  :value="item.id"
-                  :label="item.status">
+                  v-for="(item) in statusList"
+                  :key="item.id"
+                  :label="item.status"
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -183,7 +183,7 @@
               label="通信类型">
               <el-select
                 class="mainSelect"
-                v-model="manageInfo.selectedProtocol">
+                v-model="manageInfo.protocol">
                 <el-option
                   v-for="(item,index) in protocolList"
                   :key="index"
@@ -198,7 +198,7 @@
               label="请求方法">
               <el-select
                 class="mainSelect"
-                v-model="manageInfo.selectedMethod">
+                v-model="manageInfo.method">
                 <el-option
                   v-for="(item,index) in methodList"
                   :key="index"
@@ -259,7 +259,7 @@
           <el-tab-pane
             label="Header">
             <el-row
-              v-for="(item,index) in manageInfo.selectedHeader"
+              v-for="(item, index) in manageInfo.selectedHeader"
               :key="index">
               <el-col
                 :span="6">
@@ -268,8 +268,7 @@
                   label="header">
                   <el-input
                     placeholdr="请填写header"
-                    v-model="item.name"
-                    @change.once="addRow(item.name)">
+                    v-model="item.name">
                   </el-input>
                 </el-form-item>
               </el-col>
@@ -295,11 +294,21 @@
                   </el-input>
                 </el-form-item>
               </el-col>
+               <el-button
+                type="success"
+                icon="el-icon-plus"
+                size="mini"
+                class="deleteRow"
+                title="添加"
+                plain
+                @click="addRow(index)">
+              </el-button>
               <el-button
                 type="danger"
                 icon="el-icon-close"
                 size="mini"
                 class="deleteRow"
+                title="删除"
                 plain
                 @click="removeRowHeader(index)">
               </el-button>
@@ -312,7 +321,7 @@
               label-width="100px"
               label="报文格式">
               <el-select
-                v-model="manageInfo.selectedBodyFormat">
+                v-model="manageInfo.bodyFormat">
                 <el-option
                   v-for="(item,index) in bodyFormats"
                   :key="index"
@@ -364,7 +373,7 @@
     name: 'InterfacesManagement',
     data() {
       return {
-        autId: "120", // 系统id
+        autId: "1570", // 系统id
         transactsForm: {id: "339"}, // 获取功能点传递的表单数据
         singleInterfaceForm: {id: "271"}, // 获取接口的表单数据
         systemNameSearch: '', // 被测系统查询条件
@@ -401,7 +410,7 @@
           urlPath: '', // 接口路径
           selectedAuthorization: 'inherit auth from parent', // Authorization
           selectedHeader: [{}],
-          selectedBodyFormat: 'JSON', // 选择的报文格式
+          rawFormat: '', // 选择的报文格式
         },
         authenticationMethodList: [
           'HTTP Basic',
@@ -411,31 +420,31 @@
           'OAUTH 2'
         ], // 认证方法列表
         statusList: [
-          {id:'0',status:'开发中'},
-          {id:'1',status:'开发完成'},
-          {id:'2',status:'已废弃'}
+          {id: 0, status: '开发中'},
+          {id: 1, status: '开发完成'},
+          {id: 2, status: '已废弃'}
         ], // 开发状态列表
         protocolList: [
-         {id: '0', type: 'HTTP'},
-         {id: '1', type: 'FTP'}
+          {id: 1, type: 'HTTP'},
+          {id: 2, type: 'FTP'}
         ], // 通信类型列表
         methodList: [
-          {id: '0', type: 'GET'},
-          {id: '1', type: 'POST'},
-          {id: '2', type: 'PUT'},
-          {id: '3', type: 'DELETE'},
+          {id: 0, type: 'GET'},
+          {id: 1, type: 'POST'},
+          {id: 2, type: 'PUT'},
+          {id: 3, type: 'DELETE'},
         ], // 请求方法列表
         authorizationList: [
-          {id: '1',value: 'inherit auth from parent'},
-          {id: '2',value: 'No Auth'},
-          {id: '3',value: 'Bearer Token'},
-          {id: '4',value: 'Basic Auth'},
-          {id: '5',value: 'Digest Auth'},
-          {id: '6',value: 'OAuth 1.0'},
-          {id: '7',value: 'OAuth 2.0'},
-          {id: '8',value: 'Hawk Authentication'},
-          {id: '9',value: 'AWS Signature'},
-          {id: '10',value: 'NTLM Authentication[Beta]'},
+          {id: 1, value: 'inherit auth from parent'},
+          {id: 2, value: 'No Auth'},
+          {id: 3, value: 'Bearer Token'},
+          {id: 4, value: 'Basic Auth'},
+          {id: 5, value: 'Digest Auth'},
+          {id: 6, value: 'OAuth 1.0'},
+          {id: 7, value: 'OAuth 2.0'},
+          {id: 8, value: 'Hawk Authentication'},
+          {id: 9, value: 'AWS Signature'},
+          {id: 10, value: 'NTLM Authentication[Beta]'},
         ], // Authorization
         bodyFormats: [
           {id: 1, value: 'JSON'},
@@ -460,6 +469,7 @@
           if(res.respCode == '0000') {
             this.manageInfo.creatorList = res.list
             this.manageInfo.maintainerList = res.list
+            // console.log("uploadForm",this.manageInfo.maintainerList)
             
           }else {
             this.$message.warning('获取失败')
@@ -481,7 +491,6 @@
             let item = this.titleForm.autRespDTOList.find(item => {
               return item.id == this.autId
             })
-           
            console.log("item",item)
            this.selectSystem = item.nameMedium
           }else {
@@ -510,7 +519,6 @@
               this.selectedTransact = ""
               this.selectSystem = ""
             }
-            
           }else {
             this.$message.warning('获取失败')
           }
@@ -528,31 +536,28 @@
             id: id
           }
         }).then(res => {
-          console.log('querySingleInterface',res)
-          if(res.respCode == '0000') {
+          console.log('uploadquerySingleInterface', res)
+          if(res.respCode === '0000') {
             jQuery.extend(this.manageInfo, res)
-            this.manageInfo.createTime = moment(res.createTime).format('YYYY/MM/DD hh:mm:ss')
-            this.manageInfo.modifyTime = moment(res.modifyTime).format('YYYY/MM/DD hh:mm:ss')
-            let statusRes = res.status
-            let protocolRes = res.protocol
-            let methodRes = res.method
-            let bodyRes = res.bodyFormat
-            let statusItem = _this.statusList.find(item => (item.id == statusRes))
-            let methodItem = _this.methodList.find(item =>(item.id == methodRes))
-            let protocolItem = _this.protocolList.find(item =>(item.id == protocolRes))
-            let bodyItem = _this.bodyFormats.find((item)=>(item.id = bodyRes))
-            _this.manageInfo.selectedStatus = statusItem.status
-            _this.manageInfo.selectedMethod = methodItem.type
-            _this.manageInfo.selectedProtocol = protocolItem.type
-            _this.manageInfo.selectedBodyFormat = bodyItem.value
-            console.log('getData',statusRes,protocolRes,methodRes)
-            console.log('getData',statusItem,protocolItem,methodItem,bodyItem)
-            console.log('uploadForm',Number(this.manageInfo.selectedStatus))
+            this.manageInfo.createTime = moment(res.createTime).format('YYYY/MM/DD HH:mm:ss')
+            this.manageInfo.modifyTime = moment(res.modifyTime).format('YYYY/MM/DD HH:mm:ss')
+            _this.manageInfo.status = res.status //开发状态
+            _this.manageInfo.method = res.method // 请求方法
+            _this.manageInfo.protocol = res.protocol // 通信类型
+            _this.manageInfo.bodyFormat = res.bodyFormat // 报文格式
+            _this.manageInfo.selectedHeader = []
+            if(res.header !== '[]') {
+              _this.manageInfo.selectedHeader.push(...JSON.parse(res.header))
+            }else {
+               _this.manageInfo.selectedHeader.push({ name: '', val: '', desc: ''})
+            }
+            console.log("querySingleInterface", _this.manageInfo)
           }else {
             this.$message.warning('获取失败')
           }
         }).catch(error => {
-          this.$message.error('数据获取失败')
+          this.$message.error(error.respMsg)
+          console.log("querySingleInterface",error)
         })
       },
       // 选中系统更换
@@ -618,7 +623,7 @@
           authContent: null,
           authType: null,
           bodyContent: this.manageInfo.bodyContent,
-          bodyFormat: isNaN(Number(this.manageInfo.selectedBodyFormat))? '1':this.manageInfo.selectedBodyFormat,
+          bodyFormat: this.manageInfo.bodyFormat,
           bodyParseContent: null,
           createTime: this.manageInfo.createTime,
           creatorId: this.manageInfo.creatorId,
@@ -629,13 +634,13 @@
           id: this.transactsForm.id,
           interfaceCode: this.manageInfo.interfaceCode,
           maintainerId: this.manageInfo.maintainerId,
-          method: isNaN(Number(this.manageInfo.selectedMethod))? '0':this.manageInfo.selectedMethod,
+          method: this.manageInfo.method,
           name: this.manageInfo.name,
           preRequestScript: null,
-          protocol: isNaN(Number(this.manageInfo.selectedProtocol))? '1':this.manageInfo.selectedMethod,
+          protocol: this.manageInfo.protocol,
           query: "[]",
           rawFormat: 1,
-          status: isNaN(Number(this.manageInfo.selectedStatus))?'1':this.manageInfo.selectedStatus,
+          status: this.manageInfo.status,
           systemId: this.autId,
           urlPath: this.manageInfo.urlPath,
           version: this.manageInfo.version
@@ -687,22 +692,13 @@
         })
       },
       // 数据编辑时添加一行
-      addRow(name) {
-        console.log('失去焦点',this.manageInfo.selectedHeader)
-        if(name.length > 0) {
-          this.manageInfo.selectedHeader.push({})
-        }
+      addRow(index) {
+        this.manageInfo.selectedHeader.push({})
       },
       // 删除一行数据
       removeRowHeader(index) {
         this.manageInfo.selectedHeader.splice(index,1)
       }
-    },
-    computed: {
-      
-    },
-    filters: {
-
     }
   }
 </script>

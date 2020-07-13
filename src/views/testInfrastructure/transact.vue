@@ -63,8 +63,7 @@
           :default-sort="{prop:'modifiedTime',order:'descending'}"
           stripe
           highlight-current-row
-          border
-        >
+          border>
           <el-table-column label="选择" width="50px" align="center">
             <template slot-scope="scope">
               <el-radio
@@ -116,8 +115,7 @@
           width="27%"
           :title="dialogTitle"
           :visible.sync="dialogVisible"
-          :before-close="handleBeforeClose"
-        >
+          :before-close="handleBeforeClose">
           <el-form :model="ruleForm" ref="ruleForm" :rules="rules" status-icon>
             <el-form-item class="formItem" label="名称" label-width="110px" prop="nameMedium">
               <el-input class="formInput" placeholder="必输项" v-model.lazy="ruleForm.nameMedium"></el-input>
@@ -148,8 +146,9 @@
                   id="buttonName"
                   type="primary"
                   size="small"
-                  @click="submitForm("ruleForm")"
-                >{{dialogOperateButton}}</el-button>
+                  @click="submitForm('ruleForm')"
+                  >{{dialogOperateButton}}
+                </el-button>
                 <el-button type="danger" size="small" plain @click="cancelButton">取消</el-button>
               </div>
             </el-form-item>
@@ -160,8 +159,7 @@
           width="27%"
           :title="dialogTitle"
           :before-close="handleBeforeClose"
-          :visible.sync="dialogImportVisible"
-        >
+          :visible.sync="dialogImportVisible">
           <el-form>
             <el-upload
               ref="upload"
@@ -171,8 +169,7 @@
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :on-exceed="handleExceed"
-              :on-change="handleOnChange"
-            >
+              :on-change="handleOnChange">
               <el-button class="btnSelectFile" type="success" size="small" slot="trigger" plain>选择文件</el-button>
               <el-input class="formInput" placeholder="请选择导入的文件" disabled="true" v-model="fileName"></el-input>
             </el-upload>

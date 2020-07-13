@@ -20,11 +20,9 @@
           highlight-current-row
           :data="expectation"
           :show-header="showHeader"
-          @row-click="handleRowClick">
-          <el-table-column 
-            width="185px"
-            prop="expectationName">
-          </el-table-column>
+          @row-click="handleRowClick"
+        >
+          <el-table-column width="185px" prop="expectationName"></el-table-column>
           <el-table-column>
             <template slot-scope="scope">
               <el-button
@@ -39,20 +37,6 @@
         </el-table>
       </el-card>
       <div class="content">
-        <!-- <el-radio-group
-                    class="buttonGroupStyle"
-                    v-model='option'
-                    @change="changeRadioButton(option,id)">
-                    <el-radio-button
-                        label='预览'>
-                    </el-radio-button>
-                    <el-radio-button
-                        label='编辑'>
-                    </el-radio-button>
-                    <el-radio-button
-                        label='运行'>
-                    </el-radio-button>
-        </el-radio-group>-->
         <el-tabs type="card" v-model="selectName" @tab-click="handleRabClick">
           <el-tab-pane label="preview" name="preview"></el-tab-pane>
           <el-tab-pane label="edit" name="edit"></el-tab-pane>
@@ -339,7 +323,7 @@ export default {
 .mainCardPreview {
   margin-top: -16px;
   width: 100%;
-  height: 748px;
+  height: 100%;
 }
 .mainCard {
   width: 100%;

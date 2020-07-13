@@ -57,7 +57,7 @@
       </el-row>
       <el-form>
         <el-form-item label="所属部门" label-width="200px">
-          <el-input class="normalInput" placeholder="请填写所属部门，例如"行政部"" v-model="depart"></el-input>
+          <el-input class="normalInput" placeholder="请填写所属部门，例如行政部" v-model="depart"></el-input>
         </el-form-item>
         <el-form-item label="手机号" label-width="200px">
           <el-input class="normalInput" placeholder="请输入手机号" v-model="phone"></el-input>

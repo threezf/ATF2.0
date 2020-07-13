@@ -42,7 +42,6 @@ export default {
   computed: {},
   created() {
     this.autId = this.$route.query.id;
-    this.$message.success("id：" + this.autId);
     this.querySingleTool();
   },
   methods: {
@@ -99,7 +98,7 @@ export default {
 
 <style scoped>
 .buttonRow {
-  margin: -20px auto 15px 0px;
+  margin: 0px auto 15px 0px;
   font-size: 18px;
   color: gray;
   height: 32px;

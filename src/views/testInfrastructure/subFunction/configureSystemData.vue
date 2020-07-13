@@ -2,7 +2,7 @@
   <div class="page-base-inner">
     <el-container>
       <el-main>
-        <el-row class="buttonRow">
+        <el-row class="buttonRowTop">
           <el-button type="primary" size="small" icon="el-icon-plus" @click="addButton">添加</el-button>
           <el-button type="primary" size="small" icon="el-icon-delete" @click="deleteButton">删除</el-button>
           <el-button type="primary" size="small" icon="el-icon-edit" @click="updateButton">修改</el-button>
@@ -16,15 +16,15 @@
           border
           :data="tableData"
         >
-          <el-table-column label="选择" min-width="3%">
+          <el-table-column label="选择" width="60px">
             <template slot-scope="scope">
               <el-radio
                 class="el-radio"
-                align="center"
                 v-model="radioSelect"
                 :label="scope.$index"
                 @change="handleRadioSelectChange(scope.$index,scope.row)"
-              >&emsp;</el-radio>
+              >&emsp;
+              </el-radio>
             </template>
           </el-table-column>
           <el-table-column label="名称" min-width="28.5%" prop="dataName"></el-table-column>
@@ -33,11 +33,10 @@
         </el-table>
         <!--数据对话框-->
         <el-dialog
-          width="20%"
+          width="22%"
           :title="dialogTitle"
           :visible.sync="dialogVisible"
-          :before-close="handleBeforeClose"
-        >
+          :before-close="handleBeforeClose">
           <el-form>
             <el-form-item label="名称" label-width="70px">
               <el-input class="inputStyle" placeholder="请输入名称" v-model="ruleForm.dataName"></el-input>
@@ -46,13 +45,13 @@
               <el-input class="inputStyle" placeholder="请输入值" v-model="ruleForm.dataValue"></el-input>
             </el-form-item>
             <el-form-item label="描述" label-width="70px">
-              <textarea class="textareaStyle" cols="27" rows="5" v-model="ruleForm.dataDesc"></textarea>
+              <el-input type="textarea" class="textareaStyle" cols="27" rows="5" v-model="ruleForm.dataDesc"></el-input>
             </el-form-item>
             <hr width="100%" color="#F5F5F5" />
-            <el-form-item style="margin: 15px auto -15px auto" label-width="210px">
-              <el-button type="primary" size="small" @click="submitForm("ruleForm")">{{buttonName}}</el-button>
+            <div class="buttonRow">
+              <el-button type="primary" size="small" @click="submitForm('ruleForm')">{{buttonName}}</el-button>
               <el-button type="danger" size="small" plain @click="cancelClick">取消</el-button>
-            </el-form-item>
+            </div>
           </el-form>
         </el-dialog>
       </el-main>
@@ -116,6 +115,9 @@ export default {
       let _this = this;
       _this.dialogModelFlag = 0;
       _this.dialogVisible = true;
+       _this.ruleForm.dataName = ""
+      _this.ruleForm.dataValue = ""
+      _this.ruleForm.dataDesc = ""
     },
     deleteButton() {
       let _this = this;
@@ -134,6 +136,7 @@ export default {
           .then(res => {
             console.log("删除成功", res);
             _this.$message.success("删除成功");
+            _this.radioSelect = ""
             _this.queryAllDatas();
           })
           .catch(err => {
@@ -211,12 +214,19 @@ export default {
             console.log("修改成功", res);
             _this.$message.success("修改成功");
             _this.dialogVisible = false;
+            _this.radioSelect = ""
             _this.queryAllDatas();
           })
           .catch(err => {
             console.log("修改失败", err);
           });
       }
+    },
+    // 重置输入框
+    resetInput() {
+      this.ruleForm.dataName = ""
+      this.ruleForm.dataValue = ""
+      this.ruleForm.dataDesc = ""
     },
     //取消按钮
     cancelClick() {
@@ -239,20 +249,19 @@ export default {
         }
       })
         .then(res => {
-          console.log("获取成功", res);
           if (res.respCode === "0000") {
             if (res.list.length !== 0) {
-              this.tableData = res.list;
+              this.tableData = res.list? res.list: [];
             } else {
               this.$message.warning("未添加数据");
             }
           } else {
-            console.log("查询失败");
+            this.tableData = []
           }
         })
         .catch(err => {
           this.$message.warning("未添加数据");
-          console.log("获取失败", err);
+          this.tableData = []
         });
     }
   }
@@ -260,26 +269,29 @@ export default {
 </script>
 
 <style scoped>
-/*表单样式*/
-.inputStyle {
-  width: 230px;
-}
-/*表格相关样式*/
-.tableStyle {
-  margin-left: 10px;
-  margin-top: 15px;
-  width: inherit;
-}
-.rowTitle {
-  margin: 0px auto 15px 15px;
-  font-size: 17px;
-  color: gray;
-}
-.buttonRow {
-  margin: -20px auto 15px 0px;
-}
-.textareaStyle {
-  border-radius: 4px;
-  padding: 10px;
-}
+  /*表单样式*/
+  .inputStyle {
+    width: 270px;
+  }
+  /*表格相关样式*/
+  .tableStyle {
+    margin-left: 10px;
+    margin-top: 15px;
+    width: inherit;
+  }
+  .rowTitle {
+    margin: 0px auto 15px 15px;
+    font-size: 17px;
+    color: gray;
+  }
+  .buttonRow {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -10px;
+  }
+  .textareaStyle {
+    width: 280px;
+    border-radius: 4px;
+    padding: 10px;
+  }
 </style>

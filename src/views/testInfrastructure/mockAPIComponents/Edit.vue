@@ -194,7 +194,7 @@
         </el-form>
       </el-row>
     </div>
-    <div v-if="type==='forward'">
+    <div v-if="type === 'forward'">
       <el-row>
         <span class="forwardSetting">转发数据设置</span>
       </el-row>
@@ -469,6 +469,7 @@ export default {
     //根据id获取信息
     getExpectationById(id) {
       let _this = this;
+      console.log("getExpectationById")
       let qs = require("qs");
       Request({
         url: "/mockServer/getExpectationById",
@@ -478,12 +479,17 @@ export default {
         })
       })
         .then(res => {
-          console.log("res", res);
+          console.log("getExpectationById", res);
           _this.expectationName = res.expectationName;
           _this.type = res.type;
           _this.creator = res.creator;
           _this.httpRequest = res.httpRequest;
           _this.httpResponse = res.httpResponse;
+          if(res.httpForwardEntity) {
+            _this.hostContent = res.httpForwardEntity.host
+            _this.portContent = res.httpForwardEntity.port
+            _this.selectedProtocol = res.httpForwardEntity.scheme
+          }
           if (_this.httpResponse !== null) {
             _this.reasonPhrase = res.httpResponse.reasonPhrase;
             _this.statusCode = res.httpResponse.statusCode;
