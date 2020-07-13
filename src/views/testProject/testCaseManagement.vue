@@ -67,7 +67,29 @@
 						更改多种用例信息
 					</el-button>
 				</el-row>
-		
+		        <el-row style="padding-top:20px;padding-bottom:10px">
+				   <el-col :span="4">
+                    <el-select v-model="selectValue" placeholder="请选择" size="small">
+                        <el-option
+                        v-for="item in selectOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="4" style="padding-left:20px">
+                    <el-input  v-model="selectInfo" placeholder="请输入筛选内容" size="small"></el-input>
+                </el-col>
+                <el-col :span="4" :offset='1'>
+                    <el-button
+                        size="small" 
+                        @click='searchAll'
+                        type="primary">
+                        搜索
+                    </el-button>
+                </el-col>
+				</el-row>
 					<el-scrollbar style="width:100%">
 						<el-table
 							stripe
@@ -210,7 +232,7 @@
 													label="操作"
 													width="300"
 												>
-													<template
+													<!--<template
 														slot-scope="scope"
 													>
 														<el-button
@@ -230,7 +252,7 @@
 															@click=""
 															>删除
 														</el-button>
-													</template>
+													</template>-->
 												</el-table-column>
 											</el-table>
 										</el-scrollbar>
@@ -322,19 +344,13 @@
 								label="测试点"
 								property="testPoint"
 							/>
-							<el-table-column label="操作" width="300">
-								<template >
-									<el-button size="mini" 
+							<el-table-column label="操作" width="200">
+								<template slot-scope="scope">
+									<el-button size="mini" @click="showInfo(scope.row,'1')"
 										>查看
 									</el-button>
-									<el-button size="mini" type="info"
+									<el-button size="mini" type="info" @click="showInfo(scope.row,'2')"
 										>修改
-									</el-button>
-									<el-button
-										size="mini"
-										type="danger"
-										
-										>删除
 									</el-button>
 								</template>
 							</el-table-column>
@@ -2799,7 +2815,7 @@
 						<el-button
 							size="small"
 							type="primary"
-							@click="this.dialogVisibleI = false"
+							@click="dialogVisibleI = !dialogVisibleI"
 							>取消</el-button
 						>
 					</div>
@@ -2823,17 +2839,531 @@
 							<el-button
 								size="small"
 								type="primary"
-								@click=""
+								@click="exportURL"
 								>导出</el-button
 							>
 							<el-button
 								size="small"
 								type="primary"
-								@click="this.dialogVisibleO = false"
+								@click="dialogVisibleO = !dialogVisibleO"
 								>取消</el-button
 							>
 						</div>
 					</el-form>
+				</el-dialog>
+				<el-dialog
+				:title="title"
+				:visible.sync="dialogVisibleQ"
+					width="50%">
+								<el-form
+								:disabled="!changeFlag"
+									ref="addForm"									
+									:model="addForm">
+									<el-row>
+										<el-col :span="11" >
+											<el-form-item
+												label="用例编号"
+												prop="casecode"
+												label-width="40%"
+												required
+											>											
+													<el-input
+														v-model="
+															addForm.casecode
+														"
+														size="small"
+													></el-input>																					
+											</el-form-item>
+										</el-col>
+										<el-col :span="11" :offset="1">
+												<el-form-item
+													label="测试任务"
+													prop="submissionId"
+													label-width="40%"
+													required
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.submissionId
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in missionList"
+															:key="item.id"
+															:label="
+																item.nameMedium
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+									</el-row>
+									
+										<el-row>
+											<el-col :span="11">
+												<el-form-item
+													label="测试点"
+													prop="testpoint"
+													label-width="40%"
+													required
+												>
+													<el-input
+														v-model="
+															addForm.testpoint
+														"
+														size="small"
+													></el-input>
+												</el-form-item>
+											</el-col>
+											
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="版本号"
+													prop="version"
+													label-width="40%"
+												>
+													<el-input
+														v-model="
+															addForm.version
+														"
+														size="small"
+													></el-input>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="11">
+												<el-form-item
+													label="被测系统"
+													prop="autName"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="addForm.autId"
+														size="small"
+														@change="
+															transChange($event)
+														"
+													>
+														<el-option
+															v-for="item in autList"
+															:key="item.id"
+															:label="
+																item.nameMedium
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="功能点"
+													prop="transName"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.transId
+														"
+														size="small"
+														@change="
+															templateChange(
+																$event
+															)
+														"
+													>
+														<el-option
+															v-for="item in transList"
+															:key="item.id"
+															:label="
+																item.nameMedium
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											
+										</el-row>
+										<el-row>
+										<el-col :span="11" >
+												<el-form-item
+													label="基础脚本"
+													prop="scriptModeFlag"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.scriptModeFlag
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in templateList"
+															:key="item.id"
+															:label="item.name"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="用例性质"
+													prop="caseproperty"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.caseproperty
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in casePropertyList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											
+											<el-col :span="11" >
+												<el-form-item
+													label="测试用例类型"
+													prop="casetype"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.casetype
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in caseTypeList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="优先级"
+													prop="priority"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.priority
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in priorityList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="11">
+												<el-form-item
+													label="作者"
+													prop="author"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="addForm.author"
+														size="small"
+													>
+														<el-option
+															v-for="item in userList"
+															:key="item.id"
+															:label="
+																item.username
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="评审者"
+													prop="executor"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.executor
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in userList"
+															:key="item.id"
+															:label="
+																item.username
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											
+										</el-row>
+										<el-row>
+										<el-col :span="11" >
+												<el-form-item
+													label="执行者"
+													prop="reviewer"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.reviewer
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in userList"
+															:key="item.id"
+															:label="
+																item.username
+															"
+															:value="item.id"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="执行方式"
+													prop="executeMethod"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.executeMethod
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in executeMethodList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="11">
+												<el-form-item
+													label="用例使用状态"
+													prop="useStatus"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.useStatus
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in useStatusList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											
+											<el-col :span="11" :offset="1">
+												<el-form-item
+													label="脚本管理方式"
+													prop="scriptMode"
+													label-width="40%"
+												>
+													<el-select
+														class="selectWidth"
+														v-model="
+															addForm.scriptMode
+														"
+														size="small"
+													>
+														<el-option
+															v-for="item in scriptModeList"
+															:key="item.id"
+															:label="item.label"
+															:value="item.value"
+														>
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="22">
+												<el-form-item
+													label="测试意图"
+													prop="testdesign"
+													label-width="20%"
+													required
+												>
+													<el-input
+													    type="textarea"
+														v-model="
+															addForm.testdesign
+														"
+													></el-input>
+												</el-form-item>
+											</el-col>
+											
+										</el-row>
+										<el-row>
+										<el-col :span="22" >
+												<el-form-item
+													label="前置条件"
+													prop="prerequisites"
+													label-width="20%"
+													required
+												>
+													<el-input
+													    type="textarea"
+														v-model="
+															addForm.prerequisites
+														"
+													></el-input>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="22">
+												<el-form-item
+													label="测试步骤"
+													prop="teststep"
+													label-width="20%"
+													required
+												>
+													<el-input
+													type="textarea"
+														v-model="
+															addForm.teststep
+														"
+													></el-input>
+												</el-form-item>
+											</el-col>									
+										</el-row>
+										<el-row>
+											<el-col :span="22">
+												<el-form-item
+													label="预期结果"
+													prop="expectresult"
+													label-width="20%"
+													required
+												>
+													<el-input
+													type="textarea"
+														v-model="
+															addForm.expectresult
+														"
+													></el-input>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+										<el-col :span="22" >
+												<el-form-item
+													label="附加检查点"
+													prop="checkpoint"
+													label-width="20%"
+													required
+												>
+													<el-input
+													type="textarea"
+														v-model="
+															addForm.checkpoint
+														"
+													></el-input>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="22">
+												<el-form-item
+													label="备注"
+													prop="note"
+													label-width="20%"
+												>
+														<el-input
+															type="textarea"
+															placeholder="请输入内容"
+															v-model="
+																addForm.note
+															"
+														>
+														</el-input>
+												</el-form-item>
+											</el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="6" :offset="18">
+												<el-button
+													type="primary"
+													size="small"
+													v-show="changeFlag"
+													@click="changeCaseInfo"
+													>修改</el-button>
+												<el-button
+													type="primary"
+													size="small"
+													@click="
+														dialogVisibleQ = !dialogVisibleQ
+													"
+													>退出</el-button
+												>
+											</el-col>
+										</el-row>							
+								</el-form>
 				</el-dialog>
 			</el-main>
 			<el-footer> </el-footer>
@@ -2922,7 +3452,83 @@ export default {
                 transId: "未选择",
                 
 			},
-
+            selectOptions:[
+                    {
+                        label:'用例组成类型',
+                        value:'caseCompositeType',
+						compareType:"in"
+                    },
+                    {
+                        label:'用例编号',
+                        value:'casecode',
+						compareType:"C"
+                    },
+                    {
+                        label:'测试任务',
+                        value:'missionId',
+						compareType:"in"
+                    },
+                    {
+                        label:'被测系统',
+                        value:'autId'
+                    },
+					{
+                        label:'测试意图',
+                        value:'testDesign'
+                    },
+                    {
+                        label:'前置条件',
+                        value:'preRequisites'
+                    },
+					{
+                        label:'数据需求',
+                        value:'dataRequest'
+                    },
+                    {
+                        label:'测试步骤',
+                        value:'testStep'
+                    },
+					{
+                        label:'预期结果',
+                        value:'expectResult'
+                    },
+                    {
+                        label:'附加检查点',
+                        value:'checkPoint'
+                    },
+					{
+                        label:'用例性质',
+                        value:'caseProperty'
+                    },
+                    {
+                        label:'测试用例类型',
+                        value:'caseType'
+                    },
+                    {
+                        label:'优先级',
+                        value:'priority'
+                    },
+                    {
+                        label:'作者',
+                        value:'author'
+                    },
+					{
+                        label:'评审者',
+                        value:'reviewer'
+                    },
+					{
+                        label:'执行者',
+                        value:'executor'
+                    },
+					{
+                        label:'执行方式',
+                        value:'executeMethod'
+                    },
+					{
+                        label:'脚本管理方式',
+                        value:'scriptMode'
+                    }
+                ],
 			casePropertyList: [
 				{
 					value: "1",
@@ -3038,9 +3644,13 @@ export default {
 			subMultipleSelection:[],
 			addVisible: false,
 			addVisibleM: false,
+			changeFlag: false,
+			titleFlag: 1,
 			author: "",
 			executor: "",
 			reviewer: "",
+			selectValue:"caseCompositeType",
+			selectInfo:"",
 			fileList: [], //文件列表
 			idList: [],//一级表格选择的流程用例
             subIdList: [],//二级表格选择的流程节点
@@ -3077,9 +3687,11 @@ export default {
 			dialogVisibleS: true,
 			dialogVisibleM: true,
 			dialogVisibleC: false,
+			dialogVisibleQ: false,
 			buttonM: true,
 			buttonS: true,
-			modelFlag: 0
+			modelFlag: 0,
+			row:{}
 		};
 	},
 	computed: {
@@ -3092,7 +3704,14 @@ export default {
 				caseLibId: sessionStorage.getItem("caselibId")
 			};
 			return obj;
-		}
+		},
+        title(){
+        	var obj ={
+        		1: '查看测试用例信息',
+        		2: '修改测试用例信息'
+        	}
+        	return obj[this.titleFlag]
+        },
 	},
 	created() {
 		this.getCase();
@@ -3102,7 +3721,127 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		//添加用例表单
+		//筛选用例
+		searchAll(){
+			var _this=this
+			var filterType=1
+			var conditionList=[]
+			conditionList[0]={propertyName: this.selectValue,compareType:"C",propertyValueList:[this.selectInfo]}
+			conditionList[1]={propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]}
+			Request({
+				url: "/testcase/pagedQueryTestCaseByCondition",
+				method: "post",
+				params: {
+					filterType:filterType,
+					conditionList: conditionList,
+					currentPage: this.currentPage,
+					pageSize: this.pageSize,
+					orderType:"asc",
+					orderColumn: 'id',
+                    caseLibId: sessionStorage.getItem('caselibId')
+				}
+			})
+				.then(
+					res => {
+						_this.testCaseList = res.testcaseViewRespDTOList;
+                        _this.currentPage=1;
+                        _this.tt = res.totalCount;
+                        _this.totalPage = res.totalPage;
+                        _this.pageSize = _this.pageSize;
+						
+					},
+					err => {
+						this.$alert('搜索用例失败', '失败', {
+                      confirmButtonText: '确定',
+					   });
+					}
+				)
+				.catch(err => {
+					this.$alert('搜索用例失败', '失败', {
+                      confirmButtonText: '确定',
+					   });
+				});
+		},
+		//展示查看和修改页面表单
+		showInfo(row,flag){
+			this.dialogVisibleQ=!this.dialogVisibleQ
+			if(flag=="1"){
+               this.titleFlag=1
+			   this.changeFlag=false
+			}else{
+				this.titleFlag=2
+			   this.changeFlag=true
+               this.row=row
+			   console.log(this.row)
+			}
+			this.addForm= {
+				actionList: row.actionList,
+				autId: row.autId,
+				author: row.authorName,
+				automaton: row.automatonName,
+				caseCompositeType: row.caseCompositeType,
+				casecode: row.casecode,
+				caseproperty: row.caseProperty.toString(),
+				casetype:row.caseType.toString(),
+				categoryTeam: row.categoryTeam,
+				checkpoint: row.checkPoint,
+				datarequest: row.dataRequest,
+				executeMethod:row.executeMethod.toString(),
+				executor: row.executorName,
+				expectresult: row.expectResult,
+				functionModule: row.functionModule,
+				modifyChannel: row.modifyChannel,
+				modifyChannelNo: row.modifyChannelNo,
+				note: row.note,
+				prerequisites: row.preRequisites,
+				priority: row.priority.toString(),
+				reviewer: row.reviewerName,
+				scriptMode: row.scriptMode.toString(),
+				scriptModeFlag: row.scriptModeFlag,
+				submissionId: row.submissionId,
+				tags: row.tags,
+				testdesign: row.testDesign,
+				testpoint: row.testPoint,
+				teststep: row.testStep,
+				transId: row.transName,
+				useStatus:row.useStatus.toString(),
+				version: row.version
+			}
+		},
+		//修改用例信息
+		changeCaseInfo(){
+			var _this= this
+			console.log(typeof _this.addForm.caseproperty)
+			Request({
+				url: "/testcase/modifySingleTestCaseInfo",
+				method: "post",
+				params: {
+					..._this.addForm,
+				    transId: _this.row.transName==_this.addForm.transId?_this.row.transId:_this.addForm.transId,
+					id: _this.row.id
+				}
+			})
+				.then(
+					res => {
+						_this.getCase(1);
+						_this.dialogVisibleQ = !_this.dialogVisibleQ;
+						this.$alert('修改用例成功', '成功', {
+                      confirmButtonText: '确定',
+					   });
+					},
+					err => {
+						this.$alert('修改用例失败', '失败', {
+                      confirmButtonText: '确定',
+					   });
+					}
+				)
+				.catch(err => {
+					this.$alert('修改用例失败', '失败', {
+                      confirmButtonText: '确定',
+					   });
+				});
+		},
+		//展示添加用例表单
 		addCase() {
 			this.dialogVisible = true;
 		},
@@ -3650,8 +4389,9 @@ export default {
 							}
 						});
 					} else {
-						_this.failMSG = res.respMsg;
-						this.$alert(_this.failMSG, "导入情况", {
+						
+						this.dialogVisibleI = false;
+						this.$alert("导入失败", "导入情况", {
 							confirmButtonText: "确定",
 							callback: action => {
 								this.$message({
@@ -3685,11 +4425,11 @@ export default {
 		downloadTemplate(val) {
 			if (val == 0) {
 				let url =
-					"http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
+					"http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
 				window.location.href = url;
 			} else {
 				let url =
-					"http://140.143.16.21:8080/atfcloud2.0a/testcase/getStandardExcelTemporary";
+					"http://10.101.167.184:8080/atfcloud2.0a/testcase/getStandardExcelTemporary";
 				window.location.href = url;
 			}
 		},
@@ -3709,6 +4449,49 @@ export default {
 				
 			}
 		
+		},
+		//实际导出函数
+		exportURL(){
+			var exportIdList=[];
+			for(var i=0;i<this.selectList.length;i++){
+                 this.selectList[i]=this.selectList[i]+""
+				 console.log( this.selectList[i])
+			 }
+			
+           Request({
+				url: "/testcase/exportTestCase",
+				method: "get",
+				params: {testCaseIdList:this.selectList}
+			})
+				.then(res => {
+					if (res.respCode == "0000") {
+						this.dialogVisibleI = false;
+						_this.getCase();
+						this.$alert("导出成功", "导出情况", {
+							confirmButtonText: "确定",
+							callback: action => {
+								this.$message({
+									type: "info",
+									message: `action: ${action}`
+								});
+							}
+						});
+					} else {
+						_this.failMSG = res.respMsg;
+						this.$alert("导出失败", "导出情况", {
+							confirmButtonText: "确定",
+							callback: action => {
+								this.$message({
+									type: "info",
+									message: `action: ${action}`
+								});
+							}
+						});
+					}
+				})
+				.catch(err => {
+					console.log(err);
+				});
 		},
 		//选择二级表格
 		subHandleSelectionChange(val){

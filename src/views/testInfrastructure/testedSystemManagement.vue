@@ -46,6 +46,7 @@
 						type='primary'
 						icon='el-icon-s-tools'
 						size="small"
+						@click="toComponent"
 						plain>
 						自动化构件维护
 					</el-button>

@@ -58,7 +58,7 @@
 								size="mini"
 								type="danger"
 								v-show="scope.row.importStatus!='全部成功'"
-								@click="">下载
+								@click="downloadError(scope.row.batchImportNo)">下载
 							</el-button>
 						</template>
 					</el-table-column>
@@ -67,7 +67,7 @@
 							<el-button
 								size="mini"
 								type="danger"
-								@click="handleDetail(scope.$index, scope.	row)">下载
+								@click="downloadFile(scope.row.batchImportNo)">下载
 							</el-button>
 						</template>
 					</el-table-column>
@@ -102,7 +102,7 @@
 					<el-divider></el-divider>
 					<div class="in-file">
 						<el-button size="small" type="primary" @click="uploadTemp">导入</el-button>
-						<el-button size="small" type="primary" @click="this.dialogVisibleI = false">取消</el-button>
+						<el-button size="small" type="primary" @click="dialogVisibleI = !dialogVisibleI ">取消</el-button>
 					</div>
 				</el-dialog>
 			</el-main>
@@ -122,9 +122,10 @@
 				fileList:[],
 				idList: [],
 				currentPage:1,
-				pageSize:8,
+				pageSize:5,
 				totalPage:'',
 				totalCount:'',
+				radio: "1",
 				dialogVisibleI:false,
 			}
 		},
@@ -189,31 +190,75 @@
 			beforeRemove(file, fileList) {
 				return this.$confirm(`确定移除 ${file.name}？`);
 			},
+			
+            downloadError(ID) {
+          	 var url = "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/errorFile/";
+			       window.location.href = url+ID;
+		 	       
+           },
+			 downloadFile (ID) {
+          	 var url = "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/uploadFile/";
+			         window.location.href = url+ID;
+           },
 			//实际导入函数
-			uploadTemp() {
-				let file = this.fileList[0]
-				let param = new FormData()
-				var caseLibId = sessionStorage.getItem("caselibId")
-				param.append("file", file.raw)
-				param.append("caseLibId", caseLibId)
-				param.append('uploadUserId', 3)
-				console.log(param.get("file"))
-				var _this = this
-				Request({
-					url: '/testcase/batchImportTestcase',
-					method: 'post',
-					params: param
-				}).then((res) => {
+			
+		    uploadTemp() {
+			let file = this.fileList[0];
+			let param = new FormData();
+			var caseLibId = sessionStorage.getItem("caselibId");
+			param.append("file", file.raw);
+			param.append("caseLibId", caseLibId);
+			param.append("uploadUserId", 3);
+			console.log(param.get("file"));
+			var _this = this;
+			Request({
+				url: "/testcase/batchImportTestcase",
+				method: "post",
+				params: param
+			})
+				.then(res => {
 					if (res.respCode == "0000") {
-						this.dialogVisibleI = false
-						_this.getCase()
+						this.dialogVisibleI = false;
+						_this.getCase();
+						this.$alert("导入成功", "导入情况", {
+							confirmButtonText: "确定",
+							callback: action => {
+								this.$message({
+									type: "info",
+									message: `action: ${action}`
+								});
+							}
+						});
 					} else {
-						_this.failMSG = res.respMsg
+						
+						this.dialogVisibleI = false;
+						this.$alert("导入失败", "导入情况", {
+							confirmButtonText: "确定",
+							callback: action => {
+								this.$message({
+									type: "info",
+									message: `action: ${action}`
+								});
+							}
+						});
 					}
-				}).catch((err) => {
-					console.log(err)
 				})
-			},
+				.catch(err => {
+					console.log(err);
+				});
+		    },
+		    //下载模板
+		    downloadTemplate(val) {
+		    	if (val == 0) {
+		    		let url =
+		    			"http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
+		    		window.location.href = url;
+		    	} else {
+		    		let url =
+		    			"http://10.101.167.184:8080/atfcloud2.0a/testcase/getStandardExcelTemporary";
+		    		window.location.href = url;
+		    	}
+		    }
 		}
 	}
 </script>
