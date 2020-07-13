@@ -7,71 +7,62 @@
                 <section class="content-wrapper" style="margin-bottom: 50px;">
                     <div class="main" style="padding: 15px; user-select: none;">
                         <!-- breadcrumb start -->
-                        <div class="row" style="margin-bottom: 15px;">
+                        <!-- <div class="row" style="margin-bottom: 15px;">
                             <div class="col-lg-12">
                                 <ul class="breadcrumb">
                                     <li><a id = "myTitle"><i class="icon-home" id="myProjectName"></i> 项目测试 {{ projectName }}</a></li>
                                     <li><a href="#"> 测试计划及执行</a></li>
-                                    <!-- <li class="active"> 对象库</li> -->
                                 </ul>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="main-content" id="testround-main" style="padding: 15px 0;">
                             <div class="row">
                                 <form class="form-horizontal col-lg-12">
-                                    <div class="form-group col-lg-6">
+                                    <div class="form-group col-lg-8">
                                         <label class="option-name control-label col-lg-3">测试计划及状态</label>
-                                        <div class="col-lg-3">
-                                            <select class="testphase form-control" v-model="testPlanId">
-                                                <option v-for="(item,index) in testPlans" v-bind:value="item.id" :key="'testPlanId' + index">
-                                                    {{item.nameMedium}}
-                                                </option>
-                                            </select>
+                                        <div class=" col-lg-4">
+                                            <el-select v-model="testPlanId" placeholder="请选择">
+                                                <el-option v-for="(item , index) in testPlans" :key="'testplans'+index" :label="item.nameMedium" :value="item.id">
+                                                </el-option>
+                                            </el-select>
                                         </div>
                                         <label class="option-name control-label col-lg-2" v-html="exeStautShow"></label>
-                                        <div class=" col-lg-4">
-                                            <a class="btn btn-white " @click="testPlanManager()"> 测试计划管理</a>
+                                        <div class=" col-lg-3">
+                                            <el-button type='primary' size='mini' @click="testPlanManager()">测试计划管理</el-button>
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group col-lg-6">
-                                        <label class="option-name col-lg-3 control-label">
-                                        执行轮次
-                                        </label>
-                                        <div class="col-lg-9">
-                                        <input type="text" class="form-control" name="" v-model="executionround">
-                                        </div>
-                                    </div> -->
-                                    <div class="form-group col-lg-6">
-                                        <label class="option-name col-lg-3 control-label">
+                                    <div class="form-group col-lg-4">
+                                        <label class="option-name col-lg-4 control-label">
                                             执行范围
                                         </label>
-                                        <div class="col-lg-9">
-                                            <select class="execute-range form-control" v-model="exeScope">
-                                                <option value="1" selected>所有</option>
-                                                <option value="0">已选择</option>
-                                            </select>
+                                        <div class="col-lg-8">
+                                            <el-select v-model="exeScope" placeholder="请选择">
+                                                <el-option  label="所有" value="1"></el-option>
+                                                <el-option  label="已选择" value="0"></el-option>
+                                            </el-select>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="row">
                                 <form class="form-horizontal col-lg-12">
-                                    <div class="form-group col-lg-6">
+                                    <div class="form-group col-lg-8">
                                         <label class="option-name control-label col-lg-3">执行机分配模式</label>
-                                        <div class="col-lg-3">
-                                            <select class="testphase form-control" v-model="runnerExecuteType">
-                                                <option value="appointed" selected>指定执行机</option>
-                                                <option value="auto"> 自动分配</option>
-                                            </select>
+                                        <div class="col-lg-4">
+                                            <el-select v-model="runnerExecuteType" placeholder="请选择">
+                                                <el-option  label="指定执行机" value="appointed"></el-option>
+                                                <el-option  label="自动分配" value="auto"></el-option>
+                                            </el-select>
                                         </div>
                                         <label class="option-name control-label col-lg-2">执行机选择</label>
-                                        <div class=" col-lg-4 ">
-                                            <select class="selectpicker execute-range form-control" id="runnerselected"
-                                                    v-model="runnerselected" multiple>
-                                            </select>
+                                        <div class=" col-lg-3 ">
+                                            <el-select v-model="runnerselected" placeholder="请选择执行机" :multiple='true'>
+                                                <el-option v-for="(item , index) in runners" :key="'runner'+index" :label="item.runnerName" :value="item.identifiableName">
+                                                </el-option>
+                                            </el-select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-lg-6" hidden>
+                                    <div class="form-group col-lg-4" hidden>
                                         <label class="option-name col-lg-13 control-label">
                                         当前测试轮次
                                         </label>
@@ -84,43 +75,37 @@
                             </div>
                             <div class="test-control container" style="margin: 15px 5px;">
                                 <div style="font-size: 12px;color:#999;"></div>
-                                <button class="btn btn-white" @click="executeAll()"><i class="icon-play"></i> 批量执行</button>
-                                <button class="btn btn-white" @click="stopExe()"><i class="icon-stop"></i> 终止执行</button>
-                                <button class="btn btn-white" @click="getCases()"><i class=" icon-eye-open"></i> 查询</button>
-                                <button class="btn btn-white" @click="addScene();"><i class="icon-plus"></i> 添加场景</button>
-                                <button class="btn btn-white" @click="removeSceneAndCase();"><i class="icon-remove"></i>
-                                    移除场景与用例
-                                </button>
-                                <button class="btn btn-white" @click="reQuery();"><i class="icon-refresh"></i> 重新查询执行结果
-                                </button>
+                                <el-button type='primary' size="mini" @click="executeAll()"><i class="icon-play"></i> 批量执行</el-button>
+                                <el-button type='primary' size="mini" @click="stopExe()"><i class="icon-stop"></i> 终止执行</el-button>
+                                <el-button type='primary' size="mini" @click="getCases()"><i class="icon-eye-open"></i> 查询</el-button>
+                                <el-button type='primary' size="mini" @click="addScene()"><i class="icon-plus"></i> 添加场景</el-button>
+                                <el-button type='primary' size="mini" @click="removeSceneAndCase()"><i class="icon-remove"></i> 移除场景与用例</el-button>
+                                <el-button type='primary' size="mini" @click="reQuery()"><i class="icon-refresh"></i> 重新查询执行结果</el-button>
                             </div>
                             <div id="">
-                                <div v-if="logShow" id="log" ref="logShow">
-                                    <div id="hidden">
-                                        <button id="logShowBtn" class="btn btn-white" @click=" updateScreen()"><i
-                                                class="icon-double-angle-right"></i></button>
-                                    </div>
-                                    <div id="hidden-1">
-                                        <button id="logFullBtn" v-if="fullFlag" class="btn btn-white" @click="fullScreen()"><i
-                                                class="icon-fullscreen"></i></button>
-                                        <button id="logSubBtn" v-else class="btn btn-white" @click="subScreen()"><i
-                                                class="fa fa-compress"></i></button>
-                                    </div>
-                                    <div id="logcontent">
-                                        <div class=" panel-info" id="logtext">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title">运行日志</h3>
-                                            </div>
-                                            <div id="area">
-                                                <pre class="pre"><code  id="logarea" class="javascript"></code></pre>
-                                            </div>
+                                <div class="logcontainer">
+                                    <el-card class="box-card" v-if="logShow">
+                                        <div slot="header" class="clearfix">
+                                            <span>日志信息</span>
+                                            <el-button style="float: right;margin-right:5px;padding:0px" type="text"  @click=" updateScreen()">
+                                                <i class="icon-double-angle-right"></i>
+                                            </el-button>
+                                            <el-button class='el-icon-full-screen'  v-if="fullFlag" style="float: right;;margin-right:5px;padding:0px" type="text"  @click="fullScreen()"></el-button>
+                                            <el-button v-else style="float: right;margin-right:5px;padding:0px" type="text" @click="subScreen()">
+                                                <i class="fa fa-compress"></i>
+                                            </el-button>
                                         </div>
-                                    </div>
-                                </div>
-                                <div v-else id="loghidden">
-                                    <div id="hidden">
-                                        <button class="btn btn-white" @click="logShow=!logShow"><i
-                                                class="icon-double-angle-left"> <font color='black'>展开日志</font></i></button>
+                                        <div id="area">
+                                            <pre class="pre"><code  id="logarea" class="javascript"></code></pre>
+                                        </div>
+                                    </el-card>
+                                    <div v-else id="loghidden">
+                                        <div id="hidden">
+                                            <el-button size='small'  @click="showScreen()">
+                                                <i class="icon-double-angle-left"> <font color='black'>展开日志</font></i>
+                                            </el-button>
+                                            <!-- <button class="btn btn-white"></button> -->
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="main-content2">
@@ -220,8 +205,7 @@
                                 <div class="scene-list-wrapper  -wrapper" style="padding:0px 20px 10px 20px" v-for="(scene,index) in testSceneList" :key='index'>
                                     <i class="icon-move handle2" style="color: #5a3c3c;"></i>&nbsp;&nbsp;
                                     <div class="checkbox-wrapper"
-                                        style="display: inline-block;vertical-align: top;padding: 2px 5px; position: relative; top: 9px;"
-                                        @mousedown.stop="1">
+                                        style="display: inline-block;padding: 2px 5px;" @mousedown.stop="1">
                                         <input type="checkbox" :value="scene.sceneId" class="checkscene"
                                             v-bind:name="scene.id" v-model="selectedScenes"> <!-- lrqlrq-->
                                     </div>
@@ -236,10 +220,7 @@
                                     <div class="case-list" style="display:none">
                                         <div class="check-all-case" v-if="scene.testCaseList && scene.testCaseList.length"
                                             style="padding: 2px 5px;margin: 10px 10px;" @mousedown.stop="1">全选用例
-                                            <input type="checkbox" @change="checkAllInScene($event)"
-                                                class="checkall-inscene"
-                                                :value="scene.sceneId" v-model="checkallSceneIds"
-                                                style="position: relative; top: 3px;">
+                                            <input type="checkbox" @change="checkAllInScene($event)" class="checkall-inscene" :value="scene.sceneId" v-model="checkallSceneIds" >
                                         </div>
                                         <div class="sortable_scene_caselist">
                                             <div class="case-lib case-lib-pad" v-for="(case_wrapper,index) in scene.testCaseList" :key="'case_wrapper'+index">
@@ -321,30 +302,27 @@
                                                             </div>
                                                         </div> -->
                                                     <div class="case-wrapper">
-                                                        <div class="case caseFlow" v-for="(item,index) in case_wrapper.flowNodes"  :key="'case_wrapper2'+index" @mousedown.stop="1"
-                                                            @click="changeCase(scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId, 3)">
-                                                            <div class="case-header case-header-Flow">
-                                                                <img :src="exeImgs[0]"
-                                                                    :id="'img' + '-' + scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId">
-                                                                <p class="width-limit"  :title="item.flowNodeCode">{{item.flowNodeCode}} </p>
-                                                                <input type="checkbox"
-                                                                    v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
-                                                                    class="check-case check-case-inscene"
-                                                                    @change="checkFlowNode($event)"
-                                                                    v-model="selectedSceneCases">
-                                                                <p>
-                                                                    <a class="view-case"
-                                                                    @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6', item.flowNodeId)">查看
-                                                                    </a>
-                                                                </p>
-                                                                    <!-- <a class="view-case"
-                                                                        @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')"><span>查看</span></a> -->
+                                                        <div class="case caseFlow" v-for="(item,index) in case_wrapper.flowNodes"  :key="'case_wrapper2'+index" @mousedown.stop="1" @click="changeCase(scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId, 3)">
+                                                            <div style="display:flex;align-items: center;">
+                                                                <div class="case-header case-header-Flow">
+                                                                    <img :src="exeImgs[0]"
+                                                                        :id="'img' + '-' + scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId">
+                                                                    <p class="width-limit"  :title="item.flowNodeCode">{{item.flowNodeCode}} </p>
+                                                                    <input type="checkbox"
+                                                                        v-bind:value="scene.sceneId+ '-' + case_wrapper.caseId + '-' + item.flowNodeId"
+                                                                        class="check-case check-case-inscene"
+                                                                        @change="checkFlowNode($event)"
+                                                                        v-model="selectedSceneCases">
+                                                                    <p>
+                                                                        <a class="view-case"
+                                                                        @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6', item.flowNodeId)">查看
+                                                                        </a>
+                                                                    </p>
+                                                                        <!-- <a class="view-case"
+                                                                            @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')"><span>查看</span></a> -->
+                                                                </div>
+                                                                <i v-if='index != (case_wrapper.flowNodes.length - 1)' class="icon-long-arrow-right"></i>
                                                             </div>
-                                                            <div class="arrow-right" :style="{display:(index != (case_wrapper.flowNodes.length - 1)? 'inline-block':'none')}"><i class="icon-long-arrow-right"></i></div>
-                                                            <!-- <div class="case-main">
-                                                            </div> -->
-                                                            <footer class="case-footer">
-                                                            </footer>
                                                         </div>
                                                         <div class="runnerclass"
                                                             :id="'runner' + '-' + scene.sceneId+'-'+case_wrapper.caseId">
@@ -721,12 +699,18 @@
 
 <script>
     import $ from 'jquery'
+    import jQuery from 'jquery'
+    import 'bootstrap/dist/js/bootstrap'
+    import 'bootstrap/dist/css/bootstrap.min.css'
+    import 'bootstrap/dist/js/bootstrap.min'
+    // import '@/lib/bootstrap.min'
     import 'jquery-ui/themes/base/draggable.css'; //此css不引入也不影响draggable 功能
     import 'jquery-ui/themes/base/sortable.css'; //此css不引入也不影响draggable 功能
     import 'jquery-ui/themes/base/resizable.css'; //使用resizable功能必须引入此css！
     import 'jquery-ui/ui/widgets/draggable'; //必须像如下这样直接引入，import 'jquery-ui' 这样引入是无效的
     import 'jquery-ui/ui/widgets/sortable'; //必须像如下这样直接引入，import 'jquery-ui' 这样引入是无效的
     import 'jquery-ui/ui/widgets/resizable';
+    
     import {
         gotoPage,
         getSendData,
@@ -749,10 +733,11 @@
     import Vac from '../../libs/vac-functions.es'
     import Request from '../../libs/request'
     import SideBar from '@/components/side-bar'
+    import vueMixins from '@/libs/vueMixins.js'
     export default {
         components: {
         },
-        
+        mixins: [vueMixins],
 	    data(){
             const initialAddRowData = {
                 nameMedium: '',
@@ -770,13 +755,13 @@
                 // tooltipMessage:'',
                 goToPage: 0,
                 runners:[],
-                runnerselected:[],
-                runnerExecuteType:"",
+                runnerselected: [],
+                runnerExecuteType: "appointed",
                 caselibIds: [],			
                 caselibId: 3,			// caselibId 
                 executionround: '1',		// 执行轮次 
                 recordflag: 2,			// 记录单
-                exeScope: null,			// 执行范围
+                exeScope: '1',			// 执行范围
                 selectState: '',		// 选择状态
                 userId:sessionStorage.getItem('userId') || 3,
                 projectName: sessionStorage.getItem('projectNameStorage') || '(电子商务网站购物测试)',	//项目名称
@@ -820,16 +805,17 @@
 
                 // Scenes in add-scene modal
                 selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
+                // exeImgs: { },
                 exeImgs: {
-                    0: '/assets/images/waiting.png',
-                    10: '/assets/images/init.png',
-                    2: '/assets/images/success.png',
-                    3: '/assets/images/error.png',
-                    13: '/assets/images/running.gif',
-                    4: '/assets/images/success.png',
-                    5: '/assets/images/jump.png',
-                    11: '/assets/images/warn.png',
-                    12: '/assets/images/warn.png',
+                    0: '/static/img/waiting.png',
+                    10: '/static/img/init.png',
+                    2: '/static/img/success.png',
+                    3: '/static/img/error.png',
+                    13: '/static/img/running.gif',
+                    4: '/static/img/success.png',
+                    5: '/static/img/jump.png',
+                    11: '/static/img/warn.png',
+                    12: '/static/img/warn.png',
                 },
                 // 批量执行相关
                 batchId:null,
@@ -879,6 +865,13 @@
         },
         mounted(){
             var _this = this;
+            // for(let i in this.exeImgsMap){
+            //     console.log('asdasdasdasdasdasdas')
+            //     this.exeImgs[i] = require(this.exeImgsMap[i])
+            //     // this.exeImgs.push(require(exeImgsMap[i]))
+            //     console.log('asdasdasdasdasdasdas')
+            //     console.log(this.exeImgs)
+            // }
             var tempTestPlanId = sessionStorage.getItem('testPlanId') || 1210;
             _this.caselibId = sessionStorage.getItem('caselibId') || 1241;
             var getPlans = new Promise((resolve, reject) => {
@@ -959,10 +952,10 @@
                     success: function(data) {
                         if (data.respCode=="0000") {
                             _this.runners=data.runners;
-                            for(let item of _this.runners){
-                                $('#runnerselected').append(`<option value="${item.identifiableName}">${item.runnerName}</option>`);
-                            }
-                            $('#runnerselected').selectpicker('refresh');
+                            // for(let item of _this.runners){
+                            //     $('#runnerselected').append(`<option value="${item.identifiableName}">${item.runnerName}</option>`);
+                            // }
+                            // $('#runnerselected').selectpicker('refresh');
                             if(data.runners.length==0)
                                 Vac.alert('查询不到执行机');
                             // else
@@ -1018,7 +1011,7 @@
                 if (!_this.testPlanId) {
                     Vac.alert('请选择测试计划');return;
                 }
-                if( _this.runnerExecuteType=="appointed" && _this.runnerselected=="")
+                if( _this.runnerExecuteType=="appointed" && _this.runnerselected.length === 0)
                 {
                     Vac.alert('请选择执行机');return;
                 }
@@ -1026,7 +1019,7 @@
                     Vac.alert('该测试计划正在执行中，若想再次执行，请终止当前执行');return;
                 }
                 var selectedExeInstances=[];
-                if(_this.exeScope==1){}
+                if(_this.exeScope == 1){}
                 else{
                     for(var i=0; i<_this.selectedSceneCases.length; i++){
                         let temp = {};
@@ -1086,22 +1079,26 @@
             fullScreen: function(){
                 // this.$refs.logShow.style.width = "100%" ;
                 // this.$refs.logShow.style.height = "100%" ;
-                var logDiv =document.getElementById("log");
+                var logDiv =document.getElementsByClassName("logcontainer")[0];
                 logDiv.style.width="100%";
-                logDiv.style.height="100%";
+                logDiv.style.height="80vh";
                 this.fullFlag=false;
+            },
+            showScreen(){
+                this.logShow=!this.logShow
+                this.subScreen()
             },
             updateScreen: function(){
                 var _this = this;
-                var logDiv =document.getElementById("log");
-                logDiv.style.width="50%";
-                logDiv.style.height="50%";
+                var logDiv =document.getElementsByClassName("logcontainer")[0];
+                logDiv.style.width="auto";
+                logDiv.style.height="auto";
                 _this.logShow=!_this.logShow;
             },
             subScreen: function(){
-                var logDiv =document.getElementById("log");
-                logDiv.style.width="50%";
-                logDiv.style.height="50%";
+                var logDiv =document.getElementsByClassName("logcontainer")[0];
+                logDiv.style.width="500px";
+                logDiv.style.height="500px";
                 this.fullFlag=true;
             },
             startQueryResult: function() {
@@ -1401,11 +1398,13 @@
                     }),
                     success: function(data){
                         if(data.respCode == '0000'){
+                            console.log('陈工了')
                             _this.allscenes = data.sceneEntityList;
                             _this.scenePage.currentPage = data.currentPage;
                             _this.scenePage.totalCount = data.totalCount;
                             _this.scenePage.totalPage = data.totalPage;
                             $('#add-modal').modal('show');
+                            console.log('陈工了2223')
                         }
                         else{
                             Vac.alert('场景获取失败!');
@@ -2040,6 +2039,7 @@
 
 <style lang="less" scoped>
   @import '../../styles/base2.less';
+  @import '../../styles/base2.less';
     .page-outer {
         display: flex;
         .right-content {
@@ -2047,9 +2047,9 @@
         }
     }
 </style>
-    <style>
+    <style lang="less" >
         .exe-info{
-            padding-left: 10px；
+            padding-left: 10px;
         }
         .exe-info i{
             color: #58c9f3;
@@ -2060,18 +2060,23 @@
         .modal-width {
             width: 1000px;
         }
-
+        .logcontainer{
+            width: auto;
+            height: auto;
+            position: fixed;
+            right: 0px;
+            top: 15%;
+            z-index: 9999;
+        }
         #log {
             opacity: 0.75;
             position: absolute;
             right: 0%;
-            height: 50%;
-            width: 50%;
-            z-index: 9999;
+            height: 100%;
+            width: 100%;
         }
 
         #loghidden {
-            position: absolute;
             right: 0%;
             height: auto;
             width: auto;
@@ -2094,6 +2099,15 @@
             color: black;
             display:inline-block;
         }
+        .box-card{ 
+            height: 100%;
+        }
+        .el-card__header{
+            padding: 10px 20px 8px 20px;
+        }
+        .clearfix{
+            font-size: 17px;
+        }
         #logcontent {
             border: 1px solid #000;
             float: left;
@@ -2112,7 +2126,12 @@
             overflow: hidden;
             z-index: 3;
         }
-
+        .el-card__body{
+            height:  100%;
+        }
+        #area{
+            width: 100%;
+        }
         #logarea {
             resize: none;
             color: white;
@@ -2122,6 +2141,7 @@
             width: 100%;
             overflow: auto;
             z-index: 3;
+            min-height: 300px;
         }
 
         #area {
@@ -2154,7 +2174,7 @@
         #main-content .content-wrapper .main .main-content .case .case-header-Flow{
             height: 30px;
             width:155px;
-            margin-top: 10px;
+            margin-top: 0px;
             position: relative;
             background: white;
             border: 1px solid #ddd5d5;
@@ -2162,4 +2182,499 @@
             flex: 0 0 auto;
             display: inline-block;
         }
+        .main{
+            margin: 0
+        }
+
+
+@globleRed: #FF6C60;
+
+.row {
+    margin:0;
+    .breadcrumb {
+		margin-bottom: 0px;
+	}
+}
+
+
+#main-content{
+	position: relative;
+	display:flex;
+	flex-direction: column;
+	padding-top:0px;
+	.strench {
+		flex: 1 1 auto;
+		background-color: #fff;
+	}
+	.content-wrapper{
+		position: relative;
+		height: calc(100% - 110px);
+		flex: 1 0 auto;
+		flex-direction: column;
+		display: flex;
+		overflow: hidden;
+		margin-bottom: 250px;
+		transition: margin-bottom .5s;
+
+		.main{
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+			overflow: auto;
+			// background-color: #fff;
+			font-size: 13px;
+			.top-bar {
+				padding: 10px 20px;
+			}
+			.btn {
+				// padding: 3px 6px;
+				// font-size: 13px;
+			}
+			.route-position {
+				flex: 0 0 auto;
+				padding: 5px 20px;
+				background-color: #fff;
+				font-size: 14px;
+				color: #416CFF;
+				a {
+					color:  #416CFF;
+				}
+			}
+			.top-bar{
+				position: sticky;
+				top: 0;
+				flex: 0 0 auto;
+				width: 100%;
+				background-color: #f1f2f7;
+			}
+			.form-input {
+				// height: 0;
+				display: none;
+				background-color: #f1f2f7;
+				&>div {
+					float: left;
+					margin: 0 20px 0 0;
+				}
+				label {
+					font-weight: normal;
+				}
+				input[type=number], .exe-scope{
+					border-radius: 5px;
+    				border: 1px solid #ddd;
+    				padding: 5px 10px;
+				}
+			}
+			.form-input-show {
+				margin: 10px 0 5px 0;
+				padding: 10px 20px;
+				// height: auto;
+				display: block;
+			}
+			.main-content {
+				position: relative;
+				flex: 1 0 auto;
+				overflow: auto;
+				background-color: #fff;
+				padding: 0px 0px;
+				min-width: 100%;
+				.check-all-case {
+					display: inline-block;
+				}
+				.scene-list-wrapper {
+					position: relative;
+					.scene-list-title {
+						position: relative;
+						top: 5px;
+					}
+					.btn {
+						padding: 3px 6px;
+						margin: 5px 3px;
+					}
+				}
+				.case-lib {
+					// margin-bottom: 20px;
+					// border: 1px dashed #ddd;
+					padding: 5px;
+					background-color: #fafafa;
+					// width: max-content;
+					min-width: 100%;
+					display: flex;
+					flex-direction: row;
+					.checkbox-wrapper {
+						display: flex;
+						height: 100%;
+						width: 50px;
+						vertical-align: top;
+						padding: 9px 5px 0px 5px;
+						input {
+							float: left;
+							margin: 0;
+						}
+					}
+					.case-wrapper {
+						// display: flex;
+						// flex-direction: row;
+						// width: max-content;
+					}
+				}
+				.case-lib:last-child {
+					margin-bottom: 0;
+				}
+				.case {
+					margin-right: 5px;
+					@caseWidth: 155px;
+					// flex: 1 0 auto;
+					// display: flex;
+					display: inline-block;
+					margin-bottom: 0px;
+					margin-right: 20px;
+					min-width: 50px;
+					width: @caseWidth;
+					border: 1px solid #ddd5d5;
+					border-radius: 5px;
+					@caseHeaderheight: 30px;
+					
+					height: 30px;
+					&:first-of-type {
+						margin-left: 0;
+					}
+					.case-header {
+						height: @caseHeaderheight;
+						padding: 0 0px;
+						position: relative;
+						// background-color: #f5f5f5;
+						background: transparent;
+						border-top-left-radius: 5px;
+						border-top-right-radius: 5px;
+						flex: 0 0 auto;
+						input[type="checkbox"] {
+							visibility: hidden;
+							position: relative;
+							top: -8px;
+						}
+						img {
+							display: inline-block;
+							position: relative;
+							top: -11px;
+							left: 2px;
+							width: 16px;
+							height: 16px;
+							margin: 0 auto;
+							vertical-align: middle;
+						}
+						p {
+							display: inline-block;
+							line-height: @caseHeaderheight;
+							margin: 0px 0 0 0px;
+							overflow-x: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis; 
+						}
+						.width-limit{
+							width : 80px
+						}
+					}
+					.case-main {
+						.view-case {
+							position: relative;
+							top: 5px;
+							cursor: pointer;
+							width:3000px;
+						}
+					}
+					.case-footer {
+						padding-left: 20px;
+						font-size: 16px;
+						line-height: @caseHeaderheight;
+						height: @caseHeaderheight;
+						width:auto;
+					}
+				}
+
+				// testphase css
+				table#testphase-table {
+					td,th {
+						text-align: center;
+					}
+					tr :first-child {
+						width: 50px;
+					}
+					tr :nth-of-type(2){
+						width: 30%;
+					}
+				}
+			}
+			.main-content2 {
+				position: relative;
+			}
+		}
+	}
+	.bigMarginBottom {
+		margin-bottom: 0px;
+	}
+	.smallMarginBottom {
+		margin-bottom: 0px;
+	}
+	.panel{
+		position:fixed;
+		bottom: 0px;
+		// left: 0;
+		flex: 1 0 auto;
+		height: 200px;
+		width: calc(100% - 180px);
+		border-radius: 5px;
+		margin-left: 5px;
+		margin-right: 5px;
+		margin-bottom: 0;
+		overflow: hidden;
+		// transition: 0.5s height;
+		z-index: 3;
+		.panel-heading{
+			height: 34px;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			background-color: #f5f5f5;
+			font-size: 14px;
+			margin: 0 0px;
+			padding:5px 10px;
+		}
+		.panel-body{
+			// height: 166px;
+			overflow: auto;
+			button {
+				// background-color: #ccc;
+				color: #444;
+				i {
+					color: @globleRed;
+				}
+			}
+			.timeArrange {
+				div {
+					margin-top: 10px;
+					button {
+						float: right;
+						margin-right: 50px;
+					}
+				}
+			}
+			.triggerSetting {
+				.table-wrapper {
+					margin: 20px 0;
+				}
+				table {
+					width: 100%;
+					th,td{
+						text-align: center;
+					}
+					
+				}
+				.table {
+					tr {
+						th:first-child, td:first-child{
+							width: 50px;
+						}
+						th:nth-child(2){
+							width: 200px;
+						}
+						th:nth-child(4){
+							width: 100px;
+						}
+					}
+				}
+				.triggerSave{
+					float: right;
+					margin-right: 20px;
+				}
+
+			}
+			.processControl {
+				p {
+					margin: 0;
+				}
+				.wrapper-div {
+					margin: 10px 0;
+					.strategy-group {
+						margin: 10px 0;
+						.group-name {
+							display: inline-block;
+							width: 100px;
+						}
+						.select-wrapper {
+							// display: inline-block;
+						}
+						.select-group {
+							display: inline-block;
+							margin: 0 5px;
+							select {
+								padding: 3px 5px;
+							}
+						}
+					}
+				}
+				.processControl-footer {
+					.processControlSave {
+						float: right;
+					}
+				}
+			}
+			.dataPool {
+				.table-wrapper {
+					margin: 20px 0;
+				}
+				table {
+					width: 100%;
+					th {
+						text-align: center;
+					}
+					td {
+						text-align: center;
+					}
+				}
+				.triggerSave{
+					float: right;
+					margin-right: 20px;
+				}
+
+			}
+		}
+	}
+	@media (max-width: 768px) {
+		.panel {
+			width: 100%;
+		}
+	}
+	.panel.height43px {
+		// height: 34px;
+		height: 0px;
+		// top: 0;
+	}
+	.panel.height200px{
+		height: 200px;
+		// top: -0;
+	}
+	.copy-right{
+		// position: fixed;
+		// left: 0;
+		bottom: 0;
+		height: 50px;
+		// width: 100%;
+		bottom: 0;
+	}
+
+	#test-options{
+		overflow: hidden;
+		.form-group{
+			margin-bottom: 10px;
+		}
+	}
+	#testround-main{
+		.test-control{
+			margin: 10px;
+		}
+		.list-wrapper{
+			// display: flex;
+			margin-top: 10px;
+			.list-title{
+				flex: 0 0 auto;
+				vertical-align: top;
+				margin-right: 10px;
+			}
+			.case-list, .scene-list {
+				// display: flex;
+				height: auto;
+				// flex: 0 0 auto;
+				border: 1px dashed #ddd;
+				// padding: 10px;
+				overflow: hidden;
+				box-sizing: border-box;
+				transition: height 100ms;
+				.case-item {
+					display: inline-block;
+					flex: 1 1 auto;
+					margin: 10px 10px 0 0;
+
+				}
+			}
+		}
+	}
+}
+.modal {
+	.modal-header {
+		// margin: 5px 10px;
+		padding: 8px 10px;
+		h4 {
+			font-size: 16px;
+		}
+	}
+	.modal-footer {
+		padding: 8px 10px;
+		button {
+			padding: 3px 8px;
+		}
+	}
+}
+.alert{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	width: 300px;
+	z-index: 1041;
+	padding: 0;
+	border: 1px solid #ddd;
+	header {
+		height: 35px;
+		padding: 0px 10px;
+		background-color: #00A8B3;
+		span {
+			font-size: 16px;
+			color: #fff;
+			line-height: 35px;
+		}
+		button{
+			height: 35px;
+			i {
+				line-height: 35px;
+			}
+		}
+		
+	}
+	main {
+		min-height: 100px;
+		padding: 10px 5px;
+		border-bottom: 1px solid #ddd;
+		p {
+			font-size: 16px;
+			color: #b94a48;
+		}
+	}
+	footer {
+		text-align: center;
+		button {
+			display: block;
+			padding: 5px;
+			margin: 0 auto;
+		}
+		button.cancelConfirm, button.okConfirm {
+			display: inline-block;
+			padding: 5px 10px;
+			margin: 10px;
+		}
+	}
+	background-color: #fff;
+}
+.show {
+	display: none;
+}
+.hide {
+	display: block;
+}
+.runnerclass p{
+	margin: 0%;
+	width:100%;
+	height:100%;
+	vertical-align: middle;
+	padding-top: 6px
+}
     </style>

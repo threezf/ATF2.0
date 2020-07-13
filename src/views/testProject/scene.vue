@@ -1,32 +1,33 @@
 <template>
     <div class="page-inner">
         <el-container>
-            <el-header>
-                <el-button  
-                    size="small"
-                    @click='addSceneButtom'
-                    type="primary"
-                    icon="el-icon-plus">
-                    添加
-                </el-button>
-            </el-header>
             <el-main>
-                <el-row>
+                <el-row :gutter="20">
                     <el-col :span="4">
                         <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
-                    <el-col :span="4"  :offset='1'>
+                    <el-col :span="5" >
                         <el-button
                             size="small"
-                            @click='selectScene(1)'
+                            @click='getScenes(1)'
+                            icon="el-icon-search"
+                            :loading="tableLoading"
                             type="primary">
                             搜索
+                        </el-button>
+                        <el-button  
+                            size="small"
+                            @click='addSceneButtom'
+                            type="primary"
+                            icon="el-icon-plus">
+                            添加
                         </el-button>
                     </el-col>
                 </el-row>
                 <el-table
                     stripe
                     :data="tableData"
+                    :loading='tableLoading'
                     class='table'>
                     <el-table-column
                         label="场景名称"
@@ -106,6 +107,8 @@
     export default {
         mixins: [VueMixins], // 混入
         data() {
+            let caseLibId = sessionStorage.getItem('caselibId')
+            let currentUserId = sessionStorage.getItem('userId') || '3'
             return {
                 form: {
                     senceName: "",
@@ -121,8 +124,9 @@
                 //场景ID
                 selectedId: -1,
                 // 用例库ID
-                caseLibId: "1269",
-                currentUserId: "3",
+                caseLibId: caseLibId,
+                currentUserId: currentUserId,
+                tableLoading: false
             }
         },
         computed:{
@@ -253,6 +257,7 @@
                 if(type === 1){
                     this.currentPage = 1
                 }
+                this.tableLoading = true
                 Request({
                     url: '/sceneController/pagedBatchQueryScene',
                     method: 'post',
@@ -264,6 +269,8 @@
                     console.log(err)
                 }).catch((err) => {
                     console.log(err)
+                }).finally(_=>{
+                    this.tableLoading = false
                 })
             },
             // 掉起form表单 并将modelFlag标志置为 1

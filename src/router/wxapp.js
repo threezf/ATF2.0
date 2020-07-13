@@ -25,7 +25,7 @@ export default {
         redirect: '/wxapp-open/template/list',
         meta: {
             name: '模板管理',
-            parents: 'WxappIndex',
+            parent: 'WxappIndex',
             icon: 'el-icon-document-copy'
         },
         children: [{
@@ -34,7 +34,7 @@ export default {
             component: WxappTemplateDraft,
             meta: {
                 name: '草稿箱',
-                parents: 'WxappIndex'
+                parent: 'WxappIndex'
             }
         }, {
             path: 'list',
@@ -42,7 +42,7 @@ export default {
             component: WxappTemplateList,
             meta: {
                 name: '模板列表',
-                parents: 'WxappIndex'
+                parent: 'WxappIndex'
             }
         }]
     }, {
@@ -51,7 +51,7 @@ export default {
         component: WxappAppList,
         meta: {
             name: '托管小程序列表',
-            parents: 'WxappIndex',
+            parent: 'WxappIndex',
             icon: 'el-icon-mobile-phone'
         }
     }, {
@@ -60,7 +60,7 @@ export default {
         component: WxappAppManage,
         meta: {
             name: '小程序管理',
-            parents: 'WxappIndex',
+            parent: 'WxappIndex',
             hide: true
         }
     }]

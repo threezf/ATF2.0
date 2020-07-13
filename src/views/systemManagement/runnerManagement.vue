@@ -13,8 +13,8 @@
                 <el-button
                     size="small"
                     type="primary"
-                    icon="el-icon-download
-                    @click='downloadRunner'">
+                    icon="el-icon-download"
+                    @click='downloadRunner'>
                     执行机安装包下载
                 </el-button>
             </el-header>
@@ -119,6 +119,7 @@
             },
             // 执行机安装包下载
             downloadRunner(){
+                console.log('123123')
                 window.location.href = this.address4 + "atf-data/atf-runner.zip";
             },
             handleDetail(index, row) {

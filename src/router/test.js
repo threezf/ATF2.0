@@ -21,7 +21,7 @@ export default {
             component: TestSubPage1,
             meta: {
                 name: '模板管理1',
-                parents: 'TestIndex',
+                parent: 'TestIndex',
                 icon: 'el-icon-document-copy'
 
             },
@@ -32,7 +32,7 @@ export default {
                     component: TestSubPage11,
                     meta: {
                         name: '模板管理11',
-                        parents: 'TestSubPage1',
+                        parent: 'TestSubPage1',
                         icon: 'el-icon-document-copy'
                     }
                 },
@@ -42,7 +42,7 @@ export default {
                     component: TestSubPage12,
                     meta: {
                         name: '模板管理12',
-                        parents: 'TestSubPage1',
+                        parent: 'TestSubPage1',
                         icon: 'el-icon-document-copy',
                     }
                 }
@@ -54,7 +54,7 @@ export default {
             component: TestSubPage2,
             meta: {
                 name: '模板管理2',
-                parents: 'TestIndex',
+                parent: 'TestIndex',
                 icon: 'el-icon-document-copy'
             }
         }

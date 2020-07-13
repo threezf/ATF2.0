@@ -25,7 +25,7 @@ export default {
         redirect: '/aladdin/template/draft',
         meta: {
             name: '阿拉丁',
-            parents: 'AladdinIndex',
+            parent: 'AladdinIndex',
             icon: 'el-icon-document-copy'
         },
         children: [{
@@ -34,7 +34,7 @@ export default {
             component: WxappTemplateDraft,
             meta: {
                 name: '阿拉丁',
-                parents: 'AladdinIndex'
+                parent: 'AladdinIndex'
             }
         }, {
             path: 'list',
@@ -42,7 +42,7 @@ export default {
             component: WxappTemplateList,
             meta: {
                 name: '阿拉丁',
-                parents: 'AladdinIndex'
+                parent: 'AladdinIndex'
             }
         }]
     }, {
@@ -51,7 +51,7 @@ export default {
         component: WxappAppList,
         meta: {
             name: '阿拉丁',
-            parents: 'AladdinIndex',
+            parent: 'AladdinIndex',
             icon: 'el-icon-mobile-phone'
         }
     }, {
@@ -60,7 +60,7 @@ export default {
         component: WxappAppManage,
         meta: {
             name: '阿拉丁',
-            parents: 'AladdinIndex',
+            parent: 'AladdinIndex',
             hide: true
         }
     }]
