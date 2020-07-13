@@ -719,7 +719,7 @@
 
 <script>
 import Request from "@/libs/request.js";
-import VueMixins from "@/libs/vueMixins.js";
+import VueMixins from "@/libs/vueMixins.js";1
 import qs from "qs";
 import Sortable from "sortablejs";
 export default {
