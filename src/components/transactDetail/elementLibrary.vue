@@ -253,11 +253,11 @@ export default {
     props:{
         transId:{ 
             type: String,
-            default: '1708'
+            default: undefined
         },
         autId:{ 
             type: String,
-            default: '1574'
+            default: undefined
         }
     },
   data() {
@@ -272,7 +272,7 @@ export default {
         classType:'',//当前选中的元素的控件类型
         selectedUI:'',//当前选中的UI 
         selectedEle:[],//当前选中的元素
-        repositoryId:'1588',//元素库Id
+        repositoryId: undefined,//元素库Id
         mainProperties:'',
         autoSelectValue:'',
         filterText: '',
@@ -298,7 +298,13 @@ export default {
   },
     watch: {
         filterText(val) {
-        this.$refs.tree2.filter(val);
+            this.$refs.tree2.filter(val);
+        },
+        transId(){
+            if(this.transId && this.autId){
+                this.getEleTree()
+                this.getClass()
+            }
         }
     },
   computed: {},
@@ -369,6 +375,7 @@ export default {
                     tree.push(node)
                 }
                 _this.treeData = tree
+                this.repositoryId = res.elementRepositoryId
                 console.log('_this.treeData',_this.treeData)
             },(err) => {
                 console.log(err)
@@ -546,8 +553,6 @@ export default {
   },
   created() {},
   mounted() {
-      this.getEleTree()
-      this.getClass()
   }
 };
 </script>

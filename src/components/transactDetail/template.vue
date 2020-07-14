@@ -283,11 +283,11 @@ export default {
     props:{
         transId:{ 
             type: String,
-            default: '1708'
+            default: undefined
         },
         autId:{ 
             type: String,
-            default: '1574'
+            default: undefined
         },
         // 因为在快速开始时，脚本称之为用例，因此使用变量控制其显示
         name:{ 
@@ -315,7 +315,13 @@ export default {
             addItemShow:false,
         }
     },
-    watch: {},
+    watch: {
+        autId(){
+            if(this.autId && this.transId){
+                this.getTemplates()
+            }
+        }
+    },
     computed: {},
     methods: {
         log(info){
@@ -644,7 +650,9 @@ export default {
     },
     created() {},
     mounted() {
-        this.getTemplates()
+        if(this.autId && this.transId){
+            this.getTemplates()
+        }
         this.rowDrop()
         document.body.ondrop = function (event) {
             event.preventDefault();

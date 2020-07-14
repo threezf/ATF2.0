@@ -595,9 +595,7 @@ export default {
       console.log('toTransact', row)
       this.$router.push({
         name: 'TransactDetail',
-        query: {
-          data: row
-        }
+        query: row
       })
     },
     /*

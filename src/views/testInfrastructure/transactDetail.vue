@@ -55,10 +55,10 @@
                 </el-row>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="元素库" name="elementLibrary">
-                        <element-library ></element-library>
+                        <element-library :trans-id='transId + ""' :aut-id='autId+""'></element-library>
                     </el-tab-pane>
                     <el-tab-pane label="基础脚本" name="template">
-                        <template-manage path-name="TestInfrastructure"></template-manage>
+                        <template-manage :trans-id='transId + ""' :aut-id='autId+""' path-name="TestInfrastructure"></template-manage>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>
@@ -79,9 +79,9 @@
         },
         data() {
             return {
-                autId:'61',
-                transId:'115',
-                userId:'3',
+                autId: undefined,
+                transId: undefined,
+                userId: undefined,
                 autSelectValue:'',
                 tranSelectValue:'',
                 activeName: 'elementLibrary',
@@ -91,8 +91,11 @@
             }
         },
         mounted(){
-            let data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
-            console.log('data',data)
+            let data = this.$route.query // 跳转源界面传递的行数据或新增测试功能点的对象数据
+            console.log(data)
+            this.autId = data.autId
+            this.transId =  data.id
+            this.userId = sessionStorage.getItem('userId') || '3'
             this.getAuts();
             this.getTran(this.autId);
             this.transChange(this.transId)

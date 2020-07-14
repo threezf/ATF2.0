@@ -289,7 +289,7 @@
                       <el-table
                         border
                         ref="multipleTable"
-                        :data="afterOperationRows"
+                        :data="beforeOperationRows"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -993,10 +993,11 @@
                 var length = type === 1 ? strArray.length - 1 : strArray.length;
                 if(strArray.length) {
                     for (let i = 0; i < length; i++) {
-                        if(!strArray[i].length) return;
+                        let str = strArray[i].trim()
+                        if(!str.length) return;
                         // @before\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');\n@value\n{expr= }\n@after\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');
-                        if (strArray[i].includes('UI(')) {
-                            var script = strArray[i].split(').');
+                        if (str.includes('UI(')) {
+                            var script = str.split(').');
                             var operation = {};
                             var arr = script[1].split('(');
                             // UI('aa'  --> aa
@@ -1021,9 +1022,9 @@
                             operation.ui = '';
                             operation.classType = '';
                             operation.element = '';
-                            var index = strArray[i].indexOf('(');
-                            var functions = [{name: strArray[i].slice(0, index), parameterlist: ''}];
-                            var paraStr = strArray[i].slice(index + 1, -1);
+                            var index = str.indexOf('(');
+                            var functions = [{name: str.slice(0, index), parameterlist: ''}];
+                            var paraStr = str.slice(index + 1, -1);
                             var parameters = [];
                             var paraArr = paraStr.split(',');
                             for (let j = 0; j < paraArr.length; j++) {
