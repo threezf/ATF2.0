@@ -91,6 +91,8 @@
             }
         },
         mounted(){
+            let data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
+            console.log('data',data)
             this.getAuts();
             this.getTran(this.autId);
             this.transChange(this.transId)

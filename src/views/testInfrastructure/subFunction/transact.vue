@@ -76,10 +76,13 @@
           type="index">
         </el-table-column>
         <el-table-column 
-          prop="code" 
+          prop="" 
           label="编码" 
           min-width="15%" 
           align="center">
+          <template slot-scope="scope">
+            <a class="codeTo" @click.prevent="toTransact(scope.row)">{{scope.row.code}}</a>
+          </template>
         </el-table-column>
         <el-table-column 
           prop="nameMedium" 
@@ -284,6 +287,7 @@
             <el-button 
               type="success" 
               size="small"
+              @click="toDetail"
               >进入功能点
             </el-button>
           </el-form-item>
@@ -347,7 +351,8 @@ export default {
       //复制功能的数据
       elementRepositoryId: "",
       objectRepositoryId: "",
-      
+      addId: '',
+      addRow: {}
     };
   },
   created() {
@@ -395,6 +400,10 @@ export default {
       _this.isAdded = true;
       _this.dialogModelFlag = 0;
       _this.dialogVisible = true;
+      _this.ruleForm.nameMedium =  ""
+      _this.ruleForm.functionType =  "UI"
+      _this.ruleForm.code =  ""
+      _this.ruleForm.descShort =  ""
     },
     importFunctionButton() {
       let _this = this;
@@ -507,7 +516,8 @@ export default {
       console.log(
         "选中的行" + _this.rowInfo.transType,
         _this.elementRepositoryId,
-        _this.objectRepositoryId
+        _this.objectRepositoryId,
+        row
       );
     },
     /**
@@ -576,10 +586,26 @@ export default {
           console.log("获取失败", err);
         });
     },
+    // 进入功能点
+    toDetail() {
+      console.log('addRow', this.addRow)
+      this.toTransact(this.addRow)
+    },
+    // 编码跳转
+    toTransact(row) {
+      console.log('toTransact', row)
+      this.$router.push({
+        name: 'TransactDetail',
+        query: {
+          data: row
+        }
+      })
+    },
     /*
      * 获取指定option的功能点
      */
     getAllFunction() {
+      let _this = this
       Request({
         url: "/transactController/pagedBatchQueryTransact",
         method: "post",
@@ -602,6 +628,10 @@ export default {
               }
               this.tableData = res.list;
               this.totalCount = res.totalCount;
+              if(_this.addId) {
+                _this.addRow = res.list.find(item => item.id === _this.addId)
+              }
+              console.log(_this.addId, _this.addRow, res.list)
             }
           },
           err => {
@@ -622,6 +652,12 @@ export default {
       if (status) {
         this.$message.warning("*为必填项");
       } else {
+        if (_this.ruleForm.functionType === "UI") {
+          _this.ruleForm.code = _this.ruleForm.code !== ""? _this.ruleForm.code: "功能点" + Date.now()
+        }else {
+           _this.ruleForm.code = _this.ruleForm.code !== ""? _this.ruleForm.code: "接口" + Date.now()
+        }
+        console.log('submitForm', this.ruleForm)
         _this.$refs[formName].validate(valid => {
           if (valid) {
             if (document.getElementById("buttonName").innerText == "新增") {
@@ -641,6 +677,7 @@ export default {
                     _this.dialogVisible = false;
                     _this.successDialogVisible = true;
                     _this.getAllFunction();
+                    _this.addId = res.transId
                   })
                   .catch(err => {
                     console.log("添加失败", err);
@@ -832,5 +869,9 @@ export default {
   .transactDialogButtonRow {
     margin-top: -5px;
     margin-bottom: -20px;
+  }
+  .codeTo {
+    color: #409eff;
+    cursor: pointer;
   }
 </style>

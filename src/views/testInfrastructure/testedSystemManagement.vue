@@ -109,10 +109,10 @@
           width="30%"
         >
           <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
-            <el-form-item label="系统编号" prop="code">
-              <el-input placeholder="请输入测试系统编号" v-model.lazy="form.code"></el-input>
+            <el-form-item label="系统名称" prop="code">
+              <el-input placeholder="请输入测试系统名称" v-model.lazy="form.code"></el-input>
             </el-form-item>
-            <el-form-item label="系统名称">
+            <el-form-item label="系统编号">
               <el-input placeholder="为空时自动生成" v-model.lazy="form.nameMedium"></el-input>
             </el-form-item>
             <el-form-item label="开发架构">
