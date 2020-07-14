@@ -194,7 +194,7 @@ export default {
           console.log("id", _this.expectation[index].id);
           let qs = require("qs");
           Request({
-            url: "/mockServer/deleteExpectation",
+            url: "//mockServer/deleteExpectation",
             method: "POST",
             params: qs.stringify({
               id: _this.expectation[index].id
@@ -221,7 +221,6 @@ export default {
     },
     //改变导航按钮切换页面
     changeRadioButton(option, getId) {
-      console.log("调用changeRadioButton", this.id);
       let _this = this;
       // _this.$message.success('点击'+option)
       if (_this.option === "预览") {
@@ -285,9 +284,7 @@ export default {
     },
     handleRowClick(row, column, event) {
       this.count++;
-      console.log("当前点击的行数是：", row);
       this.id = row.id;
-      console.log("当前id为：" + this.id);
       this.changeRadioButton(this.option, this.id);
     },
     // 改变当前行

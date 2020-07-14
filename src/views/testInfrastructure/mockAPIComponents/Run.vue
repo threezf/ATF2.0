@@ -11,10 +11,10 @@
     <div class="contentDiv">
       <el-form>
         <el-form-item class="basicSettingRow" label="接口路径" label-width="100px">
-          <el-select v-model="selectedParseMethod">
+          <el-select v-model="selectedParseMethod" disabled>
             <el-option v-for="(item,index) in parseMethods" :key="index" :value="item"></el-option>
           </el-select>
-          <el-input class="path" v-model="path"></el-input>
+          <el-input class="path" v-model="path" disabled></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -39,14 +39,13 @@
     <!--body-->
     <div class="contentDiv" v-if="bodyVisible">
       <el-row class="radioButtonRow">
-        <el-radio-group v-model="messageFormat" @change="printFormat">
+        <el-radio-group v-model="messageFormat" @change="printFormat" disabled>
           <el-radio label="JSON"></el-radio>
           <el-radio label="XML"></el-radio>
           <el-radio label="STRING"></el-radio>
         </el-radio-group>
       </el-row>
-      <pre class="textareaStyle">{{messageInfo}}
-            </pre>
+      <pre class="textareaStyle">{{messageInfo}}</pre>
     </div>
     <!--query-->
     <div class="contentDiv" v-if="queryVisible">
@@ -56,16 +55,17 @@
             <el-col :span="15">
               <el-form>
                 <el-form-item label="请求参数" label-width="100px">
-                  <el-input style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
+                  <el-input style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]" disabled></el-input>
                   <el-input
                     style="width: 400px;margin-left: 10px"
                     placeholder="参数值"
                     v-model="paramsQueryValue[index]"
+                    disabled
                   ></el-input>
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="2" style="margin-left:-10px;margin-top:-25px">
+            <el-col :span="2" style="margin-left:-10px;margin-top:-25px" hidden>
               <el-button
                 type="primary"
                 size="mini"
@@ -98,16 +98,18 @@
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsHeadersKey[index]"
+                      disabled
                     ></el-input>
                     <el-input
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsHeadersValue[index]"
+                      disabled
                     ></el-input>
                   </el-form-item>
                 </el-form>
               </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px">
+              <el-col :span="2" style="margin-left:0px;margin-top:5px" hidden>
                 <el-button
                   type="primary"
                   size="mini"
@@ -141,16 +143,18 @@
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsCookiesKey[index]"
+                      disabled
                     ></el-input>
                     <el-input
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsCookiesValue[index]"
+                      disabled
                     ></el-input>
                   </el-form-item>
                 </el-form>
               </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px">
+              <el-col :span="2" style="margin-left:0px;margin-top:5px" hidden>
                 <el-button
                   type="primary"
                   size="mini"
@@ -177,14 +181,14 @@
         <el-form>
           <el-col :span="11">
             <el-form-item label="secure" label-width="100px">
-              <el-select v-model="selectedSecure">
+              <el-select v-model="selectedSecure" disabled>
                 <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="10">
             <el-form-item label="keepalive" label-width="100px">
-              <el-select v-model="selectedKeepalive">
+              <el-select v-model="selectedKeepalive" disabled>
                 <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
@@ -600,7 +604,7 @@
     margin: 10px auto auto auto;
     border: 1px solid lightgrey;
     border-radius: 8px;
-    background: #f5f5f5;
+    background: #EEEEEE;
   }
   .returnDataDiv {
     margin-top: -15px;
@@ -629,10 +633,10 @@
     margin: -10px auto 10px 20px;
   }
   .radioButtonRowHigh {
-    margin: 0px auto -20px 20px;
+    margin: 10px auto -20px 20px;
   }
   .liRadioButtonRow {
-    margin: 0px auto -20px 0px;
+    margin: 0px auto -35px 0px;
     width: 99%;
   }
   .ulRadioButton {
