@@ -59,7 +59,7 @@
         border>
         <el-table-column 
           label="选择" 
-          min-width="5%" 
+          min-width="3%" 
           align="center">
           <template slot-scope="scope">
             <el-radio
@@ -78,7 +78,7 @@
         <el-table-column 
           prop="code" 
           label="编码" 
-          min-width="10%" 
+          min-width="15%" 
           align="center">
         </el-table-column>
         <el-table-column 
@@ -96,7 +96,7 @@
         <el-table-column 
           prop="descShort" 
           label="描述" 
-          min-width="20%" 
+          min-width="15%" 
           align="center">
         </el-table-column>
         <el-table-column

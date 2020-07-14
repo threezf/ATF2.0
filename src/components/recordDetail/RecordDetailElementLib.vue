@@ -467,7 +467,7 @@ export default {
       console.log("queryAllElementsForATransact", id);
       let _this = this;
       Request({
-        url: "elementRepository/queryAllElementsForATransact",
+        url: "/elementRepository/queryAllElementsForATransact",
         method: "POST",
         params: {
           transactId: id
@@ -478,10 +478,12 @@ export default {
             _this.getUIs = res.uis;
           } else {
             _this.$message.error(res.respMsg);
+            _this.getUIs = []
           }
         })
         .catch(err => {
-          _this.$message.error(err.respMsg);
+          _this.$message.error(err.split('；')[err.split('；').length - 1]);
+          _this.getUIs = []
         });
     },
     // 节点过滤
@@ -503,7 +505,7 @@ export default {
         _this.$message.warning("请选择一条UI");
       } else {
         Request({
-          url: "elementRepository/deleteSingleUI",
+          url: "/elementRepository/deleteSingleUI",
           method: "POST",
           params: {
             repositoryId: _this.getRepositoryId,
@@ -554,7 +556,7 @@ export default {
         }
       };
       Request({
-        url: "elementRepository/addSingleElement",
+        url: "/elementRepository/addSingleElement",
         method: "POST",
         params: uploadParams
       })
@@ -569,7 +571,7 @@ export default {
           }
         })
         .catch(err => {
-          this.$message.error(err.respMsg);
+          his.$message.error(err.split('；')[err.split('；').length - 1])
         });
     },
     // 删除元素
@@ -580,7 +582,7 @@ export default {
         uiId: this.uiId
       };
       Request({
-        url: "elementRepository/deleteSingleElement",
+        url: "/elementRepository/deleteSingleElement",
         method: "POST",
         params: delParams
       })
@@ -609,7 +611,7 @@ export default {
         uis.push({ uiName: item });
       });
       Request({
-        url: "elementRepository/batchAddUI",
+        url: "/elementRepository/batchAddUI",
         method: "POST",
         params: {
           repositoryId: this.getRepositoryId,
@@ -618,7 +620,7 @@ export default {
       })
         .then(res => {
           if (res.respCode === "0000") {
-            this.$message.success("添加UI成功");
+            this.$message.success("添加UI成功" + this.getTransactId);
             this.queryAllElementsForATransact(this.getTransactId);
             this.addUIVisible = false;
           } else {
@@ -626,7 +628,7 @@ export default {
           }
         })
         .catch(err => {
-          this.$message.error(err.respMsg);
+          his.$message.error(err.split('；')[err.split('；').length - 1])
         });
     },
     // 模板下载
@@ -637,7 +639,7 @@ export default {
     // 查询单个UI
     querySingleUI(repositoryId, uiId) {
       Request({
-        url: "elementRepository/querySingleUI",
+        url: "/elementRepository/querySingleUI",
         method: "POST",
         params: {
           repositoryId,
@@ -654,7 +656,7 @@ export default {
     // 查询单个元素
     querySingleElement() {
       Request({
-        url: "elementRepository/querySingleElement",
+        url: "/elementRepository/querySingleElement",
         method: "POST",
         params: {
           elementId: this.elementId,
@@ -664,8 +666,7 @@ export default {
       })
         .then(res => {
           this.element = res.element;
-          this.element.relateProperties = this.element.relateProperties
-            ? this.element.relateProperties
+          this.element.relateProperties = this.element.relateProperties ? this.element.relateProperties
             : [];
         })
         .catch(err => {
@@ -721,7 +722,7 @@ export default {
       let params = {};
       console.log("params", params);
       Request({
-        url: "elementRepository/modifySingleUI",
+        url: "/elementRepository/modifySingleUI",
         method: "POST",
         params: {
           relateIdentifyObjectId: this.uiFrom.relateIdentifyObjectId,
@@ -800,7 +801,7 @@ export default {
     // 保存元素
     modifySingleElement() {
       Request({
-        url: "elementRepository/modifySingleElement",
+        url: "/elementRepository/modifySingleElement",
         method: "POST",
         params: {
           element: this.element,
@@ -839,7 +840,7 @@ export default {
       formData.append('uploadUserId', 3)
       formData.append('autId', this.getAutId)
       Request({
-        url: 'elementRepository/batchImportElementAndUi',
+        url: '/elementRepository/batchImportElementAndUi',
         method: 'POST',
         params: formData
       }).then(res => {

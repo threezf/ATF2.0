@@ -414,8 +414,8 @@ export default {
       statusCode: "200", //状态码
       delayTime: "0", //延误时间
       creator: "", //创建者
-      httpRequest: "", //解析得到的httpRequest
-      httpResponse: "", //解析得到的httpResponse
+      httpRequest: {}, //解析得到的httpRequest
+      httpResponse: {}, //解析得到的httpResponse
       httpForwardEntity: {
         id: 5,
         host: "",
@@ -483,8 +483,8 @@ export default {
           _this.expectationName = res.expectationName;
           _this.type = res.type;
           _this.creator = res.creator;
-          _this.httpRequest = res.httpRequest;
-          _this.httpResponse = res.httpResponse;
+          _this.httpRequest = res.httpRequest? res.httpRequest: {};
+          _this.httpResponse = res.httpResponse? res.httpResponse: {};
           if(res.httpForwardEntity) {
             _this.hostContent = res.httpForwardEntity.host
             _this.portContent = res.httpForwardEntity.port

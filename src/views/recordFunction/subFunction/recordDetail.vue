@@ -40,7 +40,7 @@
             @click="downloadTools"
           >录制工具下载</el-button>
         </el-row>
-        <el-tabs type="border-card" class="mainTab">
+        <el-tabs @tab-click="handleTabClick" type="border-card" class="mainTab">
           <el-tab-pane class="detailTabPane" label="详情">
             <el-form class="detailForm" label-width="60px" :model="detailForm">
               <el-form-item label="编码">
@@ -123,7 +123,7 @@ export default {
   methods: {
     queryListAut() {
       Request({
-        url: "aut/queryListAut",
+        url: "/aut/queryListAut",
         method: "POST",
         params: {}
       })
@@ -140,7 +140,7 @@ export default {
     // 查询全部元素
     queryAllElementsForATransact(id, autId) {
       Request({
-        url: 'elementRepository/queryAllElementsForATransact',
+        url: '/elementRepository/queryAllElementsForATransact',
         method: 'POST',
         params: {
           transactId: id
@@ -155,7 +155,7 @@ export default {
     querySingleTransact(id) {
 			let _this = this
       Request({
-        url: "transactController/querySingleTransact",
+        url: "/transactController/querySingleTransact",
         method: "POST",
         params: {
           id: id
@@ -210,7 +210,7 @@ export default {
 		queryAutVisibleOmClasses(id) {
 			let _this = this;
       Request({
-        url: "aut/queryAutVisibleOmClasses",
+        url: "/aut/queryAutVisibleOmClasses",
         method: "POST",
         params: {
           'id': _this.autId
@@ -230,7 +230,7 @@ export default {
 		queryAllObjectForATransact(id) {
 			let _this = this;
       Request({
-        url: "objectRepository/queryAllObjectForATransact",
+        url: "/objectRepository/queryAllObjectForATransact",
         method: "POST",
         params: {
           transactId: id
@@ -249,7 +249,7 @@ export default {
 		// 通过Transid获取模板
 		queryTemplateByTransId(id) {
 			Request({
-				url: 'scriptTemplate/queryTemplateByTransId',
+				url: '/scriptTemplate/queryTemplateByTransId',
 				method: 'POST',
 				params: {
 					id
@@ -270,7 +270,7 @@ export default {
     // 查询脚本信息
     queryScriptInfo(scriptId) {
       Request({
-        url: 'scriptTemplate/queryScriptInfo',
+        url: '/scriptTemplate/queryScriptInfo',
         method: 'POST',
         params: {
           autId: this.autId,
@@ -332,10 +332,17 @@ export default {
       window.location = "http://10.101.167.184:8080/atf-data/atf-recorder.zip";
     },
     // 录制规则录入
-   ruleRecord() {
+    ruleRecord() {
      console.log('规则录入')
      this.$refs.elelib.recordrule()
-   }
+    },
+    // 切换点击
+    handleTabClick(tab, event) {
+      console.log('handleTabClick', tab, event)
+      if(tab.label === '详情') {
+        this.$refs.elelib.maskFlag = true
+      }
+    }
   },
   components: {
     "element-library": elementLibrary

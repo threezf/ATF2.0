@@ -54,7 +54,7 @@
             </template>
           </el-table-column>
           <el-table-column label="行号" width="50px" align="center" type="index"></el-table-column>
-          <el-table-column prop="code" label="编sw码" align="center">
+          <el-table-column prop="code" label="编码" align="center">
             <template slot-scope="scope">
               <a
                 class="numberA"

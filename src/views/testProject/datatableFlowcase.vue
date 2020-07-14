@@ -377,7 +377,7 @@
 			queryFlowTestcaseInfo() {
 				let _this = this
 				Request({
-					url: 'dataCenter/queryFlowTestcaseInfo',
+					url: '/dataCenter/queryFlowTestcaseInfo',
 					method: 'POST',
 					params: {
 						id: this.testCaseInfoId
@@ -391,14 +391,13 @@
 					_this.mainForm.expectResult = res.expectResult
 					_this.mainForm.testStep = res.testStep
 					_this.mainForm.nodeInfoList = res.nodeInfoList
-					console.log("queryFlowTestcaseInfo",_this.mainForm)
 				}).catch(error => {
 
 				})
 			},
     	//切换单用例显示
 			toggleSingle() {
-
+				this.$router.push({path: '/testProjectIndext/datatable'})
 			},
 			//编辑事件
 			edit() {
@@ -430,7 +429,7 @@
 			// 获取脚本数据
 			getTestcaseScript(id) {
 				Request({
-					url: 'dataCenter/getTestcaseScript',
+					url: '/dataCenter/getTestcaseScript',
 					method: 'POST',
 					params: {
 						testcaseId: id,

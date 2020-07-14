@@ -14,7 +14,7 @@
             class="highFunction"
             v-if="!isHighExpand"
             @click="isHighExpand =! isHighExpand"
-          >>>展开高级功能</span>
+          >{{showFun}}</span>
           <span v-if="isHighExpand" class="buttons">
             <el-button
               type="primary"
@@ -728,9 +728,9 @@ export default {
   data() {
     return {
       isHighExpand: false, //控制着高级功能
-      foldHigh: "<<收起高级功能", //收起高级功能
-      sceneId: "1166",
-      caseLibId: '1278',
+      foldHigh: "<< 收起高级功能", //收起高级功能
+      sceneId: "",
+      caseLibId: '1278', 
       sceneEntity: {}, // scene实体
       addDialogVisible: false, //添加对话框是否可视
       addForm: {
@@ -828,7 +828,7 @@ export default {
         autoType: "", // 自动化类型
         packageName: "", //应用包名
         appActivy: "", //启动AppActivity
-        isReset: "是", //是否重置
+        isReset: true, //是否重置
         interfacePath: "" //接口路径
       }, // 配置移动端设备信息
       exeStrategy1Status: "", // 用例执行策略
@@ -860,12 +860,15 @@ export default {
       debugRound: "", //调试轮次
       debugRange: ["全部执行", "执行选中的用例"], //执行范围
       selectedDebugRange: "",
-      caseIdList: [] // 场景顺序
+      caseIdList: [], // 场景顺序
+      showFun: '展开高级功能 >>',
+      hideFun: ''
     };
   },
   created() {
     // 获取上个界面传递的sceneId
-    //this.sceneId = this.$route.query.id;
+    this.sceneId = this.$route.query.id;
+    this.caseLibId = this.$route.query.caseLibId
     this.selectScene();
     this.getMobileInfo();
     this.pagedBatchQueryTestCase();
@@ -976,7 +979,6 @@ export default {
           }
         })
         .catch(error => {
-          //this.$message.error('该被测系统无移动端内容')
           console.log("该被测系统无移动端内容");
         });
     },
@@ -990,7 +992,6 @@ export default {
         params: this.addForm
       })
         .then(res => {
-          console.log("添加成功", res);
           this.$message.success(res.respMsg);
           this.selectScene();
         })
@@ -1048,7 +1049,7 @@ export default {
     // 保存执行时间规划数据
     saveExecutionTimePlanning() {
       Request({
-        url: 'sceneController/sceneTestcaseSetting',
+        url: '/sceneController/sceneTestcaseSetting',
         method: 'POST',
         params: {
           sceneId: this.sceneId,
@@ -1161,7 +1162,6 @@ export default {
     },
     // 触发器新增行
     triggerAddRow() {
-      this.$message.success("触发器新增行");
       let obj = {
         objectName: "",
         matchType: "",
@@ -1214,7 +1214,7 @@ export default {
     // 查询单个触发器
     queryTriger() {
       Request({
-        url: 'trigerController/queryTriger',
+        url: '/trigerController/queryTriger',
         method: 'POST',
         params: {
           id: this.triggerId
@@ -1239,7 +1239,7 @@ export default {
       console.log("请求对象", this.triggerForm);
       if(this.triggerFlag === 1) {
         Request({
-          url: "trigerController/insertTriger",
+          url: "/trigerController/insertTriger",
           method: "POST",
           params: {
             actions: JSON.stringify(this.triggerForm.actions),
@@ -1268,7 +1268,7 @@ export default {
           occasions: JSON.stringify(this.triggerForm.occasions)
         }
         Request({
-          url: "trigerController/updataTriger",
+          url: "/trigerController/updataTriger",
           method: "POST",
           params
         }).then(res => {
@@ -1323,7 +1323,7 @@ export default {
     // 触发器存储
     saveTrigger() {
       Request({
-        url: 'trigerController/updateTrigerState',
+        url: '/trigerController/updateTrigerState',
         method: 'POST',
         params: {
           stateDtos: this.trigerDtoList // 此处stateDtos保存内容？
@@ -1391,7 +1391,7 @@ export default {
         this.$message.warning('请选择要删除的行')
       }else {
         Request({
-        url: 'dataPool/deleteSingleDataPool',
+        url: '/dataPool/deleteSingleDataPool',
         method: 'POST',
         params: {
           id: this.dataPoolRowId
@@ -1411,7 +1411,7 @@ export default {
       let successInfo = ''
       let errorInfo = ''
       if(this.dataPoolFlag === 0) {
-        url = 'dataPool/addSingleDataPool'
+        url = '/dataPool/addSingleDataPool'
         params = {
           poolName: this.dataPoolForm.dataPoolName,
           poolObjId: this.dataPoolForm.objectId,
@@ -1422,7 +1422,7 @@ export default {
         successInfo = '添加成功'
         errorInfo = '添加失败'
       }else {
-        url = 'dataPool/modifySingleDataPool'
+        url = '/dataPool/modifySingleDataPool'
         params = {
           poolName: this.dataPoolForm.dataPoolName,
           poolObjId: this.dataPoolForm.objectId,
@@ -1477,7 +1477,7 @@ export default {
       };
       console.log("参数", params);
       Request({
-        url: "mobileController/initMobile",
+        url: "/mobileController/initMobile",
         method: "POST",
         params
       })
@@ -1495,7 +1495,7 @@ export default {
     pagedBatchQueryDataPool() {
       console.log(this.errorOperation);
       Request({
-        url: "dataPool/pagedBatchQueryDataPool",
+        url: "/dataPool/pagedBatchQueryDataPool",
         method: "POST",
         params: {
           pageSize: 10000,
@@ -1506,11 +1506,10 @@ export default {
           poolObjId: 2
         }
       }).then(res => {
-        this.$message.success('获取成功')
         this.dataPoolList = res.list
         console.log('pagedBatchQueryDataPool', this.dataPoolList)
       }).catch(err => {
-        this.$message.error('获取失败')
+        this.$message.error('无数据资源池配置')
       });
     },
     // 保存执行过程
@@ -1541,7 +1540,7 @@ export default {
      */
     scenedubug() {
       Request({
-        url: "executeController/scenedubug",
+        url: "/executeController/scenedubug",
         method: "POST",
         params: {
           debuground: this.debugRound,
@@ -1572,6 +1571,7 @@ export default {
       })
         .then(res => {
           this.$message.success("保存成功");
+          this.selectScene()
         })
         .catch(err => {
           this.$message.error("保存成功");
@@ -1590,6 +1590,9 @@ export default {
       color: gray;
       display: block;
       width: 100px;
+    }
+    .highFunction:hover {
+      color: #409eff;
     }
     .buttons {
       margin-left: 10px;
@@ -1636,25 +1639,26 @@ export default {
       margin-top: 15px;
     }
     .checkboxs {
-      margin: 30px auto;
+      margin: -10px auto;
       background-color: #fafafa;
       padding-top: 10px;
       padding-bottom: 10px;
       padding-left: 10px;
       position: relative;
+      height: 60px;
       .iconI {
         display: block;
         position: absolute;
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
         top: 14px;
         color: black;
         background: white;
       }
       .el-checkbox {
         margin-left: 40px;
-        width: 200px;
-        font-size: 18px;
+        width: 230px;
+        font-size: 16px;
       }
     }
   }

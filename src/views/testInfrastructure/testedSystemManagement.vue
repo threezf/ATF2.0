@@ -60,7 +60,7 @@
                 v-model="radio"
                 :label="scope.$index"
                 @change="handleRadioChange(scope.$index,scope.row)"
-              >&nbsp;</el-radio>
+              >&emsp;</el-radio>
               <!--调用时使用的是scope.row和scope.$index-->
             </template>
           </el-table-column>
@@ -335,7 +335,7 @@
 			// 查询移动端()
 			queryMobile(id) {
 				Request({
-					url: 'mobileController/queryMobile',
+					url: '/mobileController/queryMobile',
 					method: 'POST',
 					params: {
 						sceneId: id
@@ -345,11 +345,10 @@
 					if(res.respCode === '0000') {
 
 					}else {
-
+						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					console.log('queryMobile', err)
-					this.$message.error(err.respMsg)
+					this.$message.error(err.split('；')[err.split('；').length-1])
 				})
 			},
 			/**
@@ -616,7 +615,8 @@
 		color: blue;
 	}
 	.rowMargin {
-		margin: 0px auto 0px 20px;
+		width: calc(100% - 40px);
+		margin: 0px 20px;
 	}
 	/**添加对话框选择样式 */
 	.addSelect {

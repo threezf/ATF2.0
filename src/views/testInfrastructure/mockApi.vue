@@ -21,7 +21,7 @@
           :data="expectation"
           :show-header="showHeader"
           @row-click="handleRowClick"
-        >
+          @current-change="handleCurrentChange">
           <el-table-column width="185px" prop="expectationName"></el-table-column>
           <el-table-column>
             <template slot-scope="scope">
@@ -50,8 +50,7 @@
         width="24%"
         :title="addTitle"
         :visible.sync="dialogVisible"
-        :before-close="handleBeforeClose"
-      >
+        :before-close="handleBeforeClose">
         <el-form>
           <el-form-item label="创建人" label-width="120px">
             <el-input class="dialogInput" v-model="creatorName"></el-input>
@@ -111,7 +110,8 @@ export default {
       previewPath: "/testInfrastructure/mockApi/preview/",
       editPath: "/testInfrastructure/mockApi/edit/",
       runPath: "/testInfrastructure/mockApi/run/",
-      count: 0
+      count: 0,
+      currentRow: null
     };
   },
   computed: {},
@@ -289,6 +289,11 @@ export default {
       this.id = row.id;
       console.log("当前id为：" + this.id);
       this.changeRadioButton(this.option, this.id);
+    },
+    // 改变当前行
+    handleCurrentChange(val) {
+      this.currentRow = val;
+      this.selectName = "preview"
     }
   }
 };

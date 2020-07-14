@@ -13,10 +13,12 @@
             </el-col>
             <el-col :span="5">
               <el-form-item :label="selectedQueryMethod === '按测试轮次'?'测试轮次':'测试计划'">
-                <el-select v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound">
+                <el-select v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound"
+                clearable>
                   <el-option v-for="(item,index) in testRounds" :key="index" :value="item.name"></el-option>
                 </el-select>
-                <el-select v-else v-model="selectedTestPlan">
+                <el-select v-else v-model="selectedTestPlan"
+                clearable>
                   <el-option
                     v-for="(item,index) in testPlans"
                     :key="index"
@@ -102,8 +104,8 @@
           <el-table-column min-width="7.51%" align="center" label="执行结果状态">
             <template slot-scope="scope">
               <el-tag
-                :type="scope.row.executeStatus == '成功'?'success':scope.row.executeStatus == '部分成功'?'primary':scope.row.executeStatus == '跳过执行'?'warning':scope.row.executeStatus == '失败'?'danger':'info'"
-                v-text="scope.row.executeStatus"
+                :type="scope.row.executeStatus == '成功'?'success':scope.row.executeStatus == '部分成功'?'primary':scope.row.executeStatus == '跳过执行'?'warning':scope.row.executeStatus == '失败' || scope.row.executeStatus == null?'danger':'info'"
+                v-text="scope.row.executeStatus?scope.row.executeStatus:'未知'"
               ></el-tag>
             </template>
           </el-table-column>
