@@ -17,7 +17,7 @@
                 :value="item.value">
             </el-option>
         </el-select>
-         <el-select v-model="condition.compareType" placeholder="筛选操作" @change='valueChange()'>
+         <el-select v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
             <el-option
                 v-for="item in compareTypeOptions[condition.propertyName]"
                 :key="item.value"
@@ -25,7 +25,7 @@
                 :value="item.value">
             </el-option>
         </el-select>
-        <el-input v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange()'></el-input>        
+        <el-input v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'></el-input>        
         <el-select v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值" :multiple='true'  @change='valueChange()'>
             <el-option
                 v-for="item in getConf(condition).itemList"
@@ -34,7 +34,7 @@
                 :value="item.value">
             </el-option>
         </el-select>        
-        <el-select v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange()'>
+        <el-select v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'>
             <el-option
                 v-for="item in getConf(condition).itemList"
                 :key="item.value"
@@ -68,18 +68,25 @@ export default {
     }
   },
   watch: {
-      conditionList:{
-        handler(newName, oldName) {
-          console.log('12222222222222222222222222222222222222222222222222')
-        },
-        immediate: true
-
-      },
-    //   conditionList(newVal){
-    //       console.log('12222222222222222222222222222222222222222222222222')
-    //       console.log(newVal)
-    //       this.$emit('condition-list',newVal)
-    //   }
+  },
+  mounted(){
+      Request({
+        url: "/aut/queryListAut",
+        method: "get",
+        params: {
+        }
+      }).then(resp => {
+          let options = []
+          resp.autRespDTOList.forEach(item => {
+              options.push({
+                value: item.id,
+                label: item.nameMedium,
+              })
+          })
+          this.compareTypeOptions.autId.forEach(item => {
+              item.itemList = options
+          })
+      })
   },
   computed: {
       compareType(){
@@ -115,14 +122,17 @@ export default {
       itemChange(condition){
           condition.compareType= undefined;
           condition.propertyValueList = [undefined];
-          this.valueChange()
       },
-      valueChange(){
+      valueChange(item){
+        if(item){
+            if(!(item.compareType && item.propertyName && item.propertyValueList.length > 0 &&item.propertyValueList[0])){
+                return
+            }
+        }
         this.$emit('condition-list',this.conditionList)
       },
   },
   created() {},
-  mounted() {}
 };
 </script>
 <style lang="less" scoped>
