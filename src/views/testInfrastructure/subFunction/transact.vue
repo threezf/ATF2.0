@@ -358,7 +358,6 @@ export default {
   created() {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.code;
-    this.$message.success("pagination执行Created方法:" + this.autId);
     this.getAllFunction();
     this.getAllSystem();
   },
