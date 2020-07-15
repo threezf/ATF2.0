@@ -35,7 +35,7 @@
           <el-col :span="8">
             <el-input
 							class="searchInput"
-              placeholder="请输入系统编号"
+              placeholder="请输入系统编号或系统名称"
               v-model="selectInfo"
               clearable
               @clear="searchSystemClear"
