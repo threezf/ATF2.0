@@ -43,6 +43,7 @@
               v-for="(item,key) in autRespDTOList"
               :key="key"
               :value="item.nameMedium"
+              :label="item.nameMedium"
             ></el-option>
           </el-select>
         </el-col>
@@ -357,7 +358,7 @@ export default {
   },
   created() {
     this.autId = this.$route.query.id;
-    this.ownedSystem = this.$route.query.code;
+    this.ownedSystem = this.$route.query.nameMedium;
     this.getAllFunction();
     this.getAllSystem();
   },
@@ -593,10 +594,17 @@ export default {
     // 编码跳转
     toTransact(row) {
       console.log('toTransact', row)
-      this.$router.push({
-        name: 'TransactDetail',
-        query: row
-      })
+      if(row.transType === 'UI') {
+        this.$router.push({
+          name: 'TransactDetail',
+          query: row
+        })
+      }else {
+        this.$router.push({
+          name: 'InterfacesManagement',
+          query: row
+        })
+      }
     },
     /*
      * 获取指定option的功能点
@@ -749,7 +757,7 @@ export default {
       formData.append('autId', this.autId)
       formData.append('creatorId', this.creatorId)
       Request({
-        url: 'transactController/batchImportTransact',
+        url: '/transactController/batchImportTransact',
         method: 'POST',
         params: formData
       }).then(res => {

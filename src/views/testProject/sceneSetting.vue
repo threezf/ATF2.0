@@ -912,14 +912,14 @@ export default {
           this.addForm.caseIds = [];
           this.removeForm.caseIds = [];
           this.sceneEntity = res.selectSceneDto.sceneEntity
-          this.exeStrategy1Status = this.sceneEntity.exeStrategy1Status 
-          this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order  
-          this.exeStrategy2Start = this.sceneEntity.exeStrategy2Start
-          this.exeStrategy2Status = this.sceneEntity.exeStrategy2Status
-          this.exeStrategy3Order = this.sceneEntity.exeStrategy3Order
-          this.exeStrategy3Start = this.sceneEntity.exeStrategy3Start
-          this.exeStrategy3Status = this.sceneEntity.exeStrategy3Status
-          this.exeStrategyErr = this.sceneEntity.exeStrategyErr
+          this.exeStrategy1Status = this.sceneEntity.exeStrategy1Status? this.sceneEntity.exeStrategy1Status: 1
+          this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order? this.sceneEntity.exeStrategy2Order: 1  
+          this.exeStrategy2Start = this.sceneEntity.exeStrategy2Start? this.sceneEntity.exeStrategy2Start: 1
+          this.exeStrategy2Status = this.sceneEntity.exeStrategy2Status? this.sceneEntity.exeStrategy2Status: 1
+          this.exeStrategy3Order = this.sceneEntity.exeStrategy3Order? this.sceneEntity.exeStrategy3Order: 1
+          this.exeStrategy3Start = this.sceneEntity.exeStrategy3Start? this.sceneEntity.exeStrategy3Start: 1
+          this.exeStrategy3Status = this.sceneEntity.exeStrategy3Status? this.sceneEntity.exeStrategy3Status: 1
+          this.exeStrategyErr = this.sceneEntity.exeStrategyErr? this.sceneEntity.exeStrategyErr: 1
         })
         .catch(error => {
           this.$message.error("场景数据获取失败");
