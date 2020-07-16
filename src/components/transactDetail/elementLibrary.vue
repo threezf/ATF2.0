@@ -233,9 +233,9 @@
             :limit="1"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">批量导入</el-button>
             <div slot="tip" class="el-upload__tip">请下载模板，填写后上传。</div>
         </el-upload>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="downloadTemp">模板下载</el-button>
         <div slot="footer" class="dialog-footer">
             <el-button @click="addUIDialogFlag = false">取 消</el-button>
             <el-button type="primary" @click=" addUI">确 定</el-button>
@@ -309,6 +309,11 @@ export default {
     },
   computed: {},
   methods: {
+      downloadTemp(){
+        let url = "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" + this.autId
+        console.log(url)
+        window.location.href = url;
+      },
       // 以下是三个函数是上传组件用到的
       submitUpload() {
         this.$refs.upload.submit();
