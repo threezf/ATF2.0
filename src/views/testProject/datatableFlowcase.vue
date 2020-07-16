@@ -1,6 +1,6 @@
 <template>
   <div class="page-inner datatableFlowCaseStyle">
-		<el-container>
+		<el-container> 
 			<el-main>
 				<el-row>
 					<el-button
@@ -15,14 +15,16 @@
 				<el-card class="leftCard">
 					<div class="flowTitle">流程用例</div>
 					<el-table
-						:data="tableData"
+						:data="flowTestcaseInfos"
 						class="tableLeft"
+						@current-change="handleCurrentChange"
 						border
 						stripe
 						highlight-current-row>
 						<el-table-column 
+							align="center"
 							label="流程用例列"
-							prop="id"
+							prop="casecode"
 							width="217px">
 						</el-table-column>
 					</el-table>
@@ -263,13 +265,16 @@
 					testPoint: "", // 测试点
 					testStep: "", // 测试步骤
 					nodeInfoList: [], // 节点详情
+					missionId: '',//任务id
+					casecode: '', //用例编号
+					executorId: '', // 执行者编号
 				},
-				id: '1601', //节点id
+				id: '', //节点id
 				flag: true, // 是否禁用
 				autRespDTOList: [], // 功能点列表
 				queryFlowTestCaseParams: {
 					executorId: "3",
-					caseLibId: "1227"
+					caseLibId: ""
 				}, // 查询测试用例的表单数据
 				flowTestcaseInfos: [], // 流程测试数据
 				pagedBatchQueryTestMissionParams: {
@@ -282,20 +287,23 @@
 					pageSize: 10000
 				},
 				missionList: [], // 任务列表
-				testCaseInfoId: '10952', // 获取测试用例信息id
+				testCaseInfoId: '', // 获取测试用例信息id
 				// 对话框相关的
 				dialogTitle: '查看脚本',
 				dialogVisible: false,
-				dialogTableData: []
+				dialogTableData: [],
+				currentRow: null,
 			}
 		},
 		created() {
+			this.id = sessionStorage.getItem('selectId')
+			this.queryFlowTestCaseParams.caseLibId = sessionStorage.getItem('caselibId')
+			console.log('toCase',this.id, this.queryFlowTestCaseParams.caseLibId)
     	this.queryListAut()
-			this.queryTransactsByAutId()
 			this.queryFlowTestcase()
 			this.pagedBatchQueryTestMission()
+			this.queryTransactsByAutId()
 			this.setTableData()
-			this.queryFlowTestcaseInfo()
 		},
 		methods: {
 			// 设置表格数据
@@ -326,11 +334,16 @@
 				Request({
 					url: '/dataCenter/queryFlowTestcase',
 					method: 'POST',
-					params: this.pagedBatchQueryTestMissionParams
+					params: {
+						caseLibId: this.queryFlowTestCaseParams.caseLibId,
+						executorId: "3"
+					}
 				}).then(res => {
 					if (res.respCode === '0000') {
 						console.log('获取成功', res);
 						this.flowTestcaseInfos = res.flowTestcaseInfos
+						this.testCaseInfoId = this.flowTestcaseInfos[0].id
+						this.queryFlowTestcaseInfo()
 					}else {
 						this.$message.warning(res.respMsg)
 					}
@@ -391,6 +404,9 @@
 					_this.mainForm.expectResult = res.expectResult
 					_this.mainForm.testStep = res.testStep
 					_this.mainForm.nodeInfoList = res.nodeInfoList
+					_this.mainForm.missionId = res.missionId
+					_this.mainForm.casecode = res.casecode
+					_this.mainForm.executorId = res.executorId
 				}).catch(error => {
 
 				})
@@ -449,6 +465,12 @@
 			// 确定对话框
 			handleSure() {
 				this.dialogVisible = false
+			},
+			handleCurrentChange(val) {
+				this.currentRow = val
+				console.log('handleCurrentChange', val)
+				this.testCaseInfoId = val.id
+				this.queryFlowTestcaseInfo()
 			}
 		},
 		filters: {
@@ -624,5 +646,13 @@
 			display: flex;
 			justify-content: flex-end;
 		}
+	}
+	.el-table__header-wrapper {
+		display: none;
+	}
+	.el-table__body-wrapper {
+		cursor: pointer;
+		width: 98%;
+		margin: 0px auto;
 	}
 </style>

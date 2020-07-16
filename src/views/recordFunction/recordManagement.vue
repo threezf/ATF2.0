@@ -57,8 +57,9 @@
 			 </el-row>
         <el-table
           :default-sort="{prop:'createTime',order:'descending'}"
-          ref="singleTable"
           :data="tableData"
+          ref="singleTable"
+					class="table"
           stripe
 					border
           highlight-current-row>

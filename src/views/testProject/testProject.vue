@@ -294,6 +294,8 @@
 			toCase(id,caseLibId,name){
 				sessionStorage.setItem("caselibId", caseLibId)    //存储测试项目id到sessionstorage
 				sessionStorage.setItem("projectNameStorage", "("+name+")" )   //把项目名称存入缓存中
+				sessionStorage.setItem("selectId",id)
+				console.log('toCase',id,caseLibId)
 				this.$router.push({path:'testCase'})
 			},
 			// 页码大小变化

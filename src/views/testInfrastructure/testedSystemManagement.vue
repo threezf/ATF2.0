@@ -45,7 +45,7 @@
           </el-col>
         </el-row>
         <el-table
-          class="tableStyle"
+					class="table"
           ref="singleTable"
           border
           stripe

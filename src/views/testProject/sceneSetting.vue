@@ -124,7 +124,7 @@
             </el-row>
           </el-checkbox-group>
           <el-drawer
-            class="drawer"
+            :class="isCollapse? 'drawerHide': 'drawer'"
             size="fit-content"
             :title="drawTitles[selectedDrawIndex]"
             :visible.sync="drawerVisible"
@@ -718,867 +718,877 @@
 </template>
 
 <script>
-import Request from "@/libs/request.js";
-import VueMixins from "@/libs/vueMixins.js";1
-import qs from "qs";
-import Sortable from "sortablejs";
-export default {
-  name: "ScenceSetting",
-  mixins: [VueMixins],
-  data() {
-    return {
-      isHighExpand: false, //控制着高级功能
-      foldHigh: "<< 收起高级功能", //收起高级功能
-      sceneId: "",
-      caseLibId: '1278', 
-      sceneEntity: {}, // scene实体
-      addDialogVisible: false, //添加对话框是否可视
-      addForm: {
-        caseIds: [],
-        creatorId: "",
-        id: ""
-      }, //添加时的表单对象
-      testcaseViewRespDTOList: [], //场景数据
-      isIndeterminate: true, // 设置 indeterminate 状态，只负责样式控制
-      checkAll: false, // 是否全选
-      checkedSceneTestCases: [], //选中的场景
-      sceneTestCases: [], //
-      length: 0, //场景数目长度
-      removeForm: {
-        caseIds: [],
-        id: ""
-      }, //用例移除所需要的表单
-      drawerVisible: false,
-      direction: "btt",
-      drawTitles: [
-        "执行时间规划",
-        "触发器设置",
-        "执行过程控制",
-        "数据资源池配置",
-        "配置移动端设备信息"
-      ],
-      selectedDrawIndex: 0,
-      timeForm: {
-        time: "",
-        timeIdentification: ""
-      },
-      triggerForm: {
-        actions: [], // 执行动作
-        conditionRelate: "", // 执行条件
-        conditions: [], // 执行条件详情
-        desc: "", // 触发器描述
-        name: "", // 触发器名称
-        occasions: [], // 执行时机
-        sceneId: this.sceneId
-      },
-      triggerRow: {
-        conditionName: "",
-        matchMethod: "",
-        patternValue: ""
-      }, // 触发器表格单行数据
-      conditionNames: [
-        { label: "用例编号", value: 1 },
-        { label: "测试系统名称", value: 2 },
-        { label: "功能点名称", value: 3 }
-      ],
-      trigerDtoList: [], // 触发器查询数组
-      stateDtos: [], //触发器保存按钮存储数组
-      state: "", //
-      triggerStates: [
-        {id: 1, label: '启用'},
-        {id: 0, label: '禁用'}
-      ], // 触发器状态
-      opportunityList: [
-        { label: "场景执行前", value: '1' },
-        { label: "场景执行后", value: '2' },
-        { label: "用例执行前", value: '3' },
-        { label: "用例执行后", value: '4' },
-        { label: "元素对象方法执行前", value: '5' },
-        { label: "元素对象方法执行后", value: '6' }
-      ], // 执行时机选项
-      triggerVisible: false, // 触发器显示
-      triggerId: '', // 要修改的触发器id
-      triggerFlag: 1,
-      conditions: [
-        { label: "满足以下所有条件", value: 1 },
-        { label: "满足以下任一条件", value: 2 },
-        { label: "无条件限制", value: 3 }
-      ], // 执行条件
-      selectedOperation: "", // 选择的操作
-      selectedTriggerList: [], //选择的触发器行
-      controlForm: {},
-      dataConfigureForm: {},
-      dataPoolForm: {
-        dataPoolName: "场景数据池",
-        objectId: "2",
-        dataName: "",
-        dataValue: "",
-        dataDesc: ""
-      }, // 数据池表单
-      /**
-       * 数据池列表
-       */
-      dataPoolList: [],
-      dataPoolFlag: 0, // 数据池标识
-      dataPoolVisible: false,
-      dataPoolRowId: '', // 选中的数据池id
-      mobileForm: {
-        deviceType: "", //设备类型
-        deviceName: "", //设备名称
-        autoType: "", // 自动化类型
-        packageName: "", //应用包名
-        appActivy: "", //启动AppActivity
-        isReset: true, //是否重置
-        interfacePath: "" //接口路径
-      }, // 配置移动端设备信息
-      exeStrategy1Status: "", // 用例执行策略
-      exeStrategy2Start: "", // 起始节点策略
-      exeStrategy2Order: "", //流程级执行顺序策略
-      exeStrategy2Status: "", // 执行状态策略
-      exeStrategy3Start: "", // 起始用例策略
-      exeStrategy3Order: "", // 组合级执行顺序策略
-      exeStrategy3Status: "", // 组合级执行状态策略
-      exeStrategyErr: "", // 出错操作
-      executionStrategy: [
-        {id: 1, label: "全部重新执行"},
-        {id: 2, label: "跳过执行成功的用例"}
-      ], // 执行策略数据
-      startStrategy: [
-        {id: 1, label: "从第一个执行节点开始"}, 
-        {id: 2, label: "从第一个失败的执行节点开始"}
-      ], // 起始策略
-      orderStrategy: [
-        {id: 1, label: "顺序无关执行"}, 
-        {id: 2, label: "强制顺序执行"}
-      ], //执行顺序策略
-      errorOperations: [
-        {id: 1, label: "出错后终止"}, 
-        {id: 2, label: "出错后继续执行"}, 
-        {id: 3, label: "出错后由用户选择"}
-      ],
-      debugVisible: false, //调试是否可见
-      debugRound: "", //调试轮次
-      debugRange: ["全部执行", "执行选中的用例"], //执行范围
-      selectedDebugRange: "",
-      caseIdList: [], // 场景顺序
-      showFun: '展开高级功能 >>',
-      hideFun: ''
-    };
-  },
-  created() {
-    // 获取上个界面传递的sceneId
-    this.sceneId = this.$route.query.id;
-    this.caseLibId = this.$route.query.caseLibId
-    this.selectScene();
-    this.getMobileInfo();
-    this.pagedBatchQueryTestCase();
-    this.pagedBatchQueryDataPool()
-  },
-  mounted() {
-    this.sort();
-  },
-  methods: {
-    // 执行排序操作_
-    sort() {
-      let _this = this;
-      const el = document.getElementById("sortableGroup");
-      new Sortable.create(el, {
-        animation: 150, // 动画时长
-        sort: true, // 是否启用拖拽排序
-        delay: 0,
-        preventOnFilter: false,
-        onEnd(evt) {
-          console.log(evt);
-          console.log("原先的地址", evt.oldIndex);
-          console.log("新的地址", evt.newIndex);
-          const movedRow = _this.sceneTestCases.splice(evt.oldIndex, 1)[0];
-          _this.sceneTestCases.splice(evt.newIndex, 0, movedRow);
-          console.log("地址修改完", _this.sceneTestCases);
-        }
-      });
-    },
-    // 获取场景
-    selectScene() {
-      Request({
-        url: "/sceneController/selectScene",
-        method: "POST",
-        params: {
-          id: this.sceneId
-        }
-      })
-        .then(res => {
-          this.sceneTestCases = res.selectSceneDto.caseDtos;
-          this.length = res.selectSceneDto.caseDtos.length;
-          this.addForm.caseIds = [];
-          this.removeForm.caseIds = [];
-          this.sceneEntity = res.selectSceneDto.sceneEntity
-          this.exeStrategy1Status = this.sceneEntity.exeStrategy1Status? this.sceneEntity.exeStrategy1Status: 1
-          this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order? this.sceneEntity.exeStrategy2Order: 1  
-          this.exeStrategy2Start = this.sceneEntity.exeStrategy2Start? this.sceneEntity.exeStrategy2Start: 1
-          this.exeStrategy2Status = this.sceneEntity.exeStrategy2Status? this.sceneEntity.exeStrategy2Status: 1
-          this.exeStrategy3Order = this.sceneEntity.exeStrategy3Order? this.sceneEntity.exeStrategy3Order: 1
-          this.exeStrategy3Start = this.sceneEntity.exeStrategy3Start? this.sceneEntity.exeStrategy3Start: 1
-          this.exeStrategy3Status = this.sceneEntity.exeStrategy3Status? this.sceneEntity.exeStrategy3Status: 1
-          this.exeStrategyErr = this.sceneEntity.exeStrategyErr? this.sceneEntity.exeStrategyErr: 1
-        })
-        .catch(error => {
-          this.$message.error("场景数据获取失败");
-        });
-    },
-    // 获取全部测试用例
-    pagedBatchQueryTestCase() {
-      Request({
-        url: "/testcase/pagedBatchQueryTestCase",
-        method: "POST",
-        params: {
-          caseLibId: this.caseLibId,
-          currentPage: 1,
-          orderColumns: "id",
-          orderType: "asc",
-          pageSize: 3000
-        }
-      })
-        .then(res => {
-          console.log("res", res);
-          this.testcaseViewRespDTOList = res.testcaseViewRespDTOList;
-        })
-        .catch(error => {
-          this.$message.error("场景列表获取失败");
-        });
-    },
-    // 获取移动端内容
-    getMobileInfo() {
-      Request({
-        url: "/mobileController/queryMobile",
-        method: "POST",
-        params: {
+  import Request from "@/libs/request.js";
+  import VueMixins from "@/libs/vueMixins.js";1
+  import qs from "qs";
+  import Sortable from "sortablejs";
+  export default {
+    name: "ScenceSetting",
+    mixins: [VueMixins],
+    data() {
+      return {
+        isHighExpand: false, //控制着高级功能
+        foldHigh: "<< 收起高级功能", //收起高级功能
+        sceneId: "",
+        caseLibId: '1278', 
+        sceneEntity: {}, // scene实体
+        addDialogVisible: false, //添加对话框是否可视
+        addForm: {
+          caseIds: [],
+          creatorId: "",
+          id: ""
+        }, //添加时的表单对象
+        testcaseViewRespDTOList: [], //场景数据
+        isIndeterminate: true, // 设置 indeterminate 状态，只负责样式控制
+        checkAll: false, // 是否全选
+        checkedSceneTestCases: [], //选中的场景
+        sceneTestCases: [], //
+        length: 0, //场景数目长度
+        removeForm: {
+          caseIds: [],
+          id: ""
+        }, //用例移除所需要的表单
+        drawerVisible: false,
+        direction: "btt",
+        drawTitles: [
+          "执行时间规划",
+          "触发器设置",
+          "执行过程控制",
+          "数据资源池配置",
+          "配置移动端设备信息"
+        ],
+        selectedDrawIndex: 0,
+        timeForm: {
+          time: "",
+          timeIdentification: ""
+        },
+        triggerForm: {
+          actions: [], // 执行动作
+          conditionRelate: "", // 执行条件
+          conditions: [], // 执行条件详情
+          desc: "", // 触发器描述
+          name: "", // 触发器名称
+          occasions: [], // 执行时机
           sceneId: this.sceneId
-        }
+        },
+        triggerRow: {
+          conditionName: "",
+          matchMethod: "",
+          patternValue: ""
+        }, // 触发器表格单行数据
+        conditionNames: [
+          { label: "用例编号", value: 1 },
+          { label: "测试系统名称", value: 2 },
+          { label: "功能点名称", value: 3 }
+        ],
+        trigerDtoList: [], // 触发器查询数组
+        stateDtos: [], //触发器保存按钮存储数组
+        state: "", //
+        triggerStates: [
+          {id: 1, label: '启用'},
+          {id: 0, label: '禁用'}
+        ], // 触发器状态
+        opportunityList: [
+          { label: "场景执行前", value: '1' },
+          { label: "场景执行后", value: '2' },
+          { label: "用例执行前", value: '3' },
+          { label: "用例执行后", value: '4' },
+          { label: "元素对象方法执行前", value: '5' },
+          { label: "元素对象方法执行后", value: '6' }
+        ], // 执行时机选项
+        triggerVisible: false, // 触发器显示
+        triggerId: '', // 要修改的触发器id
+        triggerFlag: 1,
+        conditions: [
+          { label: "满足以下所有条件", value: 1 },
+          { label: "满足以下任一条件", value: 2 },
+          { label: "无条件限制", value: 3 }
+        ], // 执行条件
+        selectedOperation: "", // 选择的操作
+        selectedTriggerList: [], //选择的触发器行
+        controlForm: {},
+        dataConfigureForm: {},
+        dataPoolForm: {
+          dataPoolName: "场景数据池",
+          objectId: "2",
+          dataName: "",
+          dataValue: "",
+          dataDesc: ""
+        }, // 数据池表单
+        /**
+         * 数据池列表
+         */
+        dataPoolList: [],
+        dataPoolFlag: 0, // 数据池标识
+        dataPoolVisible: false,
+        dataPoolRowId: '', // 选中的数据池id
+        mobileForm: {
+          deviceType: "", //设备类型
+          deviceName: "", //设备名称
+          autoType: "", // 自动化类型
+          packageName: "", //应用包名
+          appActivy: "", //启动AppActivity
+          isReset: true, //是否重置
+          interfacePath: "" //接口路径
+        }, // 配置移动端设备信息
+        exeStrategy1Status: "", // 用例执行策略
+        exeStrategy2Start: "", // 起始节点策略
+        exeStrategy2Order: "", //流程级执行顺序策略
+        exeStrategy2Status: "", // 执行状态策略
+        exeStrategy3Start: "", // 起始用例策略
+        exeStrategy3Order: "", // 组合级执行顺序策略
+        exeStrategy3Status: "", // 组合级执行状态策略
+        exeStrategyErr: "", // 出错操作
+        executionStrategy: [
+          {id: 1, label: "全部重新执行"},
+          {id: 2, label: "跳过执行成功的用例"}
+        ], // 执行策略数据
+        startStrategy: [
+          {id: 1, label: "从第一个执行节点开始"}, 
+          {id: 2, label: "从第一个失败的执行节点开始"}
+        ], // 起始策略
+        orderStrategy: [
+          {id: 1, label: "顺序无关执行"}, 
+          {id: 2, label: "强制顺序执行"}
+        ], //执行顺序策略
+        errorOperations: [
+          {id: 1, label: "出错后终止"}, 
+          {id: 2, label: "出错后继续执行"}, 
+          {id: 3, label: "出错后由用户选择"}
+        ],
+        debugVisible: false, //调试是否可见
+        debugRound: "", //调试轮次
+        debugRange: ["全部执行", "执行选中的用例"], //执行范围
+        selectedDebugRange: "",
+        caseIdList: [], // 场景顺序
+        showFun: '展开高级功能 >>',
+        hideFun: '',
+        isCollapse: false, //折叠时page宽度
+        baseWidth: 0
+      };
+    },
+    created() {
+      // 获取上个界面传递的sceneId
+      this.sceneId = this.$route.query.id;
+      this.caseLibId = this.$route.query.caseLibId
+      this.selectScene();
+      this.getMobileInfo();
+      this.pagedBatchQueryTestCase();
+      this.pagedBatchQueryDataPool()
+    },
+    mounted() {
+      this.sort();
+      this.baseWidth = document.getElementsByClassName('right-content')[0].offsetWidth
+      let elementResizeDectoreMaker = require("element-resize-detector")
+      let erd = elementResizeDectoreMaker()
+      erd.listenTo(document.getElementsByClassName('right-content')[0], element => {
+        let width = element.offsetWidth
+        this.isCollapse = width === this.baseWidth
+        console.log('elementResizeDectoreMaker', width)
       })
-        .then(res => {
-          console.log("数据获取成功", res);
-          let mobileProperties = res.mobileProperties;
-          if (mobileProperties) {
-            this.mobileForm.appActivy = mobileProperties.appActivity;
-            this.mobileForm.packageName = mobileProperties.appPackage;
-            this.mobileForm.autoType = mobileProperties.automationName;
-            this.mobileForm.deviceName = mobileProperties.deviceName;
-            this.mobileForm.isReset == mobileProperties.noReset;
-            this.mobileForm.deviceType = mobileProperties.platformName;
-            this.sceneId = mobileProperties.sceneId;
-            this.mobileForm.interfacePath = mobileProperties.url;
-          }else {
-            this.mobileForm.appActivy = "";
-            this.mobileForm.packageName = "";
-            this.mobileForm.autoType = "";
-            this.mobileForm.deviceName = "";
-            this.mobileForm.isReset == false;
-            this.mobileForm.deviceType = "";
-            this.sceneId = -1;
-            this.mobileForm.interfacePath = "";
+    },
+    methods: {
+      // 执行排序操作_
+      sort() {
+        let _this = this;
+        const el = document.getElementById("sortableGroup");
+        new Sortable.create(el, {
+          animation: 150, // 动画时长
+          sort: true, // 是否启用拖拽排序
+          delay: 0,
+          preventOnFilter: false,
+          onEnd(evt) {
+            console.log(evt);
+            console.log("原先的地址", evt.oldIndex);
+            console.log("新的地址", evt.newIndex);
+            const movedRow = _this.sceneTestCases.splice(evt.oldIndex, 1)[0];
+            _this.sceneTestCases.splice(evt.newIndex, 0, movedRow);
+            console.log("地址修改完", _this.sceneTestCases);
+          }
+        });
+      },
+      // 获取场景
+      selectScene() {
+        Request({
+          url: "/sceneController/selectScene",
+          method: "POST",
+          params: {
+            id: this.sceneId
           }
         })
-        .catch(error => {
-          console.log("该被测系统无移动端内容");
-        });
-    },
-    // 将选择的用例添加到场景
-    insertTestcaseToScene() {
-      this.addForm.id = this.sceneId;
-      this.addForm.creatorId = "3";
-      Request({
-        url: "/sceneController/insertTestcaseToScene",
-        method: "POST",
-        params: this.addForm
-      })
-        .then(res => {
-          this.$message.success(res.respMsg);
-          this.selectScene();
-        })
-        .catch(error => {
-          this.$message.error("添加失败");
-        });
-    },
-    changeSelect() {
-      console.log(this.addForm.caseIds);
-    },
-    // 添加场景事件
-    addScene() {
-      this.addDialogVisible = true;
-      this.removeForm.caseIds = [];
-    },
-    // 确认添加
-    addSure() {
-      this.insertTestcaseToScene();
-      this.addDialogVisible = false;
-    },
-    // 取消添加
-    addCancel() {
-      this.addDialogVisible = false;
-    },
-    // 删除场景事件
-    deleteTestcaseFromScene() {
-      if (this.removeForm.caseIds.length === 0) {
-        this.$message.warning("请选择要删除的用例");
-      } else {
-        this.removeForm.id = this.sceneId;
+          .then(res => {
+            this.sceneTestCases = res.selectSceneDto.caseDtos;
+            this.length = res.selectSceneDto.caseDtos.length;
+            this.addForm.caseIds = [];
+            this.removeForm.caseIds = [];
+            this.sceneEntity = res.selectSceneDto.sceneEntity
+            this.exeStrategy1Status = this.sceneEntity.exeStrategy1Status? this.sceneEntity.exeStrategy1Status: 1
+            this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order? this.sceneEntity.exeStrategy2Order: 1  
+            this.exeStrategy2Start = this.sceneEntity.exeStrategy2Start? this.sceneEntity.exeStrategy2Start: 1
+            this.exeStrategy2Status = this.sceneEntity.exeStrategy2Status? this.sceneEntity.exeStrategy2Status: 1
+            this.exeStrategy3Order = this.sceneEntity.exeStrategy3Order? this.sceneEntity.exeStrategy3Order: 1
+            this.exeStrategy3Start = this.sceneEntity.exeStrategy3Start? this.sceneEntity.exeStrategy3Start: 1
+            this.exeStrategy3Status = this.sceneEntity.exeStrategy3Status? this.sceneEntity.exeStrategy3Status: 1
+            this.exeStrategyErr = this.sceneEntity.exeStrategyErr? this.sceneEntity.exeStrategyErr: 1
+          })
+          .catch(error => {
+            this.$message.error("场景数据获取失败");
+          });
+      },
+      // 获取全部测试用例
+      pagedBatchQueryTestCase() {
         Request({
-          url: "/sceneController/deleteTestcaseFromScene",
+          url: "/testcase/pagedBatchQueryTestCase",
           method: "POST",
-          params: this.removeForm
+          params: {
+            caseLibId: this.caseLibId,
+            currentPage: 1,
+            orderColumns: "id",
+            orderType: "asc",
+            pageSize: 3000
+          }
         })
           .then(res => {
-            this.$message.success("删除成功");
-            this.isIndeterminate = false;
-            this.checkAll = false;
+            console.log("res", res);
+            this.testcaseViewRespDTOList = res.testcaseViewRespDTOList;
+          })
+          .catch(error => {
+            this.$message.error("场景列表获取失败");
+          });
+      },
+      // 获取移动端内容
+      getMobileInfo() {
+        Request({
+          url: "/mobileController/queryMobile",
+          method: "POST",
+          params: {
+            sceneId: this.sceneId
+          }
+        })
+          .then(res => {
+            console.log("数据获取成功", res);
+            let mobileProperties = res.mobileProperties;
+            if (mobileProperties) {
+              this.mobileForm.appActivy = mobileProperties.appActivity;
+              this.mobileForm.packageName = mobileProperties.appPackage;
+              this.mobileForm.autoType = mobileProperties.automationName;
+              this.mobileForm.deviceName = mobileProperties.deviceName;
+              this.mobileForm.isReset == mobileProperties.noReset;
+              this.mobileForm.deviceType = mobileProperties.platformName;
+              this.sceneId = mobileProperties.sceneId;
+              this.mobileForm.interfacePath = mobileProperties.url;
+            }else {
+              this.mobileForm.appActivy = "";
+              this.mobileForm.packageName = "";
+              this.mobileForm.autoType = "";
+              this.mobileForm.deviceName = "";
+              this.mobileForm.isReset == false;
+              this.mobileForm.deviceType = "";
+              this.sceneId = -1;
+              this.mobileForm.interfacePath = "";
+            }
+          })
+          .catch(error => {
+            console.log("该被测系统无移动端内容");
+          });
+      },
+      // 将选择的用例添加到场景
+      insertTestcaseToScene() {
+        this.addForm.id = this.sceneId;
+        this.addForm.creatorId = "3";
+        Request({
+          url: "/sceneController/insertTestcaseToScene",
+          method: "POST",
+          params: this.addForm
+        })
+          .then(res => {
+            this.$message.success(res.respMsg);
             this.selectScene();
           })
           .catch(error => {
-            this.$message.error("删除失败");
+            this.$message.error("添加失败");
           });
-      }
-    },
-    /**
-     * 时间规划
-     */
-    // 执行时间规划
-    executionTimePlanning() {
-      this.selectedDrawIndex = 0;
-      this.drawerVisible = true;
-    },
-    // 保存执行时间规划数据
-    saveExecutionTimePlanning() {
-      Request({
-        url: '/sceneController/sceneTestcaseSetting',
-        method: 'POST',
-        params: {
-          sceneId: this.sceneId,
-          caseIds: [],
-          executeTime: this.timeForm.time,
-          executeDateFlag: this.timeForm.timeIdentification,
-          combineGroupName: '',
-          orderNum: 1,
-          runTotalNumber: 2,
-          modifierId: 3
+      },
+      changeSelect() {
+        console.log(this.addForm.caseIds);
+      },
+      // 添加场景事件
+      addScene() {
+        this.addDialogVisible = true;
+        this.removeForm.caseIds = [];
+      },
+      // 确认添加
+      addSure() {
+        this.insertTestcaseToScene();
+        this.addDialogVisible = false;
+      },
+      // 取消添加
+      addCancel() {
+        this.addDialogVisible = false;
+      },
+      // 删除场景事件
+      deleteTestcaseFromScene() {
+        if (this.removeForm.caseIds.length === 0) {
+          this.$message.warning("请选择要删除的用例");
+        } else {
+          this.removeForm.id = this.sceneId;
+          Request({
+            url: "/sceneController/deleteTestcaseFromScene",
+            method: "POST",
+            params: this.removeForm
+          })
+            .then(res => {
+              this.$message.success("删除成功");
+              this.isIndeterminate = false;
+              this.checkAll = false;
+              this.selectScene();
+            })
+            .catch(error => {
+              this.$message.error("删除失败");
+            });
         }
-      }).then(res => {
-        if(res.respCode === '0000'){
-						this.$message.success(res.respMsg);
-					} else {
-						this.$message.error(res.respMsg)
-					}
-      }).catch(err => {
-        this.$message.error('保存失败')
-      })
-    },
-    /**
-     * 触发器
-     */
-    // 触发器设置
-    triggerSetting() {
-      this.queryTrigerForScene();
-      this.selectedDrawIndex = 1;
-      this.drawerVisible = true;
-    },
-    // 执行过程控制
-    executionProcessControl() {
-      this.selectedDrawIndex = 2;
-      this.drawerVisible = true;
-    },
-    // 数据资源池配置
-    dataResourcePoolConfiguration() {
-      this.selectedDrawIndex = 3;
-      this.drawerVisible = true;
-    },
-    // 移动端配置
-    mobileTerminalConfiguration() {
-      this.selectedDrawIndex = 4;
-      this.drawerVisible = true;
-      this.getMobileInfo()
-    },
-    // 设置全选
-    handleCheckAllChange(val) {
-      this.removeForm.caseIds = [];
-      console.log("handleCheckAllChange", val);
-      this.checkedSceneTestCases = val ? this.sceneTestCases : [];
-      if (this.checkedSceneTestCases == this.sceneTestCases) {
-        this.sceneTestCases.forEach(item => {
+      },
+      /**
+       * 时间规划
+       */
+      // 执行时间规划
+      executionTimePlanning() {
+        this.selectedDrawIndex = 0;
+        this.drawerVisible = true;
+      },
+      // 保存执行时间规划数据
+      saveExecutionTimePlanning() {
+        Request({
+          url: '/sceneController/sceneTestcaseSetting',
+          method: 'POST',
+          params: {
+            sceneId: this.sceneId,
+            caseIds: [],
+            executeTime: this.timeForm.time,
+            executeDateFlag: this.timeForm.timeIdentification,
+            combineGroupName: '',
+            orderNum: 1,
+            runTotalNumber: 2,
+            modifierId: 3
+          }
+        }).then(res => {
+          if(res.respCode === '0000'){
+              this.$message.success(res.respMsg);
+            } else {
+              this.$message.error(res.respMsg)
+            }
+        }).catch(err => {
+          this.$message.error('保存失败')
+        })
+      },
+      /**
+       * 触发器
+       */
+      // 触发器设置
+      triggerSetting() {
+        this.queryTrigerForScene();
+        this.selectedDrawIndex = 1;
+        this.drawerVisible = true;
+      },
+      // 执行过程控制
+      executionProcessControl() {
+        this.selectedDrawIndex = 2;
+        this.drawerVisible = true;
+      },
+      // 数据资源池配置
+      dataResourcePoolConfiguration() {
+        this.selectedDrawIndex = 3;
+        this.drawerVisible = true;
+      },
+      // 移动端配置
+      mobileTerminalConfiguration() {
+        this.selectedDrawIndex = 4;
+        this.drawerVisible = true;
+        this.getMobileInfo()
+      },
+      // 设置全选
+      handleCheckAllChange(val) {
+        this.removeForm.caseIds = [];
+        console.log("handleCheckAllChange", val);
+        this.checkedSceneTestCases = val ? this.sceneTestCases : [];
+        if (this.checkedSceneTestCases == this.sceneTestCases) {
+          this.sceneTestCases.forEach(item => {
+            this.removeForm.caseIds.push(item.id);
+          });
+        }
+        this.isIndeterminate = false;
+        console.log(this.removeForm);
+      },
+      // 场景用例变换时使用
+      handleCheckedSceneTestCases(val) {
+        this.removeForm.caseIds = [];
+        let length = val.length;
+        this.checkAll = length === this.sceneTestCases.length;
+        this.isIndeterminate = length > 0 && length < this.sceneTestCases.length;
+        val.forEach(item => {
           this.removeForm.caseIds.push(item.id);
         });
-      }
-      this.isIndeterminate = false;
-      console.log(this.removeForm);
-    },
-    // 场景用例变换时使用
-    handleCheckedSceneTestCases(val) {
-      this.removeForm.caseIds = [];
-      let length = val.length;
-      this.checkAll = length === this.sceneTestCases.length;
-      this.isIndeterminate = length > 0 && length < this.sceneTestCases.length;
-      val.forEach(item => {
-        this.removeForm.caseIds.push(item.id);
-      });
-      console.log(this.removeForm);
-    },
-    // elDrawer的关闭事件
-    handleBeforeClose(done) {
-      this.$confirm(
-        "是否关闭" + this.drawTitles[this.selectedDrawIndex],
-        "提示",
-        {
-          confirmButtonText: "确认",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
-        .then(() => {
-          done();
-        })
-        .catch(() => {});
-    },
-    // 展开debug行
-    expandDebug() {
-      this.debugVisible = true;
-      Request({
-        url: "",
-        method: "POST",
-        params: qs.stringify({
-          debuground: "",
-          sceneId: type,
-          exeScope: "",
-          selectState: []
-        })
-      })
-        .then(res => {
-          console.log("debug成功");
-        })
-        .catch(error => {
-          console.log("debug失败");
-        });
-    },
-    // 收起debug行
-    foldDebug() {
-      this.debugVisible = false;
-    },
-    // 触发器新增行
-    triggerAddRow() {
-      let obj = {
-        objectName: "",
-        matchType: "",
-        value: ""
-      }; //
-      this.triggerForm.conditions.push(obj);
-    },
-    // 删除触发器行
-    deleteTriggerTableRow(index) {
-      this.triggerForm.conditions.splice(index, 1);
-    },
-    // 新增执行动作
-    addAction() {
-      console.log('addAction新建对象')
-      let obj = {
-        actionName: "",
-        actionType: "",
-        scriptContent: ""
-      };
-      this.triggerForm.actions.push(obj);
-    },
-    // 从列表中删除某行
-    deleteRowFromExecutionAction(index) {
-      this.triggerForm.actions.splice(index, 1);
-    },
-    /**
-     * 触发器
-     */
-    // 新增触发器
-    addTrigger() {
-      this.triggerVisible = true;
-      this.triggerFlag = 1
-      this.triggerForm.actions = []
-      this.triggerForm.conditionRelate = ""
-      this.triggerForm.conditions = []
-      this.triggerForm.desc = ""
-      this.triggerForm.name = ""
-      this.triggerForm.occasions = []
-    },
-    // 修改触发器
-    editTrigger() {
-      if (this.selectedTriggerList.length === 0) {
-        this.$message.error("请选择要修改项");
-      } else {
-        this.triggerFlag = 2
-        this.triggerVisible = true;
-        this.queryTriger()
-      }
-    },
-    // 查询单个触发器
-    queryTriger() {
-      Request({
-        url: '/trigerController/queryTriger',
-        method: 'POST',
-        params: {
-          id: this.triggerId
-        }
-      }).then(res => {
-        this.triggerForm.actions = res.actions
-        this.triggerForm.conditionRelate = res.trigerEntity.exeConditionRelate
-        this.triggerForm.conditions = res.conditions? res.conditions: []
-        this.triggerForm.desc = res.trigerEntity.trigerDesc
-        this.triggerForm.name = res.trigerEntity.trigerName
-        this.triggerForm.occasions = res.occasions
-        console.log('修改', this.triggerForm, res)
-      }).catch(err => {
-        console.log('失败')
-      })
-    },
-    changeCheckBoxGroup() {
-      console.log("changeVaue", this.triggerForm.conditionRelate);
-    },
-    // 触发器确定事件
-    triggerSure() {
-      console.log("请求对象", this.triggerForm);
-      if(this.triggerFlag === 1) {
+        console.log(this.removeForm);
+      },
+      // elDrawer的关闭事件
+      handleBeforeClose(done) {
+        this.$confirm(
+          "是否关闭" + this.drawTitles[this.selectedDrawIndex],
+          "提示",
+          {
+            confirmButtonText: "确认",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        )
+          .then(() => {
+            done();
+          })
+          .catch(() => {});
+      },
+      // 展开debug行
+      expandDebug() {
+        this.debugVisible = true;
         Request({
-          url: "/trigerController/insertTriger",
+          url: "",
           method: "POST",
+          params: qs.stringify({
+            debuground: "",
+            sceneId: type,
+            exeScope: "",
+            selectState: []
+          })
+        })
+          .then(res => {
+            console.log("debug成功");
+          })
+          .catch(error => {
+            console.log("debug失败");
+          });
+      },
+      // 收起debug行
+      foldDebug() {
+        this.debugVisible = false;
+      },
+      // 触发器新增行
+      triggerAddRow() {
+        let obj = {
+          objectName: "",
+          matchType: "",
+          value: ""
+        }; //
+        this.triggerForm.conditions.push(obj);
+      },
+      // 删除触发器行
+      deleteTriggerTableRow(index) {
+        this.triggerForm.conditions.splice(index, 1);
+      },
+      // 新增执行动作
+      addAction() {
+        console.log('addAction新建对象')
+        let obj = {
+          actionName: "",
+          actionType: "",
+          scriptContent: ""
+        };
+        this.triggerForm.actions.push(obj);
+      },
+      // 从列表中删除某行
+      deleteRowFromExecutionAction(index) {
+        this.triggerForm.actions.splice(index, 1);
+      },
+      /**
+       * 触发器
+       */
+      // 新增触发器
+      addTrigger() {
+        this.triggerVisible = true;
+        this.triggerFlag = 1
+        this.triggerForm.actions = []
+        this.triggerForm.conditionRelate = ""
+        this.triggerForm.conditions = []
+        this.triggerForm.desc = ""
+        this.triggerForm.name = ""
+        this.triggerForm.occasions = []
+      },
+      // 修改触发器
+      editTrigger() {
+        if (this.selectedTriggerList.length === 0) {
+          this.$message.error("请选择要修改项");
+        } else {
+          this.triggerFlag = 2
+          this.triggerVisible = true;
+          this.queryTriger()
+        }
+      },
+      // 查询单个触发器
+      queryTriger() {
+        Request({
+          url: '/trigerController/queryTriger',
+          method: 'POST',
           params: {
-            actions: JSON.stringify(this.triggerForm.actions),
+            id: this.triggerId
+          }
+        }).then(res => {
+          this.triggerForm.actions = res.actions
+          this.triggerForm.conditionRelate = res.trigerEntity.exeConditionRelate
+          this.triggerForm.conditions = res.conditions? res.conditions: []
+          this.triggerForm.desc = res.trigerEntity.trigerDesc
+          this.triggerForm.name = res.trigerEntity.trigerName
+          this.triggerForm.occasions = res.occasions
+          console.log('修改', this.triggerForm, res)
+        }).catch(err => {
+          console.log('失败')
+        })
+      },
+      changeCheckBoxGroup() {
+        console.log("changeVaue", this.triggerForm.conditionRelate);
+      },
+      // 触发器确定事件
+      triggerSure() {
+        console.log("请求对象", this.triggerForm);
+        if(this.triggerFlag === 1) {
+          Request({
+            url: "/trigerController/insertTriger",
+            method: "POST",
+            params: {
+              actions: JSON.stringify(this.triggerForm.actions),
+              conditionRelate: this.triggerForm.conditionRelate,
+              conditions: JSON.stringify(this.triggerForm.conditions),
+              desc: this.triggerForm.desc,
+              name: this.triggerForm.name,
+              occasions: JSON.stringify(this.triggerForm.occasions),
+              sceneId: this.sceneId
+            }
+          }).then(res => {
+            this.$message.success("添加成功");
+            this.queryTrigerForScene();
+          }).catch(error => {
+            this.$message.error("场景数据添加失败");
+          });
+        }else {
+          let params = {
+            actions:  JSON.stringify(this.triggerForm.actions),
             conditionRelate: this.triggerForm.conditionRelate,
             conditions: JSON.stringify(this.triggerForm.conditions),
             desc: this.triggerForm.desc,
+            id: this.triggerId, 
+            modifyType: 2,
             name: this.triggerForm.name,
-            occasions: JSON.stringify(this.triggerForm.occasions),
-            sceneId: this.sceneId
+            occasions: JSON.stringify(this.triggerForm.occasions)
+          }
+          Request({
+            url: "/trigerController/updataTriger",
+            method: "POST",
+            params
+          }).then(res => {
+            this.$message.success("修改成功");
+            this.queryTrigerForScene();
+          }).catch(error => {
+            this.$message.error("场景数据添加失败");
+          });
+          console.log('修改', params)
+        }
+        this.triggerVisible = false;
+      },
+      // 删除触发器
+      triggerDelete() {
+        if (this.selectedTriggerList.length == 0) {
+          this.$message.warning("请选择要删除的列");
+        } else {
+          this.$confirm("此操作将会删除当前选中数据", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(() => {
+              this.deleteTriger();
+            })
+            .catch(() => {
+              this.triggerCancel();
+            });
+        }
+      },
+      // 确认删除
+      deleteTriger() {
+        Request({
+          url: "/trigerController/deleteTriger",
+          method: "POST",
+          params: {
+            id: this.selectedTriggerList[0].id
+          }
+        })
+          .then(res => {
+            this.$message.success("删除成功");
+            this.queryTrigerForScene();
+          })
+          .catch(err => {
+            this.$message.error("删除失败");
+          });
+      },
+      // 触发器取消事件
+      triggerCancel() {
+        this.triggerVisible = false;
+      },
+      // 触发器存储
+      saveTrigger() {
+        Request({
+          url: '/trigerController/updateTrigerState',
+          method: 'POST',
+          params: {
+            stateDtos: this.trigerDtoList // 此处stateDtos保存内容？
           }
         }).then(res => {
-          this.$message.success("添加成功");
-          this.queryTrigerForScene();
-        }).catch(error => {
-          this.$message.error("场景数据添加失败");
-        });
-      }else {
-        let params = {
-          actions:  JSON.stringify(this.triggerForm.actions),
-          conditionRelate: this.triggerForm.conditionRelate,
-          conditions: JSON.stringify(this.triggerForm.conditions),
-          desc: this.triggerForm.desc,
-          id: this.triggerId, 
-          modifyType: 2,
-          name: this.triggerForm.name,
-          occasions: JSON.stringify(this.triggerForm.occasions)
+          if(!res.respCode === '0000') {
+            this.$message.error('保存失败')
+          }
+            this.$message.success('保存成功')
+        }).catch(err => {
+          this.$message.error('保存失败')     
+        })
+      },
+      // 查询场景下的触发器
+      queryTrigerForScene() {
+        Request({
+          url: "/trigerController/queryTrigerForScene",
+          method: "POST",
+          params: {
+            sceneId: this.sceneId
+          }
+        })
+          .then(res => {
+            console.log("查询成功", res);
+            this.trigerDtoList = res.trigerDtoList;
+          })
+          .catch(error => {
+            this.$message.error("触发器获取失败");
+          });
+      },
+      // 处理触发器情况下的选择
+      handleSelectionChange(val) {
+        this.selectedTriggerList = val;
+        this.triggerId = val[0].id
+        console.log("修改", val, this.triggerId);
+      },
+      /**
+       * 数据资源池
+       */
+      // 新增修改数据池
+      addDataPool(i) {
+        this.dataPoolFlag = i
+        if(i ===0) {
+          this.dataPoolVisible = true;
+        }else if(i === 1 && this.dataPoolRowId === "") {
+          this.$message.warning('请选择要修改的行')
+        }else {
+          this.dataPoolVisible = true;
+          this.setDataPool()
+        }
+      },
+      // 设置数据池数据
+      setDataPool() {
+        const row = this.dataPoolList.find(item => item.id === this.dataPoolRowId)
+        console.log('setDataPool', row, this.dataPoolList)
+        this.dataPoolForm.dataName = row.dataName
+        this.dataPoolForm.dataValue = row.dataValue
+        this.dataPoolForm.dataDesc = row.dataDesc
+        this.dataPoolForm.dataPoolName = row.poolName
+        this.dataPoolForm.objectId = row.poolObjId
+      },
+      // 删除数据池
+      deleteDataPool() {
+        if(this.dataPoolRowId === '') {
+          this.$message.warning('请选择要删除的行')
+        }else {
+          Request({
+          url: '/dataPool/deleteSingleDataPool',
+          method: 'POST',
+          params: {
+            id: this.dataPoolRowId
+          }
+        }).then(res => {
+          this.$message.success('删除成功')
+          this.pagedBatchQueryDataPool()
+        }).catch(err => {
+          this.$message.error('删除失败')
+        })
+        }
+      },
+      // 新增数据池确定
+      addDataPoolSure() {
+        let url = ''
+        let params = {}
+        let successInfo = ''
+        let errorInfo = ''
+        if(this.dataPoolFlag === 0) {
+          url = '/dataPool/addSingleDataPool'
+          params = {
+            poolName: this.dataPoolForm.dataPoolName,
+            poolObjId: this.dataPoolForm.objectId,
+            dataName: this.dataPoolForm.dataName,
+            dataValue: this.dataPoolForm.dataValue,
+            dataDesc: this.dataPoolForm.dataDesc
+          }
+          successInfo = '添加成功'
+          errorInfo = '添加失败'
+        }else {
+          url = '/dataPool/modifySingleDataPool'
+          params = {
+            poolName: this.dataPoolForm.dataPoolName,
+            poolObjId: this.dataPoolForm.objectId,
+            dataName: this.dataPoolForm.dataName,
+            dataValue: this.dataPoolForm.dataValue,
+            dataDesc: this.dataPoolForm.dataDesc,
+            id: this.dataPoolRowId
+          }
+          successInfo = '修改成功'
+          errorInfo = '修改失败'
         }
         Request({
-          url: "/trigerController/updataTriger",
+          url,
+          method: 'POST',
+          params
+        }).then(res => {
+          this.$message.success(successInfo)
+          this.dataPoolVisible = false;
+          this.pagedBatchQueryDataPool()
+          this.dataPoolForm.dataName = ""
+          this.dataPoolForm.dataValue = ""
+          this.dataPoolForm.dataDesc = ""
+        }).catch(err => {
+          this.$message.error(errorInfo)
+        })
+      },
+      // 新增数据池取消
+      addDataPoolCancel() {
+        this.dataPoolVisible = false;
+      },
+      // 数据资源池控制
+      handleDataPoolSelectionChange(row) {
+        if(row.length > 0) {
+          this.dataPoolRowId = row[row.length -1].id
+        }else {
+          this.dataPoolRowId = '' 
+        }
+        console.log('handleDataPoolSelectionChange', row, this.dataPoolRowId)
+      },
+      // 移动端配置
+      initMobile() {
+        let params = {
+          'appActivity': this.mobileForm.appActivy,
+          'appPackage': this.mobileForm.packageName,
+          'automationName': this.mobileForm.autoType,
+          'deviceName': this.mobileForm.deviceName,
+          'noReset':
+            this.mobileForm.isReset,
+          'platformName': this.mobileForm.deviceType,
+          'sceneId': Number(this.sceneId),
+          'url': this.mobileForm.interfacePath
+        };
+        console.log("参数", params);
+        Request({
+          url: "/mobileController/initMobile",
+          method: "POST",
+          params
+        })
+          .then(res => {
+            this.$message.success("添加成功");
+          })
+          .catch(err => {
+            this.$message.error("添加失败");
+          });
+      },
+      /**
+       * 执行过程
+       */
+      // 获取执行过程
+      pagedBatchQueryDataPool() {
+        console.log(this.errorOperation);
+        Request({
+          url: "/dataPool/pagedBatchQueryDataPool",
+          method: "POST",
+          params: {
+            pageSize: 10000,
+            currentPage: 1,
+            orderType: 'asc',
+            orderColumns: 'id',
+            poolName: '场景数据池',
+            poolObjId: 2
+          }
+        }).then(res => {
+          this.dataPoolList = res.list
+          console.log('pagedBatchQueryDataPool', this.dataPoolList)
+        }).catch(err => {
+          this.$message.error('无数据资源池配置')
+        });
+      },
+      // 保存执行过程
+      saveExecutionProcess() {
+        let params = {
+            exeStrategy1Status: this.exeStrategy1Status,
+            exeStrategy2Order: this.exeStrategy2Order,
+            exeStrategy2Start: this.exeStrategy2Start,
+            exeStrategy2Status: this.exeStrategy2Status,
+            exeStrategy3Order: this.exeStrategy3Order,
+            exeStrategy3Start: this.exeStrategy3Start,
+            exeStrategy3Status: this.exeStrategy3Status,
+            exeStrategyErr: this.exeStrategyErr,
+            id: this.sceneId
+          }
+        Request({
+          url: "/sceneController/sceneStrategySetting",
           method: "POST",
           params
         }).then(res => {
-          this.$message.success("修改成功");
-          this.queryTrigerForScene();
-        }).catch(error => {
-          this.$message.error("场景数据添加失败");
-        });
-        console.log('修改', params)
-      }
-      this.triggerVisible = false;
-    },
-    // 删除触发器
-    triggerDelete() {
-      if (this.selectedTriggerList.length == 0) {
-        this.$message.warning("请选择要删除的列");
-      } else {
-        this.$confirm("此操作将会删除当前选中数据", "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(() => {
-            this.deleteTriger();
-          })
-          .catch(() => {
-            this.triggerCancel();
-          });
-      }
-    },
-    // 确认删除
-    deleteTriger() {
-      Request({
-        url: "/trigerController/deleteTriger",
-        method: "POST",
-        params: {
-          id: this.selectedTriggerList[0].id
-        }
-      })
-        .then(res => {
-          this.$message.success("删除成功");
-          this.queryTrigerForScene();
-        })
-        .catch(err => {
-          this.$message.error("删除失败");
-        });
-    },
-    // 触发器取消事件
-    triggerCancel() {
-      this.triggerVisible = false;
-    },
-    // 触发器存储
-    saveTrigger() {
-      Request({
-        url: '/trigerController/updateTrigerState',
-        method: 'POST',
-        params: {
-          stateDtos: this.trigerDtoList // 此处stateDtos保存内容？
-        }
-      }).then(res => {
-        if(!res.respCode === '0000') {
-          this.$message.error('保存失败')
-        }
           this.$message.success('保存成功')
-      }).catch(err => {
-        this.$message.error('保存失败')     
-      })
-    },
-    // 查询场景下的触发器
-    queryTrigerForScene() {
-      Request({
-        url: "/trigerController/queryTrigerForScene",
-        method: "POST",
-        params: {
-          sceneId: this.sceneId
-        }
-      })
-        .then(res => {
-          console.log("查询成功", res);
-          this.trigerDtoList = res.trigerDtoList;
-        })
-        .catch(error => {
-          this.$message.error("触发器获取失败");
+        }).catch(err => {
+          this.$message.error('保存失败')
         });
-    },
-    // 处理触发器情况下的选择
-    handleSelectionChange(val) {
-      this.selectedTriggerList = val;
-      this.triggerId = val[0].id
-      console.log("修改", val, this.triggerId);
-    },
-    /**
-     * 数据资源池
-     */
-    // 新增修改数据池
-    addDataPool(i) {
-      this.dataPoolFlag = i
-      if(i ===0) {
-        this.dataPoolVisible = true;
-      }else if(i === 1 && this.dataPoolRowId === "") {
-        this.$message.warning('请选择要修改的行')
-      }else {
-        this.dataPoolVisible = true;
-        this.setDataPool()
-      }
-    },
-    // 设置数据池数据
-    setDataPool() {
-      const row = this.dataPoolList.find(item => item.id === this.dataPoolRowId)
-      console.log('setDataPool', row, this.dataPoolList)
-      this.dataPoolForm.dataName = row.dataName
-      this.dataPoolForm.dataValue = row.dataValue
-      this.dataPoolForm.dataDesc = row.dataDesc
-      this.dataPoolForm.dataPoolName = row.poolName
-      this.dataPoolForm.objectId = row.poolObjId
-    },
-    // 删除数据池
-    deleteDataPool() {
-      if(this.dataPoolRowId === '') {
-        this.$message.warning('请选择要删除的行')
-      }else {
+      },
+      /**
+       * 调试
+       */
+      scenedubug() {
         Request({
-        url: '/dataPool/deleteSingleDataPool',
-        method: 'POST',
-        params: {
-          id: this.dataPoolRowId
-        }
-      }).then(res => {
-        this.$message.success('删除成功')
-        this.pagedBatchQueryDataPool()
-      }).catch(err => {
-        this.$message.error('删除失败')
-      })
-      }
-    },
-    // 新增数据池确定
-    addDataPoolSure() {
-      let url = ''
-      let params = {}
-      let successInfo = ''
-      let errorInfo = ''
-      if(this.dataPoolFlag === 0) {
-        url = '/dataPool/addSingleDataPool'
-        params = {
-          poolName: this.dataPoolForm.dataPoolName,
-          poolObjId: this.dataPoolForm.objectId,
-          dataName: this.dataPoolForm.dataName,
-          dataValue: this.dataPoolForm.dataValue,
-          dataDesc: this.dataPoolForm.dataDesc
-        }
-        successInfo = '添加成功'
-        errorInfo = '添加失败'
-      }else {
-        url = '/dataPool/modifySingleDataPool'
-        params = {
-          poolName: this.dataPoolForm.dataPoolName,
-          poolObjId: this.dataPoolForm.objectId,
-          dataName: this.dataPoolForm.dataName,
-          dataValue: this.dataPoolForm.dataValue,
-          dataDesc: this.dataPoolForm.dataDesc,
-          id: this.dataPoolRowId
-        }
-        successInfo = '修改成功'
-        errorInfo = '修改失败'
-      }
-      Request({
-        url,
-        method: 'POST',
-        params
-      }).then(res => {
-        this.$message.success(successInfo)
-        this.dataPoolVisible = false;
-        this.pagedBatchQueryDataPool()
-        this.dataPoolForm.dataName = ""
-        this.dataPoolForm.dataValue = ""
-        this.dataPoolForm.dataDesc = ""
-      }).catch(err => {
-        this.$message.error(errorInfo)
-      })
-    },
-    // 新增数据池取消
-    addDataPoolCancel() {
-      this.dataPoolVisible = false;
-    },
-    // 数据资源池控制
-    handleDataPoolSelectionChange(row) {
-      if(row.length > 0) {
-        this.dataPoolRowId = row[row.length -1].id
-      }else {
-        this.dataPoolRowId = '' 
-      }
-      console.log('handleDataPoolSelectionChange', row, this.dataPoolRowId)
-    },
-    // 移动端配置
-    initMobile() {
-      let params = {
-        'appActivity': this.mobileForm.appActivy,
-        'appPackage': this.mobileForm.packageName,
-        'automationName': this.mobileForm.autoType,
-        'deviceName': this.mobileForm.deviceName,
-        'noReset':
-          this.mobileForm.isReset,
-        'platformName': this.mobileForm.deviceType,
-        'sceneId': Number(this.sceneId),
-        'url': this.mobileForm.interfacePath
-      };
-      console.log("参数", params);
-      Request({
-        url: "/mobileController/initMobile",
-        method: "POST",
-        params
-      })
-        .then(res => {
-          this.$message.success("添加成功");
-        })
-        .catch(err => {
-          this.$message.error("添加失败");
-        });
-    },
-    /**
-     * 执行过程
-     */
-    // 获取执行过程
-    pagedBatchQueryDataPool() {
-      console.log(this.errorOperation);
-      Request({
-        url: "/dataPool/pagedBatchQueryDataPool",
-        method: "POST",
-        params: {
-          pageSize: 10000,
-          currentPage: 1,
-          orderType: 'asc',
-          orderColumns: 'id',
-          poolName: '场景数据池',
-          poolObjId: 2
-        }
-      }).then(res => {
-        this.dataPoolList = res.list
-        console.log('pagedBatchQueryDataPool', this.dataPoolList)
-      }).catch(err => {
-        this.$message.error('无数据资源池配置')
-      });
-    },
-    // 保存执行过程
-    saveExecutionProcess() {
-      let params = {
-          exeStrategy1Status: this.exeStrategy1Status,
-          exeStrategy2Order: this.exeStrategy2Order,
-          exeStrategy2Start: this.exeStrategy2Start,
-          exeStrategy2Status: this.exeStrategy2Status,
-          exeStrategy3Order: this.exeStrategy3Order,
-          exeStrategy3Start: this.exeStrategy3Start,
-          exeStrategy3Status: this.exeStrategy3Status,
-          exeStrategyErr: this.exeStrategyErr,
-          id: this.sceneId
-        }
-      Request({
-        url: "/sceneController/sceneStrategySetting",
-        method: "POST",
-        params
-      }).then(res => {
-        this.$message.success('保存成功')
-      }).catch(err => {
-        this.$message.error('保存失败')
-      });
-    },
-    /**
-     * 调试
-     */
-    scenedubug() {
-      Request({
-        url: "/executeController/scenedubug",
-        method: "POST",
-        params: {
-          debuground: this.debugRound,
-          sceneId: this.sceneId,
-          exeScope: '',
-          selectState: []
-        }
-      }).then(res => {
-        this.$message.success("保存成功");
-      }).catch(err => {
-        this.$message.error("保存成功");
-      });
-    },
-    // 保存顺序
-    sceneTestcaseSortSave() {
-      this.caseIdList = [];
-      this.sceneTestCases.forEach(item => {
-        this.caseIdList.push(item.id);
-      });
-      console.log("地址", this.caseIdList, this.sceneId);
-      Request({
-        url: "/sceneController/sceneTestcaseSortSave",
-        method: "POST",
-        params: {
-          sceneId: this.sceneId,
-          caseIdList: this.caseIdList
-        }
-      })
-        .then(res => {
+          url: "/executeController/scenedubug",
+          method: "POST",
+          params: {
+            debuground: this.debugRound,
+            sceneId: this.sceneId,
+            exeScope: '',
+            selectState: []
+          }
+        }).then(res => {
           this.$message.success("保存成功");
-          this.selectScene()
-        })
-        .catch(err => {
+        }).catch(err => {
           this.$message.error("保存成功");
         });
+      },
+      // 保存顺序
+      sceneTestcaseSortSave() {
+        this.caseIdList = [];
+        this.sceneTestCases.forEach(item => {
+          this.caseIdList.push(item.id);
+        });
+        console.log("地址", this.caseIdList, this.sceneId);
+        Request({
+          url: "/sceneController/sceneTestcaseSortSave",
+          method: "POST",
+          params: {
+            sceneId: this.sceneId,
+            caseIdList: this.caseIdList
+          }
+        })
+          .then(res => {
+            this.$message.success("保存成功");
+            this.selectScene()
+          })
+          .catch(err => {
+            this.$message.error("保存成功");
+          });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="less" scoped>
@@ -1663,14 +1673,21 @@ export default {
     }
   }
   .drawer {
+    width: calc(100% - 239px);
+    margin-left: 239px;
+  }
+  .drawerHide {
+    width: calc(100% - 65px);
+    margin-left: 65px;
+  }
+  .drawer,
+  .drawerHide {
     .buttonRow {
       display: flex;
       justify-content: flex-end;
       margin-top: 10px;
       padding-right: 20px;
     }
-    width: calc(100% - 239px);
-    margin-left: 239px;
     .timeInput {
       width: 175px;
     }
