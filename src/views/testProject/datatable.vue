@@ -53,19 +53,21 @@
                             保存
                         </el-button>
                         <el-button
+                            v-if='selectedTemplate !== -1'
                             size="small" 
                             @click='dataTemplate'
                             type="primary">
                             下载数据模板
                         </el-button>
                         <el-button
+                            v-if='selectedTemplate !== -1'
                             size="small" 
                             @click='exportData'
                             type="primary">
                             导入数据
                         </el-button>
                     </el-col>
-                    <el-col :span="8" >
+                    <el-col :span="8" v-if='selectedTemplate !== -1'>
                         <el-select multiple v-model="columnHidden" placeholder="请选择隐藏列">
                             <el-option
                                 v-for="item in selectOptions"
@@ -769,6 +771,22 @@
         <el-dialog title="用例筛选" :visible.sync="searchTemplateDailog" width	="30%">
             <searchtestcase @condition-list='changeCondition'></searchtestcase>
         </el-dialog>
+        <el-dialog title="批量添加元素" :visible.sync="exportDialog" width='30%'>
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                :action="actionUrl"
+                :on-success='tempSuccess'
+                :on-error='tempError'
+                :limit="1"
+                :auto-upload="false">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="exportDialog = false">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -786,11 +804,15 @@
         computed:{
             searchInfo(){
                 return this.searchFlag?"收起筛选":"显示筛选"
+            },
+            actionUrl(){
+                return this.publishActionUrl + '?'+'caseLibId=' + this.caseLibId + '&' + 'uploadUserId=3' 
             }
         },
         data() {
             let caseLibId = sessionStorage.getItem('caselibId')
             return {
+                publishActionUrl: 'http://140.143.16.21:8080/atfcloud2.0a/dataCenter/importDataFromFile',
                 columnHidden:[], // 隐藏的列
                 selectedTemplate: -1 , // 选中的行
                 editedData: {},
@@ -861,6 +883,7 @@
                 input1:'',
                 saidBarShow:true,
                 searchTemplateDailog: false,
+                exportDialog: false,
             }
         },
         mounted(){
@@ -880,6 +903,20 @@
             this.getFilterTree()
         },
         methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            tempError(response, file, fileList){
+                this.$message.error(response.respMsg)
+            },
+            tempSuccess(response, file, fileList){
+                if(response.respCode !== '0000'){
+                    this.$message.error(response.respMsg)
+                    return
+                }
+                this.exportDialog = false
+                this.$message.success('上传成功')
+            },
             // 接受添加多项的
             async addTreeInfo(treeInfo){
                 console.log('treeInfo',treeInfo)
@@ -1119,6 +1156,7 @@
             },
             dataTemplate(){
                 console.log('this.selectedTemplate.id',this.selectedTemplate.id)
+                console.log(this.selectedTemplate)
                 let qs = require('qs');
                 console.log(this.conditionList)
                 Request({
@@ -1140,6 +1178,7 @@
                 });
             },
             exportData(){
+                this.exportDialog = true
             },
             searchTemplate(){
                 this.searchTemplateDailog = true
