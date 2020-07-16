@@ -258,10 +258,17 @@
                     this.currentPage = 1
                 }
                 this.tableLoading = true
+                let search = {}
+                if(this.selectInfo){
+                    search.nameMedium = this.selectInfo
+                }
                 Request({
                     url: '/sceneController/pagedBatchQueryScene',
                     method: 'post',
-                    params: this.params
+                    params: {
+                        ...this.params,
+                        ...search
+                    }
                 }).then((res) => {
                     this.tableData = res.sceneEntityList
                     this.totalCount = res.totalCount
