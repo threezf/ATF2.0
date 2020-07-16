@@ -110,7 +110,9 @@ export default {
     submitForm(FormName) {
       let _this = this;
       if (_this.ruleForm.uid == "1") {
+				sessionStorage.setItem("userId",_this.ruleForm.uid)
         this.$router.push({ path: "/index" });
+
       } else {
         this.$refs[FormName].validate(valid => {
           console.log("进入验证", valid);

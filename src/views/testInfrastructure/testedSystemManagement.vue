@@ -308,7 +308,7 @@
 				if (this.radio === false) {
 					this.$message.warning("请选择一条数据！！");
 				} else {
-					this.$router.push({ path: "component", query: { id: this.id } });
+					this.$router.push({ path: "automatedComponentMaintenance", query: { arcId: this.row.inheriteArcId, inheriteArcName:this.row.inheriteArcName } });
 				}
 			},
 			//执行代码管理
