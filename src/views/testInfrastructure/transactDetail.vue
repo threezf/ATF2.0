@@ -98,7 +98,6 @@
             this.userId = sessionStorage.getItem('userId') || '3'
             this.getAuts();
             this.getTran(this.autId);
-            this.transChange(this.transId)
         },
         methods: {
             handleClick(tab, event) {
@@ -127,6 +126,7 @@
                     this.tranSelectValue = ''
                     this.tranSelectOptions = res.transactRespDTOs
                     this.tranSelectValue = res.transactRespDTOs[0].id
+                    this.transChange(this.transId)
                     console.log(res)
                 },(err) => {
                     console.log(err)
@@ -138,9 +138,17 @@
                 this.getTran(data)
             },
             transChange(transId){
-                this.transSelected = this.tranSelectOptions.filter(v=>(transId === v.id))[0]
+                console.log('2222222222222222222')
+                console.log(this.tranSelectOptions.filter(v=>{
+                    console.log(transId)
+                    console.log(v.id)
+                    return (transId == v.id)
+                }))
+                this.transSelected = this.tranSelectOptions.filter(v=>(transId == v.id))[0]
+                console.log(this.transSelected)
             },
             copySingleUITransact(){
+                console.log()
                 Request({
                     url: '/transactController/copySingleUITransact',
                     method: 'post',

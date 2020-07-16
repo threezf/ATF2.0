@@ -383,6 +383,7 @@ export default {
               console.log("复制失败", err);
             });
         } else if (_this.rowInfo.transType === "UI") {
+          console.log('1111111111111111111')
           console.log("复制UI功能点", _this.rowInfo.transType);
           Request({
             url: "/transactController/copySingleUITransact",
