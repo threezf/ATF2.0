@@ -301,7 +301,7 @@ export default {
             addTemplateForm:{
                 name:'',
                 description:'',
-                transId:this.transId
+                transId: this.transId
             },
             templateRadio:"",//选择的template
             addTemplateDialog:false,
@@ -543,7 +543,10 @@ export default {
         Request({
             url: '/scriptTemplate/insert',
             method: 'post',
-            params: this.addTemplateForm
+            params: {
+                ...this.addTemplateForm,
+                transId: this.transId
+            }
         }).then((res) => {
             this.$message(res.respMsg)
             this.addTemplateDialog = false
