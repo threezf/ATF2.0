@@ -94,7 +94,7 @@
             </el-col>
           </el-row>
         </el-form>
-        <el-table width="100%" border scrope :highlight-current-row="true" :data="tableData" @selection-change="handleSelctionChange">
+        <el-table width="100%" class="table" style="margin-top: 15px" border scrope :highlight-current-row="true" :data="tableData" @selection-change="handleSelctionChange">
           <el-table-column min-width="4.95%" align="center" type="selection"></el-table-column>
           <el-table-column min-width="12.95%" align="center" prop="sceneName" label="场景名称"></el-table-column>
           <el-table-column min-width="6.46%" align="center" prop="executeRound" label="执行轮次"></el-table-column>

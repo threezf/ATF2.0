@@ -17,6 +17,7 @@
     "babel-plugin-transform-vue-jsx": "^3.7.0",
     "bootstrap": "4.4.1",
     "echarts": "^4.6.0",
+    "element-resize-detector": "^1.2.1",
     "element-ui": "^2.4.11",
     "font-awesome": "^4.7.0",
     "jquery-ui": "^1.12.1",

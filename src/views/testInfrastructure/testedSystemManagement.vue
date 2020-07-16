@@ -35,7 +35,7 @@
           <el-col :span="8">
             <el-input
 							class="searchInput"
-              placeholder="请输入系统编号"
+              placeholder="请输入系统编号或系统名称"
               v-model="selectInfo"
               clearable
               @clear="searchSystemClear"
@@ -45,7 +45,7 @@
           </el-col>
         </el-row>
         <el-table
-          class="tableStyle"
+					class="table"
           ref="singleTable"
           border
           stripe
@@ -53,14 +53,14 @@
           :default-sort="{prop:'modifiedTime',order:'descending'}"
           :data="tableData">
           <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
-          <el-table-column label="选择" width="60px">
+          <el-table-column label="" width="35px">
             <template slot-scope="scope">
               <el-radio
                 class="radio"
                 v-model="radio"
-                :label="scope.$index"
-                @change="handleRadioChange(scope.$index,scope.row)"
-              >&emsp;</el-radio>
+								:label="scope.row.id"
+                @change="handleRadioChange(scope.$index,scope.row)">
+							</el-radio>
               <!--调用时使用的是scope.row和scope.$index-->
             </template>
           </el-table-column>
@@ -109,11 +109,11 @@
           width="30%"
         >
           <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
-            <el-form-item label="系统名称" prop="code">
-              <el-input placeholder="请输入测试系统名称" v-model.lazy="form.code"></el-input>
+            <el-form-item label="系统名称" prop="nameMedium">
+              <el-input placeholder="请输入测试系统名称" v-model.lazy="form.nameMedium"></el-input>
             </el-form-item>
             <el-form-item label="系统编号">
-              <el-input placeholder="为空时自动生成" v-model.lazy="form.nameMedium"></el-input>
+              <el-input placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
             </el-form-item>
             <el-form-item label="开发架构">
               <el-select
@@ -200,7 +200,7 @@
 				abstractArchitectureInfo: {},
 				selectedAbstractArchitectureName: "截图",
 				rules: {
-					code: [{ required: true, message: "系统编号是必填项", trigger: "blur" }]
+					nameMedium: [{ required: true, message: "系统名称是必填项", trigger: "blur" }]
 				},
 				successDialogVisible: false,
 				//被测系统信息
@@ -211,7 +211,8 @@
 				manageId: "", // 跳转管理功能点需要的编号,
 				manageCode: "", // 跳转管理功能点需要的code
 				hideFun: '<< 隐藏高级功能', // 隐藏高级功能
-				showFun: '展示高级功能 >>'
+				showFun: '展示高级功能 >>',
+				nameMedium: ''
 			};
 		},
 		computed: {
@@ -308,7 +309,7 @@
 				if (this.radio === false) {
 					this.$message.warning("请选择一条数据！！");
 				} else {
-					this.$router.push({ path: "component", query: { id: this.id } });
+					this.$router.push({ path: "automatedComponentMaintenance", query: { arcId: this.row.inheriteArcId, inheriteArcName:this.row.inheriteArcName } });
 				}
 			},
 			//执行代码管理
@@ -369,7 +370,7 @@
 				console.log("id", _this.id);
 				this.$router.push({
 					path: "transact",
-					query: { id: _this.id, code: row.code }
+					query: { id: _this.id, code: row.code, nameMedium: row.nameMedium }
 				}); //界面跳转
 				console.log("code", row.code);
 			},
@@ -468,7 +469,8 @@
 			// 表单提交
 			submitForm(formName) {
 				let _this = this;
-				let status = _this.form.code === "";
+			  _this.form.code =	_this.form.code === ""? '被测系统'+Date.now(): _this.form.code
+				let status = _this.form.nameMedium === "";
 				if (status) {
 					this.$message.warning("*为必选项");
 				} else {
@@ -547,6 +549,9 @@
 </script>
 
 <style scoped>
+	.el-radio__label {
+		display: none important;
+	}
 	.spanTextColor {
 		color: red;
 		font-size: 25px;

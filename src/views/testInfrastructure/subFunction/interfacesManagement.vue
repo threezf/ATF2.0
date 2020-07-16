@@ -19,8 +19,8 @@
                 class="searchInput">
               </el-input>
               <el-option 
-                v-for="(item,index) in systemSearch(titleForm.autRespDTOList)"
-                :key="index"
+                v-for="(item) in systemSearch(titleForm.autRespDTOList)"
+                :key="item.id"
                 :value="item.id"
                 :label="item.nameMedium">
               </el-option>
@@ -67,11 +67,13 @@
       <hr color="#eff2f7"/>
       <el-form
         :model="manageInfo"
+        ref="interfaceRule"
         label-width="70px">
         <el-row
          class="manageRow">
           <el-col :span="5">
             <el-form-item
+              prop="interfaceCode"
               label="接口编码">
               <el-input
                 v-model="manageInfo.interfaceCode">
@@ -80,6 +82,7 @@
           </el-col>
           <el-col :span="5" :offset="1">
             <el-form-item
+              prop="name"
               label="接口名称">
               <el-input
                 v-model="manageInfo.name">
@@ -211,6 +214,7 @@
         </el-row>
         <el-row>
           <el-form-item
+            prop="urlPath"
             label="接口路径">
             <el-input 
               v-model="manageInfo.urlPath" 
@@ -317,6 +321,7 @@
           <el-tab-pane
             label="Body">
             <el-form-item
+              prop="bodyFormat"
               class="bottomForm"
               label-width="100px"
               label="报文格式">
@@ -338,6 +343,7 @@
               </el-button>
             </el-form-item>
             <el-form-item
+              prop="bodyContent"
               class="descForm"
               label-width="100px"
               label="报文内容">
@@ -364,17 +370,15 @@
 <script>
   import Request from "@/libs/request.js";
   import VueMixins from "@/libs/vueMixins.js";
-  import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
   import jQuery from 'jquery';
   import moment from "moment";
   export default {
-    components: { ElSlPanel },
     mixins: [VueMixins], // 时间格式转化
     name: 'InterfacesManagement',
     data() {
       return {
-        autId: "1570", // 系统id
-        transactsForm: {id: "339"}, // 获取功能点传递的表单数据
+        autId: "", // 系统id
+        transactsForm: {id: ""}, // 获取功能点传递的表单数据
         singleInterfaceForm: {id: "271"}, // 获取接口的表单数据
         systemNameSearch: '', // 被测系统查询条件
         transactSearchInput: '', // 功能点查询条件
@@ -388,7 +392,7 @@
         selectSystem: '', // 选择的系统
         manageInfo: {
           bodyContent: '', // 报文内容
-          bodyFormat: '', // 报文格式
+          bodyFormat: '1', // 报文格式
           createTime: '', // 创建时间
           creatorId: '', // 创建者
           description: '', // 接口简介
@@ -399,7 +403,7 @@
           name: '', // 接口名称
           protocol: '', // 通信类型，取值1和2
           version: '', // 版本号
-          status: '', // 开发状态
+          status: '1', // 开发状态
           creatorList: [], // 创建者列表
           maintainerList: [], // 维护者列表
           modifyTime: '', // 修改时间
@@ -410,7 +414,7 @@
           urlPath: '', // 接口路径
           selectedAuthorization: 'inherit auth from parent', // Authorization
           selectedHeader: [{}],
-          rawFormat: '', // 选择的报文格式
+          rawFormat: '', // 
         },
         authenticationMethodList: [
           'HTTP Basic',
@@ -453,10 +457,16 @@
       }
     },
     created() {
-      this.querySingleInterface(this.transactsForm.id)
+      let row = this.$route.query
+      this.autId = Number(row.autId)
+      this.selectSystem = this.autId
+      this.transactsForm.id = row.id
+      this.selectedTransact = Number(this.transactsForm.id)
+      console.log('row', row)
       this.selectAllUsername()
       this.queryListAut()
       this.queryTransactsByAutId(this.autId)
+      this.querySingleInterface(this.transactsForm.id)
     },
     methods: {
       // 获取全部用户
@@ -469,7 +479,6 @@
           if(res.respCode == '0000') {
             this.manageInfo.creatorList = res.list
             this.manageInfo.maintainerList = res.list
-            // console.log("uploadForm",this.manageInfo.maintainerList)
             
           }else {
             this.$message.warning('获取失败')
@@ -487,12 +496,10 @@
         }).then(res => {
           if(res.respCode == '0000') {
             this.titleForm.autRespDTOList = res.autRespDTOList
-            console.log('queryListAut', this.titleForm.autRespDTOList,this.autId)
             let item = this.titleForm.autRespDTOList.find(item => {
               return item.id == this.autId
             })
-           console.log("item",item)
-           this.selectSystem = item.nameMedium
+           this.selectSystem = item.id
           }else {
             this.$message.warning('获取失败')
           }
@@ -509,21 +516,21 @@
             id: id
           }
         }).then(res => {
-          console.log('queryTransactsByAutId',res)
           if(res.respCode == '0000') {
-            if(res.transactRespDTOs[0].transType == 2) {
-              this.titleForm.transactRespDTOs = res.transactRespDTOs
-              this.selectedTransact = this.titleForm.transactRespDTOs[0].nameMedium
+            if(this.transactsForm.id !== "") {
+              this.titleForm.transactRespDTOs = res.transactRespDTOs.filter(item => item.transType === 2)
             }else {
-              this.$message.error('选中的不是接口类型')
-              this.selectedTransact = ""
-              this.selectSystem = ""
+              this.titleForm.transactRespDTOs = res.transactRespDTOs.filter(item => item.transType === 2)
+              this.transactsForm.id = this.titleForm.transactRespDTOs[0].id? this.titleForm.transactRespDTOs[0].id: '系统下无功能点'
+              this.selectedTransact = this.transactsForm.id
+              this.querySingleInterface(this.selectedTransact)
+              console.log('原始数据',this.titleForm.transactRespDTOs)
             }
           }else {
             this.$message.warning('获取失败')
           }
         }).catch(error => {
-          this.$message.error('数据获取失败')
+          this.$message.error('该系统下无功能点')
         })
       },
       // 获取单个接口信息
@@ -546,25 +553,28 @@
             _this.manageInfo.protocol = res.protocol // 通信类型
             _this.manageInfo.bodyFormat = res.bodyFormat // 报文格式
             _this.manageInfo.selectedHeader = []
-            if(res.header !== '[]') {
+            if(res.header === '[]' || res.header === null) {
+              _this.manageInfo.selectedHeader.push({ name: '', val: '', desc: ''})
+              }else {
               _this.manageInfo.selectedHeader.push(...JSON.parse(res.header))
-            }else {
-               _this.manageInfo.selectedHeader.push({ name: '', val: '', desc: ''})
             }
             console.log("querySingleInterface", _this.manageInfo)
           }else {
             this.$message.warning('获取失败')
           }
         }).catch(error => {
-          this.$message.error(error.respMsg)
+          this.$message.error(error)
           console.log("querySingleInterface",error)
         })
       },
       // 选中系统更换
       selectedSystemChange(value) {
         console.log('选中的value',value)
-        this.queryTransactsByAutId(value)
+        this.transactsForm.id = ""
+        this.selectedTransact = ""
         this.autId = value
+        this.selectSystem = value
+        this.queryTransactsByAutId(value)
       },
       tranctChanged(value) {
         console.log('选中的value',value)
@@ -584,7 +594,7 @@
           }
         }).then(res => {
           if(res.respCode == "0000") {
-            console.log("复制成功",res)
+           this.$message.success('复制成功')
             this.queryTransactsByAutId(this.autId)
             this.querySingleInterface(this.transactsForm.id)
           }else {
@@ -601,7 +611,7 @@
          * 此处返回满足条件的内容
          */
         return list.filter(function(item,index) {
-          // console.log(_this.systemNameSearch,item)
+          console.log(_this.systemNameSearch,item)
           if(item.nameMedium.includes(_this.systemNameSearch)) {
             return item
           }
@@ -619,48 +629,53 @@
       },
       // 保存内容
       saveContent() {
-        let uploadForm = {
-          authContent: null,
-          authType: null,
-          bodyContent: this.manageInfo.bodyContent,
-          bodyFormat: this.manageInfo.bodyFormat,
-          bodyParseContent: null,
-          createTime: this.manageInfo.createTime,
-          creatorId: this.manageInfo.creatorId,
-          dataDictList: null,
-          description: this.manageInfo.description,
-          groupName: null,
-          header: JSON.stringify(this.manageInfo.selectedHeader),
-          id: this.transactsForm.id,
-          interfaceCode: this.manageInfo.interfaceCode,
-          maintainerId: this.manageInfo.maintainerId,
-          method: this.manageInfo.method,
-          name: this.manageInfo.name,
-          preRequestScript: null,
-          protocol: this.manageInfo.protocol,
-          query: "[]",
-          rawFormat: 1,
-          status: this.manageInfo.status,
-          systemId: this.autId,
-          urlPath: this.manageInfo.urlPath,
-          version: this.manageInfo.version
-        }
-        console.log('uploadForm',uploadForm)
-        Request({
-          url: '/interface/modifySingleInterface',
-          method: 'POST',
-          params: uploadForm
-        }).then(res => {
-          if(res.respCode == "0000") {
-            this.$message.success("保存成功")
-            this.queryTransactsByAutId(this.autId)
-            this.querySingleInterface(this.transactsForm.id)
-          }else {
-            this.$message.error("保存失败")
+        let valid = this.manageInfo.bodyFormat !== null && this.manageInfo.bodyContent !== ""
+        if(valid) {
+          let uploadForm = {
+            authContent: null,
+            authType: null,
+            bodyContent: this.manageInfo.bodyContent,
+            bodyFormat: this.manageInfo.bodyFormat,
+            bodyParseContent: null,
+            createTime: this.manageInfo.createTime,
+            creatorId: this.manageInfo.creatorId,
+            dataDictList: null,
+            description: this.manageInfo.description,
+            groupName: null,
+            header: JSON.stringify(this.manageInfo.selectedHeader),
+            id: this.transactsForm.id,
+            interfaceCode: this.manageInfo.interfaceCode,
+            maintainerId: this.manageInfo.maintainerId,
+            method: this.manageInfo.method,
+            name: this.manageInfo.name,
+            preRequestScript: null,
+            protocol: this.manageInfo.protocol,
+            query: "[]",
+            rawFormat: 1,
+            status: this.manageInfo.status,
+            systemId: this.autId,
+            urlPath: this.manageInfo.urlPath,
+            version: this.manageInfo.version
           }
-        }).catch(error => {
-          this.$message.error("保存失败")
-        })
+          Request({
+            url: '/interface/modifySingleInterface',
+            method: 'POST',
+            params: uploadForm
+          }).then(res => {
+            if(res.respCode == "0000") {
+              this.$message.success("保存成功")
+              this.queryTransactsByAutId(this.autId)
+              // this.querySingleInterface(this.transactsForm.id)
+            }else {
+              this.$message.warning("保存失败")
+            }
+          }).catch(error => {
+            this.$message.error(error)
+          })
+        }else {
+          this.$message.warning('报文体格式、内容是必选项')
+          return false
+        }
       },
       // 底部保存
       saveBottom() {
@@ -669,7 +684,7 @@
       // 解码
       decode() {
         Request({
-          url: '/atfcloud2.0a/interface/parseXmlBody',
+          url: '/interface/parseXmlBody',
           method: 'POST',
           params: {
             interfaceId: this.transactsForm.id,

@@ -39,6 +39,7 @@
         <el-table
           ref="singleTable"
           style=" margin-top: 15px"
+					class="table"
           :data="tableData"
           :default-sort="{prop:'modifiedTime',order:'descending'}"
           stripe

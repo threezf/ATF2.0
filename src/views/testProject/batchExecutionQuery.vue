@@ -111,7 +111,7 @@
         <el-table 
           scripe 
           border 
-          class="tableStyle" 
+          class="table tableStyle" 
           :data="tableData">
           <el-table-column 
             align="center" 

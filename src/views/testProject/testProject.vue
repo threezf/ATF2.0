@@ -86,14 +86,14 @@
 					:before-close="handleClose"
 					width="30%">
 					<el-form ref="addForm"  :model="addForm" :rules="rules" label-width="30%">
-						<el-form-item   label="测试项目编号" prop="codeLong" required >
-							<el-input   v-model="addForm.codeLong"></el-input>
+						<el-form-item   label="测试项目编号" prop="codeLong"  >
+							<el-input   v-model="addForm.codeLong" placeholder="选填"></el-input>
 						</el-form-item>
 						<el-form-item   label="测试项目名称" prop="nameMedium" required >
 							<el-input   v-model="addForm.nameMedium"></el-input>
 						</el-form-item>
 						<el-form-item   label="描述" prop="projectDesc" >
-							<el-input   v-model="addForm.descMedium"></el-input>
+							<el-input   v-model="addForm.descMedium" placeholder="选填"></el-input>
 						</el-form-item>
 						<el-form-item >
 							<el-button    type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
@@ -134,31 +134,11 @@
 						{ required: true, message: '请输入项目名称', trigger: 'blur' },
 						{ min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
 					],
-					codeLong:[
-						{ required: true, message: '请输入项目编号', trigger: 'blur' },
-						{ min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
-					],
 				},
 				dialogVisible:false,
 				selectedId:-1,
 				searchInput:"",
 				totalCount:0,
-				// order: 'id',
-				// sort: 'asc',
-				// isPageNumberError: false,
-				// checkboxModel: [],
-				// checked: "",
-				// queryContent: '',
-				// ids: '',
-				// //当前选中行
-				// selectedId: '',
-				// selectedTestProjectCode: '',
-				// selectedTestProjectName: '',
-				// selectedTaskDescription: '',
-				// projectName: sessionStorage.getItem("projectNameStorage"),
-				// addRowData: { ...initialAddRowData },
-				// caseLibId:null,
-				// projectNameStorage: null,
 				modelFlag:0,
 			}
 		},
@@ -170,7 +150,7 @@
 					codeLongAndName: "",
 					orderColumns: "modified_time",
 					orderType: "DESC",
-				   
+
 				}
 				if(this.searchInput !== ''){
                     obj[this.codeLongAndName] = this.searchInput
@@ -229,7 +209,7 @@
 			// 清空form表单
 			resetForm() {
 				this.$refs.addForm.resetFields();
-			},			
+			},
 
 			//添加测试项目表单
 			addProjectButton() {
@@ -256,6 +236,8 @@
 			},
 			// 添加测试项目
 			addProject() {
+        this.addForm.codeLong=this.addForm.codeLong==""?"测试项目"+new Date().valueOf():this.addForm.codeLong
+				this.addForm.descMedium = this.addForm.descMedium==""?"空":this.addForm.descMedium
 				Request({
 					url: '/testProjectController/addSingleTestProject',
 					method: 'post',
@@ -294,6 +276,8 @@
 			toCase(id,caseLibId,name){
 				sessionStorage.setItem("caselibId", caseLibId)    //存储测试项目id到sessionstorage
 				sessionStorage.setItem("projectNameStorage", "("+name+")" )   //把项目名称存入缓存中
+				sessionStorage.setItem("selectId",id)
+				console.log('toCase',id,caseLibId)
 				this.$router.push({path:'testCase'})
 			},
 			// 页码大小变化
