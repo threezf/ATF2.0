@@ -83,7 +83,7 @@
                 </el-col>
                 <el-col :span="4" :offset='1'>
                     <el-button
-                        size="small" 
+                        size="small"
                         @click='searchAll'
                         type="primary">
                         搜索
@@ -117,7 +117,7 @@
 											>
 												<el-table-column
 													type="selection"
-												
+
 												/>
 												<el-table-column
 													label="流程节点编号"
@@ -356,7 +356,7 @@
 							</el-table-column>
 						</el-table>
 					</el-scrollbar>
-				
+
 				<div class="block">
 					<el-col :span="10" :offset="4">
 						<el-pagination
@@ -380,7 +380,7 @@
 							<div>
 								<el-form
 									ref="addForm"
-									
+
 									:model="addForm"
 								>
 									<el-row>
@@ -446,7 +446,6 @@
 													label="测试任务"
 													prop="submissionId"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -488,7 +487,6 @@
 													label="被测系统"
 													prop="autName"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -515,7 +513,6 @@
 													label="功能点"
 													prop="transName"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -917,7 +914,7 @@
 							<div>
 								<el-form
 									ref="addForm"
-								
+
 									:model="addForm"
 								>
 									<el-row>
@@ -983,7 +980,6 @@
 													label="测试任务"
 													prop="submissionId"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -1025,7 +1021,6 @@
 													label="被测系统"
 													prop="autName"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -1052,7 +1047,6 @@
 													label="功能点"
 													prop="transName"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -1428,14 +1422,14 @@
 												</el-form-item>
 											</el-col>
 										</el-row>
-									
+
 										<div
 											v-for="item in caseNodeNums"
 											:key="item.id"
 										>
 											<el-form
 												ref="addNodeForm"
-												
+
 												v-if="item.display"
 												:model="item.addNodeForm"
 											>
@@ -1501,7 +1495,7 @@
 															</el-col>
 															<el-col
 																:span="5"
-																offset="1"
+																:offset="1"
 															>
 																<el-button
 																	@click="
@@ -1529,7 +1523,6 @@
 																label="被测系统"
 																prop="autName"
 																label-width="40%"
-																required
 															>
 																<el-select
 																	class="selectWidth"
@@ -1569,7 +1562,6 @@
 																label="功能点"
 																prop="transName"
 																label-width="40%"
-																required
 															>
 																<el-select
 																	class="selectWidth"
@@ -1942,15 +1934,15 @@
 					:visible.sync="dialogVisibleN"
 					width="65%">
 					<el-tabs v-model="activeName" type="card">
-			
+
 										<div
 											v-for="item in caseNodeNums"
 											:key="item.id">
 											<el-form
 												ref="addNodeForm"
-																						
+
 												:model="item.addNodeForm">
-										
+
 												<el-row>
 													<el-col
 														:span="18"
@@ -2001,7 +1993,7 @@
 																	显示详情
 																</el-button>
 															</el-col>
-															
+
 														</el-form-item>
 													</el-col>
 												</el-row>
@@ -2016,7 +2008,6 @@
 																label="被测系统"
 																prop="autName"
 																label-width="40%"
-																required
 															>
 																<el-select
 																	class="selectWidth"
@@ -2056,7 +2047,6 @@
 																label="功能点"
 																prop="transName"
 																label-width="40%"
-																required
 															>
 																<el-select
 																	class="selectWidth"
@@ -2383,13 +2373,13 @@
 															</el-form-item>
 														</el-col>
 													</el-row>
-													
+
 												</div>
-												
+
 											</el-form>
 										</div>
 									<el-row style="height:50px"></el-row>
-										            
+
 													<el-row>
 									                	<el-col :span="6" :offset="18">
 									                		<el-button
@@ -2405,18 +2395,18 @@
 									                		>
 									                	</el-col>
 									                </el-row>
-								
-					</el-tabs> 
+
+					</el-tabs>
 				</el-dialog>
 				<el-dialog
 					title="更改多种用例信息"
 					:visible.sync="dialogVisibleC"
 					width="65%">
 					<el-tabs v-model="activeName" type="card">
-				
+
 						<el-form
 							ref="changeForm"
-																	
+
 							:model="changeForm">
 
 							    <el-row>
@@ -2425,7 +2415,6 @@
 											label="测试任务"
 											prop="missionId"
 											label-width="40%"
-											required
 										>
 											<el-select
 												class="selectWidth"
@@ -2453,7 +2442,6 @@
 											label="被测系统"
 											prop="autName"
 											label-width="40%"
-											required
 										>
 											<el-select
 												class="selectWidth"
@@ -2492,7 +2480,6 @@
 											label="功能点"
 											prop="transName"
 											label-width="40%"
-											required
 										>
 											<el-select
 												class="selectWidth"
@@ -2629,7 +2616,7 @@
 									</el-col>
 								</el-row>
 								<el-row>
-									
+
 									<el-col :span="11" >
 										<el-form-item
 											label="评审者"
@@ -2682,7 +2669,7 @@
 									</el-col>
 								</el-row>
 								<el-row>
-									
+
 									<el-col :span="11">
 										<el-form-item
 											label="执行方式"
@@ -2730,12 +2717,12 @@
 										</el-form-item>
 									</el-col>
 								</el-row>
-								
-							
+
+
 						</el-form>
-										
+
 							    <el-row style="height:50px"></el-row>
-							    	            
+
 							    <el-row>
 							    	<el-col :span="9" :offset="15">
 							    		<el-button
@@ -2758,8 +2745,8 @@
 							    		>
 							    	</el-col>
 							    </el-row>
-								
-					</el-tabs> 
+
+					</el-tabs>
 				</el-dialog>
 				<el-dialog
 					title="导入"
@@ -2857,7 +2844,7 @@
 					width="50%">
 								<el-form
 								:disabled="!changeFlag"
-									ref="addForm"									
+									ref="addForm"
 									:model="addForm">
 									<el-row>
 										<el-col :span="11" >
@@ -2866,13 +2853,13 @@
 												prop="casecode"
 												label-width="40%"
 												required
-											>											
+											>
 													<el-input
 														v-model="
 															addForm.casecode
 														"
 														size="small"
-													></el-input>																					
+													></el-input>
 											</el-form-item>
 										</el-col>
 										<el-col :span="11" :offset="1">
@@ -2880,7 +2867,6 @@
 													label="测试任务"
 													prop="submissionId"
 													label-width="40%"
-													required
 												>
 													<el-select
 														class="selectWidth"
@@ -2902,7 +2888,7 @@
 												</el-form-item>
 											</el-col>
 									</el-row>
-									
+
 										<el-row>
 											<el-col :span="11">
 												<el-form-item
@@ -2919,7 +2905,7 @@
 													></el-input>
 												</el-form-item>
 											</el-col>
-											
+
 											<el-col :span="11" :offset="1">
 												<el-form-item
 													label="版本号"
@@ -2992,7 +2978,7 @@
 													</el-select>
 												</el-form-item>
 											</el-col>
-											
+
 										</el-row>
 										<el-row>
 										<el-col :span="11" >
@@ -3043,7 +3029,7 @@
 											</el-col>
 										</el-row>
 										<el-row>
-											
+
 											<el-col :span="11" >
 												<el-form-item
 													label="测试用例类型"
@@ -3140,7 +3126,7 @@
 													</el-select>
 												</el-form-item>
 											</el-col>
-											
+
 										</el-row>
 										<el-row>
 										<el-col :span="11" >
@@ -3216,7 +3202,7 @@
 													</el-select>
 												</el-form-item>
 											</el-col>
-											
+
 											<el-col :span="11" :offset="1">
 												<el-form-item
 													label="脚本管理方式"
@@ -3257,7 +3243,7 @@
 													></el-input>
 												</el-form-item>
 											</el-col>
-											
+
 										</el-row>
 										<el-row>
 										<el-col :span="22" >
@@ -3291,7 +3277,7 @@
 														"
 													></el-input>
 												</el-form-item>
-											</el-col>									
+											</el-col>
 										</el-row>
 										<el-row>
 											<el-col :span="22">
@@ -3362,7 +3348,7 @@
 													>退出</el-button
 												>
 											</el-col>
-										</el-row>							
+										</el-row>
 								</el-form>
 				</el-dialog>
 			</el-main>
@@ -3409,7 +3395,7 @@ export default {
 				teststep: "",
 				transId: "",
 				useStatus: "1",
-				version: ""
+				version: "",
 			},
 			caseNodeNums: [
 				{
@@ -3450,7 +3436,7 @@ export default {
                 scriptMode: "未选择",
                 scriptModeFlag: "未选择",
                 transId: "未选择",
-                
+
 			},
             selectOptions:[
                     {
@@ -3748,7 +3734,7 @@ export default {
                         _this.tt = res.totalCount;
                         _this.totalPage = res.totalPage;
                         _this.pageSize = _this.pageSize;
-						
+
 					},
 					err => {
 						this.$alert('搜索用例失败', '失败', {
@@ -3798,7 +3784,7 @@ export default {
 				reviewer: row.reviewerName,
 				scriptMode: row.scriptMode.toString(),
 				scriptModeFlag: row.scriptModeFlag,
-				submissionId: row.submissionId,
+				submissionId: row.missionId,
 				tags: row.tags,
 				testdesign: row.testDesign,
 				testpoint: row.testPoint,
@@ -3848,6 +3834,7 @@ export default {
 		//添加用例
 		insert(caseCompositeType) {
 			var _this = this;
+			_this.addForm.actionList=[]
 			_this.addForm.caseCompositeType = caseCompositeType;
 			if (caseCompositeType == 2) {
 				for (var i = 0; i < _this.caseNodeNum - 1; i++) {
@@ -3915,8 +3902,8 @@ export default {
 					testpoint: "",
 					teststep: "",
 					transId: _this.transList[0].id
-				}
-			};
+
+			}};
 			_this.caseNodeNums.push(caseNodeNum);
 			// _this.groupBound(_this.caseNodeNums[_this.caseNodeNum-2].name);
 			if(type==1){
@@ -3924,10 +3911,10 @@ export default {
 			}else{
 			 _this.caseNodeNums[_this.caseNodeNum - 1].display = true;
 			}
-			
+
 		},
 		//添加一个流程节点
-		insertNode(){ 
+		insertNode(){
 			var _this=this
 			Request({
 				url: "/testcase/addFlowNode",
@@ -4125,7 +4112,7 @@ export default {
 				.then(
 					res => {
 						_this.missionList = res.list;
-						_this.addForm.submissionId = res.list[0].nameMedium;
+						_this.addForm.submissionId = res.list[0].id;
 					},
 					err => {
 						console.log(err);
@@ -4288,7 +4275,7 @@ export default {
                 scriptMode: "未选择",
                 scriptModeFlag: "未选择",
                 transId: "未选择",
-                
+
 			}
 		},
 		//更改多种用例信息
@@ -4389,7 +4376,7 @@ export default {
 							}
 						});
 					} else {
-						
+
 						this.dialogVisibleI = false;
 						this.$alert("导入失败", "导入情况", {
 							confirmButtonText: "确定",
@@ -4415,10 +4402,10 @@ export default {
 			}else{
 				 this.$alert('请仅选中一个用例且必须是流程用例', '警告', {
                       confirmButtonText: '确定',
-                      
+
                });
 			}
-			
+
 
 		},
 		//下载模板
@@ -4442,13 +4429,13 @@ export default {
 				if(this.multipleSelection[i].caseCompositeType==2){
                   this.idList.push(this.multipleSelection[i].id);
 				}
-				
+
 			}
 			for (var i = 0; i < this.multipleSelection.length; i++) {
 				this.selectList.push(this.multipleSelection[i].id)
-				
+
 			}
-		
+
 		},
 		//实际导出函数
 		exportURL(){
@@ -4457,7 +4444,7 @@ export default {
                  this.selectList[i]=this.selectList[i]+""
 				 console.log( this.selectList[i])
 			 }
-			
+
            Request({
 				url: "/testcase/exportTestCase",
 				method: "get",
@@ -4502,7 +4489,7 @@ export default {
 		   }
 		   this.hostId=this.subMultipleSelection[0].caseId
           },
-		  
+
 		//展示流程节点
 		subShow(row, rowList) {
 			if (row.caseCompositeType != 1) {
