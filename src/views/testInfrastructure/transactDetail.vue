@@ -138,14 +138,7 @@
                 this.getTran(data)
             },
             transChange(transId){
-                console.log('2222222222222222222')
-                console.log(this.tranSelectOptions.filter(v=>{
-                    console.log(transId)
-                    console.log(v.id)
-                    return (transId == v.id)
-                }))
                 this.transSelected = this.tranSelectOptions.filter(v=>(transId == v.id))[0]
-                console.log(this.transSelected)
             },
             copySingleUITransact(){
                 console.log()
