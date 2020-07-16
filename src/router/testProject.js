@@ -57,7 +57,7 @@ export default {
 			name: 'datatable',
 			component: datatable,
 			meta: {
-				name: '测试资源管理管理',
+				name: '测试资源管理',
 				parent: 'TestProjectIndex',
 				icon: 'el-icon-edit'
 			}
