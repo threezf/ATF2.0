@@ -275,6 +275,7 @@ import Sortable from 'sortablejs';
 import uiEleFunTree from './uiEleFunTree';
 
 export default {
+    name: 'TemplateManage',
     components: {
         draggable,
         uiEleFunTree
@@ -282,11 +283,9 @@ export default {
     mixins: [VueMixins],
     props:{
         transId:{ 
-            type: String,
             default: undefined
         },
         autId:{ 
-            type: String,
             default: undefined
         },
         // 因为在快速开始时，脚本称之为用例，因此使用变量控制其显示
@@ -318,6 +317,7 @@ export default {
     watch: {
         autId(){
             if(this.autId && this.transId){
+            console.log('222')
                 this.getTemplates()
             }
         }
@@ -651,6 +651,9 @@ export default {
     created() {},
     mounted() {
         if(this.autId && this.transId){
+            console.log(this.transId)
+            console.log(this.transId === 'undefined')
+            console.log('1112')
             this.getTemplates()
         }
         this.rowDrop()

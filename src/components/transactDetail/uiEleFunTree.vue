@@ -114,7 +114,7 @@ export default {
         console.log(status);
       },
       funCheckChange(data,status){
-
+          
       },
       closeDialog(){
           this.$emit("closeDialog",123)

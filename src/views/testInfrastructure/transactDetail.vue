@@ -58,7 +58,7 @@
                         <element-library :trans-id='transId + ""' :aut-id='autId+""'></element-library>
                     </el-tab-pane>
                     <el-tab-pane label="基础脚本" name="template">
-                        <template-manage :trans-id='transId + ""' :aut-id='autId+""' path-name="TestInfrastructure"></template-manage>
+                        <template-manage :trans-id='transId' :aut-id='autId' path-name="TestInfrastructure"></template-manage>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>
