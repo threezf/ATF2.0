@@ -344,14 +344,10 @@
         </div>
     </div>
     <!--content end -->
-    <div class="modal fade" id="add-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document" style="min-width:max-content">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">新增场景</h4>
-                </div>
+    <el-dialog
+        title="新增场景"
+        :visible.sync="senceDialog"
+        width="50%"> 
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <thead>
@@ -432,9 +428,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
+    </el-dialog>
     <!-- /.modal -->
 
     <div class="modal fade" id="testplan_modal" tabindex="-1" role="dialog">
@@ -860,6 +854,7 @@
                 //出错时的断点保存循环查询的data
                 interruptData: {},
                 isPageNumberError: false,
+                senceDialog: false,
 
             }
         },
@@ -1396,14 +1391,14 @@
                         "orderColumns":sort,
                         "caseLibId": _this.caselibId
                     }),
-                    success: function(data){
+                    success: (data)=>{
                         if(data.respCode == '0000'){
                             console.log('陈工了')
                             _this.allscenes = data.sceneEntityList;
                             _this.scenePage.currentPage = data.currentPage;
                             _this.scenePage.totalCount = data.totalCount;
                             _this.scenePage.totalPage = data.totalPage;
-                            $('#add-modal').modal('show');
+                            this.senceDialog = true;
                             console.log('陈工了2223')
                         }
                         else{

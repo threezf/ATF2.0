@@ -58,7 +58,7 @@
                         <element-library :trans-id='transId + ""' :aut-id='autId+""'></element-library>
                     </el-tab-pane>
                     <el-tab-pane label="基础脚本" name="template">
-                        <template-manage :trans-id='transId + ""' :aut-id='autId+""' path-name="TestInfrastructure"></template-manage>
+                        <template-manage :trans-id='transId' :aut-id='autId' path-name="TestInfrastructure"></template-manage>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>
@@ -98,7 +98,6 @@
             this.userId = sessionStorage.getItem('userId') || '3'
             this.getAuts();
             this.getTran(this.autId);
-            this.transChange(this.transId)
         },
         methods: {
             handleClick(tab, event) {
@@ -127,6 +126,7 @@
                     this.tranSelectValue = ''
                     this.tranSelectOptions = res.transactRespDTOs
                     this.tranSelectValue = res.transactRespDTOs[0].id
+                    this.transChange(this.transId)
                     console.log(res)
                 },(err) => {
                     console.log(err)
@@ -138,9 +138,10 @@
                 this.getTran(data)
             },
             transChange(transId){
-                this.transSelected = this.tranSelectOptions.filter(v=>(transId === v.id))[0]
+                this.transSelected = this.tranSelectOptions.filter(v=>(transId == v.id))[0]
             },
             copySingleUITransact(){
+                console.log()
                 Request({
                     url: '/transactController/copySingleUITransact',
                     method: 'post',

@@ -226,19 +226,18 @@
         <el-upload
             class="upload-demo"
             ref="upload"
-            action="/elementRepository/batchImportElementAndUi"
-            :multiple='false'
-            :on-preview="handlePreview"
-            :file-list="fileList"
+            :action="actionUrl"
+            :on-success='tempSuccess'
+            :on-error='tempError'
             :limit="1"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">批量导入</el-button>
-            <div slot="tip" class="el-upload__tip">请下载模板，填写后上传。</div>
-        </el-upload>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="downloadTemp">模板下载</el-button>
+            <div slot="tip" class="el-upload__tip">下载模板，填写完毕后进行上传</div>
+            </el-upload>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="addUIDialogFlag = false">取 消</el-button>
-            <el-button type="primary" @click=" addUI">确 定</el-button>
+            <el-button @click="branchAddEleDialogFlag = false">关闭</el-button>
         </div>
     </el-dialog>
   </div>
@@ -262,6 +261,7 @@ export default {
     },
   data() {
     return {
+        publishActionUrl: 'http://140.143.16.21:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi',
         branchAddEleDialogFlag:false,// 批量添加的dialog
         fileList: [], // 上传文件列表
         editFlag:true, // 元素信息编辑的状态
@@ -307,11 +307,31 @@ export default {
             }
         }
     },
-  computed: {},
+  computed: {
+      actionUrl(){
+          return this.publishActionUrl + '?'+'repositoryId=' + this.repositoryId + '&' + 'uploadUserId=3' + '&' + 'autId=' + this.autId
+      }
+  },
   methods: {
+      downloadTemp(){
+        let url = "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" + this.autId
+        console.log(url)
+        window.location.href = url;
+      },
       // 以下是三个函数是上传组件用到的
       submitUpload() {
         this.$refs.upload.submit();
+      },
+      tempError(response, file, fileList){
+          this.$message.error(response.respMsg)
+      },
+      tempSuccess(response, file, fileList){
+          if(response.respCode !== '0000'){
+            this.$message.error(response.respMsg)
+            return
+          }
+          this.branchAddEleDialogFlag = false
+          this.$message.success('上传成功')
       },
       handlePreview(file) {
         console.log(file);
