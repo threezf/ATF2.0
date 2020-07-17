@@ -5,7 +5,7 @@
 import TestInfrastructureIndex from '@/views/testInfrastructure/index';
 import TestedSystemManagementRouter from '@/views/testInfrastructure/testedSystemManagementRouter';
 import TestedSystemManagement from '@/views/testInfrastructure/testedSystemManagement';
-import AutomatedComponentManagement from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
+import AutomatedComponentManagement from '@/views/testInfrastructure/automatedComponentManagement';
 import MockApi from '@/views/testInfrastructure/mockApi';
 import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
@@ -109,16 +109,7 @@ export default {
 				}
 			]
 		},
-		{
-			path: 'automatedComponentManagement',
-			name: 'AutomatedComponentManagement',
-			component: AutomatedComponentManagement,
-			meta:{
-				name: '自动化构件管理',
-				parent: 'TestInfrastructure',
-				icon: "el-icon-setting"
-			}
-		},
+		
 		{
 			path: 'transactDetail',
 			name: 'TransactDetail',
@@ -128,6 +119,16 @@ export default {
 				parent: 'TestedSystemManagement',
 				icon: 'el-icon-document-copy',
 				hide: true
+			}
+		},
+		{
+			path: 'automatedComponentManagement',
+			name: 'AutomatedComponentManagement',
+			component: AutomatedComponentManagement,
+			meta:{
+				name: '自动化构件管理',
+				parent: 'TestInfrastructure',
+				icon: "el-icon-setting"
 			}
 		},
 		{
