@@ -2758,10 +2758,6 @@
 						class="upload-demo in-file"
 						action=""
 						:on-change="changeFile"
-						:on-preview="handlePreview"
-						:on-remove="handleRemove"
-						:before-remove="beforeRemove"
-						multiple
 						:file-list="fileList">
 						<el-button size="small" type="primary"
 							>选择文件</el-button
@@ -3641,6 +3637,7 @@ export default {
 			selectValue:"caseCompositeType",
 			selectInfo:"",
 			fileList: [], //文件列表
+			fileListM:[],//用于导入
 			idList: [],//一级表格选择的流程用例
             subIdList: [],//二级表格选择的流程节点
 			selectList:[],//一级表格选择的全部用例
@@ -3782,23 +3779,19 @@ export default {
 			   console.log(this.row)
 			}
 			this.addForm= {
-				actionList: row.actionList,
 				autId: row.autId,
 				author: row.authorName,
-				automaton: row.automatonName,
-				caseCompositeType: row.caseCompositeType,
 				casecode: row.casecode,
 				caseproperty: row.caseProperty.toString(),
 				casetype:row.caseType.toString(),
-				categoryTeam: row.categoryTeam,
 				checkpoint: row.checkPoint,
 				datarequest: row.dataRequest,
 				executeMethod:row.executeMethod.toString(),
 				executor: row.executorName,
 				expectresult: row.expectResult,
 				functionModule: row.functionModule,
-				modifyChannel: row.modifyChannel,
-				modifyChannelNo: row.modifyChannelNo,
+				// modifyChannel: row.modifyChannel,
+				// modifyChannelNo: row.modifyChannelNo,
 				note: row.note,
 				prerequisites: row.preRequisites,
 				priority: row.priority.toString(),
@@ -3814,18 +3807,29 @@ export default {
 				useStatus:row.useStatus.toString(),
 				version: row.version
 			}
+			for(let item in this.addForm){
+				if(this.addForm[item]){
+					this.addForm[item]=this.addForm[item].toString()
+				}else{
+					this.addForm[item]=''
+				}
+			}
 		},
 		//修改用例信息
 		changeCaseInfo(){
 			var _this= this
+
 			console.log(typeof _this.addForm.caseproperty)
 			Request({
 				url: "/testcase/modifySingleTestCaseInfo",
 				method: "post",
 				params: {
-					..._this.addForm,
-				    transId: _this.row.transName==_this.addForm.transId?_this.row.transId:_this.addForm.transId,
-					id: _this.row.id
+					...this.addForm,
+					transId: _this.row.transName==_this.addForm.transId?_this.row.transId.toString():_this.addForm.transId.toString(),
+					id: _this.row.id.toString(),
+					author: _this.row.authorId.toString(),
+					reviewer: _this.row.reviewerId.toString(),
+					executor: _this.row.executorId.toString(),
 				}
 			})
 				.then(
@@ -4356,7 +4360,7 @@ export default {
 			this.dialogVisibleI = true;
 		},
 		changeFile(file) {
-			this.fileList.push(file);
+			this.fileListM.push(file);
 		},
 		handleRemove(file, fileList) {
 			var index = fileList.indexOf(file);
@@ -4370,7 +4374,7 @@ export default {
 		},
 		//实际导入函数
 		uploadTemp() {
-			let file = this.fileList[0];
+			let file = this.fileListM[0];
 			let param = new FormData();
 			var caseLibId = sessionStorage.getItem("caselibId");
 			param.append("file", file.raw);
