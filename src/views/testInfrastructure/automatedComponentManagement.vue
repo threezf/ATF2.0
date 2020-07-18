@@ -403,7 +403,7 @@
 									:lazy="true"
 									:load="loadTreeNode"
 									@check-change="handleCheckChange">
-									<span class="custom-tree-node" slot-scope="{ node, data }">
+									<span class="custom-tree-node" slot-scope="{ node}">
 										<span>{{ node.label }}</span>
 									</span>
 								</el-tree>

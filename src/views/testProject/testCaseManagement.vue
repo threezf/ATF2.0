@@ -68,27 +68,28 @@
 					</el-button>
 				</el-row>
 		        <el-row style="padding-top:20px;padding-bottom:10px">
-				   <el-col :span="4">
-                    <el-select v-model="selectValue" placeholder="请选择" size="small">
-                        <el-option
-                        v-for="item in selectOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4" style="padding-left:20px">
-                    <el-input  v-model="selectInfo" placeholder="请输入筛选内容" size="small"></el-input>
-                </el-col>
-                <el-col :span="4" :offset='1'>
-                    <el-button
-                        size="small"
-                        @click='searchAll'
-                        type="primary">
-                        搜索
-                    </el-button>
-                </el-col>
+							<search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
+<!--				   <el-col :span="4">-->
+<!--                    <el-select v-model="selectValue" placeholder="请选择" size="small">-->
+<!--                        <el-option-->
+<!--                        v-for="item in selectOptions"-->
+<!--                        :key="item.value"-->
+<!--                        :label="item.label"-->
+<!--                        :value="item.value">-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
+<!--                </el-col>-->
+<!--                <el-col :span="4" style="padding-left:20px">-->
+<!--                    <el-input  v-model="selectInfo" placeholder="请输入筛选内容" size="small"></el-input>-->
+<!--                </el-col>-->
+<!--                <el-col :span="4" :offset='1'>-->
+<!--                    <el-button-->
+<!--                        size="small"-->
+<!--                        @click='searchAll'-->
+<!--                        type="primary">-->
+<!--                        搜索-->
+<!--                    </el-button>-->
+<!--                </el-col>-->
 				</el-row>
 					<el-scrollbar style="width:100%">
 						<el-table
@@ -3359,9 +3360,11 @@
 <script>
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
-
+import searchTestCase from "@/components/searchTestcase/index";
+import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
 	mixins: [VueMixins], // 混入
+	components: { ElSlPanel },
 	data() {
 		return {
 			addForm: {
@@ -3677,7 +3680,8 @@ export default {
 			buttonM: true,
 			buttonS: true,
 			modelFlag: 0,
-			row:{}
+			row:{},
+			conditionList:[]
 		};
 	},
 	computed: {
@@ -3707,46 +3711,63 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		//筛选用例
-		searchAll(){
-			var _this=this
-			var filterType=1
-			var conditionList=[]
-			conditionList[0]={propertyName: this.selectValue,compareType:"C",propertyValueList:[this.selectInfo]}
-			conditionList[1]={propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]}
-			Request({
-				url: "/testcase/pagedQueryTestCaseByCondition",
-				method: "post",
-				params: {
-					filterType:filterType,
-					conditionList: conditionList,
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					orderType:"asc",
-					orderColumn: 'id',
-                    caseLibId: sessionStorage.getItem('caselibId')
-				}
-			})
-				.then(
-					res => {
-						_this.testCaseList = res.testcaseViewRespDTOList;
-                        _this.currentPage=1;
-                        _this.tt = res.totalCount;
-                        _this.totalPage = res.totalPage;
-                        _this.pageSize = _this.pageSize;
-
-					},
-					err => {
-						this.$alert('搜索用例失败', '失败', {
-                      confirmButtonText: '确定',
-					   });
-					}
-				)
-				.catch(err => {
-					this.$alert('搜索用例失败', '失败', {
-                      confirmButtonText: '确定',
-					   });
-				});
+		// //筛选用例
+		// searchAll(){
+		// 	var _this=this
+		// 	var filterType=1
+    //   var conditionListM=[]
+		// 	this.conditionList.forEach(item=>{
+		// 		conditionListM.push(item)
+		// 	})
+		// 	// conditionListM=this.conditionList
+		// 	// //  conditionList[0]={propertyName: "caseCompositeType",compareType:"=",propertyValueList:['1']}
+		// 	conditionListM.push({propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]})
+		// 	// console.log(this.conditionList)
+		// 	Request({
+		// 		url: "/testcase/pagedQueryTestCaseByCondition",
+		// 		method: "post",
+		// 		params: {
+		// 			filterType:filterType,
+		// 			conditionList: conditionListM,
+		// 			currentPage: this.currentPage,
+		// 			pageSize: this.pageSize,
+		// 			orderType:"asc",
+		// 			orderColumn: 'id',
+		// 			caseLibId: sessionStorage.getItem('caselibId')
+		// 		}
+		// 	})
+		// 		.then(
+		// 			res => {
+		// 				_this.testCaseList = res.testcaseViewRespDTOList;
+    //                     _this.currentPage=1;
+    //                     _this.tt = res.totalCount;
+    //                     _this.totalPage = res.totalPage;
+    //                     _this.pageSize = _this.pageSize;
+		// 				console.log(_this.conditionList)
+		//
+		// 			},
+		// 			err => {
+		// 				this.$alert('搜索用例失败', '失败', {
+    //                   confirmButtonText: '确定',
+		// 			   });
+		// 			}
+		// 		)
+		// 		.catch(err => {
+		// 			this.$alert('搜索用例失败', '失败', {
+    //                   confirmButtonText: '确定',
+		// 			   });
+		// 		});
+		// },
+		//展示筛选结果
+		searchCase(val){
+			this.testCaseList = val
+			this.currentPage=1
+		},
+		searchCase2(val){
+			this.totalCount = val;
+			this.totalPage = Math.ceil(
+				this.totalCount / this.pageSize
+			);
 		},
 		//展示查看和修改页面表单
 		showInfo(row,flag){
@@ -4515,6 +4536,9 @@ export default {
 		toUploadRecord() {
 			this.$router.push({ path: "uploadRecord" });
 		}
+	},
+	components: {
+		"search": searchTestCase
 	}
 };
 </script>
