@@ -132,7 +132,7 @@
     }
   };
 </script>
-  <style scoped>
+<style scoped>
   .cardPreview {
     padding: 5px;
   }

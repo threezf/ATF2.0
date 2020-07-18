@@ -338,6 +338,7 @@
                 class="decode"
                 type="primary"
                 size="small"
+                style="display: none"
                 @click="decode"
                 >解码
               </el-button>
@@ -718,7 +719,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .titleClass {
     .systemSelectSystem {
       position: relative;

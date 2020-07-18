@@ -2046,7 +2046,7 @@
         }
     }
 </style>
-    <style lang="less" >
+    <style lang="less" scoped>
         .exe-info{
             padding-left: 10px;
         }
