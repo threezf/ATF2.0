@@ -12,38 +12,113 @@
       </el-form>
     </el-row>
     <el-tabs class="tabsStyle" type="border-card">
-      <el-tab-pane label="执行结果">
-        <el-table stripe border highlight-current-row>
-          <el-table-column label="场景ID" min-width="5%"></el-table-column>
-          <el-table-column label="测试计划" min-width="13%"></el-table-column>
-          <el-table-column label="用例编号" min-width="13%"></el-table-column>
-          <el-table-column label="节点名称" min-width="13%"></el-table-column>
-          <el-table-column label="记录单状态" min-width="15%"></el-table-column>
-          <el-table-column label="执行结果状态" min-width="17%"></el-table-column>
-          <el-table-column label="来源渠道" min-width="12%"></el-table-column>
-          <el-table-column label="资源路径" min-width="12%"></el-table-column>
+      <el-tab-pane label="执行结果" class="recordPane">
+        <el-table 
+          :data="recordTableData"
+          stripe 
+          border 
+          highlight-current-row>
+          <el-table-column
+             prop="sceneId"
+            label="场景ID" 
+            min-width="12%">
+          </el-table-column>
+          <el-table-column 
+            prop="testPlan"
+            label="测试计划" 
+            min-width="13%">
+          </el-table-column>
+          <el-table-column 
+            prop="usecaseId"
+            label="用例编号" 
+            min-width="13%">
+          </el-table-column>
+          <el-table-column 
+            prop="nodeName"
+            label="节点名称" 
+            min-width="10%">
+          </el-table-column>
+          <el-table-column 
+            prop="recorderStatus"
+            label="记录单状态" 
+            min-width="8%">
+          </el-table-column>
+          <el-table-column 
+            prop="executeStatus"
+            label="执行结果状态" 
+            min-width="7%">
+          </el-table-column>
+          <el-table-column 
+            prop="sourceChannel"
+            label="来源渠道" 
+            min-width="12%">
+          </el-table-column>
+          <el-table-column 
+            prop="resourcePath"
+            label="资源路径" 
+            min-width="22%">
+          </el-table-column>
         </el-table>
+        <iframe :class="resourcePath !== ''? 'mainResource' :'noResorce'" :src="resourcePath"></iframe>
       </el-tab-pane>
       <el-tab-pane label="元素库">
         <element-lib
-          :list="uis"
-          :transactId="Number(transactId)"
+          :testCaseId="Number(testcaseId)"
           :objects="objects"
-          :repositoryid="Number(repositoryId)"
         ></element-lib>
       </el-tab-pane>
       <el-tab-pane label="对象库">
         <object-lib
-          :list="uis"
-          :transactId="Number(transactId)"
-          :repositoryid="Number(repositoryId)"
+          :testCaseId="Number(testcaseId)"
         ></object-lib>
       </el-tab-pane>
       <el-tab-pane class="scriptPane" label="查看脚本">
-        <div class="scriptDiv">暂无数据</div>
+        <div class="scriptDiv">
+          <el-table
+            :data="scriptList"
+            class="table"
+            border
+            stripe
+            highlight-currnt-row>
+            <el-table-column
+              align="center"
+              label="#"
+              type="index"
+              width="100px">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="操作项"
+              min-width="40%">
+              <template slot-scope="scope">
+                <span v-if="scope.row.ui === ''"><b>{{scope.row.classType}}</b></span>
+                <span v-else>
+                  <b>UI：</b>{{scope.row.ui}}&nbsp;
+                  <b>元素：</b>{{scope.row.element}}
+                </span> 
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="方法"
+              prop="method"
+              width="100px">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="参数"
+              min-width="40%">
+              <template slot-scope="scope">
+                <span v-for="(item, index) in scope.row.parameters" :key="index">
+                  参数{{index + 1}}：<b>{{item}}</b>
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-tab-pane>
       <el-tab-pane class="userDataPane" label="用例数据">
-        <el-row>
+        <el-row hidden>
           <el-col :span="10">
             <el-checkbox
               class="checkboxAll"
@@ -71,13 +146,41 @@
           </el-col>
         </el-row>
         <el-table :data="dataPoolList" class="useDataStyle" border stripe highlight-current-row>
-          <el-table-column label="数据名称" min-width="15.4%"></el-table-column>
-          <el-table-column label="数据值" min-width="12.7%"></el-table-column>
-          <el-table-column label="数据池名" min-width="15.5%"></el-table-column>
-          <el-table-column label="流程节点名称" min-width="20.9%"></el-table-column>
-          <el-table-column label="对象名称" min-width="15.5%"></el-table-column>
-          <el-table-column label="描述" min-width="10%"></el-table-column>
-          <el-table-column label="操作" min-width="10%"></el-table-column>
+          <el-table-column
+            prop="dataName"
+            label="数据名称" 
+            min-width="15.4%">
+          </el-table-column>
+          <el-table-column 
+            prop="dataValue"
+            label="数据值" 
+            min-width="12.7%">
+          </el-table-column>
+          <el-table-column 
+            prop="poolName"
+            label="数据池名" 
+            min-width="15.5%">
+          </el-table-column>
+          <el-table-column 
+            label="流程节点名称" 
+            min-width="20.9%">
+            无
+          </el-table-column>
+          <el-table-column 
+            label="对象名称" 
+            min-width="15.5%">
+            无
+          </el-table-column>
+          <el-table-column 
+            label="描述" 
+            min-width="10%">
+            无
+          </el-table-column>
+          <el-table-column 
+            label="操作" 
+            min-width="10%">
+            无
+          </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane class="detailTabPane" label="用例详情">
@@ -147,14 +250,18 @@ export default {
     return {
       //查询所需要的数据
       batchId: "", // 测试轮次编号
-      caseCompositeType: "2", //
-      caseId: "1", // 用例编号
       testPlanId: "", // 测试计划编号
-      testcaseId: "1", // 测试用例编号
+      testcaseId: "", // 测试用例编号
       sceneId: 1,
+      caseCompositeType: "1", //
+      transId: '',
+      autId: '',
+      caseId: "1", // 用例编号
       repositoryId: "12",
 			// 执行结果
-			recordEntity: [],
+      recordEntity: [],
+      recordTableData: [], // 查询结果表格
+      resourcePath: '', //结果路径
       // 元素库
       transactId: "135",
       uis: [], // 元素库数据列表
@@ -265,11 +372,17 @@ export default {
     };
   },
   created() {
-    this.getSingleTestCaseInfo();
+    // 获取跳转传递的数据
+    this.batchId = this.$route.query.batchId
+    this.testPlanId = this.$route.query.testPlanId
+    this.testcaseId = this.$route.query.testcaseId
+    this.sceneId = this.$route.query.sceneId
+    console.log(this.batchId, this.testPlanId, this.testcaseId, this.sceneId)
+    this.getFlowDataByTestPlanId()
     this.queryInputData();
+    this.getSingleTestCaseInfo();
     this.querySingleRecordByCaseId();
-    this.batchQueryDataPool();
-    this.queryAllObjectForATransact();
+    this.getTestcaseScript()
   },
   computed: {
     threeInputParams() {
@@ -332,7 +445,7 @@ export default {
     // 通过测试计划Id获取流程节点数据
     getFlowDataByTestPlanId() {
 			Request({
-			  url: "flowDataController/getFlowDataByTestPlanId",
+			  url: "/flowDataController/getFlowDataByTestPlanId",
 			  method: "POST",
 			  params: {
 			    batchId: this.batchId,
@@ -340,10 +453,11 @@ export default {
 			    testcaseId: this.testcaseId
 			  }
 			}).then(res => {
-			  if (res.respCode === "000") {
+			  if (res.respCode === "0000") {
+          // this.$message.success(res.respMsg)
 			  } else {
 			    console.log("查询失败");
-			  }
+        }
 			})
 			.catch(err => {
 			  console.log("获取失败");
@@ -357,7 +471,7 @@ export default {
         params: {
           batchId: this.batchId,
           caseCompositeType: this.caseCompositeType,
-          caseId: this.caseId,
+          caseId: this.testcaseId,
           testPlanId: this.testPlanId
         }
       })
@@ -366,25 +480,32 @@ export default {
 						this.bodyContent = res.bodyContent
 						this.scriptList = res.scriptList
           } else {
-            this.$message.warning(res.respMsg);
+            // this.$message.warning(res.respMsg);
           }
         })
         .catch(err => {
           this.$message.error("用例组成类型只能为1(单用例)或3(流程节点)");
         });
-    },
+      },
+    
     // 获取单个用例详情数据
     getSingleTestCaseInfo() {
       Request({
         url: "/testcase/getSingleTestCaseInfo",
         method: "POST",
         params: {
-          id: "141"
+          id: this.testcaseId
         }
       })
         .then(res => {
           if (res.respCode === "0000") {
             this.testcaseViewRespDTO = res.testcaseViewRespDTO;
+            this.transId = res.testcaseViewRespDTO.transId
+            this.autId = res.testcaseViewRespDTO.autId
+            this.queryAutVisibleOmClasses(this.autId)
+            this.queryAllObjectForATransact(this.transId)
+            this.batchQueryDataPool(this.autId)
+            console.log('传递的数据', this.transId, this.autId)
           } else {
             this.$message.warning(res.respMsg);
           }
@@ -400,19 +521,30 @@ export default {
         method: "POST",
         params: {
           batchId: this.batchId,
-          caseId: this.caseId,
+          caseId: this.testcaseId,
           sceneId: this.sceneId
         }
       })
         .then(res => {
           if (res.respCode === "0000") {
-						this.recordEntity = res.recordEntity
+            this.recordEntity = res.recordEntity
+            let data = {}
+            data.sceneId = res.recordEntity.sceneName
+            data.testPlan = res.recordEntity.testPlanName
+            data.usecaseId = res.recordEntity.casecode
+            data.nodeName = res.recordEntity.flownodeName
+            data.recorderStatus = res.recordEntity.recorderStatus == 1? '未激活': '已激活'
+            data.executeStatus = res.recordEntity.executeStatus == 1? '失败': '成功'
+            data.sourceChannel = res.recordEntity.sourceChannel
+            data.resourcePath = res.recordEntity.resourcePath === null? '无执行报告': res.recordEntity.resourcePath
+            this.resourcePath = res.recordEntity.resourcePath === null? "": "http://140.143.16.21:8080/" + res.recordEntity.resourcePath
+            this.recordTableData.push(data)
           } else {
             this.$message.warning(res.respMsg);
           }
         })
         .catch(err => {
-          this.$message.error(err.respMsg);
+          this.$message.error(err);
         });
     },
     //获取测试脚本
@@ -421,7 +553,7 @@ export default {
         url: "/dataCenter/getTestcaseScript",
         method: "POST",
         params: {
-          caseCompositeType: 3,
+          caseCompositeType: 1,
           testcaseId: this.testcaseId
         }
       })
@@ -435,12 +567,12 @@ export default {
           this.$message.error(err.respMsg);
         });
     },
-    queryAutVisibleOmClasses() {
+    queryAutVisibleOmClasses(id) {
       Request({
         url: "/aut/queryAutVisibleOmClasses",
         method: "POST",
         params: {
-          id: 59
+          id
         }
       })
         .then(res => {
@@ -454,13 +586,13 @@ export default {
         });
     },
     // 被测系统池数据
-    batchQueryDataPool() {
+    batchQueryDataPool(id) {
       Request({
         url: "/dataPool/batchQueryDataPool",
         method: "POST",
         params: {
           poolName: "被测系统数据池",
-          poolObjId: 59
+          poolObjId: id
         }
       })
         .then(res => {
@@ -475,25 +607,25 @@ export default {
         });
     },
     // 对象库数据
-    queryAllObjectForATransact() {
+    queryAllObjectForATransact(id) {
       Request({
         url: "/objectRepository/queryAllObjectForATransact",
         method: "POST",
         params: {
-          transactId: this.transactId
+          transactId: id
+        }
+      }).then(res => {
+        if (res.respCode === "0000") {
+          this.objects = res.objects;
+          this.repositoryId = res.repositoryId;
+          console.log('对象数据')
+        } else {
+          this.$message.warning(res.respMsg);
         }
       })
-        .then(res => {
-          if (res.respCode === "0000") {
-            this.objects = res.objects;
-            this.repositoryId = res.repositoryId;
-          } else {
-            this.$message.warning(res.respMsg);
-          }
-        })
-        .catch(err => {
-          this.$message.error(err.message);
-        });
+      .catch(err => {
+        this.$message.error(err.message);
+      });
     }
   },
   components: {
@@ -515,6 +647,24 @@ export default {
   }
 }
 .tabsStyle {
+  
+  .recordPane {
+    width: 100%;
+    background: #f7f6f4;
+    .mainResource {
+      width: 60%;
+      border: none;
+      position: relative;
+      top: -10px;
+      left: 50%;
+      margin-bottom: -10px;
+      transform: translateX(-50%);
+      min-height: 870px;
+    }
+    .noResorce {
+      display: none;
+    }
+  }
   .scriptPane {
     text-align: center;
     .scriptDiv {
