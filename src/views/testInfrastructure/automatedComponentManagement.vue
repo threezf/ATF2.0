@@ -132,7 +132,7 @@
 										v-for="item in methodList"
 										:key="item.id"
 										:label="item.name"
-										:value="item.id">
+										:value="item">
 									</el-option>
 								</el-select>
 							</el-form-item>
@@ -159,88 +159,184 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="18">
+						<el-col :span="20">
+
 							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="24.5%">
+								<el-col :span="18">
 								<el-table
 									stripe
 									border
 									:data="secondForm.runtimeArgs"
-									class='table'>
+									class='table tableEdit'>
 									<el-table-column
-										label=""
-
-										width="180"/>
+										label="属性名">
+										<template slot-scope="scope" @change="handleEditR1(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性名"
-										property="name"/>
+										label="属性值">
+									<template slot-scope="scope" @change="handleEditR2(scope.$index, scope.row)">
+										<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+									</template>
+									</el-table-column>
 									<el-table-column
-										label="属性值"
-										property="value"/>
+										width="100">
+										<template slot-scope="scope">
+											<el-button
+												size="small"
+												@click="deleteArg(scope.$index)"
+												type="danger">
+												删除
+											</el-button>
+										</template>
+									</el-table-column>
 								</el-table>
+								</el-col>
+								<el-col :span="2">
+								<el-button
+									size="small"
+									@click="addArg"
+									style="margin-left: 20px;margin-top:0">
+									添加
+								</el-button>
+								</el-col>
 							</el-form-item>
 						</el-col>
+
 					</el-row>
 					<el-row>
-						<el-col :span="18">
+						<el-col :span="20">
 							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="24.5%">
+								<el-col :span="18">
 								<el-table
 									stripe
 									border
 									:data="secondForm.supportedRecognitionPros"
-									class='table'>
+									class='table tableEdit'>
 									<el-table-column
-										label=""
-
-										width="180"/>
+										label="属性名">
+										<template slot-scope="scope" @change="handleEditS1(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性名"
-										property="name"/>
+										label="属性值">
+										<template slot-scope="scope" @change="handleEditS2(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性值"
-										property="value"/>
+										width="100">
+										<template slot-scope="scope">
+											<el-button
+												size="small"
+												@click="deleteArgS(scope.$index)"
+												type="danger">
+												删除
+											</el-button>
+										</template>
+									</el-table-column>
 								</el-table>
+								</el-col>
+								<el-col :span="2">
+									<el-button
+										size="small"
+										@click="addArgS"
+										style="margin-left: 20px;margin-top:0">
+										添加
+									</el-button>
+								</el-col>
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="18">
+						<el-col :span="20">
 							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="24.5%">
+								<el-col :span="18">
 								<el-table
 									stripe
 									border
 									:data="secondForm.selfRecognitionPros"
-									class='table'>
+									class='table tableEdit'>
 									<el-table-column
-										label=""
-										width="180"/>
+										label="属性名">
+										<template slot-scope="scope" @change="handleEditE1(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性名"
-										property="name"/>
+										label="属性值">
+										<template slot-scope="scope" @change="handleEditE2(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性值"
-										property="value"/>
+										width="100">
+										<template slot-scope="scope">
+											<el-button
+												size="small"
+												@click="deleteArgE(scope.$index)"
+												type="danger">
+												删除
+											</el-button>
+										</template>
+									</el-table-column>
 								</el-table>
+								</el-col>
+								<el-col :span="2">
+									<el-button
+										size="small"
+										@click="addArgE"
+										style="margin-left: 20px;margin-top:0">
+										添加
+									</el-button>
+								</el-col>
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="18">
+						<el-col :span="20">
 							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="24.5%">
+								<el-col :span="18">
 								<el-table
 									stripe
 									border
 									:data="secondForm.assistRecognitionPros"
-									class='table'>
+									class='table tableEdit'>
 									<el-table-column
-										label=""
-										width="180"/>
+										label="属性名">
+										<template slot-scope="scope" @change="handleEditA1(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性名"
-										property="name"/>
+										label="属性值">
+										<template slot-scope="scope" @change="handleEditA2(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="属性值"
-										property="value"/>
+										width="100">
+										<template slot-scope="scope">
+										<el-button
+											size="small"
+											@click="deleteArgA(scope.$index)"
+											type="danger">
+											删除
+										</el-button>
+										</template>
+									</el-table-column>
 								</el-table>
+								</el-col>
+								<el-col :span="2">
+									<el-button
+										size="small"
+										@click="addArgA"
+										style="margin-left: 20px;margin-top:0">
+										添加
+									</el-button>
+								</el-col>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -312,6 +408,14 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
+							<el-col :span="2" :offset="3">
+								<el-button
+									size="small"
+									@click="addArgP"
+									style="margin-left: 100px;margin-top:5px">
+									添加参数
+								</el-button>
+							</el-col>
 						</el-row>
 						<el-row>
 							<el-col :span="20">
@@ -320,30 +424,44 @@
 									stripe
 									border
 									:data="thirdForm.arguments"
-									style="margin-left:30px"
-									class='table'>
-<!--									<el-table-column-->
-<!--										label=""-->
-<!--										property="check"-->
-<!--									/>-->
+									style="margin-left:70px"
+									class='table tableEdit'>
 									<el-table-column
-										label="参数名称"
-										property="name"
-									/>
+										label="参数名称">
+										<template slot-scope="scope" @change="handleEditP1(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="值类型"
-										property="type"
-									/>
+										label="值类型">
+										<template slot-scope="scope" @change="handleEditP2(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.type" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="参数化列"
-										property="parameterizeColumn"
-									/>
+										label="参数化列">
+										<template slot-scope="scope" @change="handleEditP3(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.parameterizeColumn" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
 									<el-table-column
-										label="描述"
-										property="desc"
-									/>
+										label="描述">
+										<template slot-scope="scope" @change="handleEditP4(scope.$index, scope.row)">
+											<el-input size="small" v-model="scope.row.desc" placeholder="请输入内容" ></el-input>
+										</template>
+									</el-table-column>
+									<el-table-column
+										width="80">
+										<template slot-scope="scope">
+											<el-button
+												size="small"
+												@click="deleteArgP(scope.$index)"
+												type="danger">
+												删除
+											</el-button>
+										</template>
+									</el-table-column>
 								</el-table>
-
 							</el-col>
 						</el-row>
 						<el-row>
@@ -673,6 +791,117 @@
 			}
 		},
 		methods: {
+			//修改或填写新增运行时参数
+			handleEditR1(index, row){
+			 this.secondForm.runtimeArgs[index-1].name=row.name
+	    },
+			handleEditR2(index, row){
+				this.secondForm.runtimeArgs[index-1].value=row.value
+			},
+			//添加运行时参数
+			addArg(){
+				if(this.secondForm.runtimeArgs){
+					this.secondForm.runtimeArgs.push({name: '', value: ''})
+				}else{
+					this.secondForm.runtimeArgs=[]
+					this.secondForm.runtimeArgs.push({name: '', value: ''})
+				}
+
+			},
+			//删除运行时参数
+			deleteArg(index){
+				this.secondForm.runtimeArgs.splice(index,1)
+			},
+			//修改或填写新增支持的识别属性
+			handleEditS1(index, row){
+				this.secondForm.supportedRecognitionPros[index-1].name=row.name
+			},
+			handleEditS2(index, row){
+				this.secondForm.supportedRecognitionPros[index-1].value=row.value
+			},
+			//添加支持的识别属性
+			addArgS(){
+				if(this.secondForm.supportedRecognitionPros){
+					this.secondForm.supportedRecognitionPros.push({name: '', value: ''})
+				}else{
+					this.secondForm.supportedRecognitionPros=[]
+					this.secondForm.supportedRecognitionPros.push({name: '', value: ''})
+				}
+
+			},
+			//删除支持的识别属性
+			deleteArgS(index){
+				this.secondForm.supportedRecognitionPros.splice(index,1)
+			},
+			//修改或填写新增自识别属性
+			handleEditE1(index, row){
+				this.secondForm.selfRecognitionPros[index-1].name=row.name
+			},
+			handleEditE2(index, row){
+				this.secondForm.selfRecognitionPros[index-1].value=row.value
+			},
+			//添加自识别属性
+			addArgE(){
+				if(this.secondForm.selfRecognitionPros){
+					this.secondForm.selfRecognitionPros.push({name: '', value: ''})
+				}else{
+					this.secondForm.selfRecognitionPros=[]
+					this.secondForm.selfRecognitionPros.push({name: '', value: ''})
+				}
+
+			},
+			//删除自识别属性
+			deleteArgE(index){
+				this.secondForm.selfRecognitionPros.splice(index,1)
+			},
+			//修改或填写新增辅助识别属性
+			handleEditA1(index, row){
+				this.secondForm.assistRecognitionPros[index-1].name=row.name
+			},
+			handleEditA2(index, row){
+				this.secondForm.assistRecognitionPros[index-1].value=row.value
+			},
+			//添加辅助识别属性
+			addArgA(){
+				if(this.secondForm.assistRecognitionPros){
+					this.secondForm.assistRecognitionPros.push({name: '', value: ''})
+				}else{
+					this.secondForm.assistRecognitionPros=[]
+					this.secondForm.assistRecognitionPros.push({name: '', value: ''})
+				}
+
+			},
+			//删除辅助识别属性
+			deleteArgA(index){
+				this.secondForm.assistRecognitionPros.splice(index,1)
+			},
+			//修改或填写新增方法中参数
+			handleEditP1(index, row){
+				this.thirdForm.arguments[index-1].name=row.name
+			},
+			handleEditP2(index, row){
+				this.thirdForm.arguments[index-1].type=row.type
+			},
+			handleEditP3(index, row){
+				this.thirdForm.arguments[index-1].parameterizeColumn=row.parameterizeColumn
+			},
+			handleEditP4(index, row){
+				this.thirdForm.arguments[index-1].desc=row.desc
+			},
+			//添加方法中参数
+			addArgP(){
+				if(this.thirdForm.arguments){
+					this.thirdForm.arguments.push({name: '', value: ''})
+				}else{
+					this.thirdForm.arguments=[]
+					this.thirdForm.arguments.push({name: '', value: ''})
+				}
+
+			},
+			//删除方法中参数
+			deleteArgP(index){
+				this.thirdForm.arguments.splice(index,1)
+			},
 			//实际添加方法函数
 			addMethod(){
 				Request({
@@ -934,10 +1163,19 @@
 				this.classValue = e.name
 				this.classId0=e.id
 				this.secondForm=e
-				this.secondForm.runtimeArgs=JSON.parse(e.runtimeArgs)
-				this.secondForm.selfRecognitionPros=JSON.parse(e.selfRecognitionPros)
-				this.secondForm.supportedRecognitionPros=JSON.parse(e.supportedRecognitionPros)
-				this.secondForm.assistRecognitionPros=JSON.parse(e.assistRecognitionPros)
+				console.log(e)
+				if(!this.secondForm.runtimeArgs||this.secondForm.runtimeArgs=="[]"){
+					this.secondForm.runtimeArgs=[]
+				}
+				if(!this.secondForm.selfRecognitionPros||this.secondForm.selfRecognitionPros=="[]"){
+					this.secondForm.selfRecognitionPros=[]
+				}
+				if(!this.secondForm.supportedRecognitionPros||this.secondForm.supportedRecognitionPros=="[]"){
+					this.secondForm.supportedRecognitionPros=[]
+				}
+				if(!this.secondForm.assistRecognitionPros||this.secondForm.assistRecognitionPros=="[]"){
+					this.secondForm.assistRecognitionPros=[]
+				}
 				this.setOverrideFlag(e.overideFlag)
 				this.setVisibility(e.visibilityFlag)
 				this.getMethod(e.id)
@@ -947,10 +1185,11 @@
 				this.thirdForm = e
 				this.methodValue = e.name
 				this.textarea = e.targetCodeContent
-				if(_this.methodList[0].arguments[1]!='o'){
-					_this.thirdForm.arguments = JSON.parse(e.arguments)
-				}else{
-					_this.thirdForm.arguments =[]
+				console.log(e)
+				if(this.methodList[0].arguments[1]!='o'&&typeof this.methodList[0].arguments=='string'){
+					this.thirdForm.arguments = JSON.parse(e.arguments)
+				}else if(this.methodList[0].arguments[1]=='o'||this.methodList[0].arguments=="[]"){
+					this.thirdForm.arguments =[]
 				}
 				this.setOverrideFlagM(e.overrideFlag)
 				this.setVisibilityM(e.visibilityFlag)
@@ -1038,10 +1277,22 @@
 			},
 			//保存控件信息
 			storeClass() {
+				var submitForm={}
+				for(let item in this.secondForm){
+					if(this.secondForm[item]){
+						if(item=="runtimeArgs"|| item=="selfRecognitionPros"||item== "supportedRecognitionPros"||item== "assistRecognitionPros"){
+							submitForm[item]=JSON.stringify(this.secondForm[item])
+						}else{
+							submitForm[item]=this.secondForm[item].toString()
+						}
+					}else{
+						submitForm[item]=''
+					}
+				}
 				Request({
 					url: '/arcClass/modifySingleArcOmClass',
 					method: 'post',
-					params: this.secondForm
+					params: submitForm
 				}).then((res) => {
 					this.$alert('保存控件信息成功', '成功', {
 						confirmButtonText: '确定',
@@ -1055,23 +1306,25 @@
 						confirmButtonText: '确定',
 					});
 				})
+
 			},
 			//保存方法信息
 			storeMethod() {
+				var submitForm={}
 				for(let key  in this.thirdForm){
 					if(this.thirdForm[key]&&key!='arguments'){
-						this.thirdForm[key]=this.thirdForm[key].toString()
+						submitForm[key]=this.thirdForm[key].toString()
 					}
 				}
 				if(this.thirdForm.arguments[0]!='[') {
-					this.thirdForm.arguments=JSON.stringify(this.thirdForm.arguments)
+					submitForm.arguments=JSON.stringify(this.thirdForm.arguments)
 				}
 				Request({
 					url: '/arcMethod/modifySingleArcOmMethod',
 					method: 'post',
 					params: {
 						author: "",
-						...this.thirdForm,
+						...submitForm,
 					}
 				}).then((res) => {
 					this.drawer = !this.drawer
@@ -1139,6 +1392,8 @@
 	.el-drawer.rtl {
 		overflow: scroll;
 	}
-
+	.tableEdit .el-input__inner{
+		border: 0
+	}
 
 </style>
