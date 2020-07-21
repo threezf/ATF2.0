@@ -6,7 +6,7 @@
 				<el-input
 					v-model="filterText"
 					placeholder="输入关键字进行过滤">
-					<el-button
+					<el-button 
 						slot="append"
 						icon="el-icon-search"
 					></el-button>
@@ -59,7 +59,7 @@
 								<el-option 
 									v-for="(item) in omClassRespDTOList"
 									:key="item.id" 
-									:value="item.id" 
+									:value="String(item.id)" 
 									:label="item.name">
 								</el-option>
 							</el-select>
@@ -356,6 +356,8 @@
     name: "ObjectLib",
 		data() {
     	return {
+				transactId: '',
+				repositoryId: '',
     		objectList: [], // 对象数组
 				filterText: '', // 过滤数据
 				rightTitle: '对象名称',
@@ -374,8 +376,7 @@
 			}
 		},
 		props: {
-			repositoryid: Number,
-			transactId: Number
+			testCaseId: Number,
 		},
 		computed: {
 			defaultProps() {
@@ -397,11 +398,31 @@
 			}
 		},
 		created() {
-			this.repositoryId = this.repositoryid
-			this.queryAllObjectForATransact()
-			this.queryAutVisibleOmClasses()
+			this.getSingleTestCaseInfo()
 		},
 		methods: {
+			// 获取单个用例详情数据
+			getSingleTestCaseInfo() {
+				let _this = this
+				Request({
+					url: "/testcase/getSingleTestCaseInfo",
+					method: "POST",
+					params: {
+						id: this.testCaseId
+					}
+				}).then(res => {
+					if (res.respCode === "0000") {
+						_this.transactId = res.testcaseViewRespDTO.transId
+						_this.queryAllObjectForATransact()
+						_this.queryAutVisibleOmClasses(res.testcaseViewRespDTO.autId)
+					} else {
+						this.$message.warning(res.respMsg);
+					}
+				})
+				.catch(err => {
+					this.$message.error("连接失败");
+				});
+			},
     	// 查询全部
 			queryAllObjectForATransact() {
 				Request({
@@ -415,6 +436,7 @@
 					if (res.respCode === '0000') {
 						// this.$message.success(res.respMsg)
 						this.objectList = res.objects
+						this.repositoryId = res.repositoryId
 					}else {
 						this.$message.warning(res.respMsg)
 					}
@@ -423,12 +445,12 @@
 				})
 			},
 			// 获取控件类型
-			queryAutVisibleOmClasses() {
+			queryAutVisibleOmClasses(id) {
 				Request({
-					url: 'aut/queryAutVisibleOmClasses',
+					url: '/aut/queryAutVisibleOmClasses',
 					method: 'POST',
 					params: {
-						id: '66'
+						id
 					}
 				}).then(res => {
 					if(res.respCode === '0000') {
@@ -458,6 +480,7 @@
 						if (res.respCode === '0000') {
 							this.$message.success(res.respMsg)
 							this.queryAllObjectForATransact()
+							this.maskFlag = true
 						}else {
 							this.$message.warning(res.respMsg)
 						}
@@ -489,6 +512,7 @@
 						this.$message.success(res.respMsg)
 						this.queryAllObjectForATransact()
 						this.objectName = ""
+						this.maskFlag = true
 					}else {
 						this.$message.warning(res.respMsg)
 					}
@@ -629,7 +653,7 @@
 				let object = _this.selectObject
 				// console.log('保存数据',element,this.repositoryId);
 				Request({
-					url: 'objectRepository/modifySingleObject',
+					url: '/objectRepository/modifySingleObject',
 					method: 'POST',
 					params: {
 						object,

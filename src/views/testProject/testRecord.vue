@@ -31,14 +31,12 @@
             <el-col :span="5">
               <el-form-item
                 label-width="90px"
-                :label="selectedQueryMethod === '按测试轮次'?'记录单状态':'执行轮次'"
-              >
+                :label="selectedQueryMethod === '按测试轮次'?'记录单状态':'执行轮次'">
                 <el-select
                   v-if="selectedQueryMethod === '按测试轮次'"
                   v-model="selectedStatus"
                   @clear="queryByTestRound"
-                  clearable
-                >
+                  clearable>
                   <el-option
                     v-for="(item,index) in recordStatus"
                     :key="index"
@@ -112,7 +110,8 @@
           <el-table-column min-width="20.4%" align="center" prop="sourceChannel" label="来源渠道"></el-table-column>
           <el-table-column min-width="9.61%" align="center" label="执行报告">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="viewReport(scope.row)">点击查看</el-button>
+              <span v-if="scope.row.recorderData === null" class="noRecord">无记录</span>
+              <a class="showRecordA" v-else type="primary" size="mini" @click.prevent="viewReport(scope.row)">点击查看</a>
             </template>
           </el-table-column>
           <el-table-column min-width="7.1%" align="center" label="操作">
@@ -185,18 +184,46 @@ export default {
       dialogVisible: false, //对话框是否可视
       formByBatch: {}, //批量执行查询的表单
       ids: [], // 丢弃选中的ids
+      // 通过执行id查询
+      runId: '', // 执行id
+      testPlanId: '', // 测试计划id
     };
   },
   created() {
-    this.selectAllTestround();
+    this.runId = this.$route.query.batchId
+    this.testPlanId = this.$route.query.testPlan
+    console.log('传递的参数',this.runId, this.testPlanId)
     this.selectAllScene();
     this.selectAllTestPlan();
     this.pagedBatchQueryScene();
     this.checkTableData();
+    this.pagedBatchQueryTestRecordByRunId()
   },
   methods: {
     checkTableData() {
       this.dialogVisible = this.tableData.length === 0;
+    },
+    // 通过测试计划查询
+    pagedBatchQueryTestRecordByRunId() {
+      Request({
+        url: '/testRecordController/pagedBatchQueryTestRecordByRunId',
+        method: 'POST',
+        params: {
+          currentPage: 1,
+          orderColumns: "casecode",
+          orderType: "asc",
+          pageSize: "20",
+          runId: this.runId,
+          testPlanId: this.testPlanId
+        }
+      }).then(res => {
+        if(!res.respCode === "0000") {
+          this.$message.warning('空记录！请尝试查询！')
+        }
+        this.tableData = res.list
+      }).catch(err => {
+        this.$message.warning('空记录！请尝试查询！')
+      })
     },
     //测试轮次查询更新数据
     queryByTestRound() {
@@ -265,17 +292,17 @@ export default {
         this.$message.warning('请选择要丢弃的项')
       }else {
         Request({
-          url: 'testRecordController/batchDelete',
+          url: '/testRecordController/batchDelete',
           method: 'POST',
           params: {
             ids: this.ids
           }
         }).then(res => {
-          this.$message.success('丢弃成功')
-          if(res.respMsg === '0000') {
+          if(res.respCode === '0000') {
             this.queryByTestRound();
+            this.$message.success(res.respMsg)
           }else {
-            this.$message.warning(res.respMsg)
+            this.queryByTestRound();
           }
         }).catch(err => {
           console.log('丢弃成功')
@@ -284,13 +311,21 @@ export default {
     },
     // 查看报告
     viewReport(row) {
-      this.$message.success("查看报告");
-      // console.log("行信息", row);
+      // 空白页打开
+      window.open("http://140.143.16.21:8080/" + row.resourcePath)
     },
     // 执行操作
     showDetail(row) {
-      this.$message.success("操作详情");
-      // console.log("操作行信息", row);
+      console.log('显示详情', row)
+      this.$router.push({
+        name: 'CaseOperation',
+        query: {
+          batchId: row.runId,
+          testPlanId: row.testPlanId,
+          testcaseId: row.caseId,
+          sceneId: row.sceneId
+        }
+      })
     },
     // 切换页数
     handleSizeChange(val) {
@@ -360,10 +395,8 @@ export default {
         }
       })
         .then(res => {
-          // console.log("pagedBatchQueryScene查询成功", res);
         })
         .catch(error => {
-          // console.log("pagedBatchQueryScene查询失败", error);
         });
     },
     // 处理复选框选中
@@ -379,32 +412,39 @@ export default {
 };
 </script>
 <style scoped>
-.formTop {
-  text-align: left;
-}
-.el-col {
-  height: 40px !important;
-}
-.buttons {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-}
-.failedStatus {
-  color: red;
-}
-.pagination {
-  text-align: center;
-  margin-top: 20px;
-}
-.dialogText {
-  margin-bottom: 30px;
-  padding-left: 20px;
-}
-.buttonBottom {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
-  margin-bottom: -15px;
-}
+  .formTop {
+    text-align: left;
+  }
+  .el-col {
+    height: 40px !important;
+  }
+  .buttons {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+  .failedStatus {
+    color: red;
+  }
+  .pagination {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .dialogText {
+    margin-bottom: 30px;
+    padding-left: 20px;
+  }
+  .buttonBottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-bottom: -15px;
+  }
+  .noRecord {
+    color: gray;
+  }
+  .showRecordA {
+    color: #409eff;
+    cursor: pointer;
+  }
 </style>

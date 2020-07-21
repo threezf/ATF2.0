@@ -55,10 +55,10 @@
                 </el-row>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="元素库" name="elementLibrary">
-                        <element-library :trans-id='transId + ""' :aut-id='autId+""'></element-library>
+                        <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""'></element-library>
                     </el-tab-pane>
                     <el-tab-pane label="基础脚本" name="template">
-                        <template-manage :trans-id='transId' :aut-id='autId' path-name="TestInfrastructure"></template-manage>
+                        <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure"></template-manage>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>
@@ -79,11 +79,9 @@
         },
         data() {
             return {
-                autId: undefined,
-                transId: undefined,
                 userId: undefined,
-                autSelectValue:'',
-                tranSelectValue:'',
+                autSelectValue: undefined,
+                tranSelectValue: undefined,
                 activeName: 'elementLibrary',
                 autSelectOptions:[],
                 tranSelectOptions:[],
@@ -93,11 +91,11 @@
         mounted(){
             let data = this.$route.query // 跳转源界面传递的行数据或新增测试功能点的对象数据
             console.log(data)
-            this.autId = data.autId
-            this.transId =  data.id
+            this.autSelectValue = data.autId
+            this.tranSelectValue =  data.id
             this.userId = sessionStorage.getItem('userId') || '3'
             this.getAuts();
-            this.getTran(this.autId);
+            this.getTran(this.autSelectValue,true);
         },
         methods: {
             handleClick(tab, event) {
@@ -110,23 +108,25 @@
                 }).then((res) => {
                     console.log(res)
                     this.autSelectOptions = res.autRespDTOList
-                    this.autSelectValue = this.autId
+                    this.autSelectValue = this.autSelectValue
                 },(err) => {
                     console.log(err)
                 }).catch((err) => {
                     console.log(err)
                 })
             },
-            getTran(id){
+            getTran(id , flag = false){
                 Request({
                     url: '/transactController/queryTransactsByAutId',
                     method: 'post',
                     params:{'id':id}
                 }).then((res) => {
-                    this.tranSelectValue = ''
                     this.tranSelectOptions = res.transactRespDTOs
-                    this.tranSelectValue = res.transactRespDTOs[0].id
-                    this.transChange(this.transId)
+                    if(!flag){
+                        this.tranSelectValue = ''
+                        this.tranSelectValue = res.transactRespDTOs[0].id
+                    }
+                    this.transChange(this.tranSelectValue)
                     console.log(res)
                 },(err) => {
                     console.log(err)
@@ -137,8 +137,8 @@
             autChange(data){
                 this.getTran(data)
             },
-            transChange(transId){
-                this.transSelected = this.tranSelectOptions.filter(v=>(transId == v.id))[0]
+            transChange(tranSelectValue){
+                this.transSelected = this.tranSelectOptions.filter(v=>(tranSelectValue == v.id))[0]
             },
             copySingleUITransact(){
                 console.log()

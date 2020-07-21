@@ -47,6 +47,7 @@
                         v-model="filterText">
                     </el-input>
                     <el-tree
+                        v-loading= 'treeLoading'
                         class="filter-tree"
                         :data="treeData"
                         :props="defaultProps"
@@ -294,6 +295,7 @@ export default {
           name:'',
           value:''
         },
+        treeLoading: false,
     }
   },
     watch: {
@@ -367,6 +369,7 @@ export default {
       // 获取元素UI树
       getEleTree(){
           const _this = this
+          this.treeLoading = true
             Request({
                 url: '/elementRepository/queryAllElementsForATransact',
                 method: 'post',
@@ -401,6 +404,9 @@ export default {
                 console.log(err)
             }).catch((err) => {
                 console.log(err)
+            }).finally(_=>{
+                
+            this.treeLoading = false
             })
       },
       //获取该测试系统下 所有的控件类型

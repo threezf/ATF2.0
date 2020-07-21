@@ -4546,7 +4546,7 @@ export default {
 	}
 };
 </script>
-<style>
+<style scoped>
 .scrollbar {
 	width: calc(100vw );
 }

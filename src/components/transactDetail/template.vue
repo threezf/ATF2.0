@@ -19,6 +19,7 @@
                 </el-button>
             </el-row>
              <el-table
+                v-loading='templateLoading'
                 border
                 ref="singleTable"
                 :data="templateList"
@@ -100,6 +101,7 @@
                       <el-table
                         border
                         ref="multipleTable"
+                        v-loading='templateLoading'
                         :data="templateInfo"
                         tooltip-effect="dark"
                         style="width: 100%"
@@ -312,12 +314,12 @@ export default {
             currentRow: null,
             multipleSelection:'',
             addItemShow:false,
+            templateLoading : false,
         }
     },
     watch: {
-        autId(){
-            if(this.autId && this.transId){
-            console.log('222')
+        transId(){
+            if(this.transId && this.autId){
                 this.getTemplates()
             }
         }
@@ -573,6 +575,7 @@ export default {
       // 获取脚本
       getTemplates(){
           console.log("getTemplates")
+          this.templateLoading = true
         Request({
             url: '/scriptTemplate/queryTemplateByTransId',
             method: 'post',
@@ -592,10 +595,13 @@ export default {
             this.$message(res.respMsg)
         }).catch((err) => {
             this.$message("网络开小差啦！")
+        }).finally(_=>{
+          this.templateLoading = false
         })
       },
       // 获取脚本详情，用于表格展示
       getTemplateInfo(){
+          this.templateLoading = true
         Request({
             url: '/scriptTemplate/queryScriptInfo',
             method: 'post',
@@ -626,6 +632,8 @@ export default {
             }
         },(err) => {
             this.templateInfo = []
+        }).finally(_=>{
+          this.templateLoading = false
         })
       },
       // 获取控件方法

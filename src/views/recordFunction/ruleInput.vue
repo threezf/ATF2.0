@@ -177,7 +177,7 @@ export default {
         }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     // .right-content{
     //     background-color: #f1f2f7;
     // }

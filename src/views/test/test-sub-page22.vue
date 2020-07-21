@@ -108,7 +108,7 @@
     }
 </script>
 
-<style >
+<style scoped>
 .menu__item {
 	display: block;
 	line-height: 20px;

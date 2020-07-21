@@ -1,7 +1,7 @@
 <template>
   <div class="elementDiv">
     <div class="leftCard">
-      <div class="title">元素库</div>
+      <div class="title">元素库</div> 
       <el-card>
         <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
         <el-row>
@@ -9,15 +9,15 @@
           <el-button type="primary" size="small" @click="removeUI">删除UI</el-button>
           <el-button type="primary" size="small" @click="addElement">添加元素</el-button>
           <el-button type="primary" size="small" @click="removeElement">删除元素</el-button>
-          <el-tree
-            :data="getList"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-            @node-expand="handleNodeExpand"
-            :filter-node-method="filterNode"
-            ref="tree"
-          ></el-tree>
         </el-row>
+        <el-tree
+          :data="getList"
+          :props="defaultProps"
+          @node-click="handleNodeClick"
+          @node-expand="handleNodeExpand"
+          :filter-node-method="filterNode"
+          ref="tree"
+        ></el-tree>
       </el-card>
     </div>
     <div class="rightCard">
@@ -44,7 +44,7 @@
                       type="primary"
                       size="small"
                       icon="el-icon-link"
-                      @click="linkObject"
+                      @click="linkObjectUI"
                     	>关联对象
 										</el-button>
                     <el-button
@@ -75,7 +75,7 @@
                     <el-option
                       v-for="(item,index) in omClassRespDTOList"
                       :key="index"
-                      :value="item.id"
+                      :value="String(item.id)"
                       :label="item.name"
                     ></el-option>
                   </el-select>
@@ -313,6 +313,15 @@
         </el-row>
       </el-form>
     </el-dialog>
+    <el-dialog class="objDialog" width="600px" title="对象库UI" :visible.sync="objectDialogVisibleUI">
+      <div class="objectDiv">
+        <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObjUI"></el-tree>
+      </div>
+      <el-row>
+        <el-button type="warning" size="small" plain @click="objectDialogVisibleUI=false">取消</el-button>
+        <el-button type="primary" size="small" @click="objectDialogVisibleUI=false">确认</el-button>
+      </el-row>
+    </el-dialog>
     <el-dialog class="objDialog" width="600px" title="对象库" :visible.sync="objectDialogVisible">
       <div class="objectDiv">
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObj"></el-tree>
@@ -342,6 +351,8 @@ export default {
   name: "ElementLib",
   data() {
     return {
+      transactId: '',
+      autId: '',
       getList: [], // 元素库数据
       filterText: "", // 搜索需要的数据
       getObjects: [], // 获取的对象库数据
@@ -351,6 +362,7 @@ export default {
       uiName: "", //UI名称
       uiId: "", // UI的id
       expandUiId: "", // 展开时的UIID
+      objectDialogVisibleUI: false, // UI的对话框显示
       dialogTitles: ["添加UI", "添加元素"],
       dialogIndex: 0,
       dialogVisible: false, // 添加数据的对话框
@@ -411,22 +423,14 @@ export default {
     }
   },
   props: {
-    list: Array,
     objects: Array,
-    transactId: {
-      type: Number,
-      default: 0
-    },
-    repositoryid: {
+    testCaseId: {
       type: Number,
       default: 0
     }
   },
   created() {
-    this.getObjects = this.objects;
-    this.queryAllElementsForATransact();
-    this.repositoryId = this.repositoryid;
-    this.queryAutVisibleOmClasses()
+    this.getSingleTestCaseInfo() 
   },
   watch: {
     filterText(val) {
@@ -437,6 +441,29 @@ export default {
     }
   },
   methods: {
+    // 获取单个用例详情数据
+    getSingleTestCaseInfo() {
+      let _this = this
+      Request({
+        url: "/testcase/getSingleTestCaseInfo",
+        method: "POST",
+        params: {
+          id: this.testCaseId
+        }
+      }).then(res => {
+        if (res.respCode === "0000") {
+          _this.transactId = res.testcaseViewRespDTO.transId
+          _this.autId = res.testcaseViewRespDTO.autId
+          _this.queryAllElementsForATransact()
+          _this.queryAutVisibleOmClasses()
+        } else {
+          this.$message.warning(res.respMsg);
+        }
+      })
+      .catch(err => {
+        this.$message.error("连接失败");
+      });
+    },
     // 查询全部元素与UI
     queryAllElementsForATransact() {
       Request({
@@ -449,6 +476,7 @@ export default {
         .then(res => {
           if (res.respCode === "0000") {
             this.getList = res.uis;
+            this.repositoryId = res.elementRepositoryId
             // this.$message.success(res.respMsg);
           } else {
             this.$message.warning(res.respMsg);
@@ -661,13 +689,25 @@ export default {
           });
       }
     },
+    /**
+     * UI库
+     */
+    // 关联对象
+    linkObjectUI() {
+      this.objectDialogVisibleUI = true
+    },
+    // 节点点击事件
+    nodeClickObjUI(val) {
+      console.log("UI节点点击", val)
+      this.relateIdentifyObjectId = val.objectId
+    },
     // 保存对象库关联
     modifySingleUI() {
       Request({
         url: "/elementRepository/modifySingleUI",
         method: "POST",
         params: {
-          relateIdentifyObjectId: this.selectObjectId,
+          relateIdentifyObjectId: this.relateIdentifyObjectId,
           repositoryId: this.repositoryId,
           uiId: this.uiId,
           uiName: this.uiName
@@ -689,16 +729,16 @@ export default {
     // 对象库
     nodeClickObj(val) {
 			this.selectObjectId = val.objectId;
-			this.element.objectName = val.objectName;
+			this.element.objectName = val.objectId;
 			console.log('设置对象库', val, this.selectObjectId, this.element.objectName);
     },
     // 获取控件类型
     queryAutVisibleOmClasses() {
       Request({
-        url: 'aut/queryAutVisibleOmClasses',
+        url: '/aut/queryAutVisibleOmClasses',
         method: 'POST',
         params: {
-          id: 66
+          id: this.autId
         }
       }).then(res => {
         if(res.respCode === '0000') {
@@ -714,6 +754,7 @@ export default {
     },
     // 解除关联
     removeLink() {
+      this.relateIdentifyObjectId = ""
       this.selectObjectId = "";
       this.element.relateIdentifyObjectId = "";
     },
@@ -763,11 +804,9 @@ export default {
     objectSureEle() {
       this.objectDialogVisibleEle = false;
       if (this.selectedIndex === 1) {
-        this.element.relateParentIdentifyObjectId = this.tempName;
-        this.selectedParentId = this.tempId;
+        this.element.relateParentIdentifyObjectId = this.tempId;
       } else {
-        this.element.relateIdentifyObjectId = this.tempName;
-        this.selectedLinkId = this.tempId;
+        this.element.relateIdentifyObjectId = this.tempId;
       }
     },
     // 删除按钮
@@ -865,8 +904,6 @@ export default {
     // 保存数据
     saveObject() {
       let _this = this
-      _this.element.relateIdentifyObjectId = _this.selectedLinkId
-      _this.element.relateParentIdentifyObjectId = _this.selectedParentId
       Request({
         url: "/elementRepository/modifySingleElement",
         method: "POST",
@@ -934,6 +971,7 @@ export default {
     }
     .el-card {
       height: 660px;
+      overflow: auto;
       .tipDiv {
         padding: 0;
         margin: 0;
