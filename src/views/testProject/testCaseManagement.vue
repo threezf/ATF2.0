@@ -68,27 +68,28 @@
 					</el-button>
 				</el-row>
 		        <el-row style="padding-top:20px;padding-bottom:10px">
-				   <el-col :span="4">
-                    <el-select v-model="selectValue" placeholder="请选择" size="small">
-                        <el-option
-                        v-for="item in selectOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4" style="padding-left:20px">
-                    <el-input  v-model="selectInfo" placeholder="请输入筛选内容" size="small"></el-input>
-                </el-col>
-                <el-col :span="4" :offset='1'>
-                    <el-button
-                        size="small"
-                        @click='searchAll'
-                        type="primary">
-                        搜索
-                    </el-button>
-                </el-col>
+							<search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
+<!--				   <el-col :span="4">-->
+<!--                    <el-select v-model="selectValue" placeholder="请选择" size="small">-->
+<!--                        <el-option-->
+<!--                        v-for="item in selectOptions"-->
+<!--                        :key="item.value"-->
+<!--                        :label="item.label"-->
+<!--                        :value="item.value">-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
+<!--                </el-col>-->
+<!--                <el-col :span="4" style="padding-left:20px">-->
+<!--                    <el-input  v-model="selectInfo" placeholder="请输入筛选内容" size="small"></el-input>-->
+<!--                </el-col>-->
+<!--                <el-col :span="4" :offset='1'>-->
+<!--                    <el-button-->
+<!--                        size="small"-->
+<!--                        @click='searchAll'-->
+<!--                        type="primary">-->
+<!--                        搜索-->
+<!--                    </el-button>-->
+<!--                </el-col>-->
 				</el-row>
 					<el-scrollbar style="width:100%">
 						<el-table
@@ -2757,10 +2758,6 @@
 						class="upload-demo in-file"
 						action=""
 						:on-change="changeFile"
-						:on-preview="handlePreview"
-						:on-remove="handleRemove"
-						:before-remove="beforeRemove"
-						multiple
 						:file-list="fileList">
 						<el-button size="small" type="primary"
 							>选择文件</el-button
@@ -3359,9 +3356,11 @@
 <script>
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
-
+import searchTestCase from "@/components/searchTestcase/index";
+import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
 	mixins: [VueMixins], // 混入
+	components: { ElSlPanel },
 	data() {
 		return {
 			addForm: {
@@ -3638,6 +3637,7 @@ export default {
 			selectValue:"caseCompositeType",
 			selectInfo:"",
 			fileList: [], //文件列表
+			fileListM:[],//用于导入
 			idList: [],//一级表格选择的流程用例
             subIdList: [],//二级表格选择的流程节点
 			selectList:[],//一级表格选择的全部用例
@@ -3677,7 +3677,8 @@ export default {
 			buttonM: true,
 			buttonS: true,
 			modelFlag: 0,
-			row:{}
+			row:{},
+			conditionList:[]
 		};
 	},
 	computed: {
@@ -3707,46 +3708,63 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		//筛选用例
-		searchAll(){
-			var _this=this
-			var filterType=1
-			var conditionList=[]
-			conditionList[0]={propertyName: this.selectValue,compareType:"C",propertyValueList:[this.selectInfo]}
-			conditionList[1]={propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]}
-			Request({
-				url: "/testcase/pagedQueryTestCaseByCondition",
-				method: "post",
-				params: {
-					filterType:filterType,
-					conditionList: conditionList,
-					currentPage: this.currentPage,
-					pageSize: this.pageSize,
-					orderType:"asc",
-					orderColumn: 'id',
-                    caseLibId: sessionStorage.getItem('caselibId')
-				}
-			})
-				.then(
-					res => {
-						_this.testCaseList = res.testcaseViewRespDTOList;
-                        _this.currentPage=1;
-                        _this.tt = res.totalCount;
-                        _this.totalPage = res.totalPage;
-                        _this.pageSize = _this.pageSize;
-
-					},
-					err => {
-						this.$alert('搜索用例失败', '失败', {
-                      confirmButtonText: '确定',
-					   });
-					}
-				)
-				.catch(err => {
-					this.$alert('搜索用例失败', '失败', {
-                      confirmButtonText: '确定',
-					   });
-				});
+		// //筛选用例
+		// searchAll(){
+		// 	var _this=this
+		// 	var filterType=1
+    //   var conditionListM=[]
+		// 	this.conditionList.forEach(item=>{
+		// 		conditionListM.push(item)
+		// 	})
+		// 	// conditionListM=this.conditionList
+		// 	// //  conditionList[0]={propertyName: "caseCompositeType",compareType:"=",propertyValueList:['1']}
+		// 	conditionListM.push({propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]})
+		// 	// console.log(this.conditionList)
+		// 	Request({
+		// 		url: "/testcase/pagedQueryTestCaseByCondition",
+		// 		method: "post",
+		// 		params: {
+		// 			filterType:filterType,
+		// 			conditionList: conditionListM,
+		// 			currentPage: this.currentPage,
+		// 			pageSize: this.pageSize,
+		// 			orderType:"asc",
+		// 			orderColumn: 'id',
+		// 			caseLibId: sessionStorage.getItem('caselibId')
+		// 		}
+		// 	})
+		// 		.then(
+		// 			res => {
+		// 				_this.testCaseList = res.testcaseViewRespDTOList;
+    //                     _this.currentPage=1;
+    //                     _this.tt = res.totalCount;
+    //                     _this.totalPage = res.totalPage;
+    //                     _this.pageSize = _this.pageSize;
+		// 				console.log(_this.conditionList)
+		//
+		// 			},
+		// 			err => {
+		// 				this.$alert('搜索用例失败', '失败', {
+    //                   confirmButtonText: '确定',
+		// 			   });
+		// 			}
+		// 		)
+		// 		.catch(err => {
+		// 			this.$alert('搜索用例失败', '失败', {
+    //                   confirmButtonText: '确定',
+		// 			   });
+		// 		});
+		// },
+		//展示筛选结果
+		searchCase(val){
+			this.testCaseList = val
+			this.currentPage=1
+		},
+		searchCase2(val){
+			this.totalCount = val;
+			this.totalPage = Math.ceil(
+				this.totalCount / this.pageSize
+			);
 		},
 		//展示查看和修改页面表单
 		showInfo(row,flag){
@@ -3761,23 +3779,19 @@ export default {
 			   console.log(this.row)
 			}
 			this.addForm= {
-				actionList: row.actionList,
 				autId: row.autId,
 				author: row.authorName,
-				automaton: row.automatonName,
-				caseCompositeType: row.caseCompositeType,
 				casecode: row.casecode,
 				caseproperty: row.caseProperty.toString(),
 				casetype:row.caseType.toString(),
-				categoryTeam: row.categoryTeam,
 				checkpoint: row.checkPoint,
 				datarequest: row.dataRequest,
 				executeMethod:row.executeMethod.toString(),
 				executor: row.executorName,
 				expectresult: row.expectResult,
 				functionModule: row.functionModule,
-				modifyChannel: row.modifyChannel,
-				modifyChannelNo: row.modifyChannelNo,
+				// modifyChannel: row.modifyChannel,
+				// modifyChannelNo: row.modifyChannelNo,
 				note: row.note,
 				prerequisites: row.preRequisites,
 				priority: row.priority.toString(),
@@ -3793,18 +3807,29 @@ export default {
 				useStatus:row.useStatus.toString(),
 				version: row.version
 			}
+			for(let item in this.addForm){
+				if(this.addForm[item]){
+					this.addForm[item]=this.addForm[item].toString()
+				}else{
+					this.addForm[item]=''
+				}
+			}
 		},
 		//修改用例信息
 		changeCaseInfo(){
 			var _this= this
+
 			console.log(typeof _this.addForm.caseproperty)
 			Request({
 				url: "/testcase/modifySingleTestCaseInfo",
 				method: "post",
 				params: {
-					..._this.addForm,
-				    transId: _this.row.transName==_this.addForm.transId?_this.row.transId:_this.addForm.transId,
-					id: _this.row.id
+					...this.addForm,
+					transId: _this.row.transName==_this.addForm.transId?_this.row.transId.toString():_this.addForm.transId.toString(),
+					id: _this.row.id.toString(),
+					author: _this.row.authorId.toString(),
+					reviewer: _this.row.reviewerId.toString(),
+					executor: _this.row.executorId.toString(),
 				}
 			})
 				.then(
@@ -4335,7 +4360,7 @@ export default {
 			this.dialogVisibleI = true;
 		},
 		changeFile(file) {
-			this.fileList.push(file);
+			this.fileListM.push(file);
 		},
 		handleRemove(file, fileList) {
 			var index = fileList.indexOf(file);
@@ -4349,7 +4374,7 @@ export default {
 		},
 		//实际导入函数
 		uploadTemp() {
-			let file = this.fileList[0];
+			let file = this.fileListM[0];
 			let param = new FormData();
 			var caseLibId = sessionStorage.getItem("caselibId");
 			param.append("file", file.raw);
@@ -4515,10 +4540,13 @@ export default {
 		toUploadRecord() {
 			this.$router.push({ path: "uploadRecord" });
 		}
+	},
+	components: {
+		"search": searchTestCase
 	}
 };
 </script>
-<style>
+<style scoped>
 .scrollbar {
 	width: calc(100vw );
 }

@@ -39,11 +39,15 @@ axios.interceptors.response.use(function (response) {
     //     console.log(response)
     //     return response
     // }
+    console.log('返回',response)
     if (! +response.status === 200) {
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
     if (response.data.respCode === '0000') {
+        return response
+    }
+    if(response.data.success) {
         return response
     }
     let message = `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}`

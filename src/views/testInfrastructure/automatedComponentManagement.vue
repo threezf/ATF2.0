@@ -32,7 +32,7 @@
 							</el-button>
 						</el-col>
 						<el-col :span="6" :offset="1">
-							<el-form-item label="控件名称" label-width="30%">
+							<el-form-item label="控件名称" label-width="30%" style="margin-top: 7px">
 								<el-select v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
@@ -44,7 +44,7 @@
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
+						<el-col :span="1" style="margin-left: 10px">
 							<el-button
 								@click="dialogVisibleA=!dialogVisibleA"
 								icon="el-icon-plus"
@@ -403,7 +403,7 @@
 									:lazy="true"
 									:load="loadTreeNode"
 									@check-change="handleCheckChange">
-									<span class="custom-tree-node" slot-scope="{ node, data }">
+									<span class="custom-tree-node" slot-scope="{ node}">
 										<span>{{ node.label }}</span>
 									</span>
 								</el-tree>
@@ -1093,7 +1093,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.custom-tree-node {
 		flex: 1;
 		display: flex;

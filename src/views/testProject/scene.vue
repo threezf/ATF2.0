@@ -320,7 +320,8 @@
                     params: {
                         modifierId: this.currentUserId,
                         id: this.selectedId,
-                        ...this.form
+                        nameMedium: this.form.senceName,
+                        descShort: this.form.senceDesc
                         }
                 }).then((res) => {
                     this.$message(res.respMsg)

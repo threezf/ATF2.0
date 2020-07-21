@@ -81,7 +81,7 @@ export default {
         },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped> 
     .tableAuto{
         width:90%;
         margin-left:40px;

@@ -430,7 +430,11 @@
       //查询记录单
       queryRecord(row) {
         this.$router.push({
-          name: 'TestRecord'
+          name: 'TestRecord',
+          query: {
+            batchId: row.batchId,
+            testPlan: row.testPlan
+          }
         })
       },
       //归档

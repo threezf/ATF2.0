@@ -350,7 +350,7 @@ export default {
   margin-left: 3px;
 }
 .dialogInput {
-  width: 240px;
+  max-width: 240px;
 }
 .hrStyleLeft {
   float: left;
