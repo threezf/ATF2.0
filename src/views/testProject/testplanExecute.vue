@@ -431,14 +431,48 @@
     </el-dialog>
     <!-- /.modal -->
 
-    <div class="modal fade" id="testplan_modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-width" role="document">
+    <el-dialog
+        title="测试计划管理"
+        :visible.sync="testPlanDialog"
+        width="50%">
+        <el-row>
+            <el-col>
+                <el-button @click='showAddModal()'>
+                    新增
+                </el-button>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-table
+                stripe
+                :data="testPlanArray"
+                style="width: 100%">
+                <el-table-column
+                    prop="nameMedium"
+                    label="名称"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    prop="descMedium"
+                    label="描述"
+                    width="180">
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                    <el-buttonn size="mini" @click="showUpdateModal(scope.row.id)">修改</el-buttonn>
+                </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
+        <el-row>
+            <el-pagination @size-change="turnToPage(1)" @current-change="(val)=>{turnToPage(val)}" :current-page="page.currentPage"
+                :page-sizes="[5, 10, 20, 50]"
+                :page-size="page.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="page.totalPage">
+            </el-pagination>
+        </el-row>
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">测试计划管理</h4>
-                </div>
                 <div class="modal-body">
                     <div class="top-bar">
                         <button type="button" class="btn btn-white" data-toggle='modal' @click='showAddModal()'><i
@@ -550,9 +584,9 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+
     </div>
+    </el-dialog>
     <!--新增测试轮次 -->
     <div class='modal fade' tabindex='-1' role='dialog' id='addTestRoundId' aria-hidden='true'
         aria-labelledby='addTestRound' data-toggle='modal'>
@@ -606,64 +640,59 @@
         </div>
     </div>
     <!--新增模态框-->
-    <div class="modal fade" data-toggle="modal" id="addTestPlan" tabindex="-1" role="dialog" aria-labelledby="testPlanLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="testPlanLabel">新增测试计划</h4>
+    
+    <el-dialog
+        title="新增测试计划"
+        :visible.sync="addTestPlanDialog"
+        width="50%">
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="testplan-name" class="col-sm-2 control-label">测试计划名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" v-model="addRowData.nameMedium" class="form-control" autocomplete="off">
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label for="testplan-name" class="col-sm-2 control-label">测试计划名称</label>
-                            <div class="col-sm-10">
-                                <input type="text" v-model="addRowData.nameMedium" class="form-control" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="testplan-desc" class="col-sm-2 control-label">测试计划描述</label>
-                            <div class="col-sm-10">
-                                <input type="text" v-model="addRowData.descMedium" class="form-control" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group display" v-show="1 === editType">
-                            <label class="col-sm-2 control-label">测试阶段</label>
-                            <div class="col-sm-10">
-                                <select name="testPhaseId" id="" class="form-control" v-model="addRowData.testPhaseId">
-                                    <option v-for="testPhase in testPhaseArray" :value="testPhase.id" :key="testPhase.id">
-                                        {{testPhase.name}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group display" v-show="1 === editType"  >
-                            <label class="col-sm-2 control-label">测试轮次</label>
-                            <div class="col-sm-10">
-                                <select name="testRoundId" v-model="addRowData.testRoundId" style="width:80%;height: 34px;"
-                                        filterable placeholder="请选择">
-                                    <option
-                                            v-for="testRound in testRoundArray"
-                                            :key="testRound.id"
-                                            :label="testRound.name"
-                                            :value="testRound.id">
-                                    </option>
-                                </select>
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle='modal'
-                                        style="margin-left: 20px;" data-target="#addTestRoundId">新增
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label for="testplan-desc" class="col-sm-2 control-label">测试计划描述</label>
+                    <div class="col-sm-10">
+                        <input type="text" v-model="addRowData.descMedium" class="form-control" autocomplete="off">
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                    <button class="btn btn-success" type="button" id="btn-add" @click="add()">确定</button>
+                <div class="form-group display" v-show="1 === editType">
+                    <label class="col-sm-2 control-label">测试阶段</label>
+                    <div class="col-sm-10">
+                        <select name="testPhaseId" id="" class="form-control" v-model="addRowData.testPhaseId">
+                            <option v-for="testPhase in testPhaseArray" :value="testPhase.id" :key="testPhase.id">
+                                {{testPhase.name}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+                <div class="form-group display" v-show="1 === editType"  >
+                    <label class="col-sm-2 control-label">测试轮次</label>
+                    <div class="col-sm-10">
+                        <select name="testRoundId" v-model="addRowData.testRoundId" style="width:80%;height: 34px;"
+                                filterable placeholder="请选择">
+                            <option
+                                    v-for="testRound in testRoundArray"
+                                    :key="testRound.id"
+                                    :label="testRound.name"
+                                    :value="testRound.id">
+                            </option>
+                        </select>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle='modal'
+                                style="margin-left: 20px;" data-target="#addTestRoundId">新增
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </div>
+        <div class="modal-footer">
+            <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+            <button class="btn btn-success" type="button" id="btn-add" @click="add()">确定</button>
+        </div>
+    </el-dialog>
     <!--出错信息提示-->
     <div class='modal fade' tabindex='-1' role='dialog' id='runInterrupt' aria-hidden='true'     aria-labelledby='addTestRound' data-toggle='modal'>
         <div class='modal-dialog '>
@@ -728,23 +757,12 @@
     import Request from '../../libs/request'
     import SideBar from '@/components/side-bar'
     import vueMixins from '@/libs/vueMixins.js'
+    import { initialAddRowData, initialAddRoundRowData } from './conf/testplanExecute.js'
     export default {
         components: {
         },
         mixins: [vueMixins],
 	    data(){
-            const initialAddRowData = {
-                nameMedium: '',
-                descMedium: '',
-                testPhaseId: '',
-                testRoundId: ''
-            };
-            const initialAddRoundRowData = {
-                roundName: '',
-                roundDesc: '',
-                recordmanagementflag: 1,
-                timeexecutesetting: ''
-            };
             return {
                 // tooltipMessage:'',
                 goToPage: 0,
@@ -765,7 +783,7 @@
                 testPlans: [], 
                 testrounds: [],
                 // save the values which is selected by users and will be send to the back end
-                testPlanId: sessionStorage.getItem('testPlanId') || 1210,
+                testPlanId: sessionStorage.getItem('testPlanId') || undefined,
                 // the cases and scenes obtained from back end
                 testCaseList: [],
                 testSceneList:[],
@@ -855,6 +873,8 @@
                 interruptData: {},
                 isPageNumberError: false,
                 senceDialog: false,
+                testPlanDialog: false,
+                addTestPlanDialog: false,
 
             }
         },
@@ -867,7 +887,7 @@
             //     console.log('asdasdasdasdasdasdas')
             //     console.log(this.exeImgs)
             // }
-            var tempTestPlanId = sessionStorage.getItem('testPlanId') || 1210;
+            var tempTestPlanId = sessionStorage.getItem('testPlanId') || undefined;
             _this.caselibId = sessionStorage.getItem('caselibId') || 1241;
             var getPlans = new Promise((resolve, reject) => {
                 console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
@@ -882,7 +902,7 @@
                     console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                         if (data.respCode === '0000') {
                             if (data.testPlanEntityList && (data.testPlanEntityList.length>0)) {
-                                if(tempTestPlanId==null){		//从执行记录查询跳转过来所需
+                                if(tempTestPlanId==undefined){		//从执行记录查询跳转过来所需
                                     _this.testPlanId = data.testPlanEntityList[0].id;
                                     console.log("我来自查询出来的");
                                 } else{
@@ -1360,18 +1380,8 @@
                     //}
                 }
             },
-            testPlanManager: function() {		
-                // Vac.ajax({
-                // 	url:  'sceneController/selectAllScene',
-                // 	data: { caseLibId: this.caselibId },
-                // 	success: function(data){
-                // 		if(data.respCode == '0000'){
-                // 			_this.allscenes = data.scenequeryDtoList;
-                // 			$('testplan_modal').modal('show');
-                // 		}
-                // 	}
-                // });
-                $('#testplan_modal').modal("show");
+            testPlanManager: function() {
+                this.testPlanDialog = true
             },
             addScene: function() {
                 var _this = this;
@@ -1895,11 +1905,12 @@
             showAddModal() {
                 this.addRowData = {...initialAddRowData};
                 this.editType = 1;
-                $('#addTestPlan').on('show.bs.modal',function(event){
-                    var modal = $(this);
-                    modal.find('.modal-title').text("新增测试计划");
-                })
-                $("#addTestPlan").modal("show");
+                this.addTestPlanDialog = true
+                // $('#addTestPlan').on('show.bs.modal',function(event){
+                //     var modal = $(this);
+                //     modal.find('.modal-title').text("新增测试计划");
+                // })
+                // $("#addTestPlan").modal("show");
             },
             // showDeleteConfirm() {
             //     if ('' === this.selectTestPlan) {
@@ -2042,7 +2053,7 @@
         }
     }
 </style>
-    <style lang="less" >
+<style lang="less" >
         .exe-info{
             padding-left: 10px;
         }
@@ -2182,494 +2193,494 @@
         }
 
 
-@globleRed: #FF6C60;
+    @globleRed: #FF6C60;
 
-.row {
-    margin:0;
-    .breadcrumb {
-		margin-bottom: 0px;
-	}
-}
+    .row {
+        margin:0;
+        .breadcrumb {
+            margin-bottom: 0px;
+        }
+    }
 
 
-#main-content{
-	position: relative;
-	display:flex;
-	flex-direction: column;
-	padding-top:0px;
-	.strench {
-		flex: 1 1 auto;
-		background-color: #fff;
-	}
-	.content-wrapper{
-		position: relative;
-		height: calc(100% - 110px);
-		flex: 1 0 auto;
-		flex-direction: column;
-		display: flex;
-		overflow: hidden;
-		margin-bottom: 250px;
-		transition: margin-bottom .5s;
+    #main-content{
+        position: relative;
+        display:flex;
+        flex-direction: column;
+        padding-top:0px;
+        .strench {
+            flex: 1 1 auto;
+            background-color: #fff;
+        }
+        .content-wrapper{
+            position: relative;
+            height: calc(100% - 110px);
+            flex: 1 0 auto;
+            flex-direction: column;
+            display: flex;
+            overflow: hidden;
+            margin-bottom: 250px;
+            transition: margin-bottom .5s;
 
-		.main{
-			position: relative;
-			display: flex;
-			flex-direction: column;
-			flex: 1 1 auto;
-			overflow: auto;
-			// background-color: #fff;
-			font-size: 13px;
-			.top-bar {
-				padding: 10px 20px;
-			}
-			.btn {
-				// padding: 3px 6px;
-				// font-size: 13px;
-			}
-			.route-position {
-				flex: 0 0 auto;
-				padding: 5px 20px;
-				background-color: #fff;
-				font-size: 14px;
-				color: #416CFF;
-				a {
-					color:  #416CFF;
-				}
-			}
-			.top-bar{
-				position: sticky;
-				top: 0;
-				flex: 0 0 auto;
-				width: 100%;
-				background-color: #f1f2f7;
-			}
-			.form-input {
-				// height: 0;
-				display: none;
-				background-color: #f1f2f7;
-				&>div {
-					float: left;
-					margin: 0 20px 0 0;
-				}
-				label {
-					font-weight: normal;
-				}
-				input[type=number], .exe-scope{
-					border-radius: 5px;
-    				border: 1px solid #ddd;
-    				padding: 5px 10px;
-				}
-			}
-			.form-input-show {
-				margin: 10px 0 5px 0;
-				padding: 10px 20px;
-				// height: auto;
-				display: block;
-			}
-			.main-content {
-				position: relative;
-				flex: 1 0 auto;
-				overflow: auto;
-				background-color: #fff;
-				padding: 0px 0px;
-				min-width: 100%;
-				.check-all-case {
-					display: inline-block;
-				}
-				.scene-list-wrapper {
-					position: relative;
-					.scene-list-title {
-						position: relative;
-						top: 5px;
-					}
-					.btn {
-						padding: 3px 6px;
-						margin: 5px 3px;
-					}
-				}
-				.case-lib {
-					// margin-bottom: 20px;
-					// border: 1px dashed #ddd;
-					padding: 5px;
-					background-color: #fafafa;
-					// width: max-content;
-					min-width: 100%;
-					display: flex;
-					flex-direction: row;
-					.checkbox-wrapper {
-						display: flex;
-						height: 100%;
-						width: 50px;
-						vertical-align: top;
-						padding: 9px 5px 0px 5px;
-						input {
-							float: left;
-							margin: 0;
-						}
-					}
-					.case-wrapper {
-						// display: flex;
-						// flex-direction: row;
-						// width: max-content;
-					}
-				}
-				.case-lib:last-child {
-					margin-bottom: 0;
-				}
-				.case {
-					margin-right: 5px;
-					@caseWidth: 155px;
-					// flex: 1 0 auto;
-					// display: flex;
-					display: inline-block;
-					margin-bottom: 0px;
-					margin-right: 20px;
-					min-width: 50px;
-					width: @caseWidth;
-					border: 1px solid #ddd5d5;
-					border-radius: 5px;
-					@caseHeaderheight: 30px;
-					
-					height: 30px;
-					&:first-of-type {
-						margin-left: 0;
-					}
-					.case-header {
-						height: @caseHeaderheight;
-						padding: 0 0px;
-						position: relative;
-						// background-color: #f5f5f5;
-						background: transparent;
-						border-top-left-radius: 5px;
-						border-top-right-radius: 5px;
-						flex: 0 0 auto;
-						input[type="checkbox"] {
-							visibility: hidden;
-							position: relative;
-							top: -8px;
-						}
-						img {
-							display: inline-block;
-							position: relative;
-							top: -11px;
-							left: 2px;
-							width: 16px;
-							height: 16px;
-							margin: 0 auto;
-							vertical-align: middle;
-						}
-						p {
-							display: inline-block;
-							line-height: @caseHeaderheight;
-							margin: 0px 0 0 0px;
-							overflow-x: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis; 
-						}
-						.width-limit{
-							width : 80px
-						}
-					}
-					.case-main {
-						.view-case {
-							position: relative;
-							top: 5px;
-							cursor: pointer;
-							width:3000px;
-						}
-					}
-					.case-footer {
-						padding-left: 20px;
-						font-size: 16px;
-						line-height: @caseHeaderheight;
-						height: @caseHeaderheight;
-						width:auto;
-					}
-				}
+            .main{
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+                overflow: auto;
+                // background-color: #fff;
+                font-size: 13px;
+                .top-bar {
+                    padding: 10px 20px;
+                }
+                .btn {
+                    // padding: 3px 6px;
+                    // font-size: 13px;
+                }
+                .route-position {
+                    flex: 0 0 auto;
+                    padding: 5px 20px;
+                    background-color: #fff;
+                    font-size: 14px;
+                    color: #416CFF;
+                    a {
+                        color:  #416CFF;
+                    }
+                }
+                .top-bar{
+                    position: sticky;
+                    top: 0;
+                    flex: 0 0 auto;
+                    width: 100%;
+                    background-color: #f1f2f7;
+                }
+                .form-input {
+                    // height: 0;
+                    display: none;
+                    background-color: #f1f2f7;
+                    &>div {
+                        float: left;
+                        margin: 0 20px 0 0;
+                    }
+                    label {
+                        font-weight: normal;
+                    }
+                    input[type=number], .exe-scope{
+                        border-radius: 5px;
+                        border: 1px solid #ddd;
+                        padding: 5px 10px;
+                    }
+                }
+                .form-input-show {
+                    margin: 10px 0 5px 0;
+                    padding: 10px 20px;
+                    // height: auto;
+                    display: block;
+                }
+                .main-content {
+                    position: relative;
+                    flex: 1 0 auto;
+                    overflow: auto;
+                    background-color: #fff;
+                    padding: 0px 0px;
+                    min-width: 100%;
+                    .check-all-case {
+                        display: inline-block;
+                    }
+                    .scene-list-wrapper {
+                        position: relative;
+                        .scene-list-title {
+                            position: relative;
+                            top: 5px;
+                        }
+                        .btn {
+                            padding: 3px 6px;
+                            margin: 5px 3px;
+                        }
+                    }
+                    .case-lib {
+                        // margin-bottom: 20px;
+                        // border: 1px dashed #ddd;
+                        padding: 5px;
+                        background-color: #fafafa;
+                        // width: max-content;
+                        min-width: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        .checkbox-wrapper {
+                            display: flex;
+                            height: 100%;
+                            width: 50px;
+                            vertical-align: top;
+                            padding: 9px 5px 0px 5px;
+                            input {
+                                float: left;
+                                margin: 0;
+                            }
+                        }
+                        .case-wrapper {
+                            // display: flex;
+                            // flex-direction: row;
+                            // width: max-content;
+                        }
+                    }
+                    .case-lib:last-child {
+                        margin-bottom: 0;
+                    }
+                    .case {
+                        margin-right: 5px;
+                        @caseWidth: 155px;
+                        // flex: 1 0 auto;
+                        // display: flex;
+                        display: inline-block;
+                        margin-bottom: 0px;
+                        margin-right: 20px;
+                        min-width: 50px;
+                        width: @caseWidth;
+                        border: 1px solid #ddd5d5;
+                        border-radius: 5px;
+                        @caseHeaderheight: 30px;
+                        
+                        height: 30px;
+                        &:first-of-type {
+                            margin-left: 0;
+                        }
+                        .case-header {
+                            height: @caseHeaderheight;
+                            padding: 0 0px;
+                            position: relative;
+                            // background-color: #f5f5f5;
+                            background: transparent;
+                            border-top-left-radius: 5px;
+                            border-top-right-radius: 5px;
+                            flex: 0 0 auto;
+                            input[type="checkbox"] {
+                                visibility: hidden;
+                                position: relative;
+                                top: -8px;
+                            }
+                            img {
+                                display: inline-block;
+                                position: relative;
+                                top: -11px;
+                                left: 2px;
+                                width: 16px;
+                                height: 16px;
+                                margin: 0 auto;
+                                vertical-align: middle;
+                            }
+                            p {
+                                display: inline-block;
+                                line-height: @caseHeaderheight;
+                                margin: 0px 0 0 0px;
+                                overflow-x: hidden;
+                                white-space: nowrap;
+                                text-overflow: ellipsis; 
+                            }
+                            .width-limit{
+                                width : 80px
+                            }
+                        }
+                        .case-main {
+                            .view-case {
+                                position: relative;
+                                top: 5px;
+                                cursor: pointer;
+                                width:3000px;
+                            }
+                        }
+                        .case-footer {
+                            padding-left: 20px;
+                            font-size: 16px;
+                            line-height: @caseHeaderheight;
+                            height: @caseHeaderheight;
+                            width:auto;
+                        }
+                    }
 
-				// testphase css
-				table#testphase-table {
-					td,th {
-						text-align: center;
-					}
-					tr :first-child {
-						width: 50px;
-					}
-					tr :nth-of-type(2){
-						width: 30%;
-					}
-				}
-			}
-			.main-content2 {
-				position: relative;
-			}
-		}
-	}
-	.bigMarginBottom {
-		margin-bottom: 0px;
-	}
-	.smallMarginBottom {
-		margin-bottom: 0px;
-	}
-	.panel{
-		position:fixed;
-		bottom: 0px;
-		// left: 0;
-		flex: 1 0 auto;
-		height: 200px;
-		width: calc(100% - 180px);
-		border-radius: 5px;
-		margin-left: 5px;
-		margin-right: 5px;
-		margin-bottom: 0;
-		overflow: hidden;
-		// transition: 0.5s height;
-		z-index: 3;
-		.panel-heading{
-			height: 34px;
-			border-top-left-radius: 5px;
-			border-top-right-radius: 5px;
-			background-color: #f5f5f5;
-			font-size: 14px;
-			margin: 0 0px;
-			padding:5px 10px;
-		}
-		.panel-body{
-			// height: 166px;
-			overflow: auto;
-			button {
-				// background-color: #ccc;
-				color: #444;
-				i {
-					color: @globleRed;
-				}
-			}
-			.timeArrange {
-				div {
-					margin-top: 10px;
-					button {
-						float: right;
-						margin-right: 50px;
-					}
-				}
-			}
-			.triggerSetting {
-				.table-wrapper {
-					margin: 20px 0;
-				}
-				table {
-					width: 100%;
-					th,td{
-						text-align: center;
-					}
-					
-				}
-				.table {
-					tr {
-						th:first-child, td:first-child{
-							width: 50px;
-						}
-						th:nth-child(2){
-							width: 200px;
-						}
-						th:nth-child(4){
-							width: 100px;
-						}
-					}
-				}
-				.triggerSave{
-					float: right;
-					margin-right: 20px;
-				}
+                    // testphase css
+                    table#testphase-table {
+                        td,th {
+                            text-align: center;
+                        }
+                        tr :first-child {
+                            width: 50px;
+                        }
+                        tr :nth-of-type(2){
+                            width: 30%;
+                        }
+                    }
+                }
+                .main-content2 {
+                    position: relative;
+                }
+            }
+        }
+        .bigMarginBottom {
+            margin-bottom: 0px;
+        }
+        .smallMarginBottom {
+            margin-bottom: 0px;
+        }
+        .panel{
+            position:fixed;
+            bottom: 0px;
+            // left: 0;
+            flex: 1 0 auto;
+            height: 200px;
+            width: calc(100% - 180px);
+            border-radius: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-bottom: 0;
+            overflow: hidden;
+            // transition: 0.5s height;
+            z-index: 3;
+            .panel-heading{
+                height: 34px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                background-color: #f5f5f5;
+                font-size: 14px;
+                margin: 0 0px;
+                padding:5px 10px;
+            }
+            .panel-body{
+                // height: 166px;
+                overflow: auto;
+                button {
+                    // background-color: #ccc;
+                    color: #444;
+                    i {
+                        color: @globleRed;
+                    }
+                }
+                .timeArrange {
+                    div {
+                        margin-top: 10px;
+                        button {
+                            float: right;
+                            margin-right: 50px;
+                        }
+                    }
+                }
+                .triggerSetting {
+                    .table-wrapper {
+                        margin: 20px 0;
+                    }
+                    table {
+                        width: 100%;
+                        th,td{
+                            text-align: center;
+                        }
+                        
+                    }
+                    .table {
+                        tr {
+                            th:first-child, td:first-child{
+                                width: 50px;
+                            }
+                            th:nth-child(2){
+                                width: 200px;
+                            }
+                            th:nth-child(4){
+                                width: 100px;
+                            }
+                        }
+                    }
+                    .triggerSave{
+                        float: right;
+                        margin-right: 20px;
+                    }
 
-			}
-			.processControl {
-				p {
-					margin: 0;
-				}
-				.wrapper-div {
-					margin: 10px 0;
-					.strategy-group {
-						margin: 10px 0;
-						.group-name {
-							display: inline-block;
-							width: 100px;
-						}
-						.select-wrapper {
-							// display: inline-block;
-						}
-						.select-group {
-							display: inline-block;
-							margin: 0 5px;
-							select {
-								padding: 3px 5px;
-							}
-						}
-					}
-				}
-				.processControl-footer {
-					.processControlSave {
-						float: right;
-					}
-				}
-			}
-			.dataPool {
-				.table-wrapper {
-					margin: 20px 0;
-				}
-				table {
-					width: 100%;
-					th {
-						text-align: center;
-					}
-					td {
-						text-align: center;
-					}
-				}
-				.triggerSave{
-					float: right;
-					margin-right: 20px;
-				}
+                }
+                .processControl {
+                    p {
+                        margin: 0;
+                    }
+                    .wrapper-div {
+                        margin: 10px 0;
+                        .strategy-group {
+                            margin: 10px 0;
+                            .group-name {
+                                display: inline-block;
+                                width: 100px;
+                            }
+                            .select-wrapper {
+                                // display: inline-block;
+                            }
+                            .select-group {
+                                display: inline-block;
+                                margin: 0 5px;
+                                select {
+                                    padding: 3px 5px;
+                                }
+                            }
+                        }
+                    }
+                    .processControl-footer {
+                        .processControlSave {
+                            float: right;
+                        }
+                    }
+                }
+                .dataPool {
+                    .table-wrapper {
+                        margin: 20px 0;
+                    }
+                    table {
+                        width: 100%;
+                        th {
+                            text-align: center;
+                        }
+                        td {
+                            text-align: center;
+                        }
+                    }
+                    .triggerSave{
+                        float: right;
+                        margin-right: 20px;
+                    }
 
-			}
-		}
-	}
-	@media (max-width: 768px) {
-		.panel {
-			width: 100%;
-		}
-	}
-	.panel.height43px {
-		// height: 34px;
-		height: 0px;
-		// top: 0;
-	}
-	.panel.height200px{
-		height: 200px;
-		// top: -0;
-	}
-	.copy-right{
-		// position: fixed;
-		// left: 0;
-		bottom: 0;
-		height: 50px;
-		// width: 100%;
-		bottom: 0;
-	}
+                }
+            }
+        }
+        @media (max-width: 768px) {
+            .panel {
+                width: 100%;
+            }
+        }
+        .panel.height43px {
+            // height: 34px;
+            height: 0px;
+            // top: 0;
+        }
+        .panel.height200px{
+            height: 200px;
+            // top: -0;
+        }
+        .copy-right{
+            // position: fixed;
+            // left: 0;
+            bottom: 0;
+            height: 50px;
+            // width: 100%;
+            bottom: 0;
+        }
 
-	#test-options{
-		overflow: hidden;
-		.form-group{
-			margin-bottom: 10px;
-		}
-	}
-	#testround-main{
-		.test-control{
-			margin: 10px;
-		}
-		.list-wrapper{
-			// display: flex;
-			margin-top: 10px;
-			.list-title{
-				flex: 0 0 auto;
-				vertical-align: top;
-				margin-right: 10px;
-			}
-			.case-list, .scene-list {
-				// display: flex;
-				height: auto;
-				// flex: 0 0 auto;
-				border: 1px dashed #ddd;
-				// padding: 10px;
-				overflow: hidden;
-				box-sizing: border-box;
-				transition: height 100ms;
-				.case-item {
-					display: inline-block;
-					flex: 1 1 auto;
-					margin: 10px 10px 0 0;
+        #test-options{
+            overflow: hidden;
+            .form-group{
+                margin-bottom: 10px;
+            }
+        }
+        #testround-main{
+            .test-control{
+                margin: 10px;
+            }
+            .list-wrapper{
+                // display: flex;
+                margin-top: 10px;
+                .list-title{
+                    flex: 0 0 auto;
+                    vertical-align: top;
+                    margin-right: 10px;
+                }
+                .case-list, .scene-list {
+                    // display: flex;
+                    height: auto;
+                    // flex: 0 0 auto;
+                    border: 1px dashed #ddd;
+                    // padding: 10px;
+                    overflow: hidden;
+                    box-sizing: border-box;
+                    transition: height 100ms;
+                    .case-item {
+                        display: inline-block;
+                        flex: 1 1 auto;
+                        margin: 10px 10px 0 0;
 
-				}
-			}
-		}
-	}
-}
-.modal {
-	.modal-header {
-		// margin: 5px 10px;
-		padding: 8px 10px;
-		h4 {
-			font-size: 16px;
-		}
-	}
-	.modal-footer {
-		padding: 8px 10px;
-		button {
-			padding: 3px 8px;
-		}
-	}
-}
-.alert{
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%,-50%);
-	width: 300px;
-	z-index: 1041;
-	padding: 0;
-	border: 1px solid #ddd;
-	header {
-		height: 35px;
-		padding: 0px 10px;
-		background-color: #00A8B3;
-		span {
-			font-size: 16px;
-			color: #fff;
-			line-height: 35px;
-		}
-		button{
-			height: 35px;
-			i {
-				line-height: 35px;
-			}
-		}
-		
-	}
-	main {
-		min-height: 100px;
-		padding: 10px 5px;
-		border-bottom: 1px solid #ddd;
-		p {
-			font-size: 16px;
-			color: #b94a48;
-		}
-	}
-	footer {
-		text-align: center;
-		button {
-			display: block;
-			padding: 5px;
-			margin: 0 auto;
-		}
-		button.cancelConfirm, button.okConfirm {
-			display: inline-block;
-			padding: 5px 10px;
-			margin: 10px;
-		}
-	}
-	background-color: #fff;
-}
-.show {
-	display: none;
-}
-.hide {
-	display: block;
-}
-.runnerclass p{
-	margin: 0%;
-	width:100%;
-	height:100%;
-	vertical-align: middle;
-	padding-top: 6px
-}
-    </style>
+                    }
+                }
+            }
+        }
+    }
+    .modal {
+        .modal-header {
+            // margin: 5px 10px;
+            padding: 8px 10px;
+            h4 {
+                font-size: 16px;
+            }
+        }
+        .modal-footer {
+            padding: 8px 10px;
+            button {
+                padding: 3px 8px;
+            }
+        }
+    }
+    .alert{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        width: 300px;
+        z-index: 1041;
+        padding: 0;
+        border: 1px solid #ddd;
+        header {
+            height: 35px;
+            padding: 0px 10px;
+            background-color: #00A8B3;
+            span {
+                font-size: 16px;
+                color: #fff;
+                line-height: 35px;
+            }
+            button{
+                height: 35px;
+                i {
+                    line-height: 35px;
+                }
+            }
+            
+        }
+        main {
+            min-height: 100px;
+            padding: 10px 5px;
+            border-bottom: 1px solid #ddd;
+            p {
+                font-size: 16px;
+                color: #b94a48;
+            }
+        }
+        footer {
+            text-align: center;
+            button {
+                display: block;
+                padding: 5px;
+                margin: 0 auto;
+            }
+            button.cancelConfirm, button.okConfirm {
+                display: inline-block;
+                padding: 5px 10px;
+                margin: 10px;
+            }
+        }
+        background-color: #fff;
+    }
+    .show {
+        display: none;
+    }
+    .hide {
+        display: block;
+    }
+    .runnerclass p{
+        margin: 0%;
+        width:100%;
+        height:100%;
+        vertical-align: middle;
+        padding-top: 6px
+    }
+</style>

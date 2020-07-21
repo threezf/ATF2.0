@@ -247,7 +247,7 @@
                         </el-button>
                         <el-button
                             size="small" 
-                            @click='dataTemplate'
+                            @click='插入函数'
                             type="primary">
                             插入函数
                         </el-button>
@@ -1161,21 +1161,37 @@
                 console.log(this.conditionList)
                 Request({
                     url: '/dataCenter/downloadDataFile',
-                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                    method: 'get',
+                    // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                    method: 'post',
                     params:{
                         "conditionList": this.conditionList,
-                        "executorId": this.executorId,
-                        "caseLibId": this.caseLibId,
                         "autId": this.selectedTemplate.autId,
                         "transId": this.selectedTemplate.transId,
                         "scriptId": this.selectedTemplate.id
-                    }
-                }).then(res=>{
-                    console.log("=_=")
-                }).catch(err=>{
-                    console.log('getExpectationById失败',err)
-                });
+                    },
+                    // _type: 'file'
+                }).then(res => {
+                    let url = 'http://140.143.16.21:8080/' + res.filePath.split('/webapps/')[1]
+                    window.location.href = url
+                    // let url = window.URL.createObjectURL(new Blob([res]))
+                    // download(url);
+                    
+                    // const blob = new Blob([res])
+                    // console.log(blob)
+                    // return blob
+                })
+                // .then(data => {
+                //     let blobUrl = window.URL.createObjectURL(data);
+                //     download(blobUrl);
+                // })
+                // function download(blobUrl) {
+                //     const a = document.createElement('a');
+                //     a.style.display = 'none';
+                //     a.download = '数据模板.xlsx';
+                //     a.href = blobUrl;
+                //     a.click();
+                //     document.body.removeChild(a);
+                // }
             },
             exportData(){
                 this.exportDialog = true

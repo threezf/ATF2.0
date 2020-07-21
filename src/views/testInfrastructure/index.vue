@@ -5,17 +5,22 @@
   <div class="page-outer">
     <side-bar path-name="TestInfrastructure"></side-bar>
     <div class="right-content">
-      <router-view />
+        <progress-bar></progress-bar>
+        <div >
+            <router-view />
+        </div>
     </div>
   </div>
 </template>
 
 <script>
 import SideBar from "@/components/side-bar";
+    import progressBar from '@/components/progressBar'
 export default {
   name: "index",
   components: {
-    SideBar
+    SideBar,
+    progressBar
   },
   data() {
     return {};
