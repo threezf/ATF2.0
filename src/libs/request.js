@@ -74,7 +74,7 @@ const Request = function (options) {
             url:  '/atfcloud2.0a' + options.url,
             method: options.method,
         }
-        
+
         if (options.method == 'get') {
             axiosParams.params = options.params
         } else {
@@ -84,7 +84,7 @@ const Request = function (options) {
             console.log('request',res.data)
             res = res.data;
             resolve(res)
-            
+
         }).catch((err) => {
             reject(err)
         })

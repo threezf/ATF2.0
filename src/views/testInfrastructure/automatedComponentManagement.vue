@@ -1392,6 +1392,9 @@
 	.el-drawer.rtl {
 		overflow: scroll;
 	}
+
+</style>
+<style>
 	.tableEdit .el-input__inner{
 		border: 0
 	}

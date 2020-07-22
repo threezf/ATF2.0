@@ -364,7 +364,7 @@
 							@size-change="handleSizeChange"
 							@current-change="handleCurrentChange"
 							:current-page="currentPage"
-							:page-sizes="[8, 10, 20, 50]"
+							:page-sizes="[5, 10, 20, 50]"
 							:page-size="pageSize"
 							layout="total, sizes, prev, pager, next, jumper"
 							:total="totalCount"
@@ -2757,7 +2757,8 @@
 					<el-upload
 						class="upload-demo in-file"
 						action=""
-						:on-change="changeFile"
+						:on-success="changeFile"
+						:on-remove="handleRemove"
 						:file-list="fileList">
 						<el-button size="small" type="primary"
 							>选择文件</el-button
@@ -4359,19 +4360,25 @@ export default {
 		uploadCase() {
 			this.dialogVisibleI = true;
 		},
-		changeFile(file) {
+		changeFile(response,file) {
 			this.fileListM.push(file);
 		},
 		handleRemove(file, fileList) {
-			var index = fileList.indexOf(file);
-			this.fileList.splice(index, 1);
+			var index=0
+			for(var i=0;i<fileList.length;i++){
+				if(file.name==fileList[i].name){
+					index=i
+					break
+				}
+			}
+			this.fileListM.splice(index, 1);
 		},
 		handlePreview(file) {
 			console.log(file);
 		},
-		beforeRemove(file, fileList) {
-			return this.$confirm(`确定移除 ${file.name}？`);
-		},
+		// beforeRemove(file, fileList) {
+		// 	// return this.$confirm(`确定移除 ${file.name}？`);
+		// },
 		//实际导入函数
 		uploadTemp() {
 			let file = this.fileListM[0];
@@ -4380,7 +4387,11 @@ export default {
 			param.append("file", file.raw);
 			param.append("caseLibId", caseLibId);
 			param.append("uploadUserId", 3);
-			console.log(param.get("file"));
+			if(file.name.charAt(1)=="t"){
+				param.append("templateType", 1);
+			}else{
+				param.append("templateType", 0);
+			}
 			var _this = this;
 			Request({
 				url: "/testcase/batchImportTestcase",
@@ -4465,15 +4476,16 @@ export default {
 		//实际导出函数
 		exportURL(){
 			var exportIdList=[];
-			for(var i=0;i<this.selectList.length;i++){
-                 this.selectList[i]=this.selectList[i]+""
-				 console.log( this.selectList[i])
-			 }
+			// for(var i=0;i<this.selectList.length;i++){
+      //            this.selectList[i]=this.selectList[i]+""
+			//  }
 
+      this.selectList=this.selectList.toString()
+			console.log(this.selectList)
            Request({
-				url: "/testcase/exportTestCase",
+				url: "/testcase/newExportTestCase",
 				method: "get",
-				params: {testCaseIdList:this.selectList}
+				params: {testCaseIdListString:this.selectList}
 			})
 				.then(res => {
 					if (res.respCode == "0000") {
@@ -4546,7 +4558,7 @@ export default {
 	}
 };
 </script>
-<style scoped>
+<style >
 .scrollbar {
 	width: calc(100vw );
 }
