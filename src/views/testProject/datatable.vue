@@ -1160,7 +1160,7 @@
                 let qs = require('qs');
                 console.log(this.conditionList)
                 Request({
-                    url: '/dataCenter/downloadDataFile',
+                    url: '/dataCenter/newDownloadDataFile',
                     // headers: { 'content-type': 'application/x-www-form-urlencoded' },
                     method: 'post',
                     params:{
