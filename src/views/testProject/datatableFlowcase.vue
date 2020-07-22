@@ -13,7 +13,7 @@
 					</el-button>
 				</el-row>
 				<el-card class="leftCard">
-					<div class="flowTitle">流程用例</div>
+					<!-- <div class="flowTitle">流程用例</div> -->
 					<el-table
 						:data="flowTestcaseInfos"
 						class="tableLeft"
@@ -326,7 +326,7 @@
 						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					this.$message.error('网络连接失败')
+					this.$message.error(err)
 				})
 			},
 			// 查询流程测试用例
@@ -348,7 +348,7 @@
 						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					this.$message.error('网络连接失败')
+					this.$message.error(err)
 				});
 			},
 			//查询测试任务
@@ -365,7 +365,7 @@
 						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					this.$message.error('网络连接失败')
+					this.$message.error(err)
 				});
 			},
 			//
@@ -383,7 +383,7 @@
 						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					this.$message.error('网络连接失败')
+					this.$message.error(err)
 				});
 			},
 			// 获取流程用例列表及信息
@@ -433,7 +433,7 @@
 						this.$message.warning(res.respMsg)
 					}
 				}).catch(err => {
-					this.$message.error('网络连接失败')
+					this.$message.error(err)
 				})
 			},
 			// 查看脚本
@@ -647,8 +647,12 @@
 			justify-content: flex-end;
 		}
 	}
+	.el-table__row {
+		cursor: pointer;
+	}
 	.el-table__header-wrapper {
 		display: none;
+		font-size: 20px  !important;
 	}
 	.el-table__body-wrapper {
 		cursor: pointer;

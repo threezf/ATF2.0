@@ -26,7 +26,7 @@ export default new Router({
             component: Login,
             meta: {
                 name: '登录',
-                hide: false, //在目录结构上隐藏，不在菜单栏外显
+                hide: true, //在目录结构上隐藏，不在菜单栏外显
             },
         },
         {
@@ -48,7 +48,7 @@ export default new Router({
         }, 
         {
             path: '/',
-            redirect: '/index',
+            redirect: '/login',
             name: 'default',
             meta: {
                 name: '首页'
