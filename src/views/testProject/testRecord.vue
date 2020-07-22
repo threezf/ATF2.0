@@ -299,7 +299,7 @@ export default {
           }
         }).then(res => {
           if(res.respCode === '0000') {
-            this.queryByTestRound();
+            this.pagedBatchQueryTestRecordByRunId();
             this.$message.success(res.respMsg)
           }else {
             this.queryByTestRound();
