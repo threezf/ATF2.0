@@ -19,6 +19,7 @@
     "echarts": "^4.6.0",
     "element-resize-detector": "^1.2.1",
     "element-ui": "^2.4.11",
+    "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",
     "jquery-ui": "^1.12.1",
     "mini-css-extract-plugin": "^0.8.0",
@@ -27,7 +28,8 @@
     "v-charts": "^1.19.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuedraggable": "^2.23.2"
+    "vuedraggable": "^2.23.2",
+    "xlsx": "^0.16.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -66,6 +68,7 @@
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
     "sass-loader": "^8.0.2",
+    "script-loader": "^0.7.2",
     "scss": "^0.2.4",
     "scss-loader": "^0.0.1",
     "selenium-server": "^3.0.1",

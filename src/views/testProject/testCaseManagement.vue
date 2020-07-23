@@ -2813,7 +2813,17 @@
 						ref="outputForm"
 						prop="outputForm"
 						label-width="80px"
+						method="POST"
+						:action="exportUrl"
 					>
+					<div hidden>
+						<el-input type="text" 
+							name="testCaseIdList" 
+							v-for="(id,index) in selectList" 
+							:value="id" 
+							:key="index">
+						</el-input>
+				</div>
 						<el-form-item label="导出范围" prop="output">
 							<el-input
 								:disabled="true"
@@ -2824,9 +2834,8 @@
 							<el-button
 								size="small"
 								type="primary"
-								@click="exportURL"
-								>导出</el-button
-							>
+								native-type="submit"
+								>导出</el-button>
 							<el-button
 								size="small"
 								type="primary"
@@ -3359,6 +3368,7 @@ import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import searchTestCase from "@/components/searchTestcase/index";
 import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
+import { exportExcel } from '@/libs/utils.js'
 export default {
 	mixins: [VueMixins], // 混入
 	components: { ElSlPanel },
@@ -3679,7 +3689,8 @@ export default {
 			buttonS: true,
 			modelFlag: 0,
 			row:{},
-			conditionList:[]
+			conditionList:[],
+			exportUrl: 'http://140.143.16.21:8080/atfcloud2.0a/testcase/exportTestCase'
 		};
 	},
 	computed: {
@@ -4473,45 +4484,23 @@ export default {
 			}
 
 		},
-		//实际导出函数
+		//实际导出函数（待寻找原因）
 		exportURL(){
 			var exportIdList=[];
-			// for(var i=0;i<this.selectList.length;i++){
-      //            this.selectList[i]=this.selectList[i]+""
-			//  }
 
-      this.selectList=this.selectList.toString()
+			this.selectList=this.selectList.toString()
+			let qs = require('qs')
 			console.log(this.selectList)
-           Request({
-				url: "/testcase/newExportTestCase",
-				method: "get",
-				params: {testCaseIdListString:this.selectList}
+      Request({
+				url: "/testcase/exportTestCase",
+				method: "POST",
+				params: qs.stringify({
+					testCaseIdList: this.selectList
+				}),
+				responseType: 'arraybuffer'
 			})
 				.then(res => {
-					if (res.respCode == "0000") {
-						this.dialogVisibleI = false;
-						_this.getCase();
-						this.$alert("导出成功", "导出情况", {
-							confirmButtonText: "确定",
-							callback: action => {
-								this.$message({
-									type: "info",
-									message: `action: ${action}`
-								});
-							}
-						});
-					} else {
-						_this.failMSG = res.respMsg;
-						this.$alert("导出失败", "导出情况", {
-							confirmButtonText: "确定",
-							callback: action => {
-								this.$message({
-									type: "info",
-									message: `action: ${action}`
-								});
-							}
-						});
-					}
+					exportExcel(res, '批量用例导出.xls')
 				})
 				.catch(err => {
 					console.log(err);
