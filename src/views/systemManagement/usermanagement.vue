@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col :span="4" :offset='1'>
                     <el-button
-                        size="small" 
+                        size="small"
                         @click='getUsers(1)'
                         type="primary">
                         搜索
@@ -57,7 +57,7 @@
                     property="dept"
                     width="120"/>
                 <el-table-column
-                    label="固定电话"
+                    label="手机号"
                     property="tel"
                     width="120"/>
                 <el-table-column
@@ -90,7 +90,7 @@
                     </el-pagination>
                 </el-col>
             </div>
-            <el-dialog  
+            <el-dialog
                 :title="modelName"
                 :visible.sync="dialogVisible"
                 :before-close="handleClose"
@@ -128,9 +128,6 @@
                     </el-form-item>
                     <el-form-item   label="手机号" prop="tel">
                         <el-input :disabled='disabled'  v-model="form.tel"  ></el-input>
-                    </el-form-item>
-                    <el-form-item   label="固定电话" prop="phone" >
-                        <el-input :disabled='disabled'  v-model="form.phone"></el-input>
                     </el-form-item>
                     <el-form-item   label="邮箱" prop="email">
                         <el-input :disabled='disabled'  v-model="form.email" ></el-input>
@@ -242,10 +239,10 @@
                         label:'角色',
                         value:'roleCn'
                     },
-                    {
-                        label:'固定电话',
-                        value:'tel'
-                    },
+									  {
+									  	label:'手机号',
+									  	value:'tel'
+									  },
                     {
                         label:'部门',
                         value:'dept'

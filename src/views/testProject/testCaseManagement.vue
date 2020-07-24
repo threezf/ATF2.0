@@ -109,13 +109,15 @@
 											scope.row.caseCompositeType == '2'
 										"
 									>
-										<el-scrollbar style="width:100%">
 											<el-table
 												:data="subCaseList"
 												@selection-change="
 													subHandleSelectionChange
 												"
+												row-key="id"
+												class="tabPosition"
 											>
+												<el-table-column width="48" ><i class="el-icon-rank" style="color:#F56C6C;font-size:16px;cursor: pointer" ></i></el-table-column>
 												<el-table-column
 													type="selection"
 
@@ -256,7 +258,6 @@
 													</template>-->
 												</el-table-column>
 											</el-table>
-										</el-scrollbar>
 									</div>
 								</template>
 							</el-table-column>
@@ -3359,6 +3360,7 @@ import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import searchTestCase from "@/components/searchTestcase/index";
 import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
+import Sortable from 'sortablejs';
 export default {
 	mixins: [VueMixins], // 混入
 	components: { ElSlPanel },
@@ -3679,7 +3681,8 @@ export default {
 			buttonS: true,
 			modelFlag: 0,
 			row:{},
-			conditionList:[]
+			conditionList:[],
+			timer:null,
 		};
 	},
 	computed: {
@@ -3707,7 +3710,9 @@ export default {
 		this.getAutSystem();
 		this.getUsers();
 	},
-	mounted() {},
+	mounted() {
+
+	},
 	methods: {
 		// //筛选用例
 		// searchAll(){
@@ -3777,7 +3782,6 @@ export default {
 				this.titleFlag=2
 			   this.changeFlag=true
                this.row=row
-			   console.log(this.row)
 			}
 			this.addForm= {
 				autId: row.autId,
@@ -3819,8 +3823,6 @@ export default {
 		//修改用例信息
 		changeCaseInfo(){
 			var _this= this
-
-			console.log(typeof _this.addForm.caseproperty)
 			Request({
 				url: "/testcase/modifySingleTestCaseInfo",
 				method: "post",
@@ -3901,7 +3903,6 @@ export default {
 		showElement(type) {
 			var _this = this;
 			_this.caseNodeNum++;
-			console.log(_this.caseNodeNums);
 			var caseNodeNum = {
 				num: _this.caseNodeNum,
 				status: true,
@@ -4481,7 +4482,6 @@ export default {
 			//  }
 
       this.selectList=this.selectList.toString()
-			console.log(this.selectList)
            Request({
 				url: "/testcase/newExportTestCase",
 				method: "get",
@@ -4526,7 +4526,42 @@ export default {
 		   }
 		   this.hostId=this.subMultipleSelection[0].caseId
           },
-
+     //行拖拽流程节点
+		rowDrop() {
+			const tbody = document.querySelector( ".el-table__expanded-cell tbody" )
+			const _this = this
+			// tbody.style.position="relative"
+			Sortable.create(tbody, {
+				filter: ".el-input__inner",  // 不需要拖动的元素
+				preventOnFilter: false, //默认true 是否禁用默认绑定的方法
+				animation: 180,// 0.18s 动画时间
+				delay: 0,// 按住、松开0毫秒后触发效果
+				dropOnEmpty:true,
+				onEnd({ newIndex, oldIndex }) {
+					const currRow = _this.subCaseList.splice(oldIndex, 1)[0]
+					_this.subCaseList.splice(newIndex, 0, currRow)
+					_this.subCaseList.push(_this.subCaseList.pop())
+					var subIdList=[]
+					for(var i=0;i<_this.subCaseList.length;i++){
+						subIdList.push(_this.subCaseList[i].id)
+					}
+					Request({
+						url: "/testcase/changeFlowNodeOrder",
+						method: "post",
+						params: {
+							caseLibId: _this.subCaseList[0].caseId,
+							testCaseActionIds:subIdList
+						}
+					})
+						.then(res => {
+							console.log("拖拽成功")
+						})
+						.catch(err => {
+							console.log(err);
+						});
+				}
+			})
+		},
 		//展示流程节点
 		subShow(row, rowList) {
 			if (row.caseCompositeType != 1) {
@@ -4538,13 +4573,20 @@ export default {
 				})
 					.then(res => {
 						_this.subCaseList = res.testcaseActionViewList;
-						console.log(_this.subCaseList);
+
 					})
 					.catch(err => {
 						console.log(err);
 					});
+				clearTimeout(this.timer); //清除延迟执行
+				this.timer = setTimeout(()=>{  //设置延迟执行
+					this.rowDrop()
+				},1000);
 			}
+
+
 		},
+
 		// 添加行的索引
 		tableRowClassName({ row, rowIndex }) {
 			row.index = rowIndex;
@@ -4594,9 +4636,9 @@ export default {
 .el-table__expanded-cell[class*="cell"] {
 	padding: 0;
 }
-.el-table__expanded-cell .el-scrollbar__wrap {
-	padding-left: 48px;
-}
+/*.el-table__expanded-cell .el-scrollbar__wrap {*/
+/*	padding-left: 48px;*/
+/*}*/
 .el-table__expanded-cell .el-table th,
 .el-table__expanded-cell .el-table tr {
 	background-color: rgba(64, 158, 255, 0.15);
@@ -4605,5 +4647,8 @@ export default {
 .el-table__expanded-cell .el-table th.is-leaf {
 	border-bottom: 1px solid #c0c4cc;
 	border-right: 1px solid #c0c4cc;
+}
+.tabPosition{
+	position:relative
 }
 </style>
