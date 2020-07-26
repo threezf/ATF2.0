@@ -5,7 +5,7 @@
     <div class="page-outer">
         <side-bar path-name="TestProject"></side-bar>
         <div class="right-content">
-            <progress-bar></progress-bar>
+            <progress-bar v-show="isShow"></progress-bar>
             <div >
                 <router-view />
             </div>
@@ -23,11 +23,11 @@
         },
         data() {
             return {
-
+                isShow: true
             }
         },
         methods: {
-
+            
         }
     }
 </script>

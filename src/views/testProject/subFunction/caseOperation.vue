@@ -372,6 +372,11 @@ export default {
     };
   },
   created() {
+    let isShow = this.$route.query.flag 
+    if(isShow) {
+      this.$parent.isShow = false
+    }
+    console.log('父组件', this.$parent.isShow)
     // 获取跳转传递的数据
     this.batchId = this.$route.query.batchId
     this.testPlanId = this.$route.query.testPlanId

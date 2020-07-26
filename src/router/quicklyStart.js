@@ -6,7 +6,8 @@ import quicklyStart from '@/views/quicklyStart/index'
 import quicklyTransact from '@/views/quicklyStart/quicklyTransact'
 import quicklyElement from '@/views/quicklyStart/quicklyElement'
 import quicklyTemplate from '@/views/quicklyStart/quicklyTemplate'
-
+import quicklyRun from '@/views/quicklyStart/quicklyRun'
+import quicklyResult from '@/views/quicklyStart/quicklyResult'
 export default {
     path: '/quicklyStart',
     name: 'QuicklyStart',
@@ -40,6 +41,24 @@ export default {
             component: quicklyTemplate,
             meta: {
                 name: '配置用例',
+                parent: 'QuicklyStart'
+            }
+        },
+        {
+            path: 'quicklyRun',
+            name: 'QuicklyRun',
+            component: quicklyRun,
+            meta: {
+                name: '执行用例',
+                parent: 'QuicklyStart'
+            }
+        },
+        {
+            path: 'quicklyResult',
+            name: 'QuicklyResult',
+            component: quicklyResult,
+            meta: {
+                name: '查看结果',
                 parent: 'QuicklyStart'
             }
         }
