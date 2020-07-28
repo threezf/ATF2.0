@@ -2,8 +2,10 @@
 const initialAddRowData = {
     nameMedium: '',
     descMedium: '',
-    testPhaseId: '',
-    testRoundId: ''
+    testPhaseId: 3,
+    creatorId: "3",
+    testRoundId: 11,
+    caseLibId: undefined
 };
 const initialAddRoundRowData = {
     roundName: '',

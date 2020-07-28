@@ -201,7 +201,7 @@
                                     场景内的用例串行执行，场景之间并行执行
                                 </span>
                             </header>
-                            <div id="sortable_sceneslist" style="margin-top: 20px;">
+                            <div class="sortable_sceneslist" style="margin-top: 20px;">
                                 <div class="scene-list-wrapper  -wrapper" style="padding:0px 20px 10px 20px" v-for="(scene,index) in testSceneList" :key='index'>
                                     <i class="icon-move handle2" style="color: #5a3c3c;"></i>&nbsp;&nbsp;
                                     <div class="checkbox-wrapper"
@@ -459,7 +459,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                    <el-buttonn size="mini" @click="showUpdateModal(scope.row.id)">修改</el-buttonn>
+                    <el-button size="mini" @click="showUpdateModal(scope.row)">修改</el-button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -472,120 +472,6 @@
                 :total="page.totalPage">
             </el-pagination>
         </el-row>
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="top-bar">
-                        <button type="button" class="btn btn-white" data-toggle='modal' @click='showAddModal()'><i
-                                class="icon-plus"></i>
-                            新增
-                        </button>
-                        <!-- <button class="btn btn-white" @click="showDeleteConfirm"><i class="icon-remove"></i>
-                        删除</button>
-                        <button class="btn btn-white" @click="showUpdateModal"><i class="icon-edit"></i>
-                        修改</button> -->
-                    </div>
-                    <div class="main-content" style="padding: 20px;">
-                        <table id="testplan-table" class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <!-- <th scope="col" class="text-center" style="width: 5%;">操作</th> -->
-                                <!-- <th scope="col" class="text-center"  data-sort="desc" data-order="id" onclick="resort(this);">id<span class="icon-sort-up" aria-hidden="true"></span></th> -->
-                                <th scope="col" class="text-center">名称</th>
-                                <th scope="col" class="text-center">描述</th>
-                                <!--<th scope="col" class="text-center">测试阶段</th>-->
-                                <!--<th scope="col" class="text-center">测试轮次</th>-->
-                                <th scope="col" class="text-center">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(testPlan,index) in testPlanArray"  :key="'testPlan'+index">
-                                <!-- <td style="width: 5%;">
-                                    <input  type="radio" v-bind:value="testPlan.id" @click="changeSelect(testPlan.id)" v-model="selectTestPlan">
-                                </td> -->
-                                <!-- <td>{{testPlan.id}}</td> -->
-                                <td>{{testPlan.nameMedium}}</td>
-                                <td>{{testPlan.descMedium}}</td>
-                                <!--<td>{{testPlan.testPhaseName}}</td>-->
-                                <!--<td>{{testPlan.testRoundName}}</td>-->
-                                <td class="center " width="">
-                                    <button class="btn btn-xs btn-success" @click="showUpdateModal(testPlan.id)">修改</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <!-- 分页 -->
-                        <div class="row">
-                            <div class="col-lg-12 text-center">
-                                <div class="pagination-wrap" v-if="page.totalPage!=0">
-                                    <div class="num">
-                                        <select size="1" name="sample_1_length" aria-controls="sample_1"
-                                                class="form-control" v-model="page.pageSize" @change='turnToPage(1)'>
-                                            <option value="5">5条/页</option>
-                                            <option value="10" selected>10条/页</option>
-                                            <option value="20">20条/页</option>
-                                            <option value="50">50条/页</option>
-                                        </select>
-                                    </div>
-                                    <ul class="pagination">
-                                        <li :class="page.currentPage==1?'disabled':''"><a href="javascript:;"
-                                                                                        @click="turnToPage(1)">首页</a></li>
-                                        <li :class="page.currentPage==1?'disabled':''"><a
-                                                @click="turnToPage(page.currentPage-1)" href="javascript:;">上一页</a></li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage-3)"
-                                            v-text="page.currentPage-3" v-if="page.currentPage-3>0"></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage-2)"
-                                            v-text="page.currentPage-2" v-if="page.currentPage-2>0"></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage-1)"
-                                            v-text="page.currentPage-1" v-if="page.currentPage-1>0"></a>
-                                        </li>
-                                        <li class="active"><a href="javascript:;" @click="turnToPage(page.currentPage)"
-                                                            v-text="page.currentPage">3</a></li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage+1)"
-                                            v-text="page.currentPage+1" v-if="page.currentPage+1<=page.totalPage"></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage+2)"
-                                            v-text="page.currentPage+2" v-if="page.currentPage+2<=page.totalPage"></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" @click="turnToPage(page.currentPage+3)"
-                                            v-text="page.currentPage+3" v-if="page.currentPage+3<=page.totalPage"></a>
-                                        </li>
-                                        <li :class="page.currentPage==page.totalPage?'disabled':''"><a href="javascript:;"
-                                                                                                    @click="turnToPage(page.currentPage+1)">下一页</a>
-                                        </li>
-                                        <li :class="page.currentPage==page.totalPage?'disabled':''"><a href="javascript:;"
-                                                                                                    @click="turnToPage(page.totalPage)">尾页</a>
-                                        </li>
-                                    </ul>
-                                    <div class="go">
-                                        <div :class="isPageNumberError?'input-group error':'input-group'">
-                                            <input class="form-control" type="number" v-model="goToPage" min="1"><a
-                                                href="javascript:;" class="input-group-addon" @click="turnToPage(goToPage)">Go</a>
-                                        </div>
-                                    </div>
-                                    <small class="small nowrap"> 当前第 <span class="text-primary"
-                                                                        v-text="page.currentPage"></span> / <span
-                                            class="text-primary" v-text="page.totalPage"></span>页，共有 <span
-                                            class="text-primary" v-text="page.totalCount"></span> 条
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" @click="sendSceneData()">确认</button>
-                </div>
-
-    </div>
     </el-dialog>
     <!--新增测试轮次 -->
     <div class='modal fade' tabindex='-1' role='dialog' id='addTestRoundId' aria-hidden='true'
@@ -681,9 +567,6 @@
                                     :value="testRound.id">
                             </option>
                         </select>
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle='modal'
-                                style="margin-left: 20px;" data-target="#addTestRoundId">新增
-                        </button>
                     </div>
                 </div>
             </form>
@@ -889,6 +772,10 @@
             // }
             var tempTestPlanId = sessionStorage.getItem('testPlanId') || undefined;
             _this.caselibId = sessionStorage.getItem('caselibId') || 1241;
+            this.addRowData.caseLibId = _this.caselibId
+            this.getTestPlans()
+            console.log('--*-*-*-*-*-*-*-*-*')
+            console.log(this.addRowData)
             var getPlans = new Promise((resolve, reject) => {
                 console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                 Vac.ajax({
@@ -1459,7 +1346,6 @@
                 // 	Vac.alert('请至少选择一项进行删除');
                 // 	return;
                 // }
-                Vac.confirm('', '', '', '确认要移除场景和用例吗？').then(() => {
                     let data = {
                         testPlanId: this.testPlanId,
                         sceneList: this.selectedScenes,
@@ -1479,9 +1365,6 @@
                             }
                         }
                     });
-                }, () => {
-                    
-                });
             },
             sendSceneData: function(){
                 var _this = this;
@@ -1502,6 +1385,9 @@
                             _this.getCases()
                             // _this.alertShow = true;
                             // _this.tooltipMessage = '添加成功';
+                            _this.$nextTick(() => {
+                                _this.setDraggable()
+                            })
                         }else {
                             Vac.alert(data.respMsg)
                         }
@@ -1533,10 +1419,10 @@
                     $( ".sortable_caselist" ).disableSelection();
                 }
                 if($('.sortable_sceneslist').length > 0){
-                    $('#sortable_sceneslist').sortable({
+                    $('.sortable_sceneslist').sortable({
                         handle: '.handle2'
                     })
-                    $("#sortable_sceneslist" ).disableSelection();
+                    $(".sortable_sceneslist" ).disableSelection();
                 }
                 if($('.sortable_scene_caselist').length > 0){
                     $('.sortable_scene_caselist').sortable({
@@ -1544,6 +1430,13 @@
                     })
                     $( '.sortable_scene_caselist' ).disableSelection();
                 }
+                if($('.scene-list-wrapper').length > 0){
+                    $('.scene-list-wrapper').sortable({
+                        handle: '.handle2'
+                    })
+                    $( '.scene-list-wrapper' ).disableSelection();
+                }
+                
                 if($('#testround-main').length > 0){
                     $('#testround-main').disableSelection();
                 }
@@ -1796,7 +1689,10 @@
                 var domNodes = $("input[value^=sort-"+sceneId+"]");
                 var arrSortId=[];
                 for(var i = 0;i<domNodes.length;i++){
-                    arrSortId.push(+$(domNodes[i]).attr('name'));
+                    let name = $(domNodes[i]).attr('name')
+                    if(name){
+                        arrSortId.push(+name);
+                    }
                 }
                 Vac.ajax({
                     url:"sceneController/sceneTestcaseSortSave",
@@ -1869,11 +1765,12 @@
                         url:  url,
                         data: data,
                         success: (data) => {
-                            $('#addTestPlan').modal('hide');
                             if ('0000' === data.respCode) {
+                                this.addTestPlanDialog = false
                                 Vac.alert(data.respMsg);
                                 this.addModalShow = false;
-                                this.addRowData = {...initialAddRowData};
+                                this.addRowData.nameMedium = ''
+                                this.addRowData.descMedium = ''
                                 this.getTestPlans();
                             } else {
                                 Vac.alert(data.respMsg);
@@ -1903,7 +1800,8 @@
                 });
             },
             showAddModal() {
-                this.addRowData = {...initialAddRowData};
+                this.addRowData.nameMedium = ''
+                this.addRowData.descMedium = ''
                 this.editType = 1;
                 this.addTestPlanDialog = true
                 // $('#addTestPlan').on('show.bs.modal',function(event){
@@ -1922,28 +1820,12 @@
             //             this.delete();
             //         }, () => {});
             // },
-            showUpdateModal(id) {
-                this.selectTestPlan=id;
-                if ('' === this.selectTestPlan) {
-                    Vac.alert('请选择测试计划');
-                    return;
-                }
+            showUpdateModal(item) {
+                this.addRowData.nameMedium = item.nameMedium
+                this.addRowData.descMedium = item.descMedium
+                this.addTestPlanDialog = true
                 this.editType = 2;
-                $('#addTestPlan').on('show.bs.modal',function(event){
-                    var modal = $(this);
-                    modal.find('.modal-title').text("修改测试计划");
-                })
-                $('#addTestPlan').modal('show');
-                ({
-                    nameMedium: this.addRowData.nameMedium,
-                    descMedium: this.addRowData.descMedium,
-                    testPhaseId: this.addRowData.testPhaseId,
-                    testRoundId: this.addRowData.testRoundId,
-                    // caseLibId: this.addRowData.caseLibId,
-                    // creatorId: this.addRowData.creatorId
-                } = this.testPlanArray.find((item) => {
-                    return +this.selectTestPlan === +item.id;
-                }));
+                this.selectTestPlan = item.id
             },
             getTestPlans() {
                 Vac.ajax({
@@ -1955,7 +1837,7 @@
                         "orderColumns":this.orderColumns,
                         "nameMedium": "",
                         "descMedium": "",
-                        "caseLibId": +initialAddRowData.caseLibId               
+                        "caseLibId": this.addRowData.caseLibId               
                     },
                     success: (data) => {
                         if ('0000' === data.respCode) {
@@ -2000,11 +1882,6 @@
                         }
                     }
                 });
-            },
-            changeSelect(id) {
-                if (+id === +this.selectTestPlan) {
-                    this.selectTestPlan = '';
-                }
             },
             addTestRound() {
                     Vac.ajax({
