@@ -162,7 +162,7 @@
                                          v-model="scope.row['data_'+item[1]]">
                                     </el-input>
                                 </div>
-                                <div v-else>{{ scope.row['data_'+item[1]] }}</div>
+                                <div v-else style='white-space: break-spaces;'>{{ scope.row['data_'+item[1]] }}</div>
 
                             </template>
                         </el-table-column>
@@ -253,53 +253,27 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                
+
                 <div>
                     <el-row>
                         <h4> 前置操作</h4>
                     </el-row>
                     <el-row>
-                        <el-button
-                            size="small" 
-                            type="primary"
-                            icon="el-icon-plus"
-                            @click='addItemShowFunction(1)'>
+                        <el-button size="small" type="primary" icon="el-icon-plus" @click='addItemShowFunction(1)'>
                             添加多项
                         </el-button>
-                        <el-button
-                            icon="el-icon-delete"
-                            size="small" 
-                            type="primary"
-                            @click='deleteTemplateInfo(1)'>
+                        <el-button icon="el-icon-delete" size="small" type="primary" @click='deleteTemplateInfo(1)'>
                             删除
                         </el-button>
-                        <el-button
-                            icon="el-icon-arrow-up"
-                            size="small" 
-                            type="primary"
-                            @click='eleUp(1)'>
+                        <el-button icon="el-icon-arrow-up" size="small" type="primary" @click='eleUp(1)'>
                             上移
                         </el-button>
-                        <el-button
-                            icon="el-icon-arrow-down"
-                            size="small" 
-                            type="primary"
-                            @click='eleDown(1)'>
+                        <el-button icon="el-icon-arrow-down" size="small" type="primary" @click='eleDown(1)'>
                             下移
                         </el-button>
                     </el-row>
-                      <el-table
-                        border
-                        ref="multipleTable"
-                        :data="beforeOperationRows"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        row-key="name"
-                        class="sortable">
-                        <el-table-column
-                            label="排序"
-                            width="55">
+                      <el-table border ref="multipleTable" :data="beforeOperationRows" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" row-key="name" class="sortable">
+                        <el-table-column label="排序" width="55">
                             <template slot-scope="scope">
                                 <i :id ='scope.row.date' class="el-icon-sort"></i>
                             </template>
@@ -307,7 +281,11 @@
                         <el-table-column
                             label="选择"
                             type="selection"
+                            prop='selected'
                             width="55">
+                            <template slot-scope="scope">
+                              <el-checkbox v-model="scope.row.selected"></el-checkbox>
+                            </template>
                         </el-table-column>
                         <el-table-column
                             label="操作项"
@@ -319,16 +297,17 @@
                             width="180">
                             <template slot-scope="scope">
                                 <el-select 
-                                    v-model="scope.row.methodName" 
+                                    v-model="scope.row.functions[0].name" 
                                     placeholder="请选择"
                                     @change="changeMethod(scope.row)">
                                     <el-option
-                                    v-for="item in methods[scope.row.elementWidget]"
+                                    v-for="item in funtionDic"
                                     :key="item.id"
                                     :label="item.name"
                                     :value="item.name">
                                     </el-option>
                                 </el-select>
+                                <!-- {{scope.row.functions[0].name}} -->
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -336,7 +315,7 @@
                             label="参数">
                             <template slot-scope="scope">
                                 <div v-if='scope.row.arguShow'>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row >
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -348,15 +327,15 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.Name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
                                             <span>
-                                                 {{ item.value }} 
+                                                 {{ item.Value }} 
                                             </span>
                                         </el-col>
                                     </el-row>
@@ -371,7 +350,7 @@
                                     </el-row>
                                 </div>
                                 <div v-else>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row>
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -383,10 +362,10 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.Name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
@@ -394,13 +373,13 @@
                                                 size="mini"
                                                 @dragenter.stop.prevent="return false"
                                                 @dragover.stop.prevent="return false"
-                                                v-model="item.newvalue" ></el-input>
+                                                v-model="item.newValue" ></el-input>
                                         </el-col>
                                     </el-row>
                                     <el-row >
                                         <el-col :span="5">
                                             <el-button  
-                                                @click='scope.row.arguments.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
+                                                @click='scope.row.parameters && scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
                                                 size="mini">
                                                  取消
                                             </el-button>
@@ -409,7 +388,7 @@
                                             <el-button 
                                                 type="primary" 
                                                 size="mini"  
-                                                @click=' scope.row.arguments.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
+                                                @click='scope.row.parameters && scope.row.parameters.forEach(v=>{v.Value=v.newValue}) ;scope.row.arguShow = true'>
                                                 确认
                                             </el-button>
                                         </el-col>
@@ -428,47 +407,21 @@
                         <h4> 后置操作</h4>
                     </el-row>
                     <el-row>
-                        <el-button
-                            size="small" 
-                            type="primary"
-                            icon="el-icon-plus"
-                            @click='addItemShowFunction(2)'>
+                        <el-button size="small" type="primary" icon="el-icon-plus" @click='addItemShowFunction(2)'>
                             添加多项
                         </el-button>
-                        <el-button
-                            icon="el-icon-delete"
-                            size="small" 
-                            type="primary"
-                            @click='deleteTemplateInfo(2)'>
+                        <el-button icon="el-icon-delete" size="small" type="primary" @click='deleteTemplateInfo(2)'>
                             删除
                         </el-button>
-                        <el-button
-                            icon="el-icon-arrow-up"
-                            size="small" 
-                            type="primary"
-                            @click='eleUp(2)'>
+                        <el-button icon="el-icon-arrow-up" size="small" type="primary" @click='eleUp(2)'>
                             上移
                         </el-button>
-                        <el-button
-                            icon="el-icon-arrow-down"
-                            size="small" 
-                            type="primary"
-                            @click='eleDown(2)'>
+                        <el-button icon="el-icon-arrow-down" size="small" type="primary" @click='eleDown(2)'>
                             下移
                         </el-button>
                     </el-row>
-                      <el-table
-                        border
-                        ref="multipleTable"
-                        :data="beforeOperationRows"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                        row-key="name"
-                        class="sortable">
-                        <el-table-column
-                            label="排序"
-                            width="55">
+                      <el-table border ref="multipleTable" :data="afterOperationRows" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" row-key="name" class="sortable">
+                        <el-table-column label="排序" width="55">
                             <template slot-scope="scope">
                                 <i :id ='scope.row.date' class="el-icon-sort"></i>
                             </template>
@@ -488,16 +441,17 @@
                             width="180">
                             <template slot-scope="scope">
                                 <el-select 
-                                    v-model="scope.row.methodName" 
+                                    v-model="scope.row.functions[0].name" 
                                     placeholder="请选择"
                                     @change="changeMethod(scope.row)">
                                     <el-option
-                                    v-for="item in methods[scope.row.elementWidget]"
+                                    v-for="item in funtionDic"
                                     :key="item.id"
                                     :label="item.name"
                                     :value="item.name">
                                     </el-option>
                                 </el-select>
+                                <!-- {{scope.row.functions[0].name}} -->
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -505,7 +459,7 @@
                             label="参数">
                             <template slot-scope="scope">
                                 <div v-if='scope.row.arguShow'>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row >
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -517,15 +471,15 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.Name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
                                             <span>
-                                                 {{ item.value }} 
+                                                 {{ item.Value }} 
                                             </span>
                                         </el-col>
                                     </el-row>
@@ -540,7 +494,7 @@
                                     </el-row>
                                 </div>
                                 <div v-else>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row >
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -552,10 +506,10 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.Name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
@@ -563,13 +517,13 @@
                                                 size="mini"
                                                 @dragenter.stop.prevent="return false"
                                                 @dragover.stop.prevent="return false"
-                                                v-model="item.newvalue" ></el-input>
+                                                v-model="item.newValue" ></el-input>
                                         </el-col>
                                     </el-row>
                                     <el-row >
                                         <el-col :span="5">
                                             <el-button  
-                                                @click='scope.row.arguments.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
+                                                @click='scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
                                                 size="mini">
                                                  取消
                                             </el-button>
@@ -578,7 +532,7 @@
                                             <el-button 
                                                 type="primary" 
                                                 size="mini"  
-                                                @click=' scope.row.arguments.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
+                                                @click='scope.row.parameters.forEach(v=>{v.Value=v.newValue}) ;scope.row.arguShow = true'>
                                                 确认
                                             </el-button>
                                         </el-col>
@@ -592,7 +546,7 @@
                     </el-table>
                 </div>
                 
-                <div>
+                <div v-if='false'>
                     <el-row>
                         <h4> 数据校验</h4>
                     </el-row>
@@ -629,7 +583,7 @@
                       <el-table
                         border
                         ref="multipleTable"
-                        :data="beforeOperationRows"
+                        :data="dataOperationRows"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
@@ -661,7 +615,7 @@
                                     placeholder="请选择"
                                     @change="changeMethod(scope.row)">
                                     <el-option
-                                    v-for="item in methods[scope.row.elementWidget]"
+                                    v-for="item in funtionDic[scope.row.elementWidget]"
                                     :key="item.id"
                                     :label="item.name"
                                     :value="item.name">
@@ -674,7 +628,7 @@
                             label="参数">
                             <template slot-scope="scope">
                                 <div v-if='scope.row.arguShow'>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row:key='item.index'>
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -685,16 +639,16 @@
                                                 参数值
                                             </span>
                                         </el-col>
-                                    </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    </el-row:key=>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.Name }} 
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
                                             <span>
-                                                 {{ item.value }} 
+                                                 {{ item.Value }} 
                                             </span>
                                         </el-col>
                                     </el-row>
@@ -709,7 +663,7 @@
                                     </el-row>
                                 </div>
                                 <div v-else>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.index'>
+                                    <el-row:key='item.index'>
                                         <el-col :span="5">
                                             <span>
                                                 名称
@@ -720,8 +674,8 @@
                                                 参数值
                                             </span>
                                         </el-col>
-                                    </el-row>
-                                    <el-row v-for='item in scope.row.arguments' :key='item.name'>
+                                    </el-row:key=>
+                                    <el-row v-for='item in scope.row.parameters' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
                                                  {{ item.name }} 
@@ -738,7 +692,7 @@
                                     <el-row >
                                         <el-col :span="5">
                                             <el-button  
-                                                @click='scope.row.arguments.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
+                                                @click='scope.row.parameters.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
                                                 size="mini">
                                                  取消
                                             </el-button>
@@ -747,7 +701,7 @@
                                             <el-button 
                                                 type="primary" 
                                                 size="mini"  
-                                                @click=' scope.row.arguments.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
+                                                @click='scope.row.parameters.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
                                                 确认
                                             </el-button>
                                         </el-col>
@@ -760,11 +714,19 @@
                         </div>
                     </el-table>
                 </div>
+                <el-row type="flex" justify="center">
+                    <el-col :span='6'>
+                        <el-button type='primary' @click="editDataFlag = false">取消</el-button>
+                        <el-button type='primary' @click="transData">保存</el-button>
+                    </el-col>
+                </el-row>
             </el-dialog>
         <el-dialog title="添加多项" :visible.sync="addItemShow" width	="30%">
             <uiEleFunTree 
                 @closeDialog = "addItemShow = false"
                 @throwTreeInfo = "addTreeInfo"
+                :transId='selectedTemplate.transId + ""'
+                :autId='selectedTemplate.autId + ""'
                 :multiselection='true'>
             </uiEleFunTree>
         </el-dialog>
@@ -795,11 +757,13 @@
     import VueMixins from '@/libs/vueMixins.js'
     import uiEleFunTree from '@/components/transactDetail/uiEleFunTree'
     import searchtestcase from '@/components/searchTestcase/index'
+    import draggable from 'vuedraggable'
     export default {
         mixins: [VueMixins],
         components: {
             uiEleFunTree,
             searchtestcase,
+            draggable,
         },
         computed:{
             searchInfo(){
@@ -874,9 +838,11 @@
                     "propertyValueList": [caseLibId]
                 }],
                 rowdata:{},
+                columndata: undefined,
                 rowColumn:'',
                 beforeOperationRows:[],
                 afterOperationRows:[],
+                dataOperationRows:[],
                 dataType:'1',
                 addItemShow:false,
                 input4:'',
@@ -884,6 +850,9 @@
                 saidBarShow:true,
                 searchTemplateDailog: false,
                 exportDialog: false,
+                funtionDic: {},
+                // 区分是添加哪个 前置操作后置操作
+                addItemFlag: -1,
             }
         },
         mounted(){
@@ -903,6 +872,20 @@
             this.getFilterTree()
         },
         methods: {
+            getFunction(){
+                this.funtionDic = []
+                // selectedTemplate.transId
+                // selectedTemplate.autId
+                Request({
+                    url: '/aut/selectFunctionSet',
+                    method: 'post',
+                    params:{
+                        id: this.selectedTemplate.autId
+                    }
+                }).then(resp => {
+                    this.funtionDic = resp.omMethodRespDTOList
+                })
+            },
             submitUpload() {
                 this.$refs.upload.submit();
             },
@@ -916,41 +899,105 @@
                 }
                 this.exportDialog = false
                 this.$message.success('上传成功')
+                
+                this.getTestcaseInfo()
             },
             // 接受添加多项的
-            async addTreeInfo(treeInfo){
+            async addTreeInfo(tree){
+                console.log(this.beforeOperationRows)
+                let treeInfo = tree.elementTree
+                let functionInfo = tree.functionTree
                 console.log('treeInfo',treeInfo)
+                console.log('functionInfo',functionInfo)
 
-                for(let i = 0;i<treeInfo.length;i++){
-                    const a = await this.getMethods(treeInfo[i].elementWidget)
-                    console.log("this.methods[treeInfo[i].elementWidget]",this.methods[treeInfo[i].elementWidget])
-                    console.log("this.methods[treeInfo[i].elementWidget]",a)
-                    let arguString = this.methods[treeInfo[i].elementWidget][0].arguments
-                    let arguObj = JSON.parse(arguString)
-                    let argu = []
-                    for(let j = 0 ; j < arguObj.length ; j++){
-                        argu.push({
-                            index:0,
-                            name:arguObj[j].name ,
-                            newvalue:"",
-                            value:""
-                        })
+                let rows = undefined
+                if(this.addItemFlag == 1){
+                    rows = this.beforeOperationRows
+                    for(let i = 0 ;i < functionInfo.length ; i++){
+                        let beforeItem = {
+                            arguShow: true,
+                            functions: [{
+                                name: functionInfo[i].name,
+                                parameterlist: ""
+                            }],
+                            id: functionInfo[i].id,
+                            operation: {
+                                classType: "",
+                                element: "",
+                                ui: ""
+                            },
+                            parameters: functionInfo[i].arguments.map(item => ({
+                                Name: item.name,
+                                Value: '',
+                                newValue: '',
+                            })),
+                            selected: false,
+                        }
+                        this.beforeOperationRows.push(beforeItem)
                     }
-                    console.log('list[i].arguments',treeInfo[i].arguments)
-                    this.templateInfo.push({
-                        sortid:this.sortidNum++,
-                        name: 'UI:'+treeInfo[i].uiname+" 元素:"+treeInfo[i].elementName,
-                        uiname: treeInfo[i].uiname,
-                        elementName: treeInfo[i].elementName,
-                        elementWidget: treeInfo[i].elementWidget,
-                        methodName: this.methods[treeInfo[i].elementWidget][0].name,
-                        arguments: argu,
-                        arguShow: true,// 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
-                    })
+
                 }
+                if(this.addItemFlag == 2){
+                    rows = this.afterOperationRows
+                    for(let i = 0 ;i < functionInfo.length ; i++){
+                        let afterItem = {
+                            arguShow: true,
+                            functions: [{
+                                name: functionInfo[i].name,
+                                parameterlist: ""
+                            }],
+                            id: functionInfo[i].id,
+                            operation: {
+                                classType: "",
+                                element: "",
+                                ui: ""
+                            },
+                            parameters: functionInfo[i].arguments.map(item => ({
+                                Name: item.name,
+                                Value: '',
+                                newValue: '',
+                            }))
+                        }
+                        this.afterOperationRows.push(afterItem)
+                    }
+                }
+                if(this.addItemFlag == 3){
+                    rows = this.dataOperationRows
+                }
+                
+                
+                // 获取方法信息 并且将信息渲染到afer或者befor上
+
+                return
+            },
+            changeMethod(item){
+                console.log(item)
+                let functionName = item.functions[0].name
+                let theFunction = this.funtionDic.filter(item => {
+                    return item.name ===functionName
+                })[0]
+                item.parameters = JSON.parse(theFunction.arguments).map(item=>({
+                    Name: item.name,
+                    Value: '',
+                    newValue:''
+                }))
+                theFunction
             },
             addItemShowFunction(flag){
-                this.addItemShow=true
+                this.addItemFlag = flag
+                this.addItemShow = true
+            },
+            deleteTemplateInfo(flag){
+                if(flag == 1){
+                    console.log(this.beforeOperationRows.filter(item => !item.selected))
+                    this.beforeOperationRows = this.beforeOperationRows.filter(item => !item.selected)
+                }
+                if(flag == 2){
+                    this.afterOperationRows = this.beforeOperationRows.filter(item => !item.selected)
+                }
+                if(flag == 3){
+                    this.dataOperationRows = this.beforeOperationRows.filter(item => !item.selected)
+                }
             },
             eleUp(flag){
                 let flag2 = false
@@ -986,8 +1033,10 @@
                 console.log('multipleSelection',this.multipleSelection)
             },
             // 编辑数据弹框
-            editData(){
-                
+            editData(row,column){
+                console.log(row)
+                console.log(column)
+                // handlechange(scope.row,scope.column)
                 this.editDataFlag = true
                 console.log(this.rowdata['data_'+ this.rowColumn])
                 let cellData = this.rowdata['data_'+ this.rowColumn]
@@ -1052,6 +1101,7 @@
                                 var o = {}
                                 o.Name = 'para' + (j + 1)
                                 o.Value = paraArr[j].slice(1, -1)
+                                o.newValue = paraArr[j].slice(1, -1)
                                 parameters.push(o)
                             }
                         } else {
@@ -1068,6 +1118,7 @@
                                 var o = {}
                                 o.Name = 'para' + (j + 1)
                                 o.Value = paraArr[j].slice(1, -1)
+                                o.newValue = paraArr[j].slice(1, -1)
                                 parameters.push(o)
                             }
                         }
@@ -1076,7 +1127,9 @@
                             id: Symbol(),
                             operation,
                             functions,
-                            parameters
+                            parameters,
+                            arguShow: true,
+                            selected: false,
                         })
                     }
                 }
@@ -1139,7 +1192,7 @@
             save(){
                 console.log('object.values(editedData)',Object.values(this.editedData))
                 if(this.editedData.length === 0){
-                    
+                    return
                 }
                 Request({
                     url: '/dataCenter/saveTableData',
@@ -1235,9 +1288,12 @@
                 })
             },
             handleNodeClick(data) {
+                console.log('data======================================')
+                console.log(data)
                 if(data.flag){
                     this.selectedTemplate = data
                     this.getTestcaseInfo()
+                    this.getFunction()
                 }
             },
             //获取该测试系统下 所有的控件类型
@@ -1314,6 +1370,7 @@
             // 右键事件
             rightMenu(	row, column, event){
                 this.rowdata  = row
+                this.columndata  = column
                 this.rowColumn = column.label.split('-')[1]
                 this.rowIndex = row.index
                 this.columnIndex = column.index
@@ -1339,6 +1396,44 @@
                 this.conditionList.splice(4)
                 this.conditionList = this.conditionList.concat(conditionlist)
             },
+            transData(){
+                let str = ''
+                if(this.beforeOperationRows.length > 0){
+                    str = str + '@before\n'
+                    for(let i = 0 ; i < this.beforeOperationRows.length ; i++){
+                        if(this.beforeOperationRows[i].parameters.length !== 0){
+                            str += `${this.beforeOperationRows[i].functions[0].name}("${this.beforeOperationRows[i].parameters[0].Value}"`
+                            for(let j = 1 ; j < this.beforeOperationRows[i].parameters.length ; j++){
+                                str += `,"${this.beforeOperationRows[i].parameters[j].Value}"`
+                            }
+                            str += ');\n'
+                        }
+                        else{
+                            str += `${this.afterOperationRows[i].functions[0].name}()"`
+                        }
+                    }
+                }
+                str += `@value ${this.input1}\n`
+                if(this.afterOperationRows.length > 0){
+                    str = str + '@after\n'
+                    for(let i = 0 ; i < this.afterOperationRows.length ; i++){
+                        if(this.afterOperationRows[i].parameters.length !== 0){
+                            str += `${this.afterOperationRows[i].functions[0].name}("${this.afterOperationRows[i].parameters[0].Value}"`
+                            for(let j = 1 ; j < this.afterOperationRows[i].parameters.length ; j++){
+                                str += `,"${this.afterOperationRows[i].parameters[j].Value}"`
+                            }
+                            str += ');\n'
+                        }
+                        else{
+                            str += `${this.afterOperationRows[i].functions[0].name}()"`
+                        }
+                    }
+                }
+                this.rowdata['data_'+ this.rowColumn] = str
+                this.editDataFlag = false
+                // console.log(str)
+                this.handlechange(this.rowdata,this.columndata)
+            }
         }
     }
 </script>

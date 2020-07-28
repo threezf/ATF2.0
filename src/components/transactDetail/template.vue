@@ -350,9 +350,10 @@ export default {
             }
         },
         // 接受添加多项的
-        async addTreeInfo(treeInfo){
-            console.log('treeInfo',treeInfo)
-
+        async addTreeInfo(tree){
+            console.log('treeInfo',tree)
+            let treeInfo = tree.elementTree
+            let functionInfo = tree.functionTree
             for(let i = 0;i<treeInfo.length;i++){
                 const a = await this.getMethods(treeInfo[i].elementWidget)
                 console.log("this.methods[treeInfo[i].elementWidget]",this.methods[treeInfo[i].elementWidget])

@@ -114,7 +114,26 @@ export default {
         console.log(status);
       },
       funCheckChange(data,status){
-          
+        if('children' in data){
+            return
+        }
+        if(!status){
+            this.funSelected = this.funSelected.filter(v=>(
+                v.id !== data.id
+            ))
+            return
+        }
+        console.log(data)
+        this.funSelected.push({
+            "id": data.id ,
+            "name": data.label ,
+            classId: data.classId,
+            label: data.label,
+            arguments: data.arguments,
+        })
+        console.log('funSelectedChangedata');
+        console.log(data);
+        console.log(status);
       },
       closeDialog(){
           this.$emit("closeDialog",123)
@@ -122,7 +141,10 @@ export default {
       throwInfo(){
           this.$emit("closeDialog")
           console.log(this.eleSelected)
-          this.$emit("throwTreeInfo",this.eleSelected)
+          this.$emit("throwTreeInfo",{
+              elementTree: this.eleSelected,
+              functionTree: this.funSelected
+            })
       },
       getEleTree(){
           const _this = this
@@ -174,6 +196,9 @@ export default {
                     let node = {
                         id: res.omMethodRespDTOList[i].id,
                         label: res.omMethodRespDTOList[i].name,
+                        classId: res.omMethodRespDTOList[i].classId,
+                        label: res.omMethodRespDTOList[i].name,
+                        arguments: JSON.parse(res.omMethodRespDTOList[i].arguments),
                     }
                     tree.push(node)
                 }
