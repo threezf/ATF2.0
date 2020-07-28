@@ -820,6 +820,7 @@
             })
             // let result = Vac.isAncestor(document.querySelector('html'), document.querySelector('body'))
             // console.log(result)
+            this.queryRunners()
         },
         methods: {
             onSubmit() {
