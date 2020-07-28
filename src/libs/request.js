@@ -39,8 +39,12 @@ axios.interceptors.response.use(function (response) {
     //     console.log(response)
     //     return response
     // }
-    console.log('返回',response)
-    if (! +response.status === 200) {
+    console.log('返回',response, response.status)
+    if(+response.status === 201) {
+        console.log('返回码201', response)
+        return response
+    }
+    if (! (+response.status === 200)) {
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
     }
@@ -74,7 +78,7 @@ const Request = function (options) {
             url:  '/atfcloud2.0a' + options.url,
             method: options.method,
         }
-        
+
         if (options.method == 'get') {
             axiosParams.params = options.params
         } else {
@@ -84,7 +88,7 @@ const Request = function (options) {
             console.log('request',res.data)
             res = res.data;
             resolve(res)
-            
+
         }).catch((err) => {
             reject(err)
         })

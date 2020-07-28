@@ -150,12 +150,12 @@
 								type="primary">
 								添加
 							</el-button>
-<!--							<el-button-->
-<!--								size="small"-->
-<!--								@click=""-->
-<!--								type="primary">-->
-<!--								删除-->
-<!--							</el-button>-->
+							<el-button
+								size="small"
+								@click="deleteMethod"
+								type="danger">
+								删除
+							</el-button>
 						</el-col>
 					</el-row>
 					<el-row>
@@ -617,8 +617,12 @@
 											"
 								size="small"
 							>
-								<el-option value="1">有</el-option>
-								<el-option value="0">无</el-option>
+								<el-option
+									v-for="item in parameterList"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="等待时间" prop="waittime">
@@ -627,8 +631,8 @@
 						<el-form-item label="超过时间" prop="timeout">
 							<el-input v-model="addMethodForm.timeout"></el-input>
 						</el-form-item>
-						<el-form-item label="目标代码" prop="objectcode">
-							<el-input type="textarea" maxlength="1000" rows="10" v-model="addMethodForm.objectcode"></el-input>
+						<el-form-item label="目标代码" prop="targetCodeContent">
+							<el-input type="textarea" maxlength="1000" rows="10" v-model="addMethodForm.targetCodeContent"></el-input>
 						</el-form-item>
 						<el-row></el-row>
 						<el-row></el-row>
@@ -738,6 +742,13 @@
 					value: 0,
 					label: '私有'
 				}],
+				parameterList:[{
+					value:0,
+					label:"无"
+				},{
+					value:1,
+					label:"有"
+			}],
 				automated: '',
 				arcId:'',
 				defaultMethod: '',
@@ -930,6 +941,29 @@
 					});
 				})
 			},
+			//实际删除方法函数
+			deleteMethod(){
+				Request({
+					url: '/arcMethod/deleteSingleArcOmMethod',
+					method: 'post',
+					params: {
+						id: this.classId
+					}
+				}).then((res) => {
+					this.$alert('删除控件成功', '成功', {
+						confirmButtonText: '确定',
+					});
+					this.getMethod(this.classId0)
+				}, (err) => {
+					this.$alert('删除控件失败', '失败', {
+						confirmButtonText: '确定',
+					});
+					}).catch((err) => {
+					this.$alert('删除控件失败', '失败', {
+						confirmButtonText: '确定',
+					});
+				})
+			},
 			//实际添加控件函数
 			addClass(){
 				Request({
@@ -953,20 +987,6 @@
 						confirmButtonText: '确定',
 					});
 					this.getClass()
-						// Request({
-						// 	url: '/arcClass/queryArcVisibleOmClasses',
-						// 	method: 'post',
-						// 	params: {
-						// 		id: this.arcId
-						// 	}
-						// }).then((res) => {
-						// 	_this.classList = res.arcClassRespDTOList
-						// 	_this.classValue = _this.classList[0].name
-						// }, (err) => {
-						// 		console.log("失败")
-						// 	}).catch((err) => {
-						// 	  console.log("失败")
-						// })
 				}, (err) => {
 					this.$alert('添加控件失败', '失败', {
 						confirmButtonText: '确定',
@@ -1122,6 +1142,7 @@
 					_this.secondForm.selfRecognitionPros=JSON.parse(_this.classList[0].selfRecognitionPros)
 					_this.secondForm.supportedRecognitionPros=JSON.parse(_this.classList[0].supportedRecognitionPros)
 					_this.secondForm.assistRecognitionPros=JSON.parse(_this.classList[0].assistRecognitionPros)
+					_this.secondForm.defaultMethod="请选择默认方法"
 					_this.setOverrideFlag(_this.classList[0].overideFlag)
 					_this.setVisibility(_this.classList[0].visibilityFlag)
 					_this.getMethod(_this.classList[0].id)
@@ -1185,6 +1206,7 @@
 				this.thirdForm = e
 				this.methodValue = e.name
 				this.textarea = e.targetCodeContent
+				this.classId=e.id
 				console.log(e)
 				if(this.methodList[0].arguments[1]!='o'&&typeof this.methodList[0].arguments=='string'){
 					this.thirdForm.arguments = JSON.parse(e.arguments)
@@ -1389,11 +1411,15 @@
 		margin: 10px 0;
 	}
 
-	.el-drawer.rtl {
-		overflow: scroll;
-	}
+
+
+</style>
+<style>
 	.tableEdit .el-input__inner{
 		border: 0
+	}
+	.el-drawer.rtl {
+		overflow: scroll;
 	}
 
 </style>

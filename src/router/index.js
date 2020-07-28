@@ -58,7 +58,6 @@ export default new Router({
 		TestInfrastructure,
         TestProject,
 		RecordFunction,
-        Test,
         QuicklyStart
     ]
 })

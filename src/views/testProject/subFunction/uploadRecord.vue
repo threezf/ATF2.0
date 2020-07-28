@@ -72,6 +72,19 @@
 						</template>
 					</el-table-column>
 				</el-table>
+				<div class="block">
+					<el-col :span="10" :offset='4'>
+						<el-pagination
+							@size-change="handleSizeChange"
+							@current-change="handleCurrentChange"
+							:current-page="currentPage"
+							:page-sizes="[5, 10, 20, 50]"
+							:page-size="pageSize"
+							layout="total, sizes, prev, pager, next, jumper"
+							:total="totalCount">
+						</el-pagination>
+					</el-col>
+				</div>
 				<el-dialog
 					title="导入"
 					:visible.sync="dialogVisibleI"
@@ -80,11 +93,8 @@
 					<el-upload
 						class="upload-demo in-file"
 						action=""
-						:on-change="changeFile"
-						:on-preview="handlePreview"
+						:on-success="changeFile"
 						:on-remove="handleRemove"
-						:before-remove="beforeRemove"
-						multiple
 						:file-list="fileList">
 						<el-button size="small" type="primary">选择文件</el-button>
 						<i slot="tip" class="el-upload__tip text">只能选择xlsx文件</i>
@@ -127,6 +137,7 @@
 				totalCount:'',
 				radio: "1",
 				dialogVisibleI:false,
+				fileListM:[]
 			}
 		},
 		created(){
@@ -177,76 +188,92 @@
 			uploadDialog(){
 				this.dialogVisibleI = true
 			},
-			changeFile(file) {
-				this.fileList.push(file)
+			changeFile(response,file) {
+				this.fileListM.push(file);
+				console.log(this.fileListM)
 			},
 			handleRemove(file, fileList) {
-				var index = fileList.indexOf(file)
-				this.fileList.splice(index, 1)
+				var index=0
+				for(var i=0;i<fileList.length;i++){
+					if(file.name==fileList[i].name){
+						index=i
+						break
+					}
+				}
+				this.fileListM.splice(index, 1);
 			},
 			handlePreview(file) {
 				console.log(file);
 			},
-			beforeRemove(file, fileList) {
-				return this.$confirm(`确定移除 ${file.name}？`);
-			},
-			
+
             downloadError(ID) {
           	 var url = "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/errorFile/";
 			       window.location.href = url+ID;
-		 	       
+
            },
 			 downloadFile (ID) {
           	 var url = "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/uploadFile/";
 			         window.location.href = url+ID;
            },
 			//实际导入函数
-			
-		    uploadTemp() {
-			let file = this.fileList[0];
-			let param = new FormData();
-			var caseLibId = sessionStorage.getItem("caselibId");
-			param.append("file", file.raw);
-			param.append("caseLibId", caseLibId);
-			param.append("uploadUserId", 3);
-			console.log(param.get("file"));
-			var _this = this;
-			Request({
-				url: "/testcase/batchImportTestcase",
-				method: "post",
-				params: param
-			})
-				.then(res => {
-					if (res.respCode == "0000") {
-						this.dialogVisibleI = false;
-						_this.getCase();
-						this.$alert("导入成功", "导入情况", {
-							confirmButtonText: "确定",
-							callback: action => {
-								this.$message({
-									type: "info",
-									message: `action: ${action}`
-								});
-							}
-						});
-					} else {
-						
-						this.dialogVisibleI = false;
-						this.$alert("导入失败", "导入情况", {
-							confirmButtonText: "确定",
-							callback: action => {
-								this.$message({
-									type: "info",
-									message: `action: ${action}`
-								});
-							}
-						});
-					}
+
+			uploadTemp() {
+				let file = this.fileListM[0];
+				let param = new FormData();
+				var caseLibId = sessionStorage.getItem("caselibId");
+				param.append("file", file.raw);
+				param.append("caseLibId", caseLibId);
+				param.append("uploadUserId", 3);
+				if(file.name.charAt(1)=="t"){
+					param.append("templateType", 1);
+				}else{
+					param.append("templateType", 0);
+				}
+				var _this = this;
+				Request({
+					url: "/testcase/batchImportTestcase",
+					method: "post",
+					params: param
 				})
-				.catch(err => {
-					console.log(err);
-				});
-		    },
+					.then(res => {
+						if (res.respCode == "0000") {
+							this.dialogVisibleI = false;
+							this.$alert("导入成功", "导入情况", {
+								confirmButtonText: "确定",
+								callback: action => {
+									this.$message({
+										type: "info",
+										message: `action: ${action}`
+									});
+								}
+							});
+							this.getCaseList()
+						} else {
+
+							this.dialogVisibleI = false;
+							this.$alert("导入失败", "导入情况", {
+								confirmButtonText: "确定",
+								callback: action => {
+									this.$message({
+										type: "info",
+										message: `action: ${action}`
+									});
+								}
+							});
+						}
+					})
+					.catch(err => {
+						console.log(err);
+					});
+			},
+			handleSizeChange(val) {
+				this.pageSize = val
+				this.getCaseList()
+			},
+			handleCurrentChange(val) {
+				this.currentPage = val
+				this.getCaseList()
+			},
 		    //下载模板
 		    downloadTemplate(val) {
 		    	if (val == 0) {

@@ -102,7 +102,7 @@
           <el-table-column min-width="7.51%" align="center" label="执行结果状态">
             <template slot-scope="scope">
               <el-tag
-                :type="scope.row.executeStatus == '成功'?'success':scope.row.executeStatus == '部分成功'?'primary':scope.row.executeStatus == '跳过执行'?'warning':scope.row.executeStatus == '失败' || scope.row.executeStatus == null?'danger':'info'"
+                :type="scope.row.executeStatus == '成功'?'success':scope.row.executeStatus == '部分成功'?'primary':scope.row.executeStatus == '跳过执行'?'warning':scope.row.executeStatus == '失败' || scope.row.executeStatus == null?'danger':'info'" 
                 v-text="scope.row.executeStatus?scope.row.executeStatus:'未知'"
               ></el-tag>
             </template>
