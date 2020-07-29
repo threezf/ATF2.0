@@ -5,7 +5,7 @@
 				<el-row>
 					<el-col :span="5">
 						<el-input v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
-					</el-col>
+					</el-col> 
 					<el-col :span="8"  :offset='1'>
 						<el-button
 							@click='getTestProject(1)'
