@@ -197,7 +197,6 @@ export default {
           }),
           success: function(data) {
             if (data.respCode === '0000') {
-              _this.startQueryLog();//查询日志
               Vac.ajax({//因为查询执行信息需要最近执行的批量号因此需要查询批次
                 url:  '/batchRunCtrlController/queryLatestBatchIdForTestPlan',
                 type: 'post',
@@ -243,6 +242,8 @@ export default {
             if(data.respSyncNo == -1){
               _this.runId = data.batchId
               _this.$message.success(data.respMsg)
+              _this.isFinished = true
+              _this.isRunning = false
             }
             else{
               _this.syncQueryIncInsStatus(data)
@@ -346,61 +347,6 @@ export default {
           Vac.alert('网络错误！请点击重新查询！');
         }
       });
-    },
-    // 查询日志
-    startQueryLog() {
-      var _this = this;
-      Vac.ajax({
-        url: '/executeController/syncQueryLog',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          logType: 2, 
-          reqSyncNo: null,
-          sessionId: null, 
-          testPlanId: _this.$route.query.testPlanId,
-          latestLineNum: 50
-        }),
-        success: function(data) {
-          if(data.respCode === "0000"){
-            syncQueryIncLog(data)
-          }
-          else{
-            _this.isFinished = true
-            _this.isRunning = false
-            Vac.alert(data.respMsg);
-          }
-        },
-        error: function() {
-          Vac.alert('网络错误！请点击重新查询！');
-        }
-    });
-    function syncQueryIncLog (values){
-      Vac.ajax({
-        url: '/executeController/syncQueryLog',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          logType: 2, 
-          reqSyncNo: values.respSyncNo,
-          sessionId: values.sessionId, 
-          testPlanId: values.testPlanId,
-          latestLineNum: 50
-        }),
-        success: function(data) {
-          if(data.respCode=="0000"){
-            syncQueryIncLog(data)
-          }
-          else{
-            _this.isFinished = true
-            _this.isRunning = false
-            Vac.alert(data.respMsg);
-          }
-        },
-        error: function() {
-            Vac.alert('网络错误！请点击重新查询！');
-        }});
-      }
     },
     // 添加用例
     insertTestcaseToScene(id) {
