@@ -1730,21 +1730,30 @@
 
             viewCase: function (sceneId, caseId, sourcechannel,flowNodeId, testPhase, testRound, recorderStatus) {
                 var that = this;
-                var o = {
-                    testPlanId:that.testPlanId,
-                    batchId:that.batchId,
+                // var o = {
+                //     testPlanId:that.testPlanId,
+                //     batchId:that.batchId,
+                //     sceneId,
+                //     caseId,
+                //     testPhase:testPhase || this.testphaseValue,
+                //     testRound:testRound || this.testroundValue,
+                //     flowNodeId,
+                //     // executeround: this.executionround,
+                //     sourcechannel: sourcechannel,
+                //     recorderStatus: recorderStatus || '2',
+                // }
+                // var args = (JSON.stringify(o));
+                // sessionStorage.setItem("executeInstanceInfo",args)
+                // window.open('case-operation.html')
+                this.$router.push({
+                    name: 'CaseOperation',
+                    query: {
+                    batchId: that.batchId,
+                    testPlanId: that.testPlanId,
+                    testcaseId: caseId,
                     sceneId,
-                    caseId,
-                    testPhase:testPhase || this.testphaseValue,
-                    testRound:testRound || this.testroundValue,
-                    flowNodeId,
-                    // executeround: this.executionround,
-                    sourcechannel: sourcechannel,
-                    recorderStatus: recorderStatus || '2',
-                }
-                var args = (JSON.stringify(o));
-                sessionStorage.setItem("executeInstanceInfo",args)
-                window.open('case-operation.html')
+                    }
+                })
             },
             
             turnToPage(currentPageParam){
