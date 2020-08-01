@@ -96,7 +96,7 @@
                                             </el-button>
                                         </div>
                                         <div id="area">
-                                            <pre class="pre"><code  id="logarea" class="javascript">{{logShow}}</code></pre>
+                                            <pre class="pre"><code  id="logarea" class="javascript">{{logInfo}}</code></pre>
                                         </div>
                                     </el-card>
                                     <div v-else id="loghidden">
@@ -1161,7 +1161,7 @@
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
-                            this.logShow = this.logShow + data.logSeg
+                            _this.logInfo = _this.logInfo + data.logSeg
                             let textarea = $("#logarea");
                             // textarea.text(data.logSeg);
                             // var logarea=document.getElementById("logarea");
@@ -1191,7 +1191,7 @@
                         }),
                         success: function(data) {
                             if(data.respCode=="0000"){
-                                this.logShow = this.logShow + data.logSeg
+                                _this.logInfo = _this.logInfo + data.logSeg
                                 let textarea = $("#logarea")
                                 // if(data.logSeg!=null){
                                     // textarea.text(textarea.text()+data.logSeg);
