@@ -35,43 +35,42 @@ export default {
       tableData: [],
       pageSizes: [5,10,20,50],
       pageSize: 10,
-      total: 100,
+      total: 0,
       currentPage: 1
     }
   },
   created() {
-    this.getResult(this.currentPage, this.pageSize)
+    this.pagedBatchQueryTestRecordByRunId(this.currentPage, this.pageSize)
   },
   watch: {
     currentPage() {
-      this.getResult(this.currentPage, this.pageSize)
+      this.pagedBatchQueryTestRecordByRunId(this.currentPage, this.pageSize)
     },
     pageSize() {
-      this.getResult(this.currentPage, this.pageSize)
+      this.pagedBatchQueryTestRecordByRunId(this.currentPage, this.pageSize)
     },
   },
   methods: {
-    getResult(currentPage, pageSize) {
+    // pagedBatchQueryTestRecordByRunId
+    pagedBatchQueryTestRecordByRunId(currentPage, pageSize) {
+      let _this = this
       Request({
-      url: "/testRecordController/pagedBatchQueryTestRecordByTestRound",
-      method: "POST",
-      params: {
-        casecode: "",
-        currentPage,
-        executeStatus: "",
-        orderColumns: "casecode",
-        orderType: "asc",
-        pageSize,
-        recorderStatus: "",
-        sceneId: "",
-        testRound: ""
-      }}).then(res => {
-        this.tableData = res.list;
-        this.total = res.totalCount
-      }).catch(error => {
-        console.log("查询失败", error);
-        // this.$message.warning("无此类数据");
-      });
+        url: '/testRecordController/pagedBatchQueryTestRecordByRunId',
+        method: 'POST',
+        params: {
+          currentPage: currentPage,
+          orderColumns: "casecode",
+          orderType: "asc",
+          pageSize: pageSize,
+          runId: _this.$route.query.runId,
+          testPlanId: _this.$route.query.data.testPlanId
+        }
+      }).then(res => {
+          _this.total = res.totalCount
+          _this.tableData = res.list
+      }).catch(err => {
+        console.log('查詢失敗')
+      })
     },
     handleSizeChange(val) {
       this.pageSize = val

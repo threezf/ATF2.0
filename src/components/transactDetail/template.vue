@@ -295,6 +295,10 @@ export default {
             type: String,
             default: '脚本'
         },
+        isQuick: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
@@ -553,6 +557,51 @@ export default {
         }).then((res) => {
             this.$message(res.respMsg)
             this.addTemplateDialog = false
+            let _this = this
+            if (this.isQuick) {
+                Request({
+                    url: '/testcase/addTestcase',
+                    method: 'POST',
+                    params: {
+                        actionList: [],
+                        autId: _this.autId,
+                        author: sessionStorage.getItem('userId') || "3",
+                        automaton: "",
+                        caseCompositeType: "1",
+                        caseLibId: "253",
+                        casecode: "casecode" + Date.now(),
+                        caseproperty: "1",
+                        casetype: "1",
+                        categoryTeam: "",
+                        checkpoint: "",
+                        datarequest: "",
+                        executeMethod: "2",
+                        executor: "3",
+                        expectresult: "1",
+                        functionModule: "",
+                        modifyChannel: "",
+                        modifyChannelNo: "",
+                        note: _this.addTemplateForm.description,
+                        prerequisites: "",
+                        priority: "1",
+                        reviewer: "3",
+                        scriptMode: "1",
+                        scriptModeFlag: res.scriptId,
+                        submissionId: "49",
+                        tags: "",
+                        testdesign: 1,
+                        testpoint: _this.addTemplateForm.name,
+                        teststep: "1",
+                        transId: _this.transId,
+                        useStatus: "1",
+                        version: ""
+                    }
+                }).then(res => {
+
+                }).catch(err => {
+
+                })
+            }
             this.getTemplates()
         },(err) => {
             this.$message(res.respMsg)
