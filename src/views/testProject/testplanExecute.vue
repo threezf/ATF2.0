@@ -96,7 +96,7 @@
                                             </el-button>
                                         </div>
                                         <div id="area">
-                                            <pre class="pre"><code  id="logarea" class="javascript"></code></pre>
+                                            <pre class="pre"><code  id="logarea" class="javascript">{{logShow}}</code></pre>
                                         </div>
                                     </el-card>
                                     <div v-else id="loghidden">
@@ -702,15 +702,15 @@
                 selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
                 // exeImgs: { },
                 exeImgs: {
-                    0: '/static/img/waiting.png',
-                    10: '/static/img/init.png',
-                    2: '/static/img/success.png',
-                    3: '/static/img/error.png',
-                    13: '/static/img/running.gif',
-                    4: '/static/img/success.png',
-                    5: '/static/img/jump.png',
-                    11: '/static/img/warn.png',
-                    12: '/static/img/warn.png',
+                    0: '/index/static/img/waiting.png',
+                    10: '/index/static/img/init.png',
+                    2: '/index/static/img/success.png',
+                    3: '/index/static/img/error.png',
+                    13: '/index/static/img/running.gif',
+                    4: '/index/static/img/success.png',
+                    5: '/index/static/img/jump.png',
+                    11: '/index/static/img/warn.png',
+                    12: '/index/static/img/warn.png',
                 },
                 // 批量执行相关
                 batchId:null,
@@ -758,7 +758,7 @@
                 senceDialog: false,
                 testPlanDialog: false,
                 addTestPlanDialog: false,
-
+                logInfo: ''
             }
         },
         mounted(){
@@ -1161,10 +1161,11 @@
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
+                            this.logShow = this.logShow + data.logSeg
                             let textarea = $("#logarea");
-                            textarea.text(data.logSeg);
-                            var logarea=document.getElementById("logarea");
-                            hljs.highlightBlock(logarea);
+                            // textarea.text(data.logSeg);
+                            // var logarea=document.getElementById("logarea");
+                            // hljs.highlightBlock(logarea);
                             textarea.scrollTop(99999999999);	
                             syncQueryIncLog(data)
                         }
@@ -1190,12 +1191,13 @@
                         }),
                         success: function(data) {
                             if(data.respCode=="0000"){
+                                this.logShow = this.logShow + data.logSeg
                                 let textarea = $("#logarea")
-                                if(data.logSeg!=null){
-                                    textarea.text(textarea.text()+data.logSeg);
-                                    var logarea=document.getElementById("logarea");
-                                    hljs.highlightBlock(logarea);
-                                }
+                                // if(data.logSeg!=null){
+                                    // textarea.text(textarea.text()+data.logSeg);
+                                    // var logarea=document.getElementById("logarea");
+                                    // hljs.highlightBlock(logarea);
+                                // }
                                 textarea.scrollTop(99999999999);
                                 syncQueryIncLog(data)
                             }
