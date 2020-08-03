@@ -932,7 +932,7 @@
                         selectedExeInstances.push(temp);
                     }
                 }
-                _this.logShow = true;
+                // _this.logShow = true;
                 _this.exeStautShow = '<i class="icon-spinner"></i>执行中';
                 Vac.ajax({
                     url:  'executeController/t1',
@@ -1745,7 +1745,7 @@
                 // var args = (JSON.stringify(o));
                 // sessionStorage.setItem("executeInstanceInfo",args)
                 // window.open('case-operation.html')
-                this.$router.push({
+                let path = this.$router.resolve({
                     name: 'CaseOperation',
                     query: {
                     batchId: that.batchId,
@@ -1754,6 +1754,7 @@
                     sceneId,
                     }
                 })
+                window.open(path.href, '_blank')
             },
             
             turnToPage(currentPageParam){
