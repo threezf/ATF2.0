@@ -347,7 +347,7 @@
     <el-dialog
         title="新增场景"
         :visible.sync="senceDialog"
-        width="50%"> 
+        width="50%">
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <thead>
@@ -526,7 +526,7 @@
         </div>
     </div>
     <!--新增模态框-->
-    
+
     <el-dialog
         title="新增测试计划"
         :visible.sync="addTestPlanDialog"
@@ -602,13 +602,17 @@
 <!--content end -->
 
 </template>
-
+<!--<script src="@/lib/highlight.pack.js"></script>-->
+<!--<script>hljs.initHighlightingOnLoad();</script>-->
 <script>
     import $ from 'jquery'
     import jQuery from 'jquery'
     import 'bootstrap/dist/js/bootstrap'
     import 'bootstrap/dist/css/bootstrap.min.css'
     import 'bootstrap/dist/js/bootstrap.min'
+		import '@/libs/highlight.pack.js'
+		import hljs from '@/libs/highlight.pack.js'
+		// import {hljs.initHighlightingOnLoad()}
     // import '@/lib/bootstrap.min'
     import 'jquery-ui/themes/base/draggable.css'; //此css不引入也不影响draggable 功能
     import 'jquery-ui/themes/base/sortable.css'; //此css不引入也不影响draggable 功能
@@ -616,7 +620,7 @@
     import 'jquery-ui/ui/widgets/draggable'; //必须像如下这样直接引入，import 'jquery-ui' 这样引入是无效的
     import 'jquery-ui/ui/widgets/sortable'; //必须像如下这样直接引入，import 'jquery-ui' 这样引入是无效的
     import 'jquery-ui/ui/widgets/resizable';
-    
+
     import {
         gotoPage,
         getSendData,
@@ -652,9 +656,9 @@
                 runners:[],
                 runnerselected: [],
                 runnerExecuteType: "appointed",
-                caselibIds: [],			
-                caselibId: 3,			// caselibId 
-                executionround: '1',		// 执行轮次 
+                caselibIds: [],
+                caselibId: 3,			// caselibId
+                executionround: '1',		// 执行轮次
                 recordflag: 2,			// 记录单
                 exeScope: '1',			// 执行范围
                 selectState: '',		// 选择状态
@@ -663,7 +667,7 @@
                 fullFlag:true,
 
                 // save the value obtained from back end and will set to the selects' options
-                testPlans: [], 
+                testPlans: [],
                 testrounds: [],
                 // save the values which is selected by users and will be send to the back end
                 testPlanId: sessionStorage.getItem('testPlanId') || undefined,
@@ -747,7 +751,7 @@
                     totalCount: 1
                 },
                 logShow:false,
-                
+
                 //出错查询的时间
                 interruptTime : 5,
                 //是否通过界面点击进行执行了,0:用户不动 1：点击执行 2：点击取消
@@ -811,7 +815,7 @@
             getPlans.then(() => {
                 _this.getCases();
             }).catch(err => { Vac.alert(err); });
-            // init the modal 
+            // init the modal
             $('#add-modal').on('hidden.bs.modal', function (e) {
                 var scenes = _this.selectedScene;
                 for(var i=0,len=scenes.length; i<len; i++){
@@ -833,7 +837,7 @@
                     params: {
                         "nameMedium": "",
                         "descMedium": "",
-                        "caseLibId": + this.caseLibId   
+                        "caseLibId": + this.caseLibId
                     }
                 }).then((res) => {
                     this.testPlanId = data.testPlanEntityList[0].id
@@ -941,7 +945,7 @@
                     data: JSON.stringify({
                         "userId": _this.userId,
                         "recordflag": _this.recordFlag,
-                        "exeScope": _this.exeScope, 
+                        "exeScope": _this.exeScope,
                         "selectState": _this.selectState,
                         "selectedExeInstances": selectedExeInstances,
                         "testPlanId": _this.testPlanId,
@@ -1013,7 +1017,7 @@
                     data: JSON.stringify({
                         "batchId": _this.batchId,
                         "reqSyncNo": null,
-                        "sessionId":null, 
+                        "sessionId":null,
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
@@ -1045,14 +1049,14 @@
                     data: JSON.stringify({
                         "batchId": values.batchId,
                         "reqSyncNo": values.respSyncNo,
-                        "sessionId":values.sessionId, 
+                        "sessionId":values.sessionId,
                     }),
                     success: function(data) {
                         if(data.respSyncNo==-1){
                             _this.setResultIcon(data.insStatuses)
                             console.log("finish this branch")
                             _this.exeStautShow = '<i class="icon-ok"></i>已执行';
-                        } 
+                        }
                         else if(data.respSyncNo==-2){
                             _this.syncQueryIncInsStatus(values)
                         }
@@ -1089,7 +1093,7 @@
                         }
                         //如果秒数大于0
                         if(_this.interruptTime < 1 || _this.interruptExe == 1){
-                            //清除定时任务 
+                            //清除定时任务
                             $('#runInterrupt').modal('hide');
                             _this.interruptExe=0;
                             clearInterval(name);
@@ -1126,7 +1130,7 @@
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        "batchId": _this.interruptData.batchId, 
+                        "batchId": _this.interruptData.batchId,
                         "sceneId": _this.interruptData.insStatuses[0].sceneId,
                         "caseId":_this.interruptData.insStatuses[0].testcaseId,
                         "errorContinuing":errorContinuing,
@@ -1153,19 +1157,20 @@
                     type: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        "logType": 2, 
+                        "logType": 2,
                         "reqSyncNo": null,
-                        "sessionId":null, 
+                        "sessionId":null,
                         "testPlanId":_this.testPlanId,
                         "latestLineNum":50
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
+                        	console.log("aaaaaaaa")
                             let textarea = $("#logarea");
                             textarea.text(data.logSeg);
                             var logarea=document.getElementById("logarea");
                             hljs.highlightBlock(logarea);
-                            textarea.scrollTop(99999999999);	
+                            textarea.scrollTop(99999999999);
                             syncQueryIncLog(data)
                         }
                         else{
@@ -1182,9 +1187,9 @@
                         type: 'post',
                         contentType: 'application/json',
                         data: JSON.stringify({
-                            "logType": 2, 
+                            "logType": 2,
                             "reqSyncNo": values.respSyncNo,
-                            "sessionId":values.sessionId, 
+                            "sessionId":values.sessionId,
                             "testPlanId":values.testPlanId,
                             "latestLineNum":50
                         }),
@@ -1264,7 +1269,7 @@
                                 console.log($(selectNode).children().text("分配执行机为："+runnerpors[0]))
                             }
                         }
-                        
+
                     //}
                 }
             },
@@ -1313,7 +1318,7 @@
                 if (!pageNum || pageNum > ts.scenePage.totalPage || pageNum < 1) {
                     alert('页码输入有误！');
                     return false;
-                } 
+                }
                 //更新页面
                 else {
                     this.scenePage.currentPage = pageNum;
@@ -1337,12 +1342,12 @@
                 // }
                 // for (let key of Object.keys(o)) {
                 // 	sceneCaseList.push({
-                // 		sceneId: +key, 
+                // 		sceneId: +key,
                 // 		testcaseList: o[key].length === 0 ? '' : o[key]
                 // 	})
                 // }
                 // sceneCaseList = sceneCaseList.length === 0 ? '' : JSON.stringify(sceneCaseList);
-                // // 
+                // //
                 // if (!sceneCaseList.length && !sceneList.length && !testcaseList.length) {
                 // 	Vac.alert('请至少选择一项进行删除');
                 // 	return;
@@ -1375,7 +1380,7 @@
                     sceneList: this.selectedScene,     // [3]
                     creatorId: +sessionStorage.getItem('userId') || 3
                 };
-                // send data and display the modal 
+                // send data and display the modal
                 Vac.ajax({
                     url:  'caseExecuteInstance/insertCaseExecuteInstance',
                     data: data,
@@ -1437,7 +1442,7 @@
                     })
                     $( '.scene-list-wrapper' ).disableSelection();
                 }
-                
+
                 if($('#testround-main').length > 0){
                     $('#testround-main').disableSelection();
                 }
@@ -1488,7 +1493,7 @@
                     data: JSON.stringify({
                         "batchId": _this.batchId,
                         "reqSyncNo": null,
-                        "sessionId":null, 
+                        "sessionId":null,
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
@@ -1570,7 +1575,7 @@
                         _this.testSceneList.sort(_this.compare("orderNum"));	//更新排序后的场景列表
                         if (_this.testSceneList) {
                             for (var j = 0; j<_this.testSceneList.length;j++) {
-                                
+
                                 var scene = _this.testSceneList[j]
                                 // sceneIds save the id of scene  [4,5,6]
                                 _this.sceneIds.push(scene.sceneId)
@@ -1584,7 +1589,7 @@
                                         _this.sceneCaseIds.push(scene.sceneId + '-' + c.caseId)
                                         let flowNodes = []
                                         for (let flowNode of c.flowNodes) {
-                                            // caselist also save the flowNodeId in flowCase in the form of 
+                                            // caselist also save the flowNodeId in flowCase in the form of
                                             //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
                                             caselist.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
                                             flowNodes.push(scene.sceneId+'-'+c.caseId+'-'+flowNode.flowNodeId)
@@ -1601,7 +1606,7 @@
                                 //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
                                 // }
                                 _this.sceneCaseMap.set(scene.sceneId, caselist)
-                                
+
                             }
                         }
                     }
@@ -1744,16 +1749,16 @@
                 sessionStorage.setItem("executeInstanceInfo",args)
                 window.open('case-operation.html')
             },
-            
+
             turnToPage(currentPageParam){
                 if(currentPageParam>0 && currentPageParam<=this.page.totalPage){
                     this.page.currentPage = currentPageParam;
                     this.getTestPlans();
-                } 
+                }
                 else Vac.alert("不在页码范围");
             },
             add() {
-                
+
                     const url = 1 === this.editType ? 'testPlanController/insertTestPlan' : 'testPlanController/updateTestPlan';
                     const data = 1 === this.editType ? this.addRowData : {
                         id: this.selectTestPlan,
@@ -1838,7 +1843,7 @@
                         "orderColumns":this.orderColumns,
                         "nameMedium": "",
                         "descMedium": "",
-                        "caseLibId": this.addRowData.caseLibId               
+                        "caseLibId": this.addRowData.caseLibId
                     },
                     success: (data) => {
                         if ('0000' === data.respCode) {
@@ -1924,6 +1929,7 @@
 <style lang="less" scoped>
   @import '../../styles/base2.less';
   @import '../../styles/base2.less';
+	@import '../../styles/ascetic.less';
     .page-outer {
         display: flex;
         .right-content {
@@ -1932,6 +1938,26 @@
     }
 </style>
 <style lang="less" >
+	      .hljs-number,
+	      .hljs-meta,
+	      .hljs-type,
+	      .hljs-params {
+	      	color:  gray;
+	      }
+				.hljs-literal{
+					color:deepskyblue;
+				}
+				.hljs-builtin-name,
+				.hljs-built_in
+				.hljs-builtco_in {
+					color:orangered;
+				}
+				.hljs-tag,
+				.hljs-name,
+				.hljs-keyword,
+				.hljs-selector-tag {
+					color: lawngreen;
+				}
         .exe-info{
             padding-left: 10px;
         }
@@ -1983,7 +2009,7 @@
             color: black;
             display:inline-block;
         }
-        .box-card{ 
+        .box-card{
             height: 100%;
         }
         .el-card__header{
@@ -2218,7 +2244,7 @@
                         border: 1px solid #ddd5d5;
                         border-radius: 5px;
                         @caseHeaderheight: 30px;
-                        
+
                         height: 30px;
                         &:first-of-type {
                             margin-left: 0;
@@ -2253,7 +2279,7 @@
                                 margin: 0px 0 0 0px;
                                 overflow-x: hidden;
                                 white-space: nowrap;
-                                text-overflow: ellipsis; 
+                                text-overflow: ellipsis;
                             }
                             .width-limit{
                                 width : 80px
@@ -2351,7 +2377,7 @@
                         th,td{
                             text-align: center;
                         }
-                        
+
                     }
                     .table {
                         tr {
@@ -2522,7 +2548,7 @@
                     line-height: 35px;
                 }
             }
-            
+
         }
         main {
             min-height: 100px;
