@@ -66,7 +66,6 @@ export default {
           _this.formData.code = "功能点" + Date.now();
         }
         if (valid) {
-          this.$message.success("已填写必选项" + this.formData.code);
           Request({
             url: "/transactController/addSingleUITransactWithoutAut",
             method: "POST",

@@ -96,7 +96,7 @@
                                             </el-button>
                                         </div>
                                         <div id="area">
-                                            <pre class="pre"><code  id="logarea" class="javascript"></code></pre>
+                                            <pre class="pre"><code  id="logarea" class="javascript">{{logInfo}}</code></pre>
                                         </div>
                                     </el-card>
                                     <div v-else id="loghidden">
@@ -706,15 +706,15 @@
                 selectedScene: [],	// 3, 1, 2, [1,2], [3],[{"sceneId":1,"testcaseList":[1,2]}]
                 // exeImgs: { },
                 exeImgs: {
-                    0: '/static/img/waiting.png',
-                    10: '/static/img/init.png',
-                    2: '/static/img/success.png',
-                    3: '/static/img/error.png',
-                    13: '/static/img/running.gif',
-                    4: '/static/img/success.png',
-                    5: '/static/img/jump.png',
-                    11: '/static/img/warn.png',
-                    12: '/static/img/warn.png',
+                    0: '/index/static/img/waiting.png',
+                    10: '/index/static/img/init.png',
+                    2: '/index/static/img/success.png',
+                    3: '/index/static/img/error.png',
+                    13: '/index/static/img/running.gif',
+                    4: '/index/static/img/success.png',
+                    5: '/index/static/img/jump.png',
+                    11: '/index/static/img/warn.png',
+                    12: '/index/static/img/warn.png',
                 },
                 // 批量执行相关
                 batchId:null,
@@ -762,7 +762,7 @@
                 senceDialog: false,
                 testPlanDialog: false,
                 addTestPlanDialog: false,
-
+                logInfo: ''
             }
         },
         mounted(){
@@ -936,7 +936,7 @@
                         selectedExeInstances.push(temp);
                     }
                 }
-                _this.logShow = true;
+                // _this.logShow = true;
                 _this.exeStautShow = '<i class="icon-spinner"></i>执行中';
                 Vac.ajax({
                     url:  'executeController/t1',
@@ -1165,7 +1165,8 @@
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
-                        	console.log("aaaaaaaa")
+													_this.logInfo = _this.logInfo + data.logSeg
+													console.log("aaaaaaaa")
                             let textarea = $("#logarea");
                             textarea.text(data.logSeg);
                             var logarea=document.getElementById("logarea");
@@ -1195,12 +1196,13 @@
                         }),
                         success: function(data) {
                             if(data.respCode=="0000"){
+                                _this.logInfo = _this.logInfo + data.logSeg
                                 let textarea = $("#logarea")
-                                if(data.logSeg!=null){
-                                    textarea.text(textarea.text()+data.logSeg);
-                                    var logarea=document.getElementById("logarea");
-                                    hljs.highlightBlock(logarea);
-                                }
+                                // if(data.logSeg!=null){
+                                    // textarea.text(textarea.text()+data.logSeg);
+                                    // var logarea=document.getElementById("logarea");
+                                    // hljs.highlightBlock(logarea);
+                                // }
                                 textarea.scrollTop(99999999999);
                                 syncQueryIncLog(data)
                             }
@@ -1733,21 +1735,31 @@
 
             viewCase: function (sceneId, caseId, sourcechannel,flowNodeId, testPhase, testRound, recorderStatus) {
                 var that = this;
-                var o = {
-                    testPlanId:that.testPlanId,
-                    batchId:that.batchId,
+                // var o = {
+                //     testPlanId:that.testPlanId,
+                //     batchId:that.batchId,
+                //     sceneId,
+                //     caseId,
+                //     testPhase:testPhase || this.testphaseValue,
+                //     testRound:testRound || this.testroundValue,
+                //     flowNodeId,
+                //     // executeround: this.executionround,
+                //     sourcechannel: sourcechannel,
+                //     recorderStatus: recorderStatus || '2',
+                // }
+                // var args = (JSON.stringify(o));
+                // sessionStorage.setItem("executeInstanceInfo",args)
+                // window.open('case-operation.html')
+                let path = this.$router.resolve({
+                    name: 'CaseOperation',
+                    query: {
+                    batchId: that.batchId,
+                    testPlanId: that.testPlanId,
+                    testcaseId: caseId,
                     sceneId,
-                    caseId,
-                    testPhase:testPhase || this.testphaseValue,
-                    testRound:testRound || this.testroundValue,
-                    flowNodeId,
-                    // executeround: this.executionround,
-                    sourcechannel: sourcechannel,
-                    recorderStatus: recorderStatus || '2',
-                }
-                var args = (JSON.stringify(o));
-                sessionStorage.setItem("executeInstanceInfo",args)
-                window.open('case-operation.html')
+                    }
+                })
+                window.open(path.href, '_blank')
             },
 
             turnToPage(currentPageParam){

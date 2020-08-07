@@ -27,6 +27,7 @@ export default new Router({
             meta: {
                 name: '登录',
                 hide: true, //在目录结构上隐藏，不在菜单栏外显
+                noRequiresAuth: true
             },
         },
         {
@@ -35,7 +36,7 @@ export default new Router({
             component: Rigester,
             meta: {
                 name: '注册',
-                hide: true
+                hide: true,
             }
         },
         {

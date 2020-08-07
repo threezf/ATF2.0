@@ -120,7 +120,7 @@
           <el-input v-model="addUIform.name"></el-input>
         </el-form-item>
         <el-form-item label="UI描述">
-          <el-input v-model="addUIform.desc"></el-input>
+          <el-input type="textarea" rows="5" v-model="addUIform.desc"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -582,7 +582,7 @@ export default {
     },
   },
   created() {
-    this.$message.success(`transId:${this.transId} + autId: ${this.autId}`)
+    // this.$message.success(`transId:${this.transId} + autId: ${this.autId}`)
     this.getEleTree();
     this.getClass();
   },
