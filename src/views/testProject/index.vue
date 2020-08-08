@@ -33,22 +33,22 @@
             
         },
         watch:{
-        '$route': {
-            handler (to, from) {
-                if(to.name === 'testProject'){
-                    this.pathShow = false
-                }
-                else{
-                    this.pathShow = true
-                    this.projectName = undefined
-                }
-                    console.log('999999999999999999')
-                    
-                    console.log(sessionStorage.getItem("projectNameStorage"))
-                    this.projectName = sessionStorage.getItem("projectNameStorage")
-            },
-            immediate: true
-        }
+            '$route': {
+                handler (to, from) {
+                    if(to.name === 'testProject'){
+                        this.pathShow = false
+                    }
+                    else{
+                        this.pathShow = true
+                        this.projectName = undefined
+                    }
+                        console.log('999999999999999999')
+                        
+                        console.log(sessionStorage.getItem("projectNameStorage"))
+                        this.projectName = sessionStorage.getItem("projectNameStorage")
+                },
+                immediate: true
+            }
         }
     }
 </script>

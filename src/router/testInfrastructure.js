@@ -35,8 +35,8 @@ export default {
 			redirect: '/testInfrastructure/TestedSystemManagementRouter/testedSystemManagement',
 			meta: {
 				name: "被测系统管理",
-				parent: 'TestInfrastructure',
-				icon: 'el-icon-view'
+				parent: 'TestInfrastructure', 
+				icon: 'el-icon-back'
 			},
 			children: [
 				{
