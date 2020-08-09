@@ -187,8 +187,8 @@ export default {
           contentType: 'application/json',
           data: JSON.stringify({
             userId: _this.userId,
-            recordflag: "2",
-            exeScope: "1", 
+            // recordflag: "2",
+            exeScope: "0", 
             selectState: "",
             selectedExeInstances: _this.selectedExeInstances,
             testPlanId: _this.testPlanId,

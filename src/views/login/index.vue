@@ -7,66 +7,67 @@
 		</div>
     <div class="mainBody">
       <h1 class="title">ATF云测试平台</h1>
-      <el-form 
-        :rules="rules"
-        :model="ruleForm" 
-        ref="ruleForm"
-        label-width="100px" 
-        class="loginForm"
-        status-icon>
-        <el-form-item 
-          prop="uid"
-          label="账号" >
-          <el-input 
-            v-model="ruleForm.uid"
-            placeholder="请输入账号"
-            suffix-icon="el-icon-user-solid"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item 
-          prop="password"
-          label="密码" >
-          <el-input 
-            v-model="ruleForm.password"
-            placeholder="请输入密码"
-            type="password"
-            suffix-icon="el-icon-lock"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item 
-          prop="sessionIdIn"
-          label="验证码" >
-          <el-input 
-            v-model="ruleForm.sessionIdIn"
-            placeholder="请输入验证码"
-            type="text"
-            suffix-icon="el-icon-lock"
-            class="verCodeInput"
-            clearable>
-          </el-input>
-          <img
-            id="sessionIdImage" 
-            class="codeStyle" 
-            type="image" 
-            alt="这里将换验证码"
-            @click="getSessionId"
-            :src="imageURL" >
-        </el-form-item>
-        <el-row>
-          <el-button 
-            :disabled="ruleForm.password===''||ruleForm.uid===''"
-            @click="submitForm('ruleForm')"
-            type="info"
-            plain
-            >登录
-          </el-button>
-          <span class="spanAccount">
-            <a href="#">忘记密码</a>&nbsp;|&nbsp;<a @click.prevent="toRigester">注册</a>
-          </span>
-        </el-row>
-      </el-form>
+      <div class="loginBody">
+        <el-form 
+          :rules="rules"
+          :model="ruleForm" 
+          class="loginForm"
+          ref="ruleForm"
+          label-width="100px" 
+          status-icon>
+          <el-form-item 
+            prop="uid"
+            label="账号" >
+            <el-input 
+              v-model="ruleForm.uid"
+              placeholder="请输入账号"
+              suffix-icon="el-icon-user-solid"
+              clearable>
+            </el-input>
+          </el-form-item>
+          <el-form-item 
+            prop="password"
+            label="密码" >
+            <el-input 
+              v-model="ruleForm.password"
+              placeholder="请输入密码"
+              type="password"
+              suffix-icon="el-icon-lock"
+              clearable>
+            </el-input>
+          </el-form-item>
+          <el-form-item 
+            prop="sessionIdIn"
+            label="验证码" >
+            <el-input 
+              v-model="ruleForm.sessionIdIn"
+              placeholder="请输入验证码"
+              type="text"
+              suffix-icon="el-icon-lock"
+              class="verCodeInput"
+              clearable>
+            </el-input>
+            <img
+              id="sessionIdImage" 
+              class="codeStyle" 
+              type="image" 
+              alt="这里将换验证码"
+              @click="getSessionId"
+              :src="imageURL" >
+          </el-form-item>
+          <el-row>
+            <el-button 
+              :disabled="ruleForm.password===''||ruleForm.uid===''"
+              @click="submitForm('ruleForm')"
+              type="primary"
+              >登录
+            </el-button>
+            <span class="spanAccount">
+              <a href="#">忘记密码?</a>&nbsp;|&nbsp;<a @click.prevent="toRigester">注册</a>
+            </span>
+          </el-row>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -239,61 +240,77 @@
   }
   
   .mainBody {
-    width: 100%;
-    height: 420px;
+    width: fit-content;
+    height: fit-content;
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
     .title {
       color: white;
       text-align: center;
       font-size: 40px;
-      margin-left: 60px;
+      margin-left: 0px;
     }
-    .loginForm {
-      width: 500px;
-      margin: 0px auto;
+    .loginBody {
       margin-top: 60px;
-      .el-form-item__label {
-        color: white !important;
-        font-size: 18px;
-        margin-right: 10px;
-      }
-      .el-input {
-        width: 360px;
-      }
-      .codeStyle {
-        color: white;
-        width: 120px;
-        margin-left: 30px;
-        height: 40px;
-        cursor: pointer;
-      }
-      .verCodeInput {
-        width: 200px;
-      }
-      .el-row {
-        width: 100%;
-        padding: 0 70px;
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-between;
-        .el-button {
-          width: 130px;
+      .loginForm {
+        background: radial-gradient(rgba(255, 255, 255, 0.01), rgba(143, 145, 152, 0.1));
+        width: 460px;
+        box-shadow: 0px 0px 10px 5px rgba(143, 145, 152, 1) inset;
+        border-radius: 15px;
+        padding: 60px 10px 50px 10px;
+        margin: 15px;
+        .el-form-item__label {
+          color: white !important;
+          font-size: 18px;
+          margin-right: 10px;
         }
-        .spanAccount {
-          color: #EEE;
-          display: block;
-          line-height: 40px;
-          a {
-            text-decoration: none;
-            cursor: pointer;
+        .el-input {
+          width: 300px;
+          color: white;
+        }
+        .el-input__inner {
+          color: white;
+          background: transparent;
+          border: 1px solid rgba(143, 145, 152, 0.6);
+        }
+        .el-input__inner:focus {
+          border: 1px solid rgba(0, 123, 255, 1);
+        }
+        .codeStyle {
+          color: white;
+          width: 120px;
+          margin-left: 30px;
+          height: 40px;
+          cursor: pointer;
+        }
+        .verCodeInput {
+          width: 140px;
+        }
+        .el-row {
+          width: 100%;
+          padding: 0 20px;
+          margin-top: 30px;
+          display: flex;
+          justify-content: space-between;
+          .el-button {
+            width: 130px;
           }
-          a:visited {
+          .spanAccount {
             color: #EEE;
-          }
-          a:hover {
-            color: aqua;
+            display: inline-block;
+            line-height: 40px;
+            a {
+              text-decoration: none;
+              cursor: pointer;
+            }
+            a:visited {
+              color: #EEE;
+            }
+            a:hover {
+              color: aqua;
+            }
           }
         }
       }
