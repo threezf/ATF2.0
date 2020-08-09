@@ -288,6 +288,8 @@
 				if (_this.radio === false) {
 					_this.$message.warning("请选择一条数据！！");
 				} else {
+					
+				sessionStorage.setItem("testSysNameStorage", "("+ this.row.nameMedium +")" ) 
 					// sessionStorage.setItem('value','this.currentPage');
 					_this.$router.push({ path: "transact", query: { id: this.id } });
 				}
@@ -368,6 +370,7 @@
 				let _this = this;
 				_this.id = row.id;
 				console.log("id", _this.id);
+				sessionStorage.setItem("testSysNameStorage", "("+ row.nameMedium +")" )   //把项目名称存入缓存中
 				this.$router.push({
 					path: "transact",
 					query: { id: _this.id, code: row.code, nameMedium: row.nameMedium }

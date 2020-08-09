@@ -39,7 +39,7 @@ export default {
 				meta: {
 						name: '测试项目管理',
 						parent: 'TestProjectIndex',
-						icon: 'el-icon-view'
+						icon: 'el-icon-back'
 				}
 		},
 		{

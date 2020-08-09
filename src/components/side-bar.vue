@@ -30,7 +30,9 @@
     import {GetSideBarList} from '@/libs/router.js'
     export default {
         props: {
-            pathName: String
+            pathName: String,
+            // 第一个导航名字将会被替换成该字段
+            firstPathName: String
         },
         data() {
             return {
@@ -60,6 +62,11 @@
                         path = item.path
                     }
                 })
+                if(this.firstPathName){
+                    console.log( '-------------------------------------------------------------******************-')
+                    console.log(path[0])
+                    children[0].meta.name = this.firstPathName
+                }
                 this.fullPath = path
                 this.menuList = children
             },

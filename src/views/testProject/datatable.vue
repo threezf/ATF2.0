@@ -1018,15 +1018,15 @@
 						}
 					}
 				}else if(type==2){
-					let flag2 = false
+					let flag3 = false
 					for (let i = 0; i < this.afterOperationRows.length; i++) {
-						if (this.multipleSelection1.some(v => (v.id === this.afterOperationRows[i].id))) {
-							if (flag2) {
+						if (this.multipleSelection2.some(v => (v.id === this.afterOperationRows[i].id))) {
+							if (flag3) {
 								let tmp = this.afterOperationRows.splice(i, 1)[0]
 								this.afterOperationRows.splice(i - 1, 0, tmp)
 							}
 						} else {
-							flag2 = true
+							flag3 = true
 						}
 					}
 				}
@@ -1047,16 +1047,16 @@
 						}
 					}
 				}else if(type==2){
-					let flag = false
+					let flag3 = false
 					for (let i = this.afterOperationRows.length - 1; i > -1; i--) {
 
-						if (this.multipleSelection1.some(v => (v.id === this.afterOperationRows[i].id))) {
-							if (flag) {
+						if (this.multipleSelection2.some(v => (v.id === this.afterOperationRows[i].id))) {
+							if (flag3) {
 								let tmp = this.afterOperationRows.splice(i, 1)[0]
 								this.afterOperationRows.splice(i + 1, 0, tmp)
 							}
 						} else {
-							flag = true
+							flag3 = true
 						}
 					}
 				}
