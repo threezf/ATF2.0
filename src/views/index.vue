@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div  id = "quicklyStart">
+        <div id="quicklyStart">
             <el-tooltip content="体验最简洁的测试流程" placement="top"  href="./quicklyTransact.html">
                 <el-button>
                     <router-link :to="{name:'QuicklyStart'}">

@@ -2,27 +2,27 @@
  * 系统管理页面路由
  */
 import SystemManagementIndex from '@/views/systemManagement/index'
-import EnterpriseMnagement from '@/views/systemManagement/EnterpriseMnagement'
-import AdministratorMnagement from '@/views/systemManagement/AdministratorMnagement'
-import RoleMnagement from '@/views/systemManagement/RoleMnagement'
+import EnterpriseManagement from '@/views/systemManagement/EnterpriseManagement'
+import AdministratorManagement from '@/views/systemManagement/AdministratorManagement'
+import RoleManagement from '@/views/systemManagement/RoleManagement'
 import MenuManagement from '@/views/systemManagement/MenuManagement'
-import ProjectMnagement from '@/views/systemManagement/ProjectMnagement'
+import ProjectManagement from '@/views/systemManagement/ProjectManagement'
 import UserManagement from '@/views/systemManagement/userManagement'
-import RunnerMnagement from '@/views/systemManagement/runnerManagement'
+import RunnerManagement from '@/views/systemManagement/runnerManagement'
 
 export default {
     path: '/systemManagement',
     name: 'SystemManagement',
     component: SystemManagementIndex,
-    redirect: '/systemManagement/userManagement',
+    redirect: '/systemManagement/enterpriseManagement',
     meta: {
         name: '系统管理'
     },
     children: [
         {
-            path: 'enterpriseMnagement',
-            name: 'enterpriseMnagement',
-            component: EnterpriseMnagement,
+            path: 'enterpriseManagement',
+            name: 'enterpriseManagement',
+            component: EnterpriseManagement,
             meta: {
                 name: '企业管理',
                 parent: 'SystemManagement',
@@ -30,9 +30,9 @@ export default {
             }
         },
         {
-            path: 'administratorMnagement',
-            name: 'administratorMnagement',
-            component: AdministratorMnagement,
+            path: 'administratorManagement',
+            name: 'administratorManagement',
+            component: AdministratorManagement,
             meta: {
                 name: '系统管理员管理',
                 parent: 'SystemManagement',
@@ -40,9 +40,9 @@ export default {
             }
         },
         {
-            path: 'roleMnagement',
-            name: 'roleMnagement',
-            component: RoleMnagement,
+            path: 'roleManagement',
+            name: 'roleManagement',
+            component: RoleManagement,
             meta: {
                 name: '角色管理',
                 parent: 'SystemManagement',
@@ -60,9 +60,9 @@ export default {
             }
         },
         {
-            path: 'projectMnagement',
-            name: 'projectMnagement',
-            component: ProjectMnagement,
+            path: 'projectManagement',
+            name: 'projectManagement',
+            component: ProjectManagement,
             meta: {
                 name: '项目组管理',
                 parent: 'SystemManagement',
@@ -80,9 +80,9 @@ export default {
             }
         },
         {
-            path: 'runnerMnagement',
-            name: 'runnerMnagement',
-            component: RunnerMnagement,
+            path: 'runnerManagement',
+            name: 'runnerManagement',
+            component: RunnerManagement,
             meta: {
                 name: '执行机管理',
                 parent: 'SystemManagement',

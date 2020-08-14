@@ -4,6 +4,7 @@
       <el-main>
         <el-row>
           <el-button type="primary" size="small" icon="el-icon-plus">新增</el-button>
+          <el-button type="primary" size="small" icon="el-icon-setting">分配权限</el-button>
         </el-row>
         <el-row class="searchRow">
           <el-input placeholder="输入搜索条件" clearable>
@@ -17,31 +18,27 @@
             type="selection">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="名称">
+            width="100px" 
+            label="序号">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="上级菜单">
+            min-width="25%" 
+            label="角色名称">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="图标">
+            min-width="25%" 
+            label="角色标识">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="类型">
+            min-width="25%" 
+            label="备注">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="菜单URL">
+            min-width="25%" 
+            label="状态">
           </el-table-column>
           <el-table-column 
-            min-width="14.28%" 
-            label="授权标识">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" label="操作">
+            min-width="25%" label="操作">
             <template slot-scope="scope">
               <el-button 
                 type="primary" 
@@ -105,7 +102,7 @@ export default {
 
 <script>
   export default {
-    name: "MenuManagement",
+    name: "RoleManagement",
     data() {
       return {
         total: 100,
