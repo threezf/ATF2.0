@@ -547,6 +547,12 @@
 					query: { id: this.manageId, code: this.manageCode }
 				}); //界面跳转
 			}
+		},
+		mounted(){
+			let dialog = this.$route.query.dialog
+			if(dialog){
+				this.$message.warning('请选择被测系统！')
+			}
 		}
 	};
 </script>

@@ -10,6 +10,8 @@ import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
 import QuicklyStart from './quicklyStart'
+import UI from '@/views/UIorCGI/ui'
+import CGI from '@/views/UIorCGI/CGI'
 
 Vue.use(Router)
 
@@ -57,6 +59,22 @@ export default new Router({
         },
         SystemManagement,
 		TestInfrastructure,
+        {
+            path: '/testInfrastructure/ui',
+            name: 'UI',
+            component: UI,
+            meta: {
+                name: 'UI测试'
+            }
+        },
+        {
+            path: '/testInfrastructure/cgi',
+            component: CGI,
+            name: 'CGI',
+            meta: {
+                name: '接口测试'
+            }
+        },
         TestProject,
 		RecordFunction,
         QuicklyStart
