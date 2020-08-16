@@ -64,6 +64,7 @@ export default new Router({
             name: 'UI',
             component: UI,
             meta: {
+                hide: true,
                 name: 'UI测试'
             }
         },
@@ -72,6 +73,7 @@ export default new Router({
             component: CGI,
             name: 'CGI',
             meta: {
+                hide: true,
                 name: '接口测试'
             }
         },
