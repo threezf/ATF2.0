@@ -38,7 +38,7 @@
             return {
                 menuList: [],
                 fullPath: '',
-                isCollapse: true,
+                isCollapse: false,
                 activedPath: this.$route.path
             }
         },
