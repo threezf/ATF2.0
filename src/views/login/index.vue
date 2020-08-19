@@ -137,11 +137,6 @@
       //提交表单，点击登陆
       submitForm(FormName) {
         let _this = this;
-        if (_this.ruleForm.uid == "1") {
-          sessionStorage.setItem("userId",_this.ruleForm.uid)
-          this.$router.push({ path: "/index" });
-
-        } else {
           this.$refs[FormName].validate(valid => {
             console.log("进入验证", valid);
             if (valid) {
@@ -156,6 +151,11 @@
               })
                 .then(res => {
                   console.log("验证成功", res);
+                  if (_this.ruleForm.uid == "1") {
+                    SessionStorage.set("userId",_this.ruleForm.uid)
+                    this.$router.push({ path: "/index" });
+                    return
+                  } 
                   Request({
                     url: "/userController/login",
                     method: "post",
@@ -168,6 +168,7 @@
                   })
                     .then(res => {
                       console.log("登录成功", res);
+                      SessionStorage.set("userId",_this.ruleForm.uid)
                       this.$router.push({ path: "/index" });
                     })
                     .catch(e => {
@@ -183,7 +184,6 @@
               this.$message.error("请输入信息");
             }
           });
-        }
       },
       //获取验证码
       getSessionId() {
