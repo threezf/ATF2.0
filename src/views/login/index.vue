@@ -194,12 +194,14 @@
           method: "POST"
         })
           .then(res => {
-            _this.storedSessionId = res.obj.sessionId;
+            console.log(res,"获取资源")
+            _this.storedSessionId = res.sessionId;
             _this.imageURL =
               "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
               "&sessionId=" +
-              res.obj.sessionId;
+              res.sessionId;
+              console.log.log("datata", _this.imageURL,  _this.storedSessionId)
           })
           .catch(e => {
             console.log("登录出错", e);

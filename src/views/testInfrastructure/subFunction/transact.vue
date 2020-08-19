@@ -32,7 +32,7 @@
     </el-container>
     <el-main class="el-main-base-inner">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
           <el-select 
             class="selectName"
@@ -46,6 +46,11 @@
               :label="item.nameMedium"
             ></el-option>
           </el-select>
+        </el-col>
+        <el-col :span="8">
+          <span class="ownedSystem">所属被测系统：</span>
+          <el-input style="width: 300px">
+          </el-input>
         </el-col>
       </el-row>
       <!--表格-->
