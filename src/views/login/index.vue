@@ -107,9 +107,9 @@
       };
       return {
         ruleForm: {
-          uid: 1,
-          password: 1,
-          sessionIdIn: 1
+          uid: "",
+          password: "",
+          sessionIdIn: ""
         },
         rules: {
           uid: [{ validator: checkAccount, trigger: "blur" }],
@@ -168,6 +168,8 @@
                   })
                     .then(res => {
                       console.log("登录成功", res);
+                      sessionStorage.setItem("sessionId",_this.storedSessionId)
+                      console.log(sessionStorage.getItem('sessionId'), 'userId')
                       this.$router.push({ path: "/index" });
                     })
                     .catch(e => {
@@ -255,7 +257,7 @@
       margin-left: 0px;
     }
     .loginBody {
-      margin-top: 60px;
+      margin-top: 30px;
       .loginForm {
         background: radial-gradient(rgba(255, 255, 255, 0.01), rgba(143, 145, 152, 0.1));
         width: 460px;

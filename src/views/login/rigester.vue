@@ -10,7 +10,7 @@
     </el-steps>
     <div v-if="currentStep === 1">
       <el-row class="titleRow">
-        <span class="formTitle">必填信息</span>
+        <span class="formTitle">请填写信息</span>
       </el-row>
       <el-form ref="ruleForm" status-icon :model="ruleForm" :rules="rules">
         <el-form-item label="用户名" label-width="200px" prop="username">
@@ -35,8 +35,7 @@
             placeholder="请输入6-16位密码"
             autocomplete="off"
             :type="passw"
-            v-model="ruleForm.password"
-          >
+            v-model="ruleForm.password">
             <i slot="suffix" :class="icon" @click="showPass"></i>
           </el-input>
         </el-form-item>
@@ -46,27 +45,33 @@
             placeholder="请确认密码"
             autocomplete="off"
             :type="passw"
-            v-model="ruleForm.surePassword"
-          >
+            v-model="ruleForm.surePassword">
             <i slot="suffix" :class="icon" @click="showPass"></i>
           </el-input>
         </el-form-item>
-      </el-form>
-      <el-row class="titleRow">
-        <span class="formTitle">选填信息</span>
-      </el-row>
-      <el-form>
-        <el-form-item label="所属部门" label-width="200px">
+         <el-form-item label="身份" label-width="200px" prop="userIndetify">
+          <el-radio-group v-model="ruleForm.myStatus">
+            <el-radio label="1" value="1">个人</el-radio>
+            <el-radio label="2" value="2">企业</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="所属部门" label-width="200px" v-show="ruleForm.myStatus==2" hidden>
           <el-input class="normalInput" placeholder="请填写所属部门，例如行政部" v-model="depart"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" label-width="200px">
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.myStatus==2" prop="companyName">
+          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" label-width="200px" v-show="ruleForm.myStatus==1">
           <el-input class="normalInput" placeholder="请输入手机号" v-model="phone"></el-input>
         </el-form-item>
-        <el-form-item label="固定电话" label-width="200px">
+        <el-form-item label="固定电话" label-width="200px" v-show="ruleForm==1">
           <el-input class="normalInput" placeholder="请输入固定电话" v-model="fixedPhone"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" label-width="200px">
+        <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.myStatus==1">
           <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="email"></el-input>
+        </el-form-item>
+        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.myStatus==2" prop="companyDesc">
+          <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.companyDesc"></el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">
           <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
@@ -104,8 +109,8 @@ export default {
   name: "rigester",
   components: { ElSlPanel },
   data() {
-    let checkUsername = (rule, value, callback) => {
-      let pattern = /[a-z0-9]{4,16}/g;
+    const checkUsername = (rule, value, callback) => {
+      const pattern = /[a-z0-9]{4,16}/g;
       if (!value) {
         return callback("用户名不可为空");
       } else if (!pattern.exec(value)) {
@@ -113,14 +118,14 @@ export default {
       }
       callback();
     };
-    let checkName = (rule, value, callback) => {
+    const checkName = (rule, value, callback) => {
       if (!value) {
         return callback("姓名不可为空");
       }
       callback();
     };
-    let checkPassword = (rule, value, callback) => {
-      let pattern = /\w{4,16}/g;
+    const checkPassword = (rule, value, callback) => {
+      const pattern = /\w{4,16}/g;
       if (!value) {
         return callback("密码不可为空");
       } else if (!pattern.exec(value)) {
@@ -128,7 +133,7 @@ export default {
       }
       return callback();
     };
-    let checkPasswordAgain = (rule, value, callback) => {
+    const checkPasswordAgain = (rule, value, callback) => {
       if (!value) {
         return callback("请输入确认密码");
       } else if (this.ruleForm.surePassword !== this.ruleForm.password) {
@@ -136,12 +141,24 @@ export default {
       }
       return callback();
     };
-    let checkAuthCode = (rule, value, callback) => {
+    const checkAuthCode = (rule, value, callback) => {
       if (!value) {
         return callback("请输入验证码");
       }
       return callback();
     };
+    const checkCompanyName = (rule, value, callback) => {
+      if(!value) {
+        return callback("请输入企业名称")
+      }
+      return callback()
+    }
+    const checkCompanyDesc = (rule, value, callback) => {
+      if(!value) {
+        return callback("请输入企业描述")
+      }
+      return callback()
+    }
     return {
       title: "ATF",
       subtitle: "用户注册",
@@ -158,7 +175,10 @@ export default {
         username: "", //用户名
         name: "", //姓名
         password: "", //密码
-        surePassword: "" //确认密码
+        surePassword: "", //确认密码
+        myStatus: "1",
+        companyName: "", // 企业名称
+        companyDesc: "", //企业描述
       },
       depart: "", //所属部门
       phone: "", //手机号
@@ -195,7 +215,19 @@ export default {
             validator: checkAuthCode,
             trigger: "blur"
           }
-        ]
+        ],
+        companyName: [
+          {
+            validator: checkCompanyName,
+            trigger: 'blur'
+          }
+        ],
+        companyDesc: [
+          {
+            validator: checkCompanyDesc,
+            trigger: 'blur'
+          }
+        ],
       }
     };
   },
@@ -216,7 +248,7 @@ export default {
       })
         .then(res => {
           console.log("验证码获取成功", res);
-          sessionStorage.setItem("sessionId", res.obj.sessionId);
+          sessionStorage.setItem("sessionId", res.sessionId);
           _this.sessionId = sessionStorage.getItem("sessionId");
           _this.url =
             "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
@@ -359,9 +391,10 @@ export default {
 }
 .codeStyle {
   width: 150px;
-  height: 40px;
+  height: 38px;
   margin-left: 20px;
   margin-bottom: -15px;
+  margin-top: -18px;
 }
 .buttonRow {
   margin-left: 200px;
