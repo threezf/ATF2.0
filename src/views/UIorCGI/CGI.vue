@@ -11,6 +11,9 @@ export default {
         if(testSys){
             this.$router.push({
                 name:'Transact',
+                query: {
+                    isInterface: true
+                }
             })
             return
         }

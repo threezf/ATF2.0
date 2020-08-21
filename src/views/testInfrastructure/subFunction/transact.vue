@@ -169,10 +169,12 @@
               v-model="ruleForm.functionType">
               <el-option 
                 value="UI" 
-                selected="true">
+                selected="true"
+                v-if="!isInterface">
               </el-option>
               <el-option 
-                value="接口">
+                value="接口"
+                v-else>
               </el-option>
             </el-select>
           </el-form-item>
@@ -341,7 +343,7 @@ export default {
       //表单数据
       ruleForm: {
         nameMedium: "",
-        functionType: "UI",
+        functionType: this.isInterface? "接口": "UI",
         code: "",
         descShort: ""
       }, //表单信息数据
@@ -358,12 +360,15 @@ export default {
       elementRepositoryId: "",
       objectRepositoryId: "",
       addId: '',
-      addRow: {}
+      addRow: {},
+      isInterface: false
     };
   },
   created() {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.nameMedium;
+    this.isInterface = this.$route.query.isInterface
+    console.log('接口测试功能点',this.$route.query)
     this.getAllFunction();
     this.getAllSystem();
   },
@@ -374,7 +379,8 @@ export default {
         currentPage: this.currentPage,
         orderColumns: "modified_time",
         orderType: "desc",
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        transType: this.isInterface? 2: 1
       };
       return obj;
     },
@@ -406,7 +412,7 @@ export default {
       _this.dialogModelFlag = 0;
       _this.dialogVisible = true;
       _this.ruleForm.nameMedium =  ""
-      _this.ruleForm.functionType =  "UI"
+      _this.ruleForm.functionType = !this.isInterface? "UI": '接口'
       _this.ruleForm.code =  ""
       _this.ruleForm.descShort =  ""
     },
@@ -679,7 +685,8 @@ export default {
                     autId: _this.autId,
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
-                    nameMedium: _this.ruleForm.nameMedium
+                    nameMedium: _this.ruleForm.nameMedium,
+                    transType: _this.isInterface? 2: 1
                   }
                 })
                   .then(res => {

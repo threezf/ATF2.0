@@ -723,7 +723,7 @@
   .titleClass {
     .systemSelectSystem {
       position: relative;
-      width: 270px;
+      width: 100%;
       .searchInput {
         position: fixed !important;
         top: 0px;
@@ -731,7 +731,7 @@
       }
     }
     .systemSelectFun {
-      width: 370px;
+      width: 100%;
     }
     .buttonCol {
       height: 40px;
@@ -764,7 +764,7 @@
       height: 120px;
     }
     .mainSelect {
-      width: 265px;
+      width: 100%;
     }
     .saveRow {
       position: relative;

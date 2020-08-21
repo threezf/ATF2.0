@@ -5,7 +5,8 @@
   <div class="page-outer">
     <side-bar v-if='pathShow' path-name="TestInfrastructure" :first-path-name='projectName'></side-bar>
     <div class="right-content">
-        <progress-bar></progress-bar>
+        <progress-bar v-show="!isInterface"></progress-bar>
+        <progress-bar-interface v-show="isInterface"></progress-bar-interface>
         <div >
             <router-view />
         </div>
@@ -16,22 +17,28 @@
 <script>
 import SideBar from "@/components/side-bar";
     import progressBar from '@/components/progressBar'
+    import progressBarInterface from '@/components/progressBarInterface'
 export default {
   name: "index",
   components: {
     SideBar,
-    progressBar
+    progressBar,
+    progressBarInterface
   },
   data() {
     return {
       pathShow: false,
       projectName: undefined,
+      isInterface: false
     };
   },
   methods: {},
   watch:{
       '$route': {
           handler (to, from) {
+              if(to.query.isInterface) {
+                this.isInterface = to.query.isInterface
+              }
               if(to.name === 'TestedSystemManagement'){
                   this.pathShow = false
               }
@@ -39,7 +46,7 @@ export default {
                   this.pathShow = true
                   this.projectName = undefined
               }
-                  console.log('999999999999999999')
+                  console.log('999999999999999999', from, to)
                   
                   console.log(sessionStorage.getItem("testSysNameStorage"))
                   this.projectName = sessionStorage.getItem("testSysNameStorage")

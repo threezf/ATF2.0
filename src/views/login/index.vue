@@ -121,7 +121,8 @@
           isSessionIdMatched: false
         },
         imageURL: "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=0.11636858629067781&sessionId=567E4A18483202100E1782F55EBCED23",
-        storedSessionId: 0
+        storedSessionId: 0,
+        userId: 0
       };
     },
     computed: {},
@@ -137,11 +138,6 @@
       //提交表单，点击登陆
       submitForm(FormName) {
         let _this = this;
-        if (_this.ruleForm.uid == "1") {
-          sessionStorage.setItem("userId",_this.ruleForm.uid)
-          this.$router.push({ path: "/index" });
-
-        } else {
           this.$refs[FormName].validate(valid => {
             console.log("进入验证", valid);
             if (valid) {
@@ -156,6 +152,11 @@
               })
                 .then(res => {
                   console.log("验证成功", res);
+                  if (_this.ruleForm.uid == "1") {
+                    SessionStorage.set("userId",_this.ruleForm.uid)
+                    this.$router.push({ path: "/index" });
+                    return
+                  } 
                   Request({
                     url: "/userController/login",
                     method: "post",
@@ -168,8 +169,8 @@
                   })
                     .then(res => {
                       console.log("登录成功", res);
-                      sessionStorage.setItem("sessionId",_this.storedSessionId)
-                      console.log(sessionStorage.getItem('sessionId'), 'userId')
+                      sessionStorage.setItem("userId",res.obj)
+                      console.log(sessionStorage.getItem("userId"), 'userId')
                       this.$router.push({ path: "/index" });
                     })
                     .catch(e => {
@@ -185,7 +186,6 @@
               this.$message.error("请输入信息");
             }
           });
-        }
       },
       //获取验证码
       getSessionId() {
@@ -198,6 +198,7 @@
           .then(res => {
             console.log(res,"获取资源")
             _this.storedSessionId = res.sessionId;
+            _this.userId = res.obj
             _this.imageURL =
               "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +

@@ -2,11 +2,12 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-form label-width="94px">
+        <el-form class="formTop" label-width="94px">
           <el-row :gutter="20">
             <el-col :span="5" :offset="0">
               <el-form-item label="开始日期:">
                 <el-date-picker
+                  class="timeStyle"
                   v-model="startTime"
                   type="datetime"
                   placeholder="开始日期"
@@ -18,6 +19,7 @@
               <el-form-item
                 label="结束日期:">
                 <el-date-picker
+                  class="timeStyle"
                   v-model="endTime"
                   type="datetime"
                   placeholder="结束日期"
@@ -25,11 +27,12 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="4.5" :offset="0">
+            <el-col :span="5" :offset="0">
               <el-form-item
                 label-width="88px"
                 label="时间段">
                 <el-select 
+                  class="elSelect"
                   clearable
                   v-model="timeSlot" 
                   @change="timeSlotSelect">
@@ -48,22 +51,22 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="9" :offset="0" class="buttons">
               <el-button 
                 type="primary" 
                 size="small" 
                 icon="el-icon-search" 
-                style="margin-left: 30px"
                 @click="executeQuery"
                 >查询
               </el-button>
             </el-col>
           </el-row>
-          <el-row class="formRowTop">
+          <el-row class="formRowTop" :gutter="20">
             <el-col :span="5" :offset="0">
               <el-form-item 
                 label="用例来源">
                 <el-select 
+                  class="elSelect"
                   clearable
                   v-model="selectedCaseSource">
                   <el-option 
@@ -78,7 +81,8 @@
               <el-form-item 
                 label="测试计划">
                 <el-select 
-                clearable
+                  class="elSelect"
+                  clearable
                   v-model="params.testPlanId" 
                   @change="handleTestPlanChange">
                   <el-option
@@ -95,6 +99,7 @@
                 label-width="88px" 
                 label="执行状态">
                 <el-select 
+                  class="elSelect"
                   clearable
                   v-model="selectedExecutionStatus" 
                   @change="handleRunStatusChange">
@@ -497,8 +502,17 @@
   };
 </script>
 <style scoped>
+  .formTop {
+    text-align: left;
+  }
+  .timeStyle, .elSelect {
+    width: 100%;
+  }
   .el-form-item {
     margin-bottom: 0px;
+  }
+  .buttons {
+    margin-top: -8px;
   }
   .timeCol,
   .executionStatus,

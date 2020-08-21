@@ -28,27 +28,26 @@ window.activeMenu;
 let loadingInstance = null
 router.beforeEach((to, from, next) => {
   window.activeMenu = (to.meta && to.meta.parent) ? to.meta.parent : to.name;
-  console.log('登录',to.meta, to.meta.noRequiresAuth)
-  next()
-  // if(to.meta && to.meta.noRequiresAuth){
-  // }
-  // else{
-  //   if(SessionStorage.get('userId')) { //需要校验的key
-  //     next()
-  //   }else{
-  //     next('/login')
-  //   }
-  // }
+  if(to.meta && to.meta.noRequiresAuth){
+    next()
+  }
+  else{
+    if(SessionStorage.get('userId')) { //需要校验的key
+      next()
+    }else{
+      next('/login')
+    }
+  }
 
-  // if(to.meta && to.meta.requiresAuth) {//如果需要登录校验，在路由处配置
-  //   if(SessionStorage.get('user')) { //需要校验的key
-  //     next()
-  //   }else{
-  //     next('/login')
-  //   }
-  // }else{
-  //   next()
-  // }
+  if(to.meta && to.meta.requiresAuth) {//如果需要登录校验，在路由处配置
+    if(SessionStorage.get('user')) { //需要校验的key
+      next()
+    }else{
+      next('/login')
+    }
+  }else{
+    next()
+  }
 });
 router.afterEach((to, from) => {
   // loadingInstance.close()
