@@ -544,7 +544,7 @@
 				</el-table>
 			</div>
 
-			<div v-if='false'>
+			<div>
 				<el-row>
 					<h4> 数据校验</h4>
 				</el-row>
@@ -691,7 +691,7 @@
 								<el-row>
 									<el-col :span="5">
 										<el-button
-											@click='scope.row.parameters.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
+											@click='scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
 											size="mini">
 											取消
 										</el-button>
@@ -700,7 +700,7 @@
 										<el-button
 											type="primary"
 											size="mini"
-											@click='scope.row.parameters.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
+											@click='scope.row.parameters.forEach(v=>{v.Value=v.newValue}) ;scope.row.arguShow = true'>
 											确认
 										</el-button>
 									</el-col>
@@ -726,6 +726,7 @@
 				@throwTreeInfo="addTreeInfo"
 				:transId='selectedTemplate.transId + ""'
 				:autId='selectedTemplate.autId + ""'
+				:addItemFlag='addItemFlag'
 				:multiselection='true'>
 			</uiEleFunTree>
 		</el-dialog>
@@ -968,6 +969,28 @@
 				}
 				if (this.addItemFlag == 3) {
 					rows = this.dataOperationRows
+					for (let i = 0; i < functionInfo.length; i++) {
+						let beforeItem = {
+							arguShow: true,
+							functions: [{
+								name: functionInfo[i].name,
+								parameterlist: ""
+							}],
+							id: functionInfo[i].id,
+							operation: {
+								classType: "",
+								element: "",
+								ui: ""
+							},
+							parameters: functionInfo[i].arguments.map(item => ({
+								Name: item.name,
+								Value: '',
+								newValue: '',
+							})),
+							selected: false,
+						}
+						this.dataOperationRows.push(beforeItem)
+					}
 				}
 
 

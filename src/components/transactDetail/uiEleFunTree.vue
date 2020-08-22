@@ -71,6 +71,10 @@ export default {
             type: Boolean,
             default: false
         },
+        addItemFlag:{
+            type: Number,
+            default: 1
+        }
     },
   data() {
     return {
@@ -85,7 +89,10 @@ export default {
         sonShowFlag :this.showFlag
     }
   },
-    watch: {
+  watch: {
+      addItemFlag(){
+        this.getFunTree()
+      }
   },
   computed: {
   },
@@ -187,7 +194,7 @@ export default {
       getFunTree(){
           const _this = this
             Request({
-                url: '/aut/selectFunctionSet',
+                url: this.addItemFlag==3? '/aut/selectCheckFunctionSet' : '/aut/selectFunctionSet',
                 method: 'post',
                 params:{'id':this.autId}
             }).then((res) => {
