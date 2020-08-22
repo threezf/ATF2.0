@@ -42,30 +42,30 @@
                 <el-table-column
                     label="用户名"
                     property="username"
-                    width="120"/>
+                    min-width="16%"/>
                 <el-table-column
                     label="姓名"
                     property="reallyname"
-                    width="120"/>
+                    min-width="16%"/>
                 <el-table-column
                     label="角色"
                     property='role'
                     :formatter="roleSwitch"
-                    width="120"/>
+                    min-width="20%"/>
                 <el-table-column
                     label="所属部门"
                     property="dept"
-                    width="120"/>
+                    min-width="20%"/>
                 <el-table-column
                     label="手机号"
                     property="tel"
-                    width="120"/>
+                    min-width="20%"/>
                 <el-table-column
                     label="状态"
                     property="status"
                     :formatter="statusSwitch"
-                    width="120"/>
-                <el-table-column label="操作">
+                    min-width="10%"/>
+                <el-table-column label="操作" min-width="18%">
                 <template slot-scope="scope">
                     <el-button
                     size="mini"

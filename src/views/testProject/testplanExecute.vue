@@ -766,6 +766,7 @@
             }
         },
         mounted(){
+            console.log('sessionId', sessionStorage.getItem('userId'))
             var _this = this;
             // for(let i in this.exeImgsMap){
             //     console.log('asdasdasdasdasdasdas')

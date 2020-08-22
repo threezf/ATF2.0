@@ -107,9 +107,9 @@
       };
       return {
         ruleForm: {
-          uid: 1,
-          password: 1,
-          sessionIdIn: 1
+          uid: "",
+          password: "",
+          sessionIdIn: ""
         },
         rules: {
           uid: [{ validator: checkAccount, trigger: "blur" }],
@@ -121,7 +121,8 @@
           isSessionIdMatched: false
         },
         imageURL: "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=0.11636858629067781&sessionId=567E4A18483202100E1782F55EBCED23",
-        storedSessionId: 0
+        storedSessionId: 0,
+        userId: 0
       };
     },
     computed: {},
@@ -168,7 +169,8 @@
                   })
                     .then(res => {
                       console.log("登录成功", res);
-                      SessionStorage.set("userId",_this.ruleForm.uid)
+                      sessionStorage.setItem("userId",res.obj)
+                      console.log(sessionStorage.getItem("userId"), 'userId')
                       this.$router.push({ path: "/index" });
                     })
                     .catch(e => {
@@ -196,6 +198,7 @@
           .then(res => {
             console.log(res,"获取资源")
             _this.storedSessionId = res.sessionId;
+            _this.userId = res.obj
             _this.imageURL =
               "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
@@ -255,7 +258,7 @@
       margin-left: 0px;
     }
     .loginBody {
-      margin-top: 60px;
+      margin-top: 30px;
       .loginForm {
         background: radial-gradient(rgba(255, 255, 255, 0.01), rgba(143, 145, 152, 0.1));
         width: 460px;

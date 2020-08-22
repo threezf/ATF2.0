@@ -39,15 +39,15 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // if(to.meta && to.meta.requiresAuth) {//如果需要登录校验，在路由处配置
-  //   if(SessionStorage.get('userId')) { //需要校验的key
-  //     next()
-  //   }else{
-  //     next('/login')
-  //   }
-  // }else{
-  //   next()
-  // }
+  if(to.meta && to.meta.requiresAuth) {//如果需要登录校验，在路由处配置
+    if(SessionStorage.get('user')) { //需要校验的key
+      next()
+    }else{
+      next('/login')
+    }
+  }else{
+    next()
+  }
 });
 router.afterEach((to, from) => {
   // loadingInstance.close()
