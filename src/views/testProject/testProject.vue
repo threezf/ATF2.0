@@ -244,12 +244,27 @@
 					params: this.addForm
 				}).then((res) => {
 					this.dialogVisible = false
+					this.insertTestPlan(res.caseLibId)
 					this.getTestProject()
 				}, (err) => {
 					this.dialogVisible = false
 					console.log(err)
 				}).catch((err) => {
 					console.log(err)
+				})
+			},
+			insertTestPlan(caseLibId){
+				Request({
+					url: '/testPlanController/insertTestPlan',
+					method: 'post',
+					params: {
+						caseLibId,
+						testPhaseId: 3,
+						testRoundId: 11,
+						creatorId: sessionStorage.getItem("userId"),
+						descMedium: this.addForm.descMedium,
+						nameMedium: this.addForm.nameMedium,
+					}
 				})
 			},
 			// 修改测试项目
