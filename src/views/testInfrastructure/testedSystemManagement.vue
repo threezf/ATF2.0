@@ -501,10 +501,16 @@
 										}
 									})
 									.catch(err => {
-										if (err.respCode === '"10011111"') {
-											this.$message.warning("系统名称已经存在");
+										if (err.respCode === '10011111') {
+											this.$message({
+												type: 'error',
+												message: '系统名称已经存在'
+											})
 										}
-										_this.$message.error(err.respMsg)
+										this.$message({
+											type: 'error',
+											message: '系统名称已经存在'
+										})
 									});
 							} else {
 								console.log(
