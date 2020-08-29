@@ -16,7 +16,7 @@ export default {
             verifyId: SessionStorage.get('unigroupuid'),
             rtx: SessionStorage.get('unigrouprtx'),
             componentAppId: 'wx1ec08a99274a048d',
-            address4:'http://140.143.16.21:8080/'
+            address4:'http://10.101.167.184:8080/'
         }
     },
     methods:{

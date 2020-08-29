@@ -120,7 +120,7 @@
           isAccountAndPasswordMatched: false,
           isSessionIdMatched: false
         },
-        imageURL: "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=0.11636858629067781&sessionId=567E4A18483202100E1782F55EBCED23",
+        imageURL: "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=0.11636858629067781&sessionId=567E4A18483202100E1782F55EBCED23",
         storedSessionId: 0,
         userId: 0
       };
@@ -200,7 +200,7 @@
             _this.storedSessionId = res.sessionId;
             _this.userId = res.obj
             _this.imageURL =
-              "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
+              "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
               "&sessionId=" +
               res.sessionId;

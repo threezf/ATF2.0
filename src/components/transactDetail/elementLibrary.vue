@@ -201,7 +201,7 @@ export default {
   data() {
     return {
       publishActionUrl:
-        "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi",
+        "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi",
       branchAddEleDialogFlag: false, // 批量添加的dialog
       fileList: [], // 上传文件列表
       editFlag: true, // 元素信息编辑的状态
@@ -268,7 +268,7 @@ export default {
   methods: {
     downloadTemp() {
       let url =
-        "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" +
+        "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" +
         this.autId;
       console.log(url);
       window.location.href = url;

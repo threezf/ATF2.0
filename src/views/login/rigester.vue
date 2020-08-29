@@ -251,7 +251,7 @@ export default {
           sessionStorage.setItem("sessionId", res.sessionId);
           _this.sessionId = sessionStorage.getItem("sessionId");
           _this.url =
-            "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
+            "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
             Math.random() +
             "&sessionId=" +
             sessionStorage.getItem("sessionId");
