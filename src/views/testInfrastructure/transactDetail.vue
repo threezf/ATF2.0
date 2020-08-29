@@ -88,9 +88,18 @@
                 transSelected:{} //当前被选中的功能点的数据
             }
         },
+        watch: {
+            "$route": {
+                handler(to, from) {
+                    console.log('$route',to, from)
+                    to.query.steps === 0? 
+                    this.activeName = 'elementLibrary':
+                    this.activeName = 'template'
+                }
+            }
+        },
         mounted(){
             let data = this.$route.query // 跳转源界面传递的行数据或新增测试功能点的对象数据
-            console.log(data)
             this.autSelectValue = data.autId
             this.tranSelectValue =  data.id
             this.userId = sessionStorage.getItem('userId') || '3'
@@ -99,7 +108,22 @@
         },
         methods: {
             handleClick(tab, event) {
-                console.log(tab, event);
+                console.log('tab-click	',tab.index);
+                if(tab.index == 0) {
+                    this.$router.push({
+                        path: '/testInfrastructure/transactDetail',
+                        query: {
+                            steps: 0
+                        }
+                    })
+                }else {
+                    this.$router.push({
+                         path: '/testInfrastructure/transactDetail',
+                        query: {
+                            steps: 1
+                        }
+                    }) 
+                }
             },
             getAuts(){
                 Request({

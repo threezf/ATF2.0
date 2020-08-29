@@ -1,308 +1,133 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
-      <el-row class="buttonsRow">
-        <el-button 
-          type="primary"
-					icon='el-icon-plus'
-					size="small" 
-          @click="addFunctionButton">添加</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="small"
-          @click="importFunctionButton"
-          >批量导入
-        </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-document-copy"
-          size="small"
-          @click="copyFunction"
-          >复制功能点
-        </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-edit-outline"
-          size="small"
-          @click="updateFunctionButton"
-          >修改
-        </el-button>
-      </el-row>
-    </el-container>
-    <el-main class="el-main-base-inner">
-      <el-row>
-        <el-col :span="6">
-          <span class="ownedSystem">所属被测系统：</span>
-          <el-select 
-            class="selectName"
-            v-model="ownedSystem" 
-            placeholder="所属被测系统"
-            @change="changeAutId">
-            <el-option
-              v-for="(item,key) in autRespDTOList"
-              :key="key"
-              :value="item.nameMedium"
-              :label="item.nameMedium"
-            ></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="8">
-          <span class="ownedSystem">所属被测系统：</span>
-          <el-input style="width: 300px">
-          </el-input>
-        </el-col>
-      </el-row>
-      <!--表格-->
-      <el-table
-        class="tableStyle"
-        ref="singleTable"
-        style="width:fit-content; margin-top: 15px"
-        :data="tableData"
-        :default-sort="{prop:'modifiedTime',order:'descending'}"
-        stripe
-        highlight-current-row
-        border>
-        <el-table-column 
-          label="选择" 
-          min-width="3%" 
-          align="center">
-          <template slot-scope="scope">
-            <el-radio
-              v-model="selectedRowIndex"
-              :label="scope.$index"
-              @change="selectRow(scope.$index,scope.row)"
-            >&nbsp;</el-radio>
-          </template>
-        </el-table-column>
-        <el-table-column 
-          label="行号" 
-          width="50px" 
-          align="center" 
-          type="index">
-        </el-table-column>
-        <el-table-column 
-          prop="" 
-          label="编码" 
-          min-width="15%" 
-          align="center">
-          <template slot-scope="scope">
-            <a class="codeTo" @click.prevent="toTransact(scope.row)">{{scope.row.code}}</a>
-          </template>
-        </el-table-column>
-        <el-table-column 
-          prop="nameMedium" 
-          label="名称" 
-          min-width="15%"
-          align="center">
-          </el-table-column>
-        <el-table-column 
-          prop="transType" 
-          label="类型" 
-          width="80px" 
-          align="center">
-        </el-table-column>
-        <el-table-column 
-          prop="descShort" 
-          label="描述" 
-          min-width="15%" 
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="创建时间"
-          width="200px"
-          align="center"
-          :formatter="transTime"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="modifiedTime"
-          label="修改时间"
-          width="200px"
-          align="center"
-          :formatter="transTime"
-          sortable
-        ></el-table-column>
-      </el-table>
-      <!--底部换页-->
-      <div>
-        <el-col class="footSelect">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-sizes="[5,10,20,50]"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="totalCount"
-            layout="total, sizes, prev ,pager ,next, jumper"
-          ></el-pagination>
-        </el-col>
-      </div>
+<div class="page-base-inner">
+  <el-container>
+    <el-row class="buttonsRow">
+      <el-button type="primary" icon='el-icon-plus' size="small" @click="addFunctionButton">添加</el-button>
+      <el-button type="primary" icon="el-icon-folder-add" size="small" @click="importFunctionButton">批量导入
+      </el-button>
+      <el-button type="primary" icon="el-icon-document-copy" size="small" @click="copyFunction">复制功能点
+      </el-button>
+      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton">修改
+      </el-button>
+    </el-row>
+  </el-container>
+  <el-main class="el-main-base-inner">
+    <el-row>
+      <el-col :span="6">
+        <span class="ownedSystem">所属被测系统：</span>
+        <el-select class="selectName" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
+          <el-option v-for="(item,key) in autRespDTOList" :key="key" :value="item.nameMedium" :label="item.nameMedium"></el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="8">
+        <span class="ownedSystem">所属被测系统：</span>
+        <el-input style="width: 300px">
+        </el-input>
+      </el-col>
+    </el-row>
+    <!--表格-->
+    <el-table class="tableStyle" ref="singleTable" style="width:fit-content; margin-top: 15px" :data="tableData" :default-sort="{prop:'modifiedTime',order:'descending'}" stripe highlight-current-row border>
+      <el-table-column label="选择" min-width="3%" align="center">
+        <template slot-scope="scope">
+          <el-radio v-model="selectedRowIndex" :label="scope.$index" @change="selectRow(scope.$index,scope.row)">&nbsp;</el-radio>
+        </template>
+      </el-table-column>
+      <el-table-column label="行号" width="50px" align="center" type="index">
+      </el-table-column>
+      <el-table-column prop="" label="编码" min-width="15%" align="center">
+        <template slot-scope="scope">
+          <a class="codeTo" @click.prevent="toTransact(scope.row)">{{scope.row.code}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="nameMedium" label="名称" min-width="15%" align="center">
+      </el-table-column>
+      <el-table-column prop="transType" label="类型" width="80px" align="center">
+      </el-table-column>
+      <el-table-column prop="descShort" label="描述" min-width="15%" align="center">
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="200px" align="center" :formatter="transTime" sortable></el-table-column>
+      <el-table-column prop="modifiedTime" label="修改时间" width="200px" align="center" :formatter="transTime" sortable></el-table-column>
+    </el-table>
+    <!--底部换页-->
+    <div>
+      <el-col class="footSelect">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[5,10,20,50]" :current-page="currentPage" :page-size="pageSize" :total="totalCount" layout="total, sizes, prev ,pager ,next, jumper"></el-pagination>
+      </el-col>
+    </div>
 
-      <!--新增和修改对话框-->
-      <el-dialog
-        width="24%"
-        :title="dialogTitle"
-        :visible.sync="dialogVisible"
-        :before-close="handleBeforeClose">
-        <el-form 
-          ref="ruleForm"
-          label-width="40px"
-          :model="ruleForm" 
-          :rules="rules"
-          status-icon>
-          <el-form-item 
-            label="名称" 
-            prop="nameMedium">
-            <el-input 
-              placeholder="必输项" 
-              v-model.lazy="ruleForm.nameMedium">
-            </el-input>
-          </el-form-item>
-          <el-form-item
-            label="类型"
-            prop="functionType"
-            v-if="isAdded">
-            <el-select
-              class="addSelect"
-              v-model="ruleForm.functionType">
-              <el-option 
-                value="UI" 
-                selected="true"
-                v-if="!isInterface">
-              </el-option>
-              <el-option 
-                value="接口"
-                v-else>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item 
-            label="编码"
-            prop="code">
-            <el-input 
-              placeholder="为空时自动生成" 
-              v-model="ruleForm.code">
-            </el-input>
-          </el-form-item>
-          <el-form-item 
-            label="描述" 
-            prop="descShort">
-            <el-input 
-              cols="5" 
-              rows="5"
-              type="textarea" 
-              v-model="ruleForm.descShort">
-            </el-input>
-          </el-form-item>
-          <hr color="#F5F5F5" />
-          <el-form-item>
-            <div class="dialogBottom">
-              <el-button
-                id="buttonName"
-                type="primary"
-                size="small"
-                @click="submitForm('ruleForm')"
-                >{{dialogOperateButton}}
-              </el-button>
-              <el-button 
-                type="danger" 
-                size="small" 
-                plain 
-                @click="cancelButton"
-                >取消
-              </el-button>
-            </div>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-      <!--导入对话框-->
-      <el-dialog
-        width="27%"
-        :title="dialogTitle"
-        :before-close="handleBeforeClose"
-        :visible.sync="dialogImportVisible">
-        <el-form :action="importURL" enctype="multipart/form-data" method='post' id="uploadForm">
-          <el-upload
-            ref="upload"
-            :action="importURL"
-            :limit="1"
-            :auto-upload="false"
-            :file-list="fileList"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :on-exceed="handleExceed"
-            :on-change="handleOnChange">
-            <el-button 
-              class="btnSelectFile"
-              type="success"
-              slot="trigger"
-              plain>上传文件
+    <!--新增和修改对话框-->
+    <el-dialog width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
+      <el-form ref="ruleForm" label-width="40px" :model="ruleForm" :rules="rules" status-icon>
+        <el-form-item label="名称" prop="nameMedium">
+          <el-input placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="类型" prop="functionType" v-if="isAdded">
+          <el-select class="addSelect" v-model="ruleForm.functionType">
+            <el-option value="UI" selected="true" v-if="!isInterface">
+            </el-option>
+            <el-option value="接口" v-else>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="编码" prop="code">
+          <el-input placeholder="为空时自动生成" v-model="ruleForm.code">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="描述" prop="descShort">
+          <el-input cols="5" rows="5" type="textarea" v-model="ruleForm.descShort">
+          </el-input>
+        </el-form-item>
+        <hr color="#F5F5F5" />
+        <el-form-item>
+          <div class="dialogBottom">
+            <el-button id="buttonName" type="primary" size="small" @click="submitForm('ruleForm')">{{dialogOperateButton}}
             </el-button>
-            <el-input class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
-          </el-upload>
-          <hr color="#F5F5F5" />
-          <el-form-item>
-            <el-col
-              class="buttonDownload"
-              :span="12">
-              <el-button
-                type="primary"
-                icon="el-icon-download"
-                size="small"
-                @click="downloadTemplate"
-              >模板下载</el-button>
-            </el-col>
-            <el-col
-              class="buttonGroup"
-              :span="12">
-              <el-button
-                type="primary"
-                size="small"
-                @click="importTemplate"
-                >导入
-              </el-button>
-              <el-button
-                size="small"
-                @click="cancelButton"
-                >取消
-              </el-button>
-            </el-col>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-      <!--添加成功对话框-->
-      <el-dialog
-        width="25%"
-        title="提示"
-        :visible.sync="successDialogVisible"
-        :before-close="handleBeforeClose">
-        <el-form>
-          <el-form-item 
-            label-width="20px">
-            <h4 class="transactSuccessTitle">操作成功</h4>
-          </el-form-item>
-          <hr width="100%" color="#F5F5F5" />
-          <el-form-item 
-            class="formFoot transactDialogButtonRow">
-            <el-button 
-              type="primary" 
-              size="small" 
-              @click="cancelButtonClicked"
-              >确定
+            <el-button type="danger" size="small" plain @click="cancelButton">取消
             </el-button>
-            <el-button 
-              type="success" 
-              size="small"
-              @click="toDetail"
-              >进入功能点
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!--导入对话框-->
+    <el-dialog width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
+      <el-form :action="importURL" enctype="multipart/form-data" method='post' id="uploadForm">
+        <el-upload ref="upload" :action="importURL" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
+          <el-button class="btnSelectFile" type="success" slot="trigger" plain>上传文件
+          </el-button>
+          <el-input class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
+        </el-upload>
+        <hr color="#F5F5F5"  />
+        <el-form-item>
+                      <el-col class="buttonDownload" :span="12">
+            <el-button type="primary" icon="el-icon-download" size="small" @click="downloadTemplate">模板下载</el-button>
+          </el-col>
+          <el-col class="buttonGroup" :span="12">
+            <el-button type="primary" size="small" @click="importTemplate">导入
             </el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </el-main>
-  </div>
+            <el-button size="small" @click="cancelButton">取消
+            </el-button>
+          </el-col>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!--添加成功对话框-->
+    <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
+      <el-form>
+        <el-form-item label-width="20px">
+          <h4 class="transactSuccessTitle">操作成功</h4>
+        </el-form-item>
+        <hr width="100%" color="#F5F5F5" />
+        <el-form-item class="formFoot transactDialogButtonRow">
+          <el-button type="primary" size="small" @click="cancelButtonClicked">确定
+          </el-button>
+          <el-button type="success" size="small" @click="toDetail">进入功能点
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </el-main>
+</div>
 </template>
 
 <script>
@@ -310,7 +135,9 @@ import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
-  components: { ElSlPanel },
+  components: {
+    ElSlPanel
+  },
   mixins: [VueMixins], // 时间格式转化
   name: "transact",
   data() {
@@ -343,12 +170,15 @@ export default {
       //表单数据
       ruleForm: {
         nameMedium: "",
-        functionType: this.isInterface? "接口": "UI",
+        functionType: this.isInterface ? "接口" : "UI",
         code: "",
         descShort: ""
       }, //表单信息数据
       rules: {
-        nameMedium: [{ validator: checkNameMedium, trigger: "blur" }]
+        nameMedium: [{
+          validator: checkNameMedium,
+          trigger: "blur"
+        }]
       }, //表单验证数据
       //文件上传
       fileList: [],
@@ -368,7 +198,7 @@ export default {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.nameMedium;
     this.isInterface = this.$route.query.isInterface
-    console.log('接口测试功能点',this.$route.query)
+    this.isInterface? this.ruleForm.functionType = "接口" : this.functionType = "UI"
     this.getAllFunction();
     this.getAllSystem();
   },
@@ -380,7 +210,7 @@ export default {
         orderColumns: "modified_time",
         orderType: "desc",
         pageSize: this.pageSize,
-        transType: this.isInterface? 2: 1
+        transType: this.isInterface ? 2 : 1
       };
       return obj;
     },
@@ -390,12 +220,13 @@ export default {
         "导入",
         "修改功能点",
         "操作失败",
-        "该系统无功能点,请添加功能点"
+        "该系统无UI功能点,请添加",
+        "该系统无接口,请添加"
       ];
       return titleArray[this.dialogModelFlag];
     },
     dialogOperateButton() {
-      let buttonArray = ["新增", "确定", "修改", "确定", "新增"];
+      let buttonArray = ["新增", "确定", "修改", "确定", "新增", "新增"];
       return buttonArray[this.dialogModelFlag];
     },
     importURL() {
@@ -411,10 +242,10 @@ export default {
       _this.isAdded = true;
       _this.dialogModelFlag = 0;
       _this.dialogVisible = true;
-      _this.ruleForm.nameMedium =  ""
-      _this.ruleForm.functionType = !this.isInterface? "UI": '接口'
-      _this.ruleForm.code =  ""
-      _this.ruleForm.descShort =  ""
+      _this.ruleForm.nameMedium = ""
+      _this.ruleForm.functionType = !this.isInterface ? "UI" : '接口'
+      _this.ruleForm.code = ""
+      _this.ruleForm.descShort = ""
     },
     importFunctionButton() {
       let _this = this;
@@ -429,7 +260,11 @@ export default {
         _this.dialogModelFlag = 2;
         _this.dialogVisible = true;
         _this.isAdded = false;
-        const { nameMedium, code, descShort } = _this.rowInfo;
+        const {
+          nameMedium,
+          code,
+          descShort
+        } = _this.rowInfo;
         this.ruleForm = {
           nameMedium,
           code,
@@ -445,14 +280,14 @@ export default {
         if (_this.rowInfo.transType === "接口") {
           console.log("复制功能点", _this.rowInfo.transType);
           Request({
-            url: "/transactController/copySingleInterfaceTransact",
-            method: "POST",
-            params: {
-              autId: _this.autId,
-              creatorId: "3",
-              transId: _this.updateId
-            }
-          })
+              url: "/transactController/copySingleInterfaceTransact",
+              method: "POST",
+              params: {
+                autId: _this.autId,
+                creatorId: "3",
+                transId: _this.updateId
+              }
+            })
             .then(res => {
               console.log("复制成功", res);
               if (res.respCode) {
@@ -469,16 +304,16 @@ export default {
         } else if (_this.rowInfo.transType === "UI") {
           console.log("复制UI功能点", _this.rowInfo.transType);
           Request({
-            url: "/transactController/copySingleUITransact",
-            method: "POST",
-            params: {
-              autId: _this.autId,
-              creatorId: "3",
-              elementRepositoryId: _this.elementRepositoryId,
-              objectRepositoryId: _this.objectRepositoryId,
-              transId: _this.updateId
-            }
-          })
+              url: "/transactController/copySingleUITransact",
+              method: "POST",
+              params: {
+                autId: _this.autId,
+                creatorId: "3",
+                elementRepositoryId: _this.elementRepositoryId,
+                objectRepositoryId: _this.objectRepositoryId,
+                transId: _this.updateId
+              }
+            })
             .then(res => {
               console.log("复制Ui成功", res);
               if (res.respCode) {
@@ -584,10 +419,10 @@ export default {
      */
     getAllSystem() {
       Request({
-        url: "/aut/queryListAut",
-        method: "POST",
-        params: {}
-      })
+          url: "/aut/queryListAut",
+          method: "POST",
+          params: {}
+        })
         .then(res => {
           // console.log('获取成功',res);
           this.autRespDTOList = res.autRespDTOList;
@@ -605,12 +440,12 @@ export default {
     // 编码跳转
     toTransact(row) {
       console.log('toTransact', row)
-      if(row.transType === 'UI') {
+      if (row.transType === 'UI') {
         this.$router.push({
           name: 'TransactDetail',
           query: row
         })
-      }else {
+      } else {
         this.$router.push({
           name: 'InterfacesManagement',
           query: row
@@ -623,16 +458,19 @@ export default {
     getAllFunction() {
       let _this = this
       Request({
-        url: "/transactController/pagedBatchQueryTransact",
-        method: "post",
-        params: this.changedParams
-      })
+          url: "/transactController/pagedBatchQueryTransact",
+          method: "post",
+          params: this.changedParams
+        })
         .then(
           res => {
-            // console.log('获取res',res);
+            console.log('获取res',res, this.isInterface);
             if (res.list.length === 0) {
-              this.dialogModelFlag = 4;
+              this.isInterface? 
+              this.dialogModelFlag = 5:
+              this.dialogModelFlag = 4
               this.dialogVisible = true;
+
               this.tableData = [];
             } else {
               for (let i = 0; i < res.list.length; i++) {
@@ -644,7 +482,7 @@ export default {
               }
               this.tableData = res.list;
               this.totalCount = res.totalCount;
-              if(_this.addId) {
+              if (_this.addId) {
                 _this.addRow = res.list.find(item => item.id === _this.addId)
               }
               console.log(_this.addId, _this.addRow, res.list)
@@ -661,17 +499,16 @@ export default {
     submitForm(formName) {
       let _this = this;
       let status = _this.ruleForm.nameMedium === "";
-      this.$message.info(`nameMedium: ${_this.ruleForm.nameMedium}
-									functionType: ${_this.ruleForm.functionType}
-									code: ${_this.ruleForm.code}
-									descShort: ${_this.ruleForm.descShort}`);
+      this.$message.info(`nameMedium: ${_this.ruleForm.nameMedium}functionType: ${_this.ruleForm.functionType}
+      code: ${_this.ruleForm.code}
+      descShort: ${_this.ruleForm.descShort}`);
       if (status) {
         this.$message.warning("*为必填项");
       } else {
         if (_this.ruleForm.functionType === "UI") {
-          _this.ruleForm.code = _this.ruleForm.code !== ""? _this.ruleForm.code: "功能点" + Date.now()
-        }else {
-           _this.ruleForm.code = _this.ruleForm.code !== ""? _this.ruleForm.code: "接口" + Date.now()
+          _this.ruleForm.code = _this.ruleForm.code !== "" ? _this.ruleForm.code : "功能点" + Date.now()
+        } else {
+          _this.ruleForm.code = _this.ruleForm.code !== "" ? _this.ruleForm.code : "接口" + Date.now()
         }
         console.log('submitForm', this.ruleForm)
         _this.$refs[formName].validate(valid => {
@@ -679,16 +516,16 @@ export default {
             if (document.getElementById("buttonName").innerText == "新增") {
               if (_this.ruleForm.functionType === "UI") {
                 Request({
-                  url: "/transactController/addSingleTransact",
-                  method: "POST",
-                  params: {
-                    autId: _this.autId,
-                    code: _this.ruleForm.code,
-                    descShort: _this.ruleForm.descShort,
-                    nameMedium: _this.ruleForm.nameMedium,
-                    transType: _this.isInterface? 2: 1
-                  }
-                })
+                    url: "/transactController/addSingleTransact",
+                    method: "POST",
+                    params: {
+                      autId: _this.autId,
+                      code: _this.ruleForm.code,
+                      descShort: _this.ruleForm.descShort,
+                      nameMedium: _this.ruleForm.nameMedium,
+                      transType: _this.isInterface ? 2 : 1
+                    }
+                  })
                   .then(res => {
                     console.log("添加成功", res);
                     _this.dialogVisible = false;
@@ -704,16 +541,16 @@ export default {
                   });
               } else {
                 Request({
-                  url: "/interface/addSingleInterface",
-                  method: "POST",
-                  params: {
-                    creatorId: "3",
-                    description: _this.ruleForm.descShort,
-                    interfaceCode: _this.ruleForm.code,
-                    name: _this.ruleForm.nameMedium,
-                    systemId: _this.autId
-                  }
-                })
+                    url: "/interface/addSingleInterface",
+                    method: "POST",
+                    params: {
+                      creatorId: "3",
+                      description: _this.ruleForm.descShort,
+                      interfaceCode: _this.ruleForm.code,
+                      name: _this.ruleForm.nameMedium,
+                      systemId: _this.autId
+                    }
+                  })
                   .then(res => {
                     console.log("接口添加成功", res);
                     _this.dialogVisible = false;
@@ -730,15 +567,15 @@ export default {
               document.getElementById("buttonName").innerText == "修改"
             ) {
               Request({
-                url: "/transactController/modifySingleTransact",
-                method: "POST",
-                params: {
-                  code: _this.ruleForm.code,
-                  descShort: _this.ruleForm.descShort,
-                  id: _this.updateId,
-                  nameMedium: _this.ruleForm.nameMedium
-                }
-              })
+                  url: "/transactController/modifySingleTransact",
+                  method: "POST",
+                  params: {
+                    code: _this.ruleForm.code,
+                    descShort: _this.ruleForm.descShort,
+                    id: _this.updateId,
+                    nameMedium: _this.ruleForm.nameMedium
+                  }
+                })
                 .then(res => {
                   console.log("修改成功", res);
                   _this.dialogVisible = false;
@@ -764,7 +601,7 @@ export default {
     },
     // 导入模板
     importTemplate() {
-      console.log('importTemplate',this.autId)
+      console.log('importTemplate', this.autId)
       let formData = new FormData(document.getElementById('uploadForm'))
       formData.append('autId', this.autId)
       formData.append('creatorId', this.creatorId)
@@ -787,108 +624,131 @@ export default {
 </script>
 
 <style scoped>
-  /** 顶部按钮组 */
-  .buttonsRow {
-    margin: 0px auto 0px 20px;
-    width: 100%;
-  }
-  /* 下拉框 */
-  .selectName {
-    width: 250px;
-  }
-  .tableStyle {
-    width: 100%!important;
-  }
-  .formFoot {
-    display: flex;
-    justify-content: flex-end;
-    margin: 20px auto -15px 13%;
-  }
-  .spanTextColor {
-    color: red;
-    font-size: 25px;
-    margin-top: 10px;
-  }
-  .spanRow {
-    margin-left: 10px;
-  }
-  .headerRow {
-    margin: 0px auto -8px 0px;
-    clear: both;
-  }
-  .ownedSystem {
-    height: fit-content;
-    color: gray;
-    font-size: 16px;
-    margin-right: 10px;
-  }
-  .row {
-    border-color: lightgray;
-    border-width: 1px;
-    border-bottom-style: solid;
-    width: 100%;
-    height: 35px;
-    margin-bottom: 10px;
-  }
-  .footSelect {
-    text-align: center;
-    overflow: hidden;
-    margin: 30px auto 10px auto;
-  }
-  .addSelect {
-    width: 100%;
-  }
-  .dialogBottom,
-  .dialogImportBottom,
-  .dialogFailBottom {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 15px;
-    margin-bottom: -35px;
-  }
-  .formInput {
-    width: 300px;
-    margin-left: 20px;
-  }
-  .buttonDownload,.buttonGroup {
-    margin: 15px 0px -35px 0px;
-    display: flex;
-  }
-  .buttonGroup {
-    justify-content: flex-end;
-  }
-  .uploadFile {
-    display: none;
-  }
-  .dialogImportBottom {
-    overflow: hidden;
-    width: 97%;
-    margin-bottom: -30px;
-    margin-left: 10px;
-  }
-  .failContent {
-    height: fit-content;
-    font-size: 16px;
-    margin: -10px auto;
-    font-weight: bold;
-  }
-  .dialogFailBottom {
-    height: fit-content;
-    margin-bottom: -40px;
-  }
-  .btnSelectFile {
-    margin: -10px -5px 10px 0px;
-  }
-  .transactSuccessTitle {
-    margin-top: -20px;
-    margin-bottom: -10px;
-  }
-  .transactDialogButtonRow {
-    margin-top: -5px;
-    margin-bottom: -20px;
-  }
-  .codeTo {
-    color: #409eff;
-    cursor: pointer;
-  }
+/** 顶部按钮组 */
+.buttonsRow {
+  margin: 0px auto 0px 20px;
+  width: 100%;
+}
+
+/* 下拉框 */
+.selectName {
+  width: 250px;
+}
+
+.tableStyle {
+  width: 100% !important;
+}
+
+.formFoot {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px auto -15px 13%;
+}
+
+.spanTextColor {
+  color: red;
+  font-size: 25px;
+  margin-top: 10px;
+}
+
+.spanRow {
+  margin-left: 10px;
+}
+
+.headerRow {
+  margin: 0px auto -8px 0px;
+  clear: both;
+}
+
+.ownedSystem {
+  height: fit-content;
+  color: gray;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.row {
+  border-color: lightgray;
+  border-width: 1px;
+  border-bottom-style: solid;
+  width: 100%;
+  height: 35px;
+  margin-bottom: 10px;
+}
+
+.footSelect {
+  text-align: center;
+  overflow: hidden;
+  margin: 30px auto 10px auto;
+}
+
+.addSelect {
+  width: 100%;
+}
+
+.dialogBottom,
+.dialogImportBottom,
+.dialogFailBottom {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  margin-bottom: -35px;
+}
+
+.formInput {
+  width: 300px;
+  margin-left: 20px;
+}
+
+.buttonDownload,
+.buttonGroup {
+  margin: 15px 0px -35px 0px;
+  display: flex;
+}
+
+.buttonGroup {
+  justify-content: flex-end;
+}
+
+.uploadFile {
+  display: none;
+}
+
+.dialogImportBottom {
+  overflow: hidden;
+  width: 97%;
+  margin-bottom: -30px;
+  margin-left: 10px;
+}
+
+.failContent {
+  height: fit-content;
+  font-size: 16px;
+  margin: -10px auto;
+  font-weight: bold;
+}
+
+.dialogFailBottom {
+  height: fit-content;
+  margin-bottom: -40px;
+}
+
+.btnSelectFile {
+  margin: -10px -5px 10px 0px;
+}
+
+.transactSuccessTitle {
+  margin-top: -20px;
+  margin-bottom: -10px;
+}
+
+.transactDialogButtonRow {
+  margin-top: -5px;
+  margin-bottom: -20px;
+}
+
+.codeTo {
+  color: #409eff;
+  cursor: pointer;
+}
 </style>

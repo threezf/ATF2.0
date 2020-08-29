@@ -19,13 +19,13 @@ const Path =[
             },
             {
                 name:"添加UI及元素",
-                pathName:"TransactDetail",
+                pathName:"TransactDetail/1",
                 status:"",
                 pre:2
             },
             {
                 name:"配置脚本",
-                pathName:"TransactDetail",
+                pathName:"TransactDetail/2",
                 status:"",
                 pre:2
             }

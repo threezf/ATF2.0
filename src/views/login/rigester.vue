@@ -419,4 +419,7 @@ export default {
   color: rgb(0, 102, 255);
   cursor: pointer;
 }
+.el-radio-group {
+  line-height: 48px;
+}
 </style>

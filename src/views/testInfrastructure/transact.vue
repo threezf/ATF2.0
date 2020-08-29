@@ -525,7 +525,7 @@ export default {
       })
         .then(
           res => {
-            // console.log('获取res',res);
+            console.log('获取res',res);
             if (res.list.length === 0) {
               this.dialogModelFlag = 4;
               this.dialogVisible = true;

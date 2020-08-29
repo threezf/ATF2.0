@@ -43,14 +43,19 @@ export default {
                 console.log(this.paths[i].pathName )
                 console.log(to.meta.parent )
                 console.log('=======================2222=======================')
-                        for(let j = 0 ; j < this.paths[i].item.length; j++){
-                            if(this.paths[i].item[j].pathName === to.name){
-                                this.bigActive = i
-                                this.smallActive = j
-                console.log('=======================1111=======================')
-                                break
+                    for(let j = 0 ; j < this.paths[i].item.length; j++){
+                        if(this.paths[i].item[j].pathName.split('/')[0] === to.name){
+                            this.bigActive = i
+                            this.smallActive = j
+                            if(to.query.steps == 0) {
+                                this.smallActive = 2
+                            }else if(to.query.steps == 1) {
+                                this.smallActive = 3
                             }
+                            console.log('=======================1111=======================')
+                            break
                         }
+                    }
                 }
             },
             immediate: true
@@ -61,7 +66,24 @@ export default {
     methods: {
         goToPage(name){
             console.log('name')
-            console.log(name)
+            console.log('路径跳转', name)
+            if(name === 'TransactDetail/1') {
+                console.log("1")
+                return this.$router.push({
+                    path: '/testInfrastructure/transactDetail',
+                    query: {
+                        steps: 0
+                    }
+                })
+            }else if(name === 'TransactDetail/2') {
+                console.log("2")
+                return this.$router.push({
+                    path: '/testInfrastructure/transactDetail',
+                    query: {
+                        steps: 1
+                    }
+                })
+            }
             this.$router.push({
                 name: name
             })
