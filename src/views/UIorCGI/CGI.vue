@@ -12,7 +12,9 @@ export default {
             this.$router.push({
                 name:'Transact',
                 query: {
-                    isInterface: true
+                    isInterface: true,
+                    id: JSON.parse(sessionStorage.getItem('toTransact')).id,
+                    nameMedium: JSON.parse(sessionStorage.getItem('toTransact')).nameMedium,
                 }
             })
             return

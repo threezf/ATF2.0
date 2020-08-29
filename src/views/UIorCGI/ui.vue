@@ -11,6 +11,10 @@ export default {
         if(testSys){
             this.$router.push({
                 name:'Transact',
+                query: {
+                    id: JSON.parse(sessionStorage.getItem('toTransact')).id,
+                    nameMedium: JSON.parse(sessionStorage.getItem('toTransact')).nameMedium,
+                }
             })
             return
         }

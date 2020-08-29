@@ -7,6 +7,7 @@ import AdministratorManagement from '@/views/systemManagement/AdministratorManag
 import RoleManagement from '@/views/systemManagement/RoleManagement'
 import MenuManagement from '@/views/systemManagement/MenuManagement'
 import ProjectManagement from '@/views/systemManagement/ProjectManagement'
+import ProjectManagerMangement from '@/views/systemManagement/ProjectManagerManagement'
 import UserManagement from '@/views/systemManagement/userManagement'
 import RunnerManagement from '@/views/systemManagement/runnerManagement'
 
@@ -67,6 +68,16 @@ export default {
                 name: '项目组管理',
                 parent: 'SystemManagement',
                 icon: 'el-icon-s-management'
+            }
+        },
+        {
+            path: 'projectManagerManagement',
+            name: 'ProjectManagerManagement',
+            component: ProjectManagerMangement,
+            meta: {
+                name: '项目经理管理',
+                parent: 'SystemManagement',
+                icon: 'el-icon-user'
             }
         },
         {

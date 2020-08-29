@@ -4,7 +4,6 @@ import Router from 'vue-router'
 import Login from '@/views/login/index'
 import Rigester from '@/views/login/rigester';
 import Index from '@/views/index'
-import Test from './test.js'
 import TestInfrastructure from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
@@ -64,7 +63,6 @@ export default new Router({
             name: 'UI',
             component: UI,
             meta: {
-                hide: true,
                 name: 'UI测试'
             }
         },
@@ -73,7 +71,6 @@ export default new Router({
             component: CGI,
             name: 'CGI',
             meta: {
-                hide: true,
                 name: '接口测试'
             }
         },
