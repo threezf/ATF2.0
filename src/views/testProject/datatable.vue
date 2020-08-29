@@ -609,14 +609,14 @@
 						width="180">
 						<template slot-scope="scope">
 							<el-select
-								v-model="scope.row.methodName"
+								v-model="scope.row.id"
 								placeholder="请选择"
 								@change="changeMethod(scope.row,true)">
 								<el-option
 									v-for="item in dataCheckFunList"
 									:key="item.id"
 									:label="item.name"
-									:value="item.name">
+									:value="item.id">
 								</el-option>
 							</el-select>
 						</template>
@@ -932,11 +932,11 @@
 								element: "",
 								ui: ""
 							},
-							parameters: functionInfo[i].arguments.map(item => ({
+							parameters: functionInfo[i].arguments? functionInfo[i].arguments.map(item => ({
 								Name: item.name,
 								Value: '',
 								newValue: '',
-							})),
+							})) : [],
 							selected: false,
 						}
 						this.beforeOperationRows.push(beforeItem)
@@ -958,11 +958,11 @@
 								element: "",
 								ui: ""
 							},
-							parameters: functionInfo[i].arguments.map(item => ({
+							parameters: functionInfo[i].arguments ? functionInfo[i].arguments.map(item => ({
 								Name: item.name,
 								Value: '',
 								newValue: '',
-							}))
+							})) : []
 						}
 						this.afterOperationRows.push(afterItem)
 					}
@@ -972,21 +972,21 @@
 					for (let i = 0; i < functionInfo.length; i++) {
 						let beforeItem = {
 							arguShow: true,
-							functions: [{
+							functions: {
 								name: functionInfo[i].name,
 								parameterlist: ""
-							}],
+							},
 							id: functionInfo[i].id,
 							operation: {
 								classType: "",
 								element: "",
 								ui: ""
 							},
-							parameters: functionInfo[i].arguments.map(item => ({
+							parameters: functionInfo[i].arguments ? functionInfo[i].arguments.map(item => ({
 								Name: item.name,
 								Value: '',
 								newValue: '',
-							})),
+							})) : [],
 							selected: false,
 						}
 						this.dataOperationRows.push(beforeItem)
@@ -1579,7 +1579,7 @@
 							}
 							str += ');\n'
 						} else {
-							str += `${this.afterOperationRows[i].functions[0].name}()"`
+							str += `${this.afterOperationRows[i].functions[0].name}()`
 						}
 					}
 				}
@@ -1587,13 +1587,13 @@
 					str = str + '@display\n'
 					for (let i = 0; i < this.dataOperationRows.length; i++) {
 						if (this.dataOperationRows[i].parameters.length !== 0) {
-							str += `${this.dataOperationRows[i].functions[0].name}("${this.dataOperationRows[i].parameters[0].Value}"`
+							str += `${this.dataOperationRows[i].functions.name}("${this.dataOperationRows[i].parameters[0].Value}"`
 							for (let j = 1; j < this.dataOperationRows[i].parameters.length; j++) {
 								str += `,"${this.dataOperationRows[i].parameters[j].Value}"`
 							}
 							str += ');\n'
 						} else {
-							str += `${this.dataOperationRows[i].functions[0].name}()"`
+							str += `${this.dataOperationRows[i].functions.name}()`
 						}
 					}
 				}
