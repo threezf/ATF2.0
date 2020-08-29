@@ -313,24 +313,24 @@
 						<template slot-scope="scope">
 							<div v-if='scope.row.arguShow'>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.Name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                  {{ item.Value }}
                                             </span>
@@ -348,24 +348,24 @@
 							</div>
 							<div v-else>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.Name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
 										<el-input
 											size="mini"
 											@dragenter.stop.prevent="return false"
@@ -374,14 +374,14 @@
 									</el-col>
 								</el-row>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											@click='scope.row.parameters && scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
 											size="mini">
 											取消
 										</el-button>
 									</el-col>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											type="primary"
 											size="mini"
@@ -458,24 +458,24 @@
 						<template slot-scope="scope">
 							<div v-if='scope.row.arguShow'>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.Name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                  {{ item.Value }}
                                             </span>
@@ -493,24 +493,24 @@
 							</div>
 							<div v-else>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.Name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
 										<el-input
 											size="mini"
 											@dragenter.stop.prevent="return false"
@@ -519,14 +519,14 @@
 									</el-col>
 								</el-row>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											@click='scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
 											size="mini">
 											取消
 										</el-button>
 									</el-col>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											type="primary"
 											size="mini"
@@ -585,6 +585,7 @@
 					tooltip-effect="dark"
 					style="width: 100%"
 					@selection-change="handleSelectionChange"
+					class="sortable3"
 					row-key="name">
 					<el-table-column
 						label="排序"
@@ -610,9 +611,9 @@
 							<el-select
 								v-model="scope.row.methodName"
 								placeholder="请选择"
-								@change="changeMethod(scope.row)">
+								@change="changeMethod(scope.row,true)">
 								<el-option
-									v-for="item in funtionDic[scope.row.elementWidget]"
+									v-for="item in dataCheckFunList"
 									:key="item.id"
 									:label="item.name"
 									:value="item.name">
@@ -625,26 +626,25 @@
 						label="参数">
 						<template slot-scope="scope">
 							<div v-if='scope.row.arguShow'>
-								<el-row:key
-								='item.index'>
-								<el-col :span="5">
+								<el-row>
+								<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 								</el-col>
-								<el-col :span="10">
+								<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 								</el-col>
-								</el-row:key=>
+								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.Name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
                                             <span>
                                                  {{ item.Value }}
                                             </span>
@@ -661,26 +661,25 @@
 								</el-row>
 							</div>
 							<div v-else>
-								<el-row:key
-								='item.index'>
-								<el-col :span="5">
+								<el-row>
+								<el-col :span="12">
                                             <span>
                                                 名称
                                             </span>
 								</el-col>
-								<el-col :span="10">
+								<el-col :span="12">
                                             <span>
                                                 参数值
                                             </span>
 								</el-col>
-								</el-row:key=>
+								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
-									<el-col :span="5" class='fixedHeight'>
+									<el-col :span="12" class='fixedHeight'>
                                             <span>
                                                  {{ item.name }}
                                             </span>
 									</el-col>
-									<el-col :span="10">
+									<el-col :span="12">
 										<el-input
 											size="mini"
 											@dragenter.stop.prevent="return false"
@@ -689,14 +688,14 @@
 									</el-col>
 								</el-row>
 								<el-row>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											@click='scope.row.parameters.forEach(v=>{v.newValue =v.Value});scope.row.arguShow = true'
 											size="mini">
 											取消
 										</el-button>
 									</el-col>
-									<el-col :span="5">
+									<el-col :span="12">
 										<el-button
 											type="primary"
 											size="mini"
@@ -859,6 +858,7 @@
 				multipleSelection:[],
 				multipleSelection1:[],
 				multipleSelection2:[],
+				dataCheckFunList:[],
 			}
 		},
 		mounted() {
@@ -998,17 +998,24 @@
 
 				return
 			},
-			changeMethod(item) {
+			changeMethod(item, flag) {
 				console.log(item)
 				let functionName = item.functions[0].name
-				let theFunction = this.funtionDic.filter(item => {
-					return item.name === functionName
-				})[0]
-				item.parameters = JSON.parse(theFunction.arguments).map(item => ({
+				let theFunction = {}
+				if(flag){
+					theFunction = this.dataCheckFunList
+				}
+				else{
+					theFunction = this.funtionDic.filter(item => {
+						return item.name === functionName
+					})[0]
+				}
+				item.parameters = theFunction.arguments ? JSON.parse(theFunction.arguments).map(item => ({
 					Name: item.name,
 					Value: '',
 					newValue: ''
 				}))
+				: []
 				theFunction
 			},
 			addItemShowFunction(flag) {
@@ -1052,6 +1059,18 @@
 							flag3 = true
 						}
 					}
+				}else if(type==3){
+					let flag3 = false
+					for (let i = 0; i < this.dataOperationRows.length; i++) {
+						if (this.multipleSelection2.some(v => (v.id === this.dataOperationRows[i].id))) {
+							if (flag3) {
+								let tmp = this.dataOperationRows.splice(i, 1)[0]
+								this.dataOperationRows.splice(i - 1, 0, tmp)
+							}
+						} else {
+							flag3 = true
+						}
+					}
 				}
 
 			},
@@ -1077,6 +1096,19 @@
 							if (flag3) {
 								let tmp = this.afterOperationRows.splice(i, 1)[0]
 								this.afterOperationRows.splice(i + 1, 0, tmp)
+							}
+						} else {
+							flag3 = true
+						}
+					}
+				}else if(type==3){
+					let flag3 = false
+					for (let i = this.dataOperationRows.length - 1; i > -1; i--) {
+
+						if (this.multipleSelection2.some(v => (v.id === this.dataOperationRows[i].id))) {
+							if (flag3) {
+								let tmp = this.dataOperationRows.splice(i, 1)[0]
+								this.dataOperationRows.splice(i + 1, 0, tmp)
 							}
 						} else {
 							flag3 = true
@@ -1114,6 +1146,20 @@
 						_this.afterOperationRows.push(_this.afterOperationRows.pop())
 					}
 				})
+				const tbody3 = document.querySelector('.sortable3 tbody')
+				console.log("偶吼吼",tbody3)
+				Sortable.create(tbody3, {
+					filter: ".el-input__inner",  // 不需要拖动的元素
+					preventOnFilter: false, //默认true 是否禁用默认绑定的方法
+					animation: 180,// 0.18s 动画时间
+					delay: 0,// 按住、松开0毫秒后触发效果
+					onEnd({newIndex, oldIndex}) {
+						const currRow = _this.dataOperationRows.splice(oldIndex, 1)[0]
+						_this.dataOperationRows.splice(newIndex, 0, currRow)
+						_this.dataOperationRows.push(_this.dataOperationRows.pop())
+					}
+				})
+				
 			},
 			handleSelectionChange(val) {
 				this.multipleSelection = val;
@@ -1140,6 +1186,7 @@
 				if(cellData){
 					this.beforeOperationRows = [];
 					this.afterOperationRows = [];
+					this.dataOperationRows = [];
 					if (cellData.includes('@before')) {
 						var beforeStr = cellData.slice(cellData.indexOf('@before\n') + 7, cellData.indexOf('@value'));
 						console.log("beforeSte:" + beforeStr);
@@ -1148,9 +1195,14 @@
 						this.parseScript(beforeArr, this.beforeOperationRows, 1)
 					}
 					if (cellData.includes('@after')) {
-						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6);
+						var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6, cellData.indexOf('@display')===-1?undefined : cellData.indexOf('@display'));
 						var afterArr = afterStr.split(';\n');
 						this.parseScript(afterArr, this.afterOperationRows, 2);
+					}
+					if (cellData.includes('@display')) {
+						var checkStr = cellData.slice(cellData.indexOf('@display\n') + 6);
+						var checkArr = checkStr.split(';\n');
+						this.parseScript(checkArr, this.dataOperationRows, 2);
 					}
 					var valueStr;
 					if (cellData.includes('@value')) {
@@ -1397,6 +1449,7 @@
 					this.selectedTemplate = data
 					this.getTestcaseInfo()
 					this.getFunction()
+					this.getCheckFunTree()
 				}
 			},
 			//获取该测试系统下 所有的控件类型
@@ -1530,11 +1583,38 @@
 						}
 					}
 				}
+				if (this.dataOperationRows.length > 0) {
+					str = str + '@display\n'
+					for (let i = 0; i < this.dataOperationRows.length; i++) {
+						if (this.dataOperationRows[i].parameters.length !== 0) {
+							str += `${this.dataOperationRows[i].functions[0].name}("${this.dataOperationRows[i].parameters[0].Value}"`
+							for (let j = 1; j < this.dataOperationRows[i].parameters.length; j++) {
+								str += `,"${this.dataOperationRows[i].parameters[j].Value}"`
+							}
+							str += ');\n'
+						} else {
+							str += `${this.dataOperationRows[i].functions[0].name}()"`
+						}
+					}
+				}
 				this.rowdata['data_' + this.rowColumn] = str
 				this.editDataFlag = false
 				// console.log(str)
 				this.handlechange(this.rowdata, this.columndata)
-			}
+			},
+			getCheckFunTree(){
+				Request({
+					url: '/aut/selectCheckFunctionSet' ,
+					method: 'post',
+					params:{'id': +this.selectedTemplate.autId}
+				}).then((res) => {
+					this.dataCheckFunList = res.omMethodRespDTOList
+				},(err) => {
+					console.log(err)
+				}).catch((err) => {
+					console.log(err)
+				})
+			},
 		}
 	}
 </script>
