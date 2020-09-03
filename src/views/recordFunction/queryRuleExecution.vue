@@ -330,13 +330,8 @@ export default {
     },
     //查看饼状图
     openCakePic(row) {
-      this.$message.success("查看饼状图");
       console.log(row);
       let cakeContent = document.getElementById("leftCake");
-      // if(cakeContent!=null){
-      //    cakeContent.innerHTML = '';
-      //     console.log('绘制饼状图之前清空div')
-      // }
       let width = 300;
       let height = 300;
       let successInsCount = parseInt(row.successInsCount);

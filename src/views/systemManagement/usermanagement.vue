@@ -7,36 +7,37 @@
           添加用户
         </el-button>
       </el-row>
-      <el-row>
+      <el-row :gutter="15">
         <el-col :span="3">
-          <el-select v-model="selectValue" placeholder="请选择">
+          <el-select v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
             <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="4" :offset='1'>
-          <el-input v-model="selectInfo" placeholder="请输入内容"></el-input>
+        <el-col :span="5" :offset='0'>
+          <el-input v-model="selectInfo" placeholder="请输入内容" clearable>
+            <el-button icon="el-icon-search" @click='getUsers(1)' slot="append">
+          </el-button>
+          </el-input>
         </el-col>
         <el-col :span="4" :offset='1'>
-          <el-button size="small" @click='getUsers(1)' type="primary">
-            搜索
-          </el-button>
+          
         </el-col>
       </el-row>
       <el-table stripe border :data="tableData" class='table'>
         <el-table-column label="用户名" property="username" min-width="16%" />
-        <el-table-column label="姓名" property="reallyname" min-width="16%" />
+        <el-table-column label="真实姓名" property="reallyname" min-width="16%" />
         <el-table-column label="角色" property='role' :formatter="roleSwitch" min-width="20%" />
         <el-table-column label="所属部门" property="dept" min-width="20%" />
         <el-table-column label="手机号" property="tel" min-width="20%" />
-        <el-table-column label="状态" property="status" :formatter="statusSwitch" min-width="10%" />
+        <el-table-column label="状态" property="status" :formatter="statusSwitch" width="100px" />
         <el-table-column label="操作" min-width="18%">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="启用" min-width="6%">
+        <el-table-column label="启用" width="100px" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status"></el-switch>
           </template>
@@ -48,7 +49,7 @@
           </el-pagination>
         </el-col>
       </div>
-      <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="30%">
+      <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="30%" style="margin-top: -60px">
         <el-form ref="form" prop="form" :rules="rules" :model="form" label-width="80px">
           <el-form-item label="用户名" prop="username">
             <el-input :disabled='disabled' v-model="form.username"></el-input>
@@ -64,8 +65,8 @@
           </el-form-item>
           <el-form-item label="用户状态" prop="status" required>
             <el-select :disabled='disabled' v-model="form.status" placeholder="请选择用户状态">
-              <el-option label="锁定" value="0"></el-option>
-              <el-option label="正常" value="1"></el-option>
+              <el-option label="锁定" :value="0"></el-option>
+              <el-option label="正常" :value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="用户角色" prop="roleName" required>
@@ -128,21 +129,23 @@ export default {
     return {
       form: {
         username: "", // 用户姓名
-        reallyname: "", // 真实姓名
         password: "", // 密码
-        checkPassword: '', // 检查密码
-        roleName: "", // 角色名称
-        status: "1", 
-        deptName: "",
+        reallyname: "", // 真实姓名
+        email: "", // 邮箱
         telephone: "", // 联系方式
         phone: "", // 固定电话
-        email: "", // 邮箱
-        verifyInfo: "1", //
-        companyName: '',
-        createTime: '',
-        modifierId: '',
-        modifiedTime: '',
-        creatorId: '',
+        roleName: "", // 角色名称
+        deptName: "", // 项目组名称
+        verifyInfo: "1", // 认证标识
+        companyName: '', // 企业名称
+        status: 1, // 状态
+        lastLoginDate: '', // 上次登录日期
+        lastLoginIp: '', // 上次登录的ip
+        createTime: '', // 创建时间 
+        checkPassword: '', // 检查密码
+        modifierId: '', // 修改者id
+        modifiedTime: '', // 修改时间
+        creatorId: '', // 创建者id
       },
       rules: {
         username: [{
@@ -226,19 +229,19 @@ export default {
           value: 'username'
         },
         {
-          label: '姓名',
+          label: '真实姓名',
           value: 'reallyname'
         },
         {
-          label: '手机号',
-          value: 'tel'
+          label: '角色名称',
+          value: 'roleName'
         },
         {
-          label: '部门',
-          value: 'dept'
+          label: '项目组',
+          value: 'deptName'
         }
       ],
-      selectValue: '', // 搜索选项
+      selectValue: 'username', // 搜索选项
       selectInfo: '', // 搜索输入
       tableData: [],
       totalCount: 0,
@@ -258,10 +261,9 @@ export default {
         pageSize: this.pageSize,
         orderColumns: "id",
         orderType: "asc",
-        dept: "",
+        deptName: "",
         reallyname: "",
-        role: "",
-        tel: "",
+        roleName: "",
         username: "",
         userId: sessionStorage.getItem('userId')
       }
@@ -305,6 +307,10 @@ export default {
       done()
       return true
     },
+    // 下拉框选择
+    handleSelectChange() {
+      this.selectInfo = ""
+    },
     // 提交表单进行验证
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -331,8 +337,8 @@ export default {
       this.modelFlag = 2
       const {
         username,
-        reallyname,
         password,
+        reallyname,
         role,
         status,
         dept,
@@ -407,6 +413,7 @@ export default {
     // 添加用户
     addUser() {
       this.form.createTime = Date.now()
+      this.form.modifiedTime = Date.now()
       this.form.creatorId = sessionStorage.getItem('userId')
       Request({
         url: '/userController/insert',

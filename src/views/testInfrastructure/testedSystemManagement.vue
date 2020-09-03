@@ -119,7 +119,8 @@ export default {
         code: "",
         nameMedium: "",
         inheriteArcId: 9,
-        descShort: ""
+        descShort: "",
+        createId: sessionStorage.getItem('userId')
       },
       id: "", //修改测试系统信息时使用的id
       abstractArchitectureInfo: {},

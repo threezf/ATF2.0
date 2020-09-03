@@ -5,7 +5,7 @@
             <!--main content start-->
             <section id="main-content">
                 <section class="content-wrapper" style="margin-bottom: 50px;">
-                    <div class="main" style="padding: 15px; user-select: none;">
+                    <div class="main" style="padding: 15px; user-select: none; min-width: 100%">
                         <!-- breadcrumb start -->
                         <!-- <div class="row" style="margin-bottom: 15px;">
                             <div class="col-lg-12">
@@ -16,53 +16,51 @@
                             </div>
                         </div> -->
                         <div class="main-content" id="testround-main" style="padding: 15px 0;">
-                            <div class="row">
-                                <form class="form-horizontal col-lg-12">
-                                    <div class="form-group col-lg-8">
-                                        <label class="option-name control-label col-lg-3">测试计划及状态</label>
-                                        <div class=" col-lg-4">
+                            <el-row>
+                                <form class="form-horizontal col-lg-12 topRow">
+                                    <div class="form-group col-lg-3">
+                                        <label class="option-name control-label col-lg-3" style="margin-right: -15px">测试计划</label>
+                                        <div class=" col-lg-6">
                                             <el-select v-model="testPlanId" placeholder="请选择">
                                                 <el-option v-for="(item , index) in testPlans" :key="'testplans'+index" :label="item.nameMedium" :value="item.id">
                                                 </el-option>
                                             </el-select>
+                                            <p class="executeStatus" v-html="exeStautShow"></p>
                                         </div>
-                                        <label class="option-name control-label col-lg-2" v-html="exeStautShow"></label>
-                                        <div class=" col-lg-3">
+                                        <div class=" col-lg-1">
                                             <el-button type='primary' size='mini' @click="testPlanManager()">测试计划管理</el-button>
                                         </div>
                                     </div>
-                                    <div class="form-group col-lg-4">
-                                        <label class="option-name col-lg-4 control-label">
+                                    <div class="form-group col-lg-2">
+                                        <label class="option-name col-lg-6 control-label" style="text-align:">
                                             执行范围
                                         </label>
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-6">
                                             <el-select v-model="exeScope" placeholder="请选择">
                                                 <el-option  label="所有" value="1"></el-option>
                                                 <el-option  label="已选择" value="0"></el-option>
                                             </el-select>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div class="row">
-                                <form class="form-horizontal col-lg-12">
-                                    <div class="form-group col-lg-8">
-                                        <label class="option-name control-label col-lg-3">执行机分配模式</label>
-                                        <div class="col-lg-4">
+                                    <div class="form-group col-lg-3">
+                                        <label class="option-name control-label col-lg-6">执行机分配模式</label>
+                                        <div class="col-lg-6">
                                             <el-select v-model="runnerExecuteType" placeholder="请选择">
                                                 <el-option  label="指定执行机" value="appointed"></el-option>
                                                 <el-option  label="自动分配" value="auto"></el-option>
                                             </el-select>
                                         </div>
-                                        <label class="option-name control-label col-lg-2">执行机选择</label>
-                                        <div class=" col-lg-3 ">
+                                    </div>
+                                    <div class="form-group col-lg-3">
+                                        <label class="option-name control-label col-lg-4">执行机选择</label>
+                                        <div class=" col-lg-6 ">
                                             <el-select v-model="runnerselected" placeholder="请选择执行机" :multiple='true'>
                                                 <el-option v-for="(item , index) in runners" :key="'runner'+index" :label="item.runnerName" :value="item.identifiableName">
                                                 </el-option>
                                             </el-select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-lg-4" hidden>
+                                    <div class="form-group col-lg-2" hidden>
                                         <label class="option-name col-lg-13 control-label">
                                         当前测试轮次
                                         </label>
@@ -72,7 +70,7 @@
 
                                     </div>
                                 </form>
-                            </div>
+                            </el-row>
                             <div class="test-control container" style="margin: 15px 5px;">
                                 <div style="font-size: 12px;color:#999;"></div>
                                 <el-button type='primary' size="mini" @click="executeAll()"><i class="icon-play"></i> 批量执行</el-button>
@@ -718,7 +716,8 @@
                 },
                 // 批量执行相关
                 batchId:null,
-                exeStautShow: '<i class="icon-meh"></i>无计划',
+                exeStautShow: '执行状态：<i class="el-icon-info""></i>无计划',
+                tagType: 'primary',
                 exeStauts:true, //执行状态,用与判断该测试计划是否在执行中，确定是否调用执行接口
                 // save the string : 展开 and 收起
                 expandString: '展开',
@@ -938,7 +937,8 @@
                     }
                 }
                 // _this.logShow = true;
-                _this.exeStautShow = '<i class="icon-spinner"></i>执行中';
+                _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>执行中';
+                _this.tagType = "primary"
                 Vac.ajax({
                     url:  'executeController/t1',
                     type: 'post',
@@ -1024,7 +1024,8 @@
                         if(data.respCode=="0000"){
                             if(data.respSyncNo==-1){
                                 _this.setResultIcon(data.insStatuses)
-                                _this.exeStautShow = '<i class="icon-ok"></i>已执行';
+                                _this.exeStautShow = '执行状态：<i class="el-icon-circle-check"></i>已执行';
+                                _this.tagType = 'success'
                                 console.log("finish this branch")
                             }
                             else{
@@ -1056,7 +1057,8 @@
                         if(data.respSyncNo==-1){
                             _this.setResultIcon(data.insStatuses)
                             console.log("finish this branch")
-                            _this.exeStautShow = '<i class="icon-ok"></i>已执行';
+                            _this.exeStautShow = '执行状态：<i class="el-icon-circle-check"></i>已执行';
+                            _this.tagType = 'success'
                         }
                         else if(data.respSyncNo==-2){
                             _this.syncQueryIncInsStatus(values)
@@ -1475,7 +1477,8 @@
                             _this.getSinglebranchStatus();
                         }
                         else if(data.respCode=="10012000"){
-                            _this.exeStautShow = '<i class="icon-circle-blank"></i>尚未执行';
+                            _this.exeStautShow = '执行状态：<i class="el-icon-video-play"></i>尚未执行';
+                            _this.tagType = 'warning'
                             _this.exeStauts = true;
                             Vac.alert(data.respMsg);
                         }
@@ -1502,17 +1505,20 @@
                         if(data.respCode=="0000"){
                             if(data.respSyncNo==-1){
                                 _this.setResultIcon(data.insStatuses);
-                                _this.exeStautShow = '<i class="icon-ok"></i>已执行';
+                                _this.exeStautShow = '执行状态：<i class="el-icon-circle-check"></i>已执行';
+                                _this.tagType = 'success'
                                 _this.exeStauts = true;
                             }
                             else{
                                 _this.setResultIcon(data.insStatuses);
-                                _this.exeStautShow = '<i class="icon-spinner"></i>执行中';
+                                _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>执行中';
+                                _this.tagType = 'primary'
                                 _this.exeStauts = false;
                             }
                         }
                         else{
-                            _this.exeStautShow = '<i class="icon-question"></i>未知';
+                            _this.exeStautShow = '执行状态：<i class="el-icon-question"></i>未知';
+                            _this.tagType = 'info'
                             _this.exeStauts = false;
                             Vac.alert(data.respMsg);
                         }
@@ -2113,6 +2119,7 @@
     @globleRed: #FF6C60;
 
     .row {
+        width: 100%;
         margin:0;
         .breadcrumb {
             margin-bottom: 0px;
@@ -2599,5 +2606,15 @@
         height:100%;
         vertical-align: middle;
         padding-top: 6px
+    }
+    .control-label {
+        line-height: 30px;
+    }
+    .executeStatus {
+        margin-top: 5px !important;
+        font-family: "宋体";
+    }
+    .form-group {
+        margin-bottom: 0px !important;
     }
 </style>

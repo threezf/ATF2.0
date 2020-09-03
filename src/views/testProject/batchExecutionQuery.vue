@@ -151,7 +151,7 @@
             prop="instanceSource">
           </el-table-column>
           <el-table-column 
-            min-width="9.1%" 
+            min-width="12%" 
             align="center" 
             label="测试计划">
             <template 
@@ -201,16 +201,16 @@
             prop="notRunInsCount">
             </el-table-column>
           <el-table-column 
-            min-width="6.8%" 
+            min-width="6%" 
             align="center" 
-            label="用例饼状图">
+            label="结果饼状图">
             <template 
               slot-scope="scope">
               <el-button 
                 type="primary" 
                 size="mini" 
                 @click="openCakePic(scope.row)"
-                >查看饼状图
+                >查看
               </el-button>
             </template>
           </el-table-column>

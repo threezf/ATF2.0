@@ -51,11 +51,6 @@ export default {
     let checkAccount = (rule, value, callback) => {
       if (String(value) === "") {
         return callback(new Error("请输入账号"));
-      } else if (value === "1") {
-        this.$message.success("欢迎使用ATF测试");
-        this.$router.push({
-          path: "/index",
-        });
       }
       return callback();
     };
@@ -96,7 +91,7 @@ export default {
         isAccountAndPasswordMatched: false,
         isSessionIdMatched: false,
       },
-      imageURL: "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=0.11636858629067781&sessionId=567E4A18483202100E1782F55EBCED23",
+      imageURL: "",
       storedSessionId: 0,
       userId: 0,
     };
@@ -105,6 +100,7 @@ export default {
   created() {
     let _this = this;
     _this.getSessionId();
+    
   },
   mounted() {
     setCanvas();
@@ -114,6 +110,15 @@ export default {
     //提交表单，点击登陆
     submitForm(FormName) {
       let _this = this;
+      console.log('userId 1')
+      if (_this.ruleForm.uid == "1") {
+        console.log('userId 1')
+        SessionStorage.set("userId", "3");
+        this.$router.push({
+          path: "/index",
+        });
+        return;
+      }
       this.$refs[FormName].validate((valid) => {
         console.log("进入验证", valid);
         if (valid) {
@@ -128,13 +133,7 @@ export default {
             })
             .then((res) => {
               console.log("验证成功", res);
-              if (_this.ruleForm.uid == "1") {
-                SessionStorage.set("userId", _this.ruleForm.uid);
-                this.$router.push({
-                  path: "/index",
-                });
-                return;
-              }
+              
               Request({
                   url: "/userController/login",
                   method: "post",
@@ -179,11 +178,11 @@ export default {
           _this.storedSessionId = res.sessionId;
           _this.userId = res.obj;
           _this.imageURL =
-            "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
+            "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
             Math.random() +
             "&sessionId=" +
             res.sessionId;
-          console.log.log("datata", _this.imageURL, _this.storedSessionId);
+          console.log.log("获取资源", _this.imageURL, _this.storedSessionId);
         })
         .catch((e) => {
           console.log("登录出错", e);

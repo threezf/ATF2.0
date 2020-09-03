@@ -1,24 +1,23 @@
 <template>
     <div class="page-inner">
         <el-container>
-
-            <el-header>
-                <el-button
-                    size="small"
-                    type="primary"
-                    icon="el-icon-refresh"
-                    @click='reFresh'>
-                    刷新
-                </el-button>
-                <el-button
-                    size="small"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click='downloadRunner'>
-                    执行机安装包下载
-                </el-button>
-            </el-header>
             <el-main>
+                <el-row>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        icon="el-icon-refresh"
+                        @click='reFresh'>
+                        刷新
+                    </el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        icon="el-icon-download"
+                        @click='downloadRunner'>
+                        执行机安装包下载
+                    </el-button>
+                </el-row>
                 <el-table
                     stripe
                     :data="tableData"

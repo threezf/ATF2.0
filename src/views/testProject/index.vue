@@ -5,7 +5,7 @@
     <div class="page-outer">
         <side-bar v-if='pathShow' path-name="TestProject" :first-path-name='projectName'></side-bar>
         <div class="right-content">
-            <progress-bar v-show="isShow"></progress-bar>
+            <progress-bar v-show="$store.state.flag &&isShow"></progress-bar>
             <div >
                 <router-view />
             </div>
@@ -31,6 +31,10 @@
         },
         methods: {
             
+        },
+        created() {
+            const flag = localStorage.getItem("userType")
+            this.$store.commit("changeFlag", flag == 'true')
         },
         watch:{
             '$route': {

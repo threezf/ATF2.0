@@ -16,6 +16,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 import {SessionStorage} from 'wii-fe-utils'
 import moment from 'moment'
+import store from './store/index'
 
 
 Vue.config.productionTip = false
@@ -58,6 +59,7 @@ router.afterEach((to, from) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

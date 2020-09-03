@@ -73,6 +73,7 @@ export default {
               nameMedium: _this.formData.name,
               descShort: _this.formData.desc,
               code: _this.formData.code,
+              createId: sessionStorage.getItem('userId')
             },
           })
             .then((res) => {

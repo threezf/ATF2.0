@@ -77,7 +77,9 @@ export default {
             meta: {
                 name: '项目经理管理',
                 parent: 'SystemManagement',
-                icon: 'el-icon-user'
+                icon: 'el-icon-user',
+                hide: true
+                
             }
         },
         {
