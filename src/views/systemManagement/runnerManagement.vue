@@ -17,6 +17,14 @@
                     @click='downloadRunner'>
                     执行机安装包下载
                 </el-button>
+                <el-popover placement="bottom" title="使用说明" width="500" trigger="click" content="  5.">
+                    <p>1. 确认电脑是否安装java环境，如果没有请先安装好java环境。</p>
+                    <p>2. 下载并解压执行机安装包。</p>
+                    <p>3. 修改目录下的setting.properties文件（执行机名称）。</p>
+                    <p>4. 双击.bat文件，开启dos窗口等待命令自动执行完毕，启动执行机。</p>
+                    <p>5. 刷新执行机查询页面，此使出现已启动的执行机。</p>
+                    <el-button size="small" type="primary" slot="reference" icon='el-icon-info'>执行机使用说明</el-button>
+                </el-popover>
             </el-header>
             <el-main>
                 <el-table

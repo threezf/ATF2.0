@@ -42,7 +42,7 @@
 					<el-button size="mini" @click="saidBarShow=!saidBarShow"><i class="el-icon-d-arrow-right"></i></el-button>
 				</div>
 			</div>
-			<div :class="'ele-right '+(saidBarShow?'':'wide-ele-right')">
+			<div :class="'ele-right '+(saidBarShow?'':'wide-ele-right') + (fullScreen? ' full-screen' : '')">
 				<el-row class="itemCenter" :gutter="20">
 					<el-col :span="8">
 						<el-button
@@ -67,7 +67,21 @@
 							导入数据
 						</el-button>
 					</el-col>
-					<el-col :span="8" v-if='selectedTemplate !== -1'>
+					<el-col :span="16" v-if='selectedTemplate !== -1'>
+						<el-button
+							v-if='!fullScreen'
+							size="small"
+							@click='fullScreen = true'
+							type="primary">
+							表格全屏
+						</el-button>
+						<el-button
+							v-else
+							size="small"
+							@click='fullScreen = false'
+							type="primary">
+							取消全屏
+						</el-button>
 						<el-select multiple v-model="columnHidden" placeholder="请选择隐藏列">
 							<el-option
 								v-for="item in selectOptions"
@@ -859,6 +873,7 @@
 				multipleSelection1:[],
 				multipleSelection2:[],
 				dataCheckFunList:[],
+				fullScreen: false,
 			}
 		},
 		mounted() {
@@ -1638,6 +1653,16 @@
 		padding: 10px;
 		min-height: 500px;
 		margin-right: 10px;
+	}
+	.full-screen{
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		background: #eee;
+		z-index: 99;
 	}
 
 	.itemCenter {
