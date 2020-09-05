@@ -26,7 +26,7 @@
               <el-input v-model="formData.code"></el-input>
             </el-form-item>
             <el-form-item label="描述:" prop="desc">
-              <el-input v-model="formData.desc" type="textarea"></el-input>
+              <el-input v-model="formData.desc" type="textarea" style="width: 270px"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('form')">添加并进入下一步</el-button>
@@ -73,7 +73,8 @@ export default {
               nameMedium: _this.formData.name,
               descShort: _this.formData.desc,
               code: _this.formData.code,
-              createId: sessionStorage.getItem('userId')
+              // creatorId: sessionStorage.getItem('userId')
+              creatorId: '3'
             },
           })
             .then((res) => {
