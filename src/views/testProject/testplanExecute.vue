@@ -96,7 +96,7 @@
                                             </el-button>
                                         </div>
                                         <div id="area">
-                                            <pre class="pre"><code  id="logarea" class="javascript">{{logInfo}}</code></pre>
+                                            <pre class="pre"><code  id="logarea" class="javascript"></code></pre>
                                         </div>
                                     </el-card>
                                     <div v-else id="loghidden">
@@ -762,7 +762,7 @@
                 senceDialog: false,
                 testPlanDialog: false,
                 addTestPlanDialog: false,
-                logInfo: ''
+
             }
         },
         mounted(){
@@ -936,7 +936,7 @@
                         selectedExeInstances.push(temp);
                     }
                 }
-                // _this.logShow = true;
+                _this.logShow = true;
                 _this.exeStautShow = '<i class="icon-spinner"></i>执行中';
                 Vac.ajax({
                     url:  'executeController/t1',
@@ -1165,8 +1165,7 @@
                     }),
                     success: function(data) {
                         if(data.respCode=="0000"){
-													_this.logInfo = _this.logInfo + data.logSeg
-													console.log("aaaaaaaa")
+                        	console.log("aaaaaaaa")
                             let textarea = $("#logarea");
                             textarea.text(data.logSeg);
                             var logarea=document.getElementById("logarea");
@@ -1196,13 +1195,12 @@
                         }),
                         success: function(data) {
                             if(data.respCode=="0000"){
-                                _this.logInfo = _this.logInfo + data.logSeg
                                 let textarea = $("#logarea")
-                                // if(data.logSeg!=null){
-                                    // textarea.text(textarea.text()+data.logSeg);
-                                    // var logarea=document.getElementById("logarea");
-                                    // hljs.highlightBlock(logarea);
-                                // }
+                                if(data.logSeg!=null){
+                                    textarea.text(textarea.text()+data.logSeg);
+                                    var logarea=document.getElementById("logarea");
+                                    hljs.highlightBlock(logarea);
+                                }
                                 textarea.scrollTop(99999999999);
                                 syncQueryIncLog(data)
                             }
@@ -1950,17 +1948,17 @@
     }
 </style>
 <style lang="less" >
-	      .hljs-number,
-	      .hljs-meta,
-	      .hljs-type,
-	      .hljs-params {
-	      	color:  gray;
-	      }
+	      /*.hljs-number,*/
+	      /*.hljs-meta,*/
+	      /*.hljs-type,*/
+	      /*.hljs-params {*/
+	      /*	color:  gray;*/
+	      /*}*/
 				.hljs-literal{
 					color:deepskyblue;
 				}
 				.hljs-builtin-name,
-				.hljs-built_in
+				.hljs-built_in,
 				.hljs-builtco_in {
 					color:orangered;
 				}
@@ -1968,7 +1966,11 @@
 				.hljs-name,
 				.hljs-keyword,
 				.hljs-selector-tag {
-					color: lawngreen;
+					color: #22ee55;
+				}
+				.hljs-comment,
+				.hljs-quote {
+					color:  #e4ba00 ;
 				}
         .exe-info{
             padding-left: 10px;

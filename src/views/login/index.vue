@@ -1,34 +1,34 @@
 <template >
   <div class="search-main page-outer loginBackground">
     <div id="particles-js">
-      <canvas 
+      <canvas
         class="particles-js-canvas-el">
       </canvas>
 		</div>
     <div class="mainBody">
       <h1 class="title">ATF云测试平台</h1>
       <div class="loginBody">
-        <el-form 
+        <el-form
           :rules="rules"
-          :model="ruleForm" 
+          :model="ruleForm"
           class="loginForm"
           ref="ruleForm"
-          label-width="100px" 
+          label-width="100px"
           status-icon>
-          <el-form-item 
+          <el-form-item
             prop="uid"
             label="账号" >
-            <el-input 
+            <el-input
               v-model="ruleForm.uid"
               placeholder="请输入账号"
               suffix-icon="el-icon-user-solid"
               clearable>
             </el-input>
           </el-form-item>
-          <el-form-item 
+          <el-form-item
             prop="password"
             label="密码" >
-            <el-input 
+            <el-input
               v-model="ruleForm.password"
               placeholder="请输入密码"
               type="password"
@@ -36,10 +36,10 @@
               clearable>
             </el-input>
           </el-form-item>
-          <el-form-item 
+          <el-form-item
             prop="sessionIdIn"
             label="验证码" >
-            <el-input 
+            <el-input
               v-model="ruleForm.sessionIdIn"
               placeholder="请输入验证码"
               type="text"
@@ -48,15 +48,15 @@
               clearable>
             </el-input>
             <img
-              id="sessionIdImage" 
-              class="codeStyle" 
-              type="image" 
+              id="sessionIdImage"
+              class="codeStyle"
+              type="image"
               alt="这里将换验证码"
               @click="getSessionId"
               :src="imageURL" >
           </el-form-item>
           <el-row>
-            <el-button 
+            <el-button
               :disabled="ruleForm.password===''||ruleForm.uid===''"
               @click="submitForm('ruleForm')"
               type="primary"
@@ -152,10 +152,10 @@
                 .then(res => {
                   console.log("验证成功", res);
                   if (_this.ruleForm.uid == "1") {
-                    SessionStorage.set("userId",_this.ruleForm.uid)
+                    SessionStorage.set("userId",3)
                     this.$router.push({ path: "/index" });
                     return
-                  } 
+                  }
                   Request({
                     url: "/userController/login",
                     method: "post",
@@ -168,7 +168,9 @@
                   })
                     .then(res => {
                       console.log("登录成功", res);
-                      SessionStorage.set("userId",_this.ruleForm.uid)
+                      if(res.obj){
+												SessionStorage.set("userId",res.obj)
+											}
                       this.$router.push({ path: "/index" });
                     })
                     .catch(e => {
@@ -217,12 +219,12 @@
 
 <style lang="less">
   /*
-    canvas相关背景样式 
+    canvas相关背景样式
   */
   canvas {
     display: block;
-    width: 100%; 
-    height: 100%;  
+    width: 100%;
+    height: 100%;
   }
   #particles-js {
     display: flex;
@@ -240,7 +242,7 @@
     top: 0;
     left: 0;
   }
-  
+
   .mainBody {
     width: fit-content;
     height: fit-content;

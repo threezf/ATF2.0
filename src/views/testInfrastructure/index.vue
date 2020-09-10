@@ -40,7 +40,7 @@ export default {
                   this.projectName = undefined
               }
                   console.log('999999999999999999')
-                  
+
                   console.log(sessionStorage.getItem("testSysNameStorage"))
                   this.projectName = sessionStorage.getItem("testSysNameStorage")
           },

@@ -47,11 +47,15 @@ export default {
       activeMenu: activeMenu,
     };
   },
-  watch: {
+	watch: {
     $route: {
       handler(to, from) {
+				// console.log("后啦啦啦啦啦",this.$router.history.current.name)
         console.log("to.meta.parent", to.meta.parent);
         this.activeMenu = to.meta.parent || to.name;
+        if(this.activeMenu=='TestProjectIndex'){
+					this.activeMenu="TestProject";
+				}
       },
       immediate: true,
     },

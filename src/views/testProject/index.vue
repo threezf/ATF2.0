@@ -30,7 +30,7 @@
             }
         },
         methods: {
-            
+
         },
         watch:{
             '$route': {
@@ -43,7 +43,7 @@
                         this.projectName = undefined
                     }
                         console.log('999999999999999999')
-                        
+
                         console.log(sessionStorage.getItem("projectNameStorage"))
                         this.projectName = sessionStorage.getItem("projectNameStorage")
                 },
