@@ -156,6 +156,9 @@
         handler(to, from) {
           console.log("to.meta.parent", to.meta.parent);
           this.activeMenu = to.meta.parent || to.name;
+           if(this.activeMenu=='TestProjectIndex'){
+					this.activeMenu="TestProject";
+				}
         },
         immediate: true,
       },

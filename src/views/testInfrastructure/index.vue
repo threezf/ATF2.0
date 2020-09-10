@@ -40,6 +40,7 @@ export default {
     this.$store.commit("changeFlag", flag == 'true')
   },
   watch:{
+<<<<<<< HEAD
     '$route': {
         handler (to, from) {
             if(to.query.isInterface) {
@@ -59,6 +60,24 @@ export default {
         },
         immediate: true
     }
+=======
+      '$route': {
+          handler (to, from) {
+              if(to.name === 'TestedSystemManagement'){
+                  this.pathShow = false
+              }
+              else{
+                  this.pathShow = true
+                  this.projectName = undefined
+              }
+                  console.log('999999999999999999')
+
+                  console.log(sessionStorage.getItem("testSysNameStorage"))
+                  this.projectName = sessionStorage.getItem("testSysNameStorage")
+          },
+          immediate: true
+      }
+>>>>>>> fsd
   }
 };
 </script>
