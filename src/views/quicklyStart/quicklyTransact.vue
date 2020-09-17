@@ -39,13 +39,9 @@
             <el-form-item label="编码:" prop="code">
               <el-input v-model="formData.code" :disabled="disabled"></el-input>
             </el-form-item>
-<<<<<<< HEAD
-            <el-form-item label="描述:" prop="desc">
-              <el-input v-model="formData.desc" type="textarea" style="width: 270px"></el-input>
-=======
+
             <el-form-item label="描述:" prop="descShort" >
               <el-input v-model="formData.descShort" type="textarea" :disabled="disabled"></el-input>
->>>>>>> fsd
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>

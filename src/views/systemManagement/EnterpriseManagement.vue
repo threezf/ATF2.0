@@ -10,20 +10,20 @@
 						@click="show(0)"
             >新增
           </el-button>
-					<el-button
-						type="primary"
-						size="small"
-						icon="el-icon-close"
-						@click="close()"
-					>禁用企业
-					</el-button>
-					<el-button
-						type="primary"
-						size="small"
-						icon="el-icon-check"
-						@click="open()"
-					>启用企业
-					</el-button>
+<!--					<el-button-->
+<!--						type="primary"-->
+<!--						size="small"-->
+<!--						icon="el-icon-close"-->
+<!--						@click="close()"-->
+<!--					>禁用企业-->
+<!--					</el-button>-->
+<!--					<el-button-->
+<!--						type="primary"-->
+<!--						size="small"-->
+<!--						icon="el-icon-check"-->
+<!--						@click="open()"-->
+<!--					>启用企业-->
+<!--					</el-button>-->
         </el-row>
 				<el-row class="searchRow">
 					<el-col :span="3">
@@ -127,10 +127,10 @@
 					<el-form-item label="公司介绍" prop="descShort" >
 						<el-input v-model="form.descShort" :disabled='disabled'></el-input>
 					</el-form-item>
-					<el-form-item label="管理员名称" prop="username" >
+					<el-form-item label="管理员名称" prop="username" v-show="flag==0" >
 						<el-input v-model="form.username" :disabled='disabled'></el-input>
 					</el-form-item>
-					<el-form-item label="管理员真实姓名" prop="reallyname" >
+					<el-form-item label="管理员真实姓名" prop="reallyname" v-show="flag==0" >
 						<el-input v-model="form.reallyname" :disabled='disabled'></el-input>
 					</el-form-item>
 					<el-form-item   label="密码" prop="password" v-show="flag==0" required>
@@ -385,6 +385,9 @@
 			//修改企业
 			editEnterprise(){
 				this.form.modifiedTime=new Date().valueOf()
+				this.form.status = 1
+				this.form.createTime = new Date().valueOf()
+				this.form.creatorId= sessionStorage.getItem("userId")
 				Request({
 					url: '/companyController/updateByPrimaryKey',
 					method: 'post',

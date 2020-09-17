@@ -3,13 +3,13 @@
  */
 import SystemManagementIndex from '@/views/systemManagement/index'
 import EnterpriseManagement from '@/views/systemManagement/EnterpriseManagement'
-import AdministratorManagement from '@/views/systemManagement/AdministratorManagement'
 import RoleManagement from '@/views/systemManagement/RoleManagement'
 import MenuManagement from '@/views/systemManagement/MenuManagement'
 import ProjectManagement from '@/views/systemManagement/ProjectManagement'
 import ProjectManagerMangement from '@/views/systemManagement/ProjectManagerManagement'
 import UserManagement from '@/views/systemManagement/userManagement'
 import RunnerManagement from '@/views/systemManagement/runnerManagement'
+import ProjectMemberManagement from "../views/systemManagement/ProjectMemberManagement";
 
 export default {
     path: '/systemManagement',
@@ -31,11 +31,11 @@ export default {
             }
         },
         {
-            path: 'administratorManagement',
-            name: 'administratorManagement',
-            component: AdministratorManagement,
+            path: 'projectMemberManagement',
+            name: 'projectMemberManagement',
+            component: ProjectMemberManagement,
             meta: {
-                name: '系统管理员管理',
+                name: '项目成员管理',
                 parent: 'SystemManagement',
                 icon: 'el-icon-user-solid'
             }
@@ -65,7 +65,7 @@ export default {
             name: 'projectManagement',
             component: ProjectManagement,
             meta: {
-                name: '项目组管理',
+                name: '项目管理',
                 parent: 'SystemManagement',
                 icon: 'el-icon-s-management'
             }
@@ -79,7 +79,7 @@ export default {
                 parent: 'SystemManagement',
                 icon: 'el-icon-user',
                 hide: true
-                
+
             }
         },
         {

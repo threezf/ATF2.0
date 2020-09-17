@@ -146,7 +146,9 @@ export default {
                                 })
                                 .then((res) => {
                                     console.log("登录成功", res);
-                                    sessionStorage.setItem("userId", res.obj);
+                                    sessionStorage.setItem("userId", res.userId);
+																	  sessionStorage.setItem("companyName", res.companyName);
+																	sessionStorage.setItem("companyId", res.companyId);
                                     this.$router.push({
                                         path: "/index",
                                     });
@@ -198,7 +200,7 @@ export default {
 
 <style lang="less">
 /*
-    canvas相关背景样式 
+    canvas相关背景样式
   */
 canvas {
     display: block;

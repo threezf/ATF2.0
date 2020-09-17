@@ -69,7 +69,7 @@
 
 					/>
 					<el-table-column
-						label="操作" width="200px">
+						label="操作" width="250px">
 						<template slot-scope="scope">
 							<el-button
 								size="small"
@@ -81,6 +81,12 @@
 								size="small"
 								@click="show(1,scope.row)"
 							>编辑
+							</el-button>
+							<el-button
+								type="primary"
+								size="small"
+								@click="toPage(scope.row)"
+							>管理
 							</el-button>
 						</template>
 					</el-table-column>
@@ -100,30 +106,32 @@
 			<el-dialog
 				:title="modelName"
 				:visible.sync="dialogVisible"
-				width="30%">
+				width="43%">
 				<el-form ref="form" prop="form" :model="form" label-width="100px">
-					<el-form-item label="项目组名称" prop="dept" required>
-						<el-input v-model="form.dept" :disabled='disabled'></el-input>
+					<el-form-item label="项目名称" prop="projectName" >
+						<el-input v-model="form.projectName" :disabled='disabled'></el-input>
 					</el-form-item>
-					<el-form-item label="项目组介绍" prop="descShort" required>
+					<el-form-item label="项目介绍" prop="descShort">
 						<el-input v-model="form.descShort" :disabled='disabled'></el-input>
 					</el-form-item>
+					<el-form-item label="使用时间" prop="descShort" required>
+						<el-date-picker
+							v-model="value"
+							:disabled='disabled'
+							type="datetimerange"
+							:picker-options="pickerOptions"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right">
+						</el-date-picker>
+					</el-form-item>
 					<el-form-item label="公司" prop="companyName">
-						<el-select
-							class="selectWidth"
+						<el-input
 							v-model="form.companyName"
 							:disabled='disabled2'
 						>
-							<el-option
-								v-for="item in companyList"
-								:key="item.id"
-								:label="
-																item.companyName
-															"
-								:value="item.companyName"
-							>
-							</el-option>
-						</el-select>
+						</el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button v-if="flag==0" type="primary" @click="addProject()">添加</el-button>
@@ -173,6 +181,34 @@
 						value:'projectName'
 					}
 				],
+				pickerOptions: {
+					shortcuts: [{
+						text: '最近一周',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近一个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近三个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+							picker.$emit('pick', [start, end]);
+						}
+					}]
+				},
+				value: '',
 				selectValue: 'projectName', // 搜索选项
 				dialogVisible: false,
 				modelFlag: 0,
@@ -214,6 +250,15 @@
 				this.currentPage = val
 				this.getProjects(0)
 			},
+			toPage(row){
+				this.$router.push({
+					path: "projectMemberManagement",
+					query: {
+						projectId:row.id,
+						showOrNot:true
+					}
+				}); //界面跳转
+			},
 			//展示添加，查看，编辑页面
 			show(flag, row) {
 				if (flag == 0) {
@@ -222,14 +267,18 @@
 					this.disabled = false
 					this.disabled2=true
 					this.form = {
-						// 项目组名称
-						dept: '',
-						// 项目组介绍
+						// 项目名称
+						projectName: '',
+						// 项目介绍
 						descShort: '',
 						// 所处公司名称
-						companyName: '',
+						companyName: sessionStorage.getItem("companyName"),
 						// 状态
 						status: '',
+						//起始时间
+						startTime:'',
+						//截止时间
+						endTime:'',
 						// 创建时间
 						createTime: '',
 						// 创建者id
@@ -237,26 +286,21 @@
 						// 修改时间
 						modifiedTime: '',
 						// 修改者id
-						modifierId: sessionStorage.getItem("userId")
+						modifierId:sessionStorage.getItem("userId")
 					}
 				} else if (flag == 1) {
 					this.modelFlag = 1
 					this.flag = 1
 					this.form = row
-					this.form.modifierId = sessionStorage.getItem("userId")
-					if (this.form.status == 1) {
-						this.form.status = "正常"
-					}
-					if (this.form.status == 0) {
-						this.form.status = "锁定"
-					}
+					this.value=[row.startTime,row.endTime]
+
 					this.disabled = false
 					this.disabled2 = true
 				} else {
 					this.modelFlag = 2
 					this.flag = 3
 					this.form = row
-					row.status == 1 || row.status == "1" ? this.form.status = "正常" : this.form.status = "锁定"
+					this.value=[row.startTime,row.endTime]
 					this.disabled = true
 					this.disabled2 = true
 				}
@@ -265,11 +309,12 @@
 			//添加项目组
 			addProject() {
 				this.form.createTime = new Date().valueOf()
-				this.form.modifierId = null
 				this.form.modifiedTime = this.form.createTime
 				this.form.status = 1
+				this.form.startTime=Date.parse(this.value[0])
+				this.form.endTime=Date.parse(this.value[1])
 				Request({
-					url: '/departmentController/insert',
+					url: '/projectController/insert',
 					method: 'post',
 					params: this.form
 				}).then((res) => {
@@ -293,8 +338,11 @@
 			//修改项目组
 			editProject(){
 				this.form.modifiedTime=new Date().valueOf()
+				this.form.modifierId = sessionStorage.getItem("userId")
+				this.form.startTime=Date.parse(this.value[0])
+				this.form.endTime=Date.parse(this.value[1])
 				Request({
-					url: '/departmentController/updateByPrimaryKey',
+					url: '/projectController/updateByPrimaryKey',
 					method: 'post',
 					params: this.form
 				}).then((res) => {
@@ -398,5 +446,8 @@
 		.el-input {
 			width: 300px;
 		}
+	}
+	.selectWidth{
+		width:100%
 	}
 </style>
