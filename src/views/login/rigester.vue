@@ -21,12 +21,12 @@
             v-model="ruleForm.username"
           ></el-input>
         </el-form-item>
-        <el-form-item label="姓名" label-width="200px" prop="name">
+        <el-form-item label="姓名" label-width="200px" prop="reallyname">
           <el-input
             class="normalInput"
             placeholder="请输入姓名"
             autocomplete="off"
-            v-model="ruleForm.name"
+            v-model="ruleForm.reallyname"
           ></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="200px" prop="password">
@@ -50,28 +50,22 @@
           </el-input>
         </el-form-item>
          <el-form-item label="身份" label-width="200px" prop="userIndetify">
-          <el-radio-group v-model="ruleForm.myStatus">
+          <el-radio-group v-model="ruleForm.mark" @change="handleCurrentChange">
             <el-radio label="1" value="1">个人</el-radio>
-            <el-radio label="2" value="2">企业</el-radio>
+            <el-radio label="0" value="0">企业</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="所属部门" label-width="200px" v-show="ruleForm.myStatus==2" hidden>
-          <el-input class="normalInput" placeholder="请填写所属部门，例如行政部" v-model="depart"></el-input>
-        </el-form-item>
-        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.myStatus==2" prop="companyName">
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0">
           <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" label-width="200px" v-show="ruleForm.myStatus==1">
-          <el-input class="normalInput" placeholder="请输入手机号" v-model="phone"></el-input>
+        <el-form-item label="手机号" label-width="200px" v-show="ruleForm.mark==1">
+          <el-input class="normalInput" placeholder="请输入手机号" v-model="ruleForm.telephone"></el-input>
         </el-form-item>
-        <el-form-item label="固定电话" label-width="200px" v-show="ruleForm==1">
-          <el-input class="normalInput" placeholder="请输入固定电话" v-model="fixedPhone"></el-input>
+        <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.mark==1">
+          <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="ruleForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.myStatus==1">
-          <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="email"></el-input>
-        </el-form-item>
-        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.myStatus==2" prop="companyDesc">
-          <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.companyDesc"></el-input>
+        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0">
+          <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.descShort"></el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">
           <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
@@ -172,18 +166,19 @@ export default {
        * 表单信息
        */
       ruleForm: {
-        username: "", //用户名
-        name: "", //姓名
-        password: "", //密码
+        username: "", // 管理员名称
+        password: "", // 管理员密码
+        reallyname: "", // 管理员真实姓名
         surePassword: "", //确认密码
-        myStatus: "1",
+        mark: "1", // 个人和企业的标识
+        telephone: '', // 联系方式
         companyName: "", // 企业名称
-        companyDesc: "", //企业描述
+        email: '', // 邮箱
+        descShort: "", //企业描述
+        status: 1, // 企业状态
+        creatorId: '', // 创建者id
+        modifierId: '', // 修改者id
       },
-      depart: "", //所属部门
-      phone: "", //手机号
-      fixedPhone: "", //固定电话
-      email: "", //电子邮箱
       authCode: "", //填写的验证码
       rules: {
         username: [
@@ -192,7 +187,7 @@ export default {
             trigger: "blur"
           }
         ],
-        name: [
+        reallyname: [
           {
             validator: checkName,
             trigger: "blur"
@@ -216,18 +211,6 @@ export default {
             trigger: "blur"
           }
         ],
-        companyName: [
-          {
-            validator: checkCompanyName,
-            trigger: 'blur'
-          }
-        ],
-        companyDesc: [
-          {
-            validator: checkCompanyDesc,
-            trigger: 'blur'
-          }
-        ],
       }
     };
   },
@@ -239,6 +222,7 @@ export default {
   },
   computed: {},
   methods: {
+    // 获取验证码
     getSessionId() {
       let _this = this;
       Request({
@@ -264,55 +248,90 @@ export default {
     //取消清空表单
     cancelEvent(formName) {
       this.$refs[formName].resetFields();
+      this.$router.push({
+        name: 'Login'
+      })
     },
     //先进行表单验证，然后提交请求
     commitEvent(formName) {
+      console.log(this.ruleForm)
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let qs = require("qs");
-          Request({
-            url: "/userController/register",
-            method: "POST",
-            params: qs.stringify({
-              username: this.ruleForm.username,
-              reallyname: this.ruleForm.name,
-              password: this.ruleForm.password,
-              repassword: this.ruleForm.surePassword,
-              dept: this.depart,
-              tel: this.phone,
-              phone: this.fixedPhone,
-              email: this.email,
-              authCode: this.authCode,
-              sessionId: this.sessionId
-            })
-          })
-            .then(res => {
-              console.log("注册成功", res);
-              this.$message.success("注册成功");
-              this.currentStep = 2;
-            })
-            .catch(err => {
-              console.log("注册失败", err);
-              this.$message.error(err.msg);
-            });
-          //用户名验证(存在问题)
-          // Request({
-          //     url: 'http://10.108.226.152:8080/ATFCloud/userController/checkUser',
-          //     method: 'POST',
-          //     params: qs.stringify({
-          //         username: this.username
-          //     })
-          // }).then(res => {
-          //     console.log('用户名校验通过',res)
+          if(this.ruleForm.mark == 1) {
+            const phoneExp = /^1[3|4|5|7|8]\d{9}$/
+            const emailExp = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
+            if(phoneExp.test(this.ruleForm.telephone) && emailExp.test(this.ruleForm.email)){
+              this.sendToPost(this.ruleForm)
+            }else {
+              return this.$message.warning('请输入手机号或邮箱')
+            }
+         }else {
+           if(this.ruleForm.companyName != "" && this.ruleForm.descShort != "") {
+             this.sendToPost(this.ruleForm)
 
-          // }).catch(err => {
-          //     console.log('用户名校验失败',err)
-          // })
+           }else {
+             this.$message.warning('请输入企业信息')
+           }
+         }
         } else {
           this.$message.error("表单验证失败");
         }
       });
     },
+    // 数据发送到服务器
+    sendToPost(params) {
+      params.sessionId = this.sessionId;
+      params.authCode = this.authCode
+      let qs = require("qs");
+      Request({
+        url: "/userController/register",
+        method: "POST",
+        params: qs.stringify(params)
+      })
+        .then(res => {
+          console.log("注册成功", res);
+          if(this.ruleForm.mark == 0) {
+            return this.insertAllDefaultRole(res.userId)
+          }
+          this.$message.success("注册成功");
+          this.currentStep = 2;
+        })
+        .catch(err => {
+          console.log("注册失败", err);
+        });
+    },
+    // 企业插入操作
+    insertAllDefaultRole(userId) {
+      Request({
+        url: '/roleController/insertAllDefaultRole',
+        method: 'POST',
+        params: {
+          companyName: this.ruleForm.companyName,
+          userId
+        }
+      }).then(res => {
+        this.insert(res.userId)
+      }).catch(error => {
+        console.log('insertAllDefaultRole失败')
+      })
+    },
+    insert(userId) {
+      Request({
+        url: '/userRoleController/insert',
+        method: 'POST',
+        params: {
+          companyName: this.ruleForm.companyName,
+          userId,
+          roleList: ['系统管理员']
+        }
+      }).then(res => {
+        this.$message.success("注册成功");
+        this.currentStep = 2;
+      }).catch(error => {
+        console.log('insert 失败')
+      })
+    },
+    // 检查验证码
     checkAuthCode() {
       let qs = require("qs");
       console.log("authCode:", this.authCode);
@@ -333,6 +352,7 @@ export default {
           console.log("验证码验证失败", err);
         });
     },
+    // 展示密码
     showPass() {
       if (this.passw === "text") {
         this.passw = "password";
@@ -344,6 +364,16 @@ export default {
     },
     toLogin() {
       this.$router.push({ path: "/login" });
+    },
+    // 处理用户状态
+    handleCurrentChange(val) {
+      if(val == 1) {
+        this.ruleForm.companyName = ""
+        this.ruleForm.descShort = ""
+      }else {
+        this.ruleForm.email = ""
+        this.ruleForm.telephone = ""
+      }
     }
   }
 };

@@ -25,9 +25,16 @@
           </el-input>
         </el-col>
       </el-row>
-      <el-table class="table" ref="singleTable" border stripe highlight-current-row :default-sort="{prop:'modifiedTime',order:'descending'}" :data="tableData">
+      <el-table 
+        class="table" 
+        ref="singleTable" 
+        border 
+        stripe 
+        highlight-current-row 
+        :default-sort="{prop:'modifiedTime',order:'descending'}" 
+        :data="tableData">
         <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
-        <el-table-column label="" width="35px">
+        <el-table-column label="" width="34px">
           <template slot-scope="scope">
             <el-radio class="radio" v-model="radio" :label="scope.row.id" @change="handleRadioChange(scope.$index,scope.row)">
             </el-radio>
@@ -142,7 +149,8 @@ export default {
       manageCode: "", // 跳转管理功能点需要的code
       hideFun: '<< 隐藏高级功能', // 隐藏高级功能
       showFun: '展示高级功能 >>',
-      nameMedium: ''
+      nameMedium: '',
+      creatorId: '', // 创建者id
     };
   },
   computed: {
@@ -322,6 +330,7 @@ export default {
       this.row = row;
       this.id = row.id;
       this.nameMedium = row.nameMedium
+      this.creatorId = row.creatorId
     },
     toTransact(index, row) {
       // sessionStorage.setItem('case')
@@ -332,7 +341,8 @@ export default {
       sessionStorage.setItem('toTransact', JSON.stringify({
           id: _this.id,
           code: row.code,
-          nameMedium: row.nameMedium
+          nameMedium: row.nameMedium,
+          creatorId: row.creatorId
         }))
       this.$router.push({
         path: "transact",

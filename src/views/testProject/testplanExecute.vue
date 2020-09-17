@@ -661,7 +661,7 @@
                 exeScope: '1',			// 执行范围
                 selectState: '',		// 选择状态
                 userId:sessionStorage.getItem('userId') || 3,
-                projectName: sessionStorage.getItem('projectNameStorage') || '(电子商务网站购物测试)',	//项目名称
+                projectName: sessionStorage.getItem('nameMediumStorage') || '(电子商务网站购物测试)',	//项目名称
                 fullFlag:true,
 
                 // save the value obtained from back end and will set to the selects' options

@@ -48,8 +48,8 @@
                     }
                         console.log('999999999999999999')
                         
-                        console.log(sessionStorage.getItem("projectNameStorage"))
-                        this.projectName = sessionStorage.getItem("projectNameStorage")
+                        console.log(sessionStorage.getItem("nameMediumStorage"))
+                        this.projectName = sessionStorage.getItem("nameMediumStorage")
                 },
                 immediate: true
             }

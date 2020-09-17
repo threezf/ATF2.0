@@ -25,21 +25,40 @@
         </el-col>
       </el-row>
       <el-table stripe border :data="tableData" class='table'>
-        <el-table-column label="用户名" property="username" min-width="16%" />
-        <el-table-column label="真实姓名" property="reallyname" min-width="16%" />
-        <el-table-column label="角色" property='role' :formatter="roleSwitch" min-width="20%" />
-        <el-table-column label="所属部门" property="dept" min-width="20%" />
-        <el-table-column label="手机号" property="tel" min-width="20%" />
-        <el-table-column label="状态" property="status" :formatter="statusSwitch" width="100px" />
-        <el-table-column label="操作" min-width="18%">
+        <el-table-column label="用户名" property="userEntity.username" min-width="16%" />
+        <el-table-column label="真实姓名" property="userEntity.reallyname" min-width="16%" />
+        <el-table-column label="公司名称" property="userEntity.companyName" min-width="20%" />
+        <el-table-column label="手机号" property="userEntity.telephone" min-width="20%" />
+        <el-table-column label="邮箱" property="userEntity.email" min-width="15%" />
+        <el-table-column label="修改时间" min-width="20%" prop="userEntity.modifiedTime" :formatter="transTime"/>
+        <el-table-column label="状态" width="80px" align="center" >
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
-            <el-button size="mini" type="danger" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-tag 
+              v-if="scope.row.userEntity.status === 1"
+              type="primary"
+              >正常
+            </el-tag>
+            <el-tag 
+              v-else
+              type="warning"
+              >锁定
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="启用" width="100px" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.status"></el-switch>
+            <el-switch 
+              v-model="switches[scope.$index]"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="doSwitchChange(scope.row.userEntity)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="140px" align="center">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+            <el-button size="mini" type="danger" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -49,47 +68,122 @@
           </el-pagination>
         </el-col>
       </div>
-      <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="30%" style="margin-top: -60px">
-        <el-form ref="form" prop="form" :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="用户名" prop="username">
-            <el-input :disabled='disabled' v-model="form.username"></el-input>
+      <el-dialog 
+        :title="modelName" 
+        :visible.sync="dialogVisible" 
+        :before-close="handleClose" 
+        width="30%" 
+        style="margin-top: -60px">
+        <el-form 
+          class="demo-ruleForm"
+          ref="form" 
+          prop="form" 
+          :rules="rules" 
+          :model="form" 
+          label-width="80px">
+          <el-form-item 
+            label="用户名" 
+            prop="username">
+            <el-input 
+              :disabled='disabled' 
+              v-model="form.username">
+            </el-input>
           </el-form-item>
-          <el-form-item label="真实姓名" prop="reallyname" required>
-            <el-input :disabled='disabled' v-model="form.reallyname"></el-input>
+          <el-form-item 
+            label="真实姓名" 
+            prop="reallyname" 
+            required>
+            <el-input 
+              :disabled='disabled' 
+              v-model="form.reallyname">
+            </el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password" required>
-            <el-input :disabled='disabled' type="password" v-model="form.password" auto-complete="off"></el-input>
+          <el-form-item 
+            label="密码" 
+            prop="password" 
+            required>
+            <el-input 
+              :disabled='disabled' 
+              type="password" 
+              v-model="form.password" 
+              show-password
+              auto-complete="off">
+            </el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="checkPassword" required>
-            <el-input :disabled='disabled' type="password" v-model="form.checkPassword" auto-complete="off"></el-input>
+          <el-form-item 
+            label="确认密码" 
+            prop="againPassward" 
+            required>
+            <el-input 
+              :disabled='disabled' 
+              type="password" 
+              show-password
+              v-model="form.againPassward" 
+              auto-complete="off">
+            </el-input>
           </el-form-item>
-          <el-form-item label="用户状态" prop="status" required>
-            <el-select :disabled='disabled' v-model="form.status" placeholder="请选择用户状态">
-              <el-option label="锁定" :value="0"></el-option>
-              <el-option label="正常" :value="1"></el-option>
+          <el-form-item 
+            label="用户状态" 
+            prop="status" 
+            required>
+            <el-select 
+              :disabled='disabled' 
+              v-model="form.status" 
+              placeholder="请选择用户状态">
+              <el-option 
+                label="锁定" 
+                :value="0">
+              </el-option>
+              <el-option 
+                label="正常" 
+                :value="1">
+              </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="用户角色" prop="roleName" required>
-            <el-select :disabled='disabled' v-model="form.roleName" placeholder="请选择用户角色">
-              <el-option label="测试主管" value="1"></el-option>
-              <el-option label="测试经理" value="2"></el-option>
-              <el-option label="测试组长" value="3"></el-option>
-              <el-option label="自动化技术人员" value="4"></el-option>
-              <el-option label="功能测试人员" value="5"></el-option>
-            </el-select>
+          <el-form-item 
+            label="用户角色" 
+            prop="roleList" 
+            required>
+            <el-checkbox-group
+              :disabled='disabled'
+              v-model="form.roleList">
+              <el-checkbox 
+                v-for="(item, index) in roles"
+                :key="index"
+                :value="item"
+                :label="item"
+                >{{item}}
+              </el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="部门" prop="dept">
-            <el-input :disabled='disabled' v-model="form.dept"></el-input>
+          <el-form-item 
+            label="手机号" 
+            prop="telephone">
+            <el-input 
+              :disabled='disabled' 
+              v-model="form.telephone">
+            </el-input>
           </el-form-item>
-          <el-form-item label="手机号" prop="telephone">
-            <el-input :disabled='disabled' v-model="form.telephone"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input :disabled='disabled' v-model="form.email"></el-input>
+          <el-form-item 
+            label="邮箱" 
+            prop="email">
+            <el-input 
+              :disabled='disabled' 
+              v-model="form.email">
+          </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button :disabled='disabled' type="primary" @click="submitForm('form')">{{buttonName}}</el-button>
-            <el-button :disabled='disabled' @click="resetForm('form')">重置</el-button>
+            <el-button 
+              :disabled='disabled' 
+              type="primary" 
+              @click="submitForm('form')"
+              >{{buttonName}}
+            </el-button>
+            <el-button 
+              :disabled='disabled' 
+              @click="resetForm('form')"
+              >重置
+            </el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -107,6 +201,17 @@ import moment, { now } from 'moment';
 export default {
   mixins: [VueMixins], // 混入
   data() {
+    const phoneExp = /^1[3|4|5|7|8]\d{9}$/
+    const emailExp = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
+    const validUsername = (rule, value, callback) => {
+      if(value === '') {
+        return callback(new Error('请输入用户名'))
+      }else if (!(phoneExp.test(value) || emailExp.test(value))) {
+        return callback(new Error("用户名必须是手机号或者邮箱"))
+      }else {
+        return callback()
+      }
+    }
     const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
@@ -117,15 +222,29 @@ export default {
         callback();
       }
     };
-    const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.form.password) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
+    const validAgainPassward = (rule, value, callback) => {
+      if(value === "") {
+        return callback(new Error("请输入确认密码"))
+      }else if(value !== this.form.password) {
+        return callback(new Error('两次密码不一致'))
+      }else {
+        return callback()
       }
-    };
+    }
+    const validPhone = (rule, value, callback) => {
+      if(!(phoneExp.test(value))) {
+        return callback(new Error('请输入规范的手机号'))
+      }else {
+        return callback()
+      }
+    }
+    const validEmail = (rule, value, callback) => {
+      if(!(emailExp.test(value))) {
+        return callback(new Error('请输入规范的邮箱'))
+      }else {
+        return callback()
+      }
+    }
     return {
       form: {
         username: "", // 用户姓名
@@ -133,30 +252,22 @@ export default {
         reallyname: "", // 真实姓名
         email: "", // 邮箱
         telephone: "", // 联系方式
-        phone: "", // 固定电话
-        roleName: "", // 角色名称
-        deptName: "", // 项目组名称
-        verifyInfo: "1", // 认证标识
+        totalScore: 0, // 新老用户认证积分（新加）
+        mark: 0, // 用户标识 0:企业 / 1: 个人
+        roleList: [], // 角色名称
         companyName: '', // 企业名称
         status: 1, // 状态
-        lastLoginDate: '', // 上次登录日期
-        lastLoginIp: '', // 上次登录的ip
+        lastLoginDate: '', // 上次登录时间
+        lastLoginIp: '', // 上次登录ip
         createTime: '', // 创建时间 
-        checkPassword: '', // 检查密码
-        modifierId: '', // 修改者id
         modifiedTime: '', // 修改时间
+        modifierId: '', // 修改者id
         creatorId: '', // 创建者id
+        againPassward: '',
       },
       rules: {
         username: [{
-            required: true,
-            message: '请输入用户名称',
-            trigger: 'blur'
-          },
-          {
-            min: 2,
-            max: 10,
-            message: '长度在 2 到 10 个字符',
+            validator: validUsername,
             trigger: 'blur'
           }
         ],
@@ -172,9 +283,10 @@ export default {
             trigger: 'blur'
           }
         ],
-        roleName: [{
+        roleList: [{
+          type: "array",
           required: true,
-          message: '请选择用户角色',
+          message: '请选择至少一个用户角色',
           trigger: 'change'
         }],
         status: [{
@@ -187,39 +299,20 @@ export default {
           message: '请输入密码',
           trigger: 'blur'
         }],
-        checkPassword: [{
-          validator: validatePass2,
-          message: '请再次输入密码',
-          trigger: 'blur'
-        }],
-        deptName: [{
-          required: false,
-          message: '请选择用户状态',
+        againPassward: [{
+          validator: validAgainPassward,
           trigger: 'blur'
         }],
         telephone: [{
-          required: false,
-          message: '请选择用户状态',
-          trigger: 'blur'
-        }],
-        phone: [{
-          required: false,
-          message: '请选择用户状态',
+          validator: validPhone,
           trigger: 'blur'
         }],
         email: [{
-          required: false,
-          message: '请选择用户状态',
+          validator: validEmail,
           trigger: 'blur'
         }],
       },
-      roles: {
-        1: "测试主管",
-        2: "测试经理",
-        3: "测试组长",
-        4: "自动化技术人员",
-        5: "功能测试人员"
-      }, // 角色类型
+      roles: [], // 角色类型
       status: {
         0: '锁定',
         1: '正常'
@@ -231,14 +324,6 @@ export default {
         {
           label: '真实姓名',
           value: 'reallyname'
-        },
-        {
-          label: '角色名称',
-          value: 'roleName'
-        },
-        {
-          label: '项目组',
-          value: 'deptName'
         }
       ],
       selectValue: 'username', // 搜索选项
@@ -246,11 +331,13 @@ export default {
       tableData: [],
       totalCount: 0,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       dialogVisible: false,
       disabled: false,
       modelFlag: 0,
       selectedId: -1,
+      loginInfo: {},
+      switches: [], // switch的数据
     }
   },
   computed: {
@@ -261,9 +348,7 @@ export default {
         pageSize: this.pageSize,
         orderColumns: "id",
         orderType: "asc",
-        deptName: "",
         reallyname: "",
-        roleName: "",
         username: "",
         userId: sessionStorage.getItem('userId')
       }
@@ -295,15 +380,32 @@ export default {
   },
   created() {
     this.getUsers()
+    this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))
+    this.selectLimitedRoles()
   },
   mounted() {},
   methods: {
+    // 获取用户列表
+    selectLimitedRoles() {
+      Request({
+        url: '/roleController/selectLimitedRoles',
+        method: 'POST',
+        params: {
+          userId: sessionStorage.getItem("userId"),
+          companyId: this.loginInfo.companyId
+        }
+      }).then(res => {
+        this.roles = res.list.map(item => item.roleName)
+        console.log('roles', this.roles)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleClose(done) {
       if (this.modelFlag === 1) {
         done()
         return true
       }
-      this.$refs['form'].resetFields()
       done()
       return true
     },
@@ -335,39 +437,57 @@ export default {
     handleDetail(index, row) {
       this.disabled = true
       this.modelFlag = 2
-      const {
-        username,
-        password,
-        reallyname,
-        role,
-        status,
-        dept,
-        tel,
-        phone,
-        email,
-      } = row
-      this.$nextTick(() => {
-        this.form = {
-          username,
-          reallyname,
-          password,
-          checkPassword: password,
-          role: role === null ? '' : role + '',
-          status: status === null ? '' : status + '',
-          dept,
-          tel,
-          phone,
-          email,
-        }
-      })
+      this.setForm(row)
       this.dialogVisible = true
     },
     // 掉起form表单 并将modelFlag标志置为 3
     handleEdit(index, row) {
-      this.handleDetail(index, row);
       this.modelFlag = 3
       this.disabled = false
-      this.selectedId = row.id
+      this.selectedId = row.userEntity.id
+      console.log(row)
+      this.setForm(row)
+      this.dialogVisible = true
+      console.log('roles', this.form, this.selectedId)
+    },
+    setForm(row) {
+      const {
+        username,
+        password,
+        reallyname,
+        status,
+        telephone,
+        email,
+        totalScore,
+        mark,
+        companyName,
+        lastLoginDate,
+        lastLoginIp,
+        createTime,
+        modifierId,
+        modifiedTime,
+        creatorId
+      } = row.userEntity
+      const {roleList} = row
+      this.form = {
+        username,
+        reallyname,
+        password,
+        againPassward: password,
+        status: status === 0? 0 : 1,
+        telephone,
+        email,
+        totalScore,
+        mark,
+        companyName,
+        lastLoginDate,
+        lastLoginIp,
+        createTime,
+        modifierId,
+        modifiedTime,
+        creatorId,
+        roleList
+      }
     },
     //角色一栏处理函数
     roleSwitch(row, column) {
@@ -395,11 +515,12 @@ export default {
         method: 'post',
         params: this.params
       }).then((res) => {
-        console.log(res)
-        this.tableData = res.list
+        this.tableData = res.userList
         this.totalCount = res.totalCount
+        this.switches = this.tableData.map(obj => (obj.userEntity.status == 1))
       }, (err) => {
         console.log(err)
+        this.tableData = []
       }).catch((err) => {
         console.log(err)
       })
@@ -409,12 +530,15 @@ export default {
       this.modelFlag = 1
       this.dialogVisible = true
       this.disabled = false
+      this.$refs['form'] && this.$refs['form'].resetFields()
     },
     // 添加用户
     addUser() {
       this.form.createTime = Date.now()
       this.form.modifiedTime = Date.now()
       this.form.creatorId = sessionStorage.getItem('userId')
+      this.form.companyName = this.loginInfo.companyName
+      console.log(this.form)
       Request({
         url: '/userController/insert',
         method: 'post',
@@ -422,6 +546,7 @@ export default {
       }).then((res) => {
         this.$message(res.respMsg)
         this.dialogVisible = false
+        this.userRoleController(res.userId)
         this.getUsers()
       }, (err) => {
         this.$message(res.respMsg)
@@ -431,9 +556,32 @@ export default {
         console.log(err)
       })
     },
+    // 插入user
+    userRoleController(userId) {
+      Request({
+        url: "/userRoleController/insert",
+        method: 'POST',
+        params: {
+          userId,
+          companyName: this.loginInfo.companyName,
+          roleList: this.form.roleList
+        }
+      }).then(res => {
+        this.$message.success('插入成功')
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     // 修改用户
     updateUser() {
-      delete this.form.checkPassword
+      delete this.form.againPassward
+      delete this.form.userPriority
+      this.form.modifiedTime = Date.now()
+      this.form.modifierId = sessionStorage.getItem('userId')
+      console.log({
+        id: this.selectedId,
+        ...this.form
+      })
       Request({
         url: '/userController/updateByPrimaryKey',
         method: 'post',
@@ -444,6 +592,7 @@ export default {
       }).then((res) => {
         this.$message(res.respMsg)
         this.dialogVisible = false
+        this.$refs['form'].resetFields()
         this.getUsers()
       }, (err) => {
         this.$message(res.respMsg)
@@ -453,6 +602,41 @@ export default {
         console.log(err)
       })
       this.form.checkPassword = ''
+    },
+    // switch状态数据改变
+    doSwitchChange(row) {
+      row.status = (row.status == 1? 0: 1)
+      if(row.status == 1) {
+        this.enableUserStatus(row.id)
+      }else {
+        this.disableUserStatus(row.id)
+      }
+    },
+    enableUserStatus(id) {
+      Request({
+        url: '/userController/enableUserStatus',
+        method: 'POST',
+        params: {
+          id
+        }
+      }).then(res => {
+        this.$message.success('启用成功')
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    disableUserStatus(id) {
+      Request({
+        url: '/userController/disableUserStatus',
+        method: 'POST',
+        params: {
+          id
+        }
+      }).then(res => {
+        this.$message.success('锁定成功')
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
 }

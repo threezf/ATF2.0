@@ -294,6 +294,7 @@ export default {
     this.$message.success("pagination执行Created方法:" + this.autId);
     this.getAllFunction();
     this.getAllSystem();
+    this.insertSwaggerAPI()
   },
   mounted() {},
   computed: {
@@ -549,6 +550,21 @@ export default {
         .catch(err => {
           console.log("pagination查询出错" + err);
         });
+    },
+    insertSwaggerAPI() {
+      Request({
+        url: '/swaggerController/insertSwaggerAPI',
+        method: 'POST',
+        params: {
+          url: "http://localhost:9090/v2/api-docs",
+          systemId: 1659,
+          creatorId: 3
+        }
+      }).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
     },
     submitForm(formName) {
       let _this = this;

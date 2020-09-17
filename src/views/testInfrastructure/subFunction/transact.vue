@@ -9,6 +9,13 @@
       </el-button>
       <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton">修改
       </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        icon="el-icon-link"
+        @click="linkSwagger"
+        >绑定swagger
+      </el-button>
     </el-row>
   </el-container>
   <el-main class="el-main-base-inner">
@@ -18,11 +25,6 @@
         <el-select class="selectName" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
           <el-option v-for="(item,key) in autRespDTOList" :key="key" :value="item.nameMedium" :label="item.nameMedium"></el-option>
         </el-select>
-      </el-col>
-      <el-col :span="8">
-        <span class="ownedSystem">所属被测系统：</span>
-        <el-input style="width: 300px">
-        </el-input>
       </el-col>
     </el-row>
     <!--表格-->
@@ -126,6 +128,40 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog
+      title="绑定swagger"
+      width="21%"
+      :visible.sync="swaggerVisible">
+      <el-form>
+        <el-form-item
+          label-width="50px"
+          label="URL: ">
+          <el-input 
+            style="width: 300px"
+            placeholder="请输入绑定swagger的url"
+            v-model="swaggerUrl"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-row 
+          style="display: flex; justify-content: flex-end; padding-right: 16px; margin-bottom: -5px">
+          <el-button
+            type="primary"
+            size="small"
+            @click="insertSwaggerAPI"
+            >确定
+          </el-button>
+          <el-button
+            type="warning"
+            size="small"
+            @click="cancelSwagger"
+            plain
+            >取消
+          </el-button>
+
+        </el-row>
+      </el-form>
+    </el-dialog>
   </el-main>
 </div>
 </template>
@@ -191,7 +227,9 @@ export default {
       objectRepositoryId: "",
       addId: '',
       addRow: {},
-      isInterface: false
+      isInterface: false,
+      swaggerVisible: false,
+      swaggerUrl: '', // swagger绑定用的url
     };
   },
   created() {
@@ -201,6 +239,7 @@ export default {
     this.isInterface? this.ruleForm.functionType = "接口" : this.functionType = "UI"
     this.getAllFunction();
     this.getAllSystem();
+    // this.insertSwaggerAPI()
   },
   computed: {
     changedParams() {
@@ -234,6 +273,40 @@ export default {
     }
   },
   methods: {
+    /**
+     *  swagger相关
+     */
+    // 打开swagger对话框
+    linkSwagger() {
+      this.swaggerVisible = true
+    },
+    // 绑定swagger
+    insertSwaggerAPI() {
+      if(this.swaggerUrl != "") {
+        Request({
+          url: '/swaggerController/insertSwaggerAPI',
+          method: 'POST',
+          params: {
+            url: this.swaggerUrl,
+            systemId: this.autId,
+            creatorId: 3
+          }
+        }).then(res => {
+          console.log(res)
+          this.$message.success('绑定成功')
+          this.swaggerVisible = false
+        }).catch(error => {
+          console.log(error)
+          this.$message.error('请求swagger接口失败')
+        })
+      }else {
+        this.$message.warning('请输入url')
+      }
+    },
+    // 取消swagger绑定
+    cancelSwagger() {
+      this.swaggerVisible = false
+    },
     /**
      * 顶部按钮方法
      **/
@@ -470,7 +543,6 @@ export default {
               this.dialogModelFlag = 5:
               this.dialogModelFlag = 4
               this.dialogVisible = true;
-
               this.tableData = [];
             } else {
               for (let i = 0; i < res.list.length; i++) {

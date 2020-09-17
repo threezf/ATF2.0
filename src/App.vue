@@ -19,6 +19,10 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item class="currentUser" icon="el-icon-user">
+                当前:
+                <span style="font-weight: bold">{{currentUser}}</span>
+                </el-dropdown-item>
               <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
               <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
               <el-dropdown-item icon='el-icon-circle-close' @click.native="logout">登出</el-dropdown-item>
@@ -148,7 +152,10 @@
 
         },
         userStatus: 1,
-        isStepsShow: true
+        isStepsShow: true,
+        loginInfo: {},
+        currentUser: '', // 当前用户
+        totalScore: ''
       };
     },
     watch: {
@@ -169,7 +176,7 @@
           }
         });
         return menuList;
-      },
+      }
     },
     methods: {
       logout() {
@@ -188,9 +195,30 @@
         this.dialogVisible = true
       },
       submitForm(ruleForm) {
+        let params = {
+          userId: this.loginInfo.userId,
+          oldPassword: this.ruleForm.oldPass,
+          newPassword: this.ruleForm.newPass
+        }
         this.$refs[ruleForm].validate((valid) => {
           if(valid) {
-            this.$message.success('验证通过')
+            Request({
+              url: '/userController/updatePassword',
+              method: 'POST',
+              params: params
+            }).then(res => {
+              console.log(res) 
+              if(res.respCode === "0000") {
+                this.$message.success(res.respMsg)
+                this.dialogVisible = false
+                this.$refs['ruleForm'].resetFields()
+              }else {
+                this.$message.warning(res.respMsg)
+              }
+            }).catch(error => {
+              console.log('修改失败', error)
+              this.$message.warning("原密码错误")
+            })
           }else {
             return false
           }
@@ -207,7 +235,17 @@
       }
     },
     created() {
+      this.totalScore = sessionStorage.getItem("totalScore")
+      this.totalScore = 10
+      if(this.totalScore <= 100) {
+        localStorage.setItem('userType', 'true')
+      }else {
+        localStorage.setItem('userType', 'false')
+      }
       const flag = localStorage.getItem("userType")
+      console.log(this.totalScore, 'totalScore')
+      this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))? JSON.parse(localStorage.getItem('loginInfo')): {}
+      this.currentUser = sessionStorage.getItem("username")
       if(flag == 'false') {
         this.userStatus = 1
       }else {
@@ -257,5 +295,17 @@
     display: flex;
     justify-content: flex-end;
     padding-right: 35px;
+  }
+  .el-menu-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .currentUser {
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .currentUser:hover {
+    background: white;
   }
 </style>

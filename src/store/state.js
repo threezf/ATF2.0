@@ -1,3 +1,4 @@
 export default {
-  flag: true
+  flag: true,
+  loginInfo: {}
 }

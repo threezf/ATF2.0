@@ -4,7 +4,10 @@
     <canvas class="particles-js-canvas-el"></canvas>
   </div>
   <div class="mainBody">
-    <h1 class="title">ATF云测试平台</h1>
+    <!-- <h1 class="title">ATF云测试平台</h1> -->
+    <div class="bodyIcon">
+      <img class="imageIcon" src="../../assets/jin.gif" />
+    </div>
     <div class="loginBody">
       <el-form :rules="rules" :model="ruleForm" class="loginForm" ref="ruleForm" label-width="100px" status-icon>
         <el-form-item prop="uid" label="账号">
@@ -133,7 +136,6 @@ export default {
             })
             .then((res) => {
               console.log("验证成功", res);
-              
               Request({
                   url: "/userController/login",
                   method: "post",
@@ -146,10 +148,18 @@ export default {
                 })
                 .then((res) => {
                   console.log("登录成功", res);
-                  sessionStorage.setItem("userId", res.obj);
-                  this.$router.push({
-                    path: "/index",
-                  });
+                  if(res.respCode === '0000') {
+                    sessionStorage.setItem("userId", res.userId);
+                    sessionStorage.setItem("username", this.ruleForm.uid);
+                    this.$store.commit('setLoginInfo', {
+                      companyId: res.companyId,
+                      companyName: res.companyName,
+                      userId: res.userId
+                    })
+                    this.toMainPage(res.userId)
+                  }else {
+                    this.$$message.console.warning('请验证登录信息');
+                  }
                 })
                 .catch((e) => {
                   console.log("错误信息", e);
@@ -188,10 +198,31 @@ export default {
           console.log("登录出错", e);
         });
     },
+    // 跳转并传递参数
+    toMainPage(userId) {
+      Request({
+        url: '/userController/getTotalScore',
+        method: 'POST',
+        params: {
+          userId
+        }
+      }).then(res => {
+        this.$router.push({
+          path: "/index",
+        });
+        sessionStorage.setItem('totalScore', res.totalScore)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     //注册
     toRigester() {
       this.$router.push("/rigester");
     },
+    // 修改用户积分
+    setTotalCount() {
+
+    }
   },
 };
 </script>
@@ -221,6 +252,20 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.bodyIcon {
+  width: 189px;
+  height: 220px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 3px 4px gray;
+}
+.bodyIcon:hover {
+  top: -2px;
 }
 
 .mainBody {

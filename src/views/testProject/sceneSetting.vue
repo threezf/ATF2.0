@@ -124,7 +124,7 @@
             </el-row>
           </el-checkbox-group>
           <el-drawer
-            :class="isCollapse? 'drawerHide': 'drawer'"
+            :class="drawerStyle"
             size="fit-content"
             :title="drawTitles[selectedDrawIndex]"
             :visible.sync="drawerVisible"
@@ -863,8 +863,9 @@
         caseIdList: [], // 场景顺序
         showFun: '展开高级功能 >>',
         hideFun: '',
-        isCollapse: false, //折叠时page宽度
-        baseWidth: 0
+        isCollapse: true, //折叠时page宽度
+        baseWidth: 0,
+        drawerStyle: 'drawer'
       };
     },
     created() {
@@ -875,6 +876,8 @@
       this.getMobileInfo();
       this.pagedBatchQueryTestCase();
       this.pagedBatchQueryDataPool()
+      // this.isCollapse = true
+      // this.baseWidth = document.getElementsByClassName('right-content')[0].offsetWidth
     },
     mounted() {
       this.sort();
@@ -883,8 +886,9 @@
       let erd = elementResizeDectoreMaker()
       erd.listenTo(document.getElementsByClassName('right-content')[0], element => {
         let width = element.offsetWidth
-        this.isCollapse = width === this.baseWidth
-        console.log('elementResizeDectoreMaker', width)
+        this.isCollapse = (width == this.baseWidth)
+        this.drawerStyle = this.isCollapse? 'drawer' : 'drawerHide'
+        console.log('elementResizeDectoreMaker', width, this.baseWidth, this.isCollapse, this.drawerStyle)
       })
     },
     methods: {

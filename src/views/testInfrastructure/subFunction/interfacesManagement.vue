@@ -332,11 +332,11 @@ export default {
         },
       ], // Authorization
       bodyFormats: [{
-          id: 1,
+          id: "1",
           value: 'JSON'
         },
         {
-          id: 2,
+          id: "2",
           value: 'XML'
         },
       ], // 报文格式
@@ -437,7 +437,7 @@ export default {
           _this.manageInfo.status = res.status //开发状态
           _this.manageInfo.method = res.method // 请求方法
           _this.manageInfo.protocol = res.protocol // 通信类型
-          _this.manageInfo.bodyFormat = res.bodyFormat // 报文格式
+          _this.manageInfo.bodyFormat = res.bodyFormat? res.bodyFormat: '1' // 报文格式
           _this.manageInfo.selectedHeader = []
           if (res.header === '[]' || res.header === null) {
             _this.manageInfo.selectedHeader.push({
