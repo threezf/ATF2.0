@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-header class="header-container" v-if="activeMenu!= 'Login' && activeMenu != 'Rigester'">
+    <el-header class="header-container" v-if="activeMenu!= 'Login' && activeMenu != 'Rigester' && activeMenu != 'Error'">
       <el-row class="header">
         <el-col :span="4" class="logo">
           <h3 class="mainTitle" style="white-space: nowrap;">管理系统</h3>
@@ -163,6 +163,9 @@
         handler(to, from) {
           console.log("to.meta.parent", to.meta.parent);
           this.activeMenu = to.meta.parent || to.name;
+          if(this.activeMenu=='TestProjectIndex'){
+            this.activeMenu="TestProject";
+          }
         },
         immediate: true,
       },
@@ -171,8 +174,14 @@
       menuList() {
         let menuList = [];
         this.$router.options.routes.forEach((item) => {
-          if (item.path != "/" && !item.meta.hide) {
-            menuList.push(item);
+          console.log(!(item.meta && item.meta.hide), 'item.meta', item.name)
+          // if (item.path != "/" && !(item.meta && item.meta.hide)) {
+          //   if(item.name) {
+          //     menuList.push(item);
+          //   }
+          // }
+          if(item.path != "/" && !item.meta.hide) {
+            menuList.push(item)
           }
         });
         return menuList;
@@ -232,16 +241,24 @@
       },
       handleStatusChange(val) {
         this.$store.commit('changeFlag', val == 2)
+        localStorage.setItem("userType", val == 2)
+      },
+      // 初始化用户状态
+      initUserState() {
+        this.totalScore = sessionStorage.getItem("totalScore")
+        const userType = localStorage.getItem('userType')
+        console.log('userType1', userType)
+        this.$store.commit("changeFlag", userType === 'true')
+        console.log('userType2', localStorage.getItem('userType'))
+        if(this.totalScore <= 100) {
+          // localStorage.setItem('userType', 'true')
+        }else {
+          // localStorage.setItem('userType', 'false')
+          // this.$store.state.commit("changeFlag", 'false')
+        }
       }
     },
     created() {
-      this.totalScore = sessionStorage.getItem("totalScore")
-      this.totalScore = 10
-      if(this.totalScore <= 100) {
-        localStorage.setItem('userType', 'true')
-      }else {
-        localStorage.setItem('userType', 'false')
-      }
       const flag = localStorage.getItem("userType")
       console.log(this.totalScore, 'totalScore')
       this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))? JSON.parse(localStorage.getItem('loginInfo')): {}
@@ -251,6 +268,7 @@
       }else {
         this.userStatus = 2
       }
+      this.initUserState()
     },
   };
 </script>

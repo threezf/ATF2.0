@@ -11,6 +11,7 @@ import RecordFunction from './recordFunction'
 import QuicklyStart from './quicklyStart'
 import UI from '@/views/UIorCGI/ui'
 import CGI from '@/views/UIorCGI/CGI'
+import Addition from './addition'
 
 Vue.use(Router)
 
@@ -76,6 +77,7 @@ export default new Router({
         },
         TestProject,
 		RecordFunction,
-        QuicklyStart
+        QuicklyStart,
+        Addition
     ]
 })

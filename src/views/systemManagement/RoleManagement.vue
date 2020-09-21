@@ -44,6 +44,7 @@
               @click="searchByItem">
             </el-button>
           </el-input>
+					</el-col>
         </el-row>
         <el-table
           :data="tableData"
@@ -380,7 +381,7 @@
                 this.$message.warning(res.respMsg)
               }
             }).catch(error => {
-              this.$message.error('修改失败')
+              this.$message.error('该角色不可自行创建')
             })
           }else {
             return

@@ -37,9 +37,11 @@ export default {
   methods: {},
   created() {
     const flag = localStorage.getItem("userType")
-    this.$store.commit("changeFlag", flag == 'true')
+    console.log('userType', flag)
+    this.$store.commit("changeFlag", flag === 'true')
   },
   watch:{
+
     '$route': {
         handler (to, from) {
             if(to.query.isInterface) {
@@ -53,7 +55,6 @@ export default {
                 this.projectName = undefined
             }
                 console.log('999999999999999999', from, to)
-                
                 console.log(sessionStorage.getItem("testSysNameStorage"))
                 this.projectName = sessionStorage.getItem("testSysNameStorage")
         },

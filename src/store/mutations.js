@@ -1,6 +1,7 @@
 export default {
   changeFlag(state, payload) {
     state.flag = payload
+    console.log('userType mutations', state.flag)
     localStorage.setItem('userType', state.flag)
   },
   setLoginInfo(state, payload) {
@@ -8,5 +9,11 @@ export default {
     state.loginInfo.companyName = payload.companyName
     state.loginInfo.userId = payload.userId
     localStorage.setItem('loginInfo', JSON.stringify(state.loginInfo))
+  },
+  updateTotalScore(state, payload) {
+    state.totalScore = state.totalScore + payload.totalScore
+  },
+  setTotalScore(state, payload) {
+    state.totalScore = payload.totalScore
   }
 }

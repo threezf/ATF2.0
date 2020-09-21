@@ -766,6 +766,7 @@
 				addFlag:true,
 				direction: 'rtl',
 				componentData: [],
+				componentChildData:[],
 				classList: [],
 				methodList: [],
 				parentList:[],
@@ -1265,33 +1266,42 @@
 			},
 			//加载树数据
 			loadTreeNode(node, resolve) {
-				let self = this;
+				let _this = this;
 				console.log(node);
 				if (node.level == 0) {
 					Request({
 						url: '/abstractArchitecture/queryArchitectureList',
 						method: 'post',
 					}).then((res) => {
-						var componentChildData = res.architectureRespDTOList
-						for (var i = 0; i < componentChildData.length; i++) {
-							if (componentChildData[i].level == 0) {
-								this.componentData.push(componentChildData[i])
+						_this.componentChildData = res.architectureRespDTOList
+						for (var i = 0; i < _this.componentChildData.length; i++) {
+							if (_this.componentChildData[i].level == 0) {
+								_this.componentData.push(_this.componentChildData[i])
 							}
 						}
-						resolve(this.componentData)
+						resolve(_this.componentData)
 					}, (err) => {
 						console.log(err)
 					}).catch((err) => {
 						console.log(err)
 					})
-				} else {
-					this.flag = 1
-					for (var i = 0; i < this.componentData.length; i++) {
-						if (this.componentData[i].id == node.data.id) {
-							resolve(this.componentData[i].childNodeList)
-							this.flag = 2
+				} else{
+					_this.flag = 1
+					var list=[]
+					for (var i = 0; i < _this.componentChildData.length; i++) {
+						if(_this.componentChildData[i].level==(node.level-1)){
+							list.push(_this.componentChildData[i])
 						}
-						if (this.flag == 1) {
+					}
+					console.log(list)
+					for (var j = 0; j < list.length; j++) {
+						if (list[j].id == node.data.id) {
+							if(list[j].childNodeList){
+								resolve(list[j].childNodeList)
+								this.flag = 2
+							}
+						}
+						if (_this.flag == 1) {
 							resolve([])
 						}
 					}

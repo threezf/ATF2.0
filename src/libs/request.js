@@ -35,6 +35,7 @@ axios.defaults.paramsSerializer = (params) => {
 // 如果判断条件不通过就直接return Promise.reject(message) 不执行后边的内容
 axios.interceptors.response.use(function (response) {
     console.log(response.request.responseURL)
+    console.log(response, '响应内容')
     // if(isDownload(response.request.responseURL)){
     //     console.log(response)
     //     return response
@@ -58,6 +59,8 @@ axios.interceptors.response.use(function (response) {
     console.log('拦截器捕获了错误' + message)
     return Promise.reject(message)
 }, function (error) {
+    window.location = '/#/error'
+    console.log('发生错误拦截', error, _Vue)
     return Promise.reject(error)
 })
 
