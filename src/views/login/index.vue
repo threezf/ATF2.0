@@ -147,7 +147,7 @@ export default {
                 })
                 .then((res) => {
                   console.log("登录成功", res);
-                  sessionStorage.setItem("userId", res.obj);
+                  sessionStorage.setItem("userId", res.userId);
                   this.$router.push({
                     path: "/index",
                   });
