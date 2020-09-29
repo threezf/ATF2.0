@@ -17,7 +17,7 @@ export default {
     data: function () {
         return {
             paths: Path,
-            smallPaths: Path[0].item,
+            smallPaths: Path[0].item, 
             bigActive: 0,
             smallActive: 1,
             flag: false,
@@ -72,7 +72,8 @@ export default {
                 return this.$router.push({
                     path: '/testInfrastructure/transactDetail',
                     query: {
-                        steps: 0
+                        steps: 0,
+                        data: {}
                     }
                 })
             }else if(name === 'TransactDetail/2') {

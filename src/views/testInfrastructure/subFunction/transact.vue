@@ -1,169 +1,312 @@
 <template>
-<div class="page-base-inner">
-  <el-container>
-    <el-row class="buttonsRow">
-      <el-button type="primary" icon='el-icon-plus' size="small" @click="addFunctionButton">添加</el-button>
-      <el-button type="primary" icon="el-icon-folder-add" size="small" @click="importFunctionButton">批量导入
-      </el-button>
-      <el-button type="primary" icon="el-icon-document-copy" size="small" @click="copyFunction">复制功能点
-      </el-button>
-      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton">修改
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-link"
-        @click="linkSwagger"
-        >绑定swagger
-      </el-button>
-    </el-row>
-  </el-container>
-  <el-main class="el-main-base-inner">
-    <el-row>
-      <el-col :span="6">
-        <span class="ownedSystem">所属被测系统：</span>
-        <el-select class="selectName" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
-          <el-option v-for="(item,key) in autRespDTOList" :key="key" :value="item.nameMedium" :label="item.nameMedium"></el-option>
-        </el-select>
-      </el-col>
-    </el-row>
-    <!--表格-->
-    <el-table class="tableStyle" ref="singleTable" style="width:fit-content; margin-top: 15px" :data="tableData" :default-sort="{prop:'modifiedTime',order:'descending'}" stripe highlight-current-row border>
-      <el-table-column label="选择" min-width="3%" align="center">
-        <template slot-scope="scope">
-          <el-radio v-model="selectedRowIndex" :label="scope.$index" @change="selectRow(scope.$index,scope.row)">&nbsp;</el-radio>
-        </template>
-      </el-table-column>
-      <el-table-column label="行号" width="50px" align="center" type="index">
-      </el-table-column>
-      <el-table-column prop="" label="编码" min-width="15%" align="center">
-        <template slot-scope="scope">
-          <a class="codeTo" @click.prevent="toTransact(scope.row)">{{scope.row.code}}</a>
-        </template>
-      </el-table-column>
-      <el-table-column prop="nameMedium" label="名称" min-width="15%" align="center">
-      </el-table-column>
-      <el-table-column prop="transType" label="类型" width="80px" align="center">
-      </el-table-column>
-      <el-table-column prop="descShort" label="描述" min-width="15%" align="center">
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="200px" align="center" :formatter="transTime" sortable></el-table-column>
-      <el-table-column prop="modifiedTime" label="修改时间" width="200px" align="center" :formatter="transTime" sortable></el-table-column>
-    </el-table>
-    <!--底部换页-->
-    <div>
-      <el-col class="footSelect">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[5,10,20,50]" :current-page="currentPage" :page-size="pageSize" :total="totalCount" layout="total, sizes, prev ,pager ,next, jumper"></el-pagination>
-      </el-col>
-    </div>
-
-    <!--新增和修改对话框-->
-    <el-dialog width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
-      <el-form ref="ruleForm" label-width="40px" :model="ruleForm" :rules="rules" status-icon>
-        <el-form-item label="名称" prop="nameMedium">
-          <el-input placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="类型" prop="functionType" v-if="isAdded">
-          <el-select class="addSelect" v-model="ruleForm.functionType">
-            <el-option value="UI" selected="true" v-if="!isInterface">
-            </el-option>
-            <el-option value="接口" v-else>
-            </el-option>
+  <div class="page-base-inner">
+    <el-container>
+      <el-row class="buttonsRow">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="small"
+          @click="addFunctionButton"
+          :disabled="disableFunc"
+          >添加</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-folder-add"
+          size="small"
+          @click="importFunctionButton"
+          :disabled="disableFunc"
+          >批量导入
+        </el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-document-copy"
+          size="small"
+          @click="copyFunction"
+          :disabled="disableFunc"
+          >复制功能点
+        </el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-edit-outline"
+          size="small"
+          @click="updateFunctionButton"
+          :disabled="disableFunc"
+          >修改
+        </el-button>
+        <el-button
+          type="primary"
+          size="small"
+          icon="el-icon-link"
+          @click="linkSwagger"
+          :disabled="disableFunc"
+          >绑定swagger
+        </el-button>
+      </el-row>
+    </el-container>
+    <el-main class="el-main-base-inner">
+      <el-row>
+        <el-col :span="6">
+          <span class="ownedSystem">所属被测系统：</span>
+          <el-select
+            class="selectName"
+            v-model="ownedSystem"
+            placeholder="所属被测系统"
+            @change="changeAutId"
+            :disabled="disableFunc"
+          >
+            <el-option
+              v-for="(item, key) in autRespDTOList"
+              :key="key"
+              :value="item.nameMedium"
+              :label="item.nameMedium"
+            ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="编码" prop="code">
-          <el-input placeholder="为空时自动生成" v-model="ruleForm.code">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="描述" prop="descShort">
-          <el-input cols="5" rows="5" type="textarea" v-model="ruleForm.descShort">
-          </el-input>
-        </el-form-item>
-        <hr color="#F5F5F5" />
-        <el-form-item>
-          <div class="dialogBottom">
-            <el-button id="buttonName" type="primary" size="small" @click="submitForm('ruleForm')">{{dialogOperateButton}}
-            </el-button>
-            <el-button type="danger" size="small" plain @click="cancelButton">取消
-            </el-button>
-          </div>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!--导入对话框-->
-    <el-dialog width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
-      <el-form :action="importURL" enctype="multipart/form-data" method='post' id="uploadForm">
-        <el-upload ref="upload" :action="importURL" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
-          <el-button class="btnSelectFile" type="success" slot="trigger" plain>上传文件
-          </el-button>
-          <el-input class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
-        </el-upload>
-        <hr color="#F5F5F5"  />
-        <el-form-item>
-                      <el-col class="buttonDownload" :span="12">
-            <el-button type="primary" icon="el-icon-download" size="small" @click="downloadTemplate">模板下载</el-button>
-          </el-col>
-          <el-col class="buttonGroup" :span="12">
-            <el-button type="primary" size="small" @click="importTemplate">导入
-            </el-button>
-            <el-button size="small" @click="cancelButton">取消
-            </el-button>
-          </el-col>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!--添加成功对话框-->
-    <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
-      <el-form>
-        <el-form-item label-width="20px">
-          <h4 class="transactSuccessTitle">操作成功</h4>
-        </el-form-item>
-        <hr width="100%" color="#F5F5F5" />
-        <el-form-item class="formFoot transactDialogButtonRow">
-          <el-button type="primary" size="small" @click="cancelButtonClicked">确定
-          </el-button>
-          <el-button type="success" size="small" @click="toDetail">进入功能点
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <el-dialog
-      title="绑定swagger"
-      width="21%"
-      :visible.sync="swaggerVisible">
-      <el-form>
-        <el-form-item
-          label-width="50px"
-          label="URL: ">
-          <el-input 
-            style="width: 300px"
-            placeholder="请输入绑定swagger的url"
-            v-model="swaggerUrl"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-row 
-          style="display: flex; justify-content: flex-end; padding-right: 16px; margin-bottom: -5px">
-          <el-button
-            type="primary"
-            size="small"
-            @click="insertSwaggerAPI"
-            >确定
-          </el-button>
-          <el-button
-            type="warning"
-            size="small"
-            @click="cancelSwagger"
-            plain
-            >取消
-          </el-button>
+        </el-col>
+      </el-row>
+      <!--表格-->
+      <el-table
+        class="tableStyle"
+        ref="singleTable"
+        style="width: fit-content; margin-top: 15px"
+        :data="tableData"
+        :default-sort="{ prop: 'modifiedTime', order: 'descending' }"
+        stripe
+        highlight-current-row
+        border>
+        <el-table-column label="选择" min-width="3%" align="center">
+          <template slot-scope="scope">
+            <el-radio
+              v-model="selectedRowIndex"
+              :label="scope.$index"
+              @change="selectRow(scope.$index, scope.row)"
+              :disabled="disableFunc"
+              >&nbsp;</el-radio
+            >
+          </template>
+        </el-table-column>
+        <el-table-column label="行号" width="50px" align="center" type="index">
+        </el-table-column>
+        <el-table-column prop="" label="编码" min-width="15%" align="center">
+          <template slot-scope="scope">
+            <a class="codeTo" @click.prevent="toTransact(scope.row)" :disabled="disableFunc">{{
+              scope.row.code
+            }}</a>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="nameMedium"
+          label="名称"
+          min-width="15%"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="transType"
+          label="类型"
+          width="80px"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="descShort"
+          label="描述"
+          min-width="15%"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          width="200px"
+          align="center"
+          :formatter="transTime"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="modifiedTime"
+          label="修改时间"
+          width="200px"
+          align="center"
+          :formatter="transTime"
+          sortable
+        ></el-table-column>
+      </el-table>
+      <!--底部换页-->
+      <div>
+        <el-col class="footSelect">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[5, 10, 20, 50]"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalCount"
+            layout="total, sizes, prev ,pager ,next, jumper"
+          ></el-pagination>
+        </el-col>
+      </div>
 
-        </el-row>
-      </el-form>
-    </el-dialog>
-  </el-main>
-</div>
+      <!--新增和修改对话框-->
+      <el-dialog
+        width="24%"
+        :title="dialogTitle"
+        :visible.sync="dialogVisible"
+        :before-close="handleBeforeClose"
+      >
+        <el-form
+          ref="ruleForm"
+          label-width="40px"
+          :model="ruleForm"
+          :rules="rules"
+          status-icon
+        >
+          <el-form-item label="名称" prop="nameMedium">
+            <el-input placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="类型" prop="functionType" v-if="isAdded">
+            <el-select class="addSelect" v-model="ruleForm.functionType">
+              <el-option value="UI" selected="true" v-if="!isInterface">
+              </el-option>
+              <el-option value="接口" v-else> </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="编码" prop="code">
+            <el-input placeholder="为空时自动生成" v-model="ruleForm.code">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="descShort">
+            <el-input
+              cols="5"
+              rows="5"
+              type="textarea"
+              v-model="ruleForm.descShort"
+            >
+            </el-input>
+          </el-form-item>
+          <hr color="#F5F5F5" />
+          <el-form-item>
+            <div class="dialogBottom">
+              <el-button
+                id="buttonName"
+                type="primary"
+                size="small"
+                @click="submitForm('ruleForm')"
+                >{{ dialogOperateButton }}
+              </el-button>
+              <el-button type="danger" size="small" plain @click="cancelButton"
+                >取消
+              </el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!--导入对话框-->
+      <el-dialog
+        width="27%"
+        :title="dialogTitle"
+        :before-close="handleBeforeClose"
+        :visible.sync="dialogImportVisible"
+      >
+        <el-form
+          :action="importURL"
+          enctype="multipart/form-data"
+          method="post"
+          id="uploadForm"
+        >
+          <el-upload
+            ref="upload"
+            :action="importURL"
+            :limit="1"
+            :auto-upload="false"
+            :file-list="fileList"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-exceed="handleExceed"
+            :on-change="handleOnChange"
+          >
+            <el-button class="btnSelectFile" type="success" slot="trigger" plain
+              >上传文件
+            </el-button>
+            <el-input
+              class="formInput"
+              placeholder="请选择导入的文件"
+              :disabled="true"
+              v-model="fileName"
+            ></el-input>
+          </el-upload>
+          <hr color="#F5F5F5" />
+          <el-form-item>
+            <el-col class="buttonDownload" :span="12">
+              <el-button
+                type="primary"
+                icon="el-icon-download"
+                size="small"
+                @click="downloadTemplate"
+                >模板下载</el-button
+              >
+            </el-col>
+            <el-col class="buttonGroup" :span="12">
+              <el-button type="primary" size="small" @click="importTemplate"
+                >导入
+              </el-button>
+              <el-button size="small" @click="cancelButton">取消 </el-button>
+            </el-col>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!--添加成功对话框-->
+      <el-dialog
+        width="25%"
+        title="提示"
+        :visible.sync="successDialogVisible"
+        :before-close="handleBeforeClose"
+      >
+        <el-form>
+          <el-form-item label-width="20px">
+            <h4 class="transactSuccessTitle">操作成功</h4>
+          </el-form-item>
+          <hr width="100%" color="#F5F5F5" />
+          <el-form-item class="formFoot transactDialogButtonRow">
+            <el-button type="primary" size="small" @click="cancelButtonClicked"
+              >确定
+            </el-button>
+            <el-button type="success" size="small" @click="toDetail"
+              >进入功能点
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-dialog title="绑定swagger" width="21%" :visible.sync="swaggerVisible">
+        <el-form>
+          <el-form-item label-width="50px" label="URL: ">
+            <el-input
+              style="width: 300px"
+              placeholder="请输入绑定swagger的url"
+              v-model="swaggerUrl"
+              clearable
+            >
+            </el-input>
+          </el-form-item>
+          <el-row
+            style="
+              display: flex;
+              justify-content: flex-end;
+              padding-right: 16px;
+              margin-bottom: -5px;
+            ">
+            <el-button type="primary" size="small" @click="insertSwaggerAPI"
+              >确定
+            </el-button>
+            <el-button type="warning" size="small" @click="cancelSwagger" plain
+              >取消
+            </el-button>
+          </el-row>
+        </el-form>
+      </el-dialog>
+    </el-main>
+  </div>
 </template>
 
 <script>
@@ -172,7 +315,7 @@ import VueMixins from "@/libs/vueMixins.js";
 import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
   components: {
-    ElSlPanel
+    ElSlPanel,
   },
   mixins: [VueMixins], // 时间格式转化
   name: "transact",
@@ -208,13 +351,15 @@ export default {
         nameMedium: "",
         functionType: this.isInterface ? "接口" : "UI",
         code: "",
-        descShort: ""
+        descShort: "",
       }, //表单信息数据
       rules: {
-        nameMedium: [{
-          validator: checkNameMedium,
-          trigger: "blur"
-        }]
+        nameMedium: [
+          {
+            validator: checkNameMedium,
+            trigger: "blur",
+          },
+        ],
       }, //表单验证数据
       //文件上传
       fileList: [],
@@ -225,21 +370,35 @@ export default {
       //复制功能的数据
       elementRepositoryId: "",
       objectRepositoryId: "",
-      addId: '',
+      addId: "",
       addRow: {},
       isInterface: false,
       swaggerVisible: false,
-      swaggerUrl: '', // swagger绑定用的url
+      swaggerUrl: "", // swagger绑定用的url
+      transInfo: {},
+      disableFunc: false
     };
+  },
+  watch: {
+    '$route'(newVal, oldVal) {
+      console.log('路由改变', newVal, oldVal)
+    }
   },
   created() {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.nameMedium;
-    this.isInterface = this.$route.query.isInterface
-    this.isInterface? this.ruleForm.functionType = "接口" : this.functionType = "UI"
+    this.isInterface = this.$route.query.isInterface;
+    this.isInterface
+      ? (this.ruleForm.functionType = "接口")
+      : (this.functionType = "UI");
     this.getAllFunction();
     this.getAllSystem();
+    console.log('is interface', this.isInterface, this.$route.query)
     // this.insertSwaggerAPI()
+    this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
+    const user = sessionStorage.getItem('userId')
+    console.log('测试数据', this.transInfo, user, this.transInfo.creatorId)
+    this.disableFunc = (user != this.transInfo.creatorId)
   },
   computed: {
     changedParams() {
@@ -249,7 +408,7 @@ export default {
         orderColumns: "modified_time",
         orderType: "desc",
         pageSize: this.pageSize,
-        transType: this.isInterface ? 2 : 1
+        transType: this.isInterface ? 2 : 1,
       };
       return obj;
     },
@@ -260,7 +419,7 @@ export default {
         "修改功能点",
         "操作失败",
         "该系统无UI功能点,请添加",
-        "该系统无接口,请添加"
+        "该系统无接口,请添加",
       ];
       return titleArray[this.dialogModelFlag];
     },
@@ -269,8 +428,8 @@ export default {
       return buttonArray[this.dialogModelFlag];
     },
     importURL() {
-      return 'http://10.101.167.184:8080/atfcloud2.0a/transactController/batchImportTransact' // 上传的URL
-    }
+      return "http://10.101.167.184:8080/atfcloud2.0a/transactController/batchImportTransact"; // 上传的URL
+    },
   },
   methods: {
     /**
@@ -278,34 +437,36 @@ export default {
      */
     // 打开swagger对话框
     linkSwagger() {
-      this.swaggerVisible = true
+      this.swaggerVisible = true;
     },
     // 绑定swagger
     insertSwaggerAPI() {
-      if(this.swaggerUrl != "") {
+      if (this.swaggerUrl != "") {
         Request({
-          url: '/swaggerController/insertSwaggerAPI',
-          method: 'POST',
+          url: "/swaggerController/insertSwaggerAPI",
+          method: "POST",
           params: {
             url: this.swaggerUrl,
-            systemId: this.autId,
-            creatorId: 3
-          }
-        }).then(res => {
-          console.log(res)
-          this.$message.success('绑定成功')
-          this.swaggerVisible = false
-        }).catch(error => {
-          console.log(error)
-          this.$message.error('请求swagger接口失败')
+            systemId: this.autId,
+            creatorId: 3,
+          },
         })
-      }else {
-        this.$message.warning('请输入url')
+          .then((res) => {
+            console.log(res);
+            this.$message.success("绑定成功");
+            this.swaggerVisible = false;
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$message.error("请求swagger接口失败");
+          });
+      } else {
+        this.$message.warning("请输入url");
       }
     },
     // 取消swagger绑定
     cancelSwagger() {
-      this.swaggerVisible = false
+      this.swaggerVisible = false;
     },
     /**
      * 顶部按钮方法
@@ -315,10 +476,10 @@ export default {
       _this.isAdded = true;
       _this.dialogModelFlag = 0;
       _this.dialogVisible = true;
-      _this.ruleForm.nameMedium = ""
-      _this.ruleForm.functionType = !this.isInterface ? "UI" : '接口'
-      _this.ruleForm.code = ""
-      _this.ruleForm.descShort = ""
+      _this.ruleForm.nameMedium = "";
+      _this.ruleForm.functionType = !this.isInterface ? "UI" : "接口";
+      _this.ruleForm.code = "";
+      _this.ruleForm.descShort = "";
     },
     importFunctionButton() {
       let _this = this;
@@ -333,15 +494,11 @@ export default {
         _this.dialogModelFlag = 2;
         _this.dialogVisible = true;
         _this.isAdded = false;
-        const {
-          nameMedium,
-          code,
-          descShort
-        } = _this.rowInfo;
+        const { nameMedium, code, descShort } = _this.rowInfo;
         this.ruleForm = {
           nameMedium,
           code,
-          descShort
+          descShort,
         };
       }
     },
@@ -353,15 +510,15 @@ export default {
         if (_this.rowInfo.transType === "接口") {
           console.log("复制功能点", _this.rowInfo.transType);
           Request({
-              url: "/transactController/copySingleInterfaceTransact",
-              method: "POST",
-              params: {
-                autId: _this.autId,
-                creatorId: "3",
-                transId: _this.updateId
-              }
-            })
-            .then(res => {
+            url: "/transactController/copySingleInterfaceTransact",
+            method: "POST",
+            params: {
+              autId: _this.autId,
+              creatorId: "3",
+              transId: _this.updateId,
+            },
+          })
+            .then((res) => {
               console.log("复制成功", res);
               if (res.respCode) {
                 _this.$message.success(res.respMsg);
@@ -371,23 +528,23 @@ export default {
                 console.log("复制失败");
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log("复制失败", err);
             });
         } else if (_this.rowInfo.transType === "UI") {
           console.log("复制UI功能点", _this.rowInfo.transType);
           Request({
-              url: "/transactController/copySingleUITransact",
-              method: "POST",
-              params: {
-                autId: _this.autId,
-                creatorId: "3",
-                elementRepositoryId: _this.elementRepositoryId,
-                objectRepositoryId: _this.objectRepositoryId,
-                transId: _this.updateId
-              }
-            })
-            .then(res => {
+            url: "/transactController/copySingleUITransact",
+            method: "POST",
+            params: {
+              autId: _this.autId,
+              creatorId: "3",
+              elementRepositoryId: _this.elementRepositoryId,
+              objectRepositoryId: _this.objectRepositoryId,
+              transId: _this.updateId,
+            },
+          })
+            .then((res) => {
               console.log("复制Ui成功", res);
               if (res.respCode) {
                 _this.$message.success(res.respMsg);
@@ -397,7 +554,7 @@ export default {
                 console.log("复制失败");
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log("复制UI失败", err);
             });
         }
@@ -406,7 +563,7 @@ export default {
     //操作失败对话框
     failedOperation() {
       let _this = this;
-      _this.$message.error('请选择功能点')
+      _this.$message.error("请选择功能点");
     },
     /**
      * 更换选择id
@@ -492,56 +649,62 @@ export default {
      */
     getAllSystem() {
       Request({
-          url: "/aut/queryListAut",
-          method: "POST",
-          params: {}
-        })
-        .then(res => {
+        url: "/aut/queryListAut",
+        method: "POST",
+        params: {},
+      })
+        .then((res) => {
           // console.log('获取成功',res);
           this.autRespDTOList = res.autRespDTOList;
           // console.log('本地',this.autRespDTOList)
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("获取失败", err);
         });
     },
     // 进入功能点
     toDetail() {
-      console.log('addRow', this.addRow)
-      this.toTransact(this.addRow)
+      console.log("addRow", this.addRow);
+      this.toTransact(this.addRow);
     },
     // 编码跳转
     toTransact(row) {
-      console.log('toTransact', row)
-      if (row.transType === 'UI') {
+      console.log("toTransact", row);
+      if (row.transType === "UI") {
         this.$router.push({
-          name: 'TransactDetail',
-          query: row
-        })
+          name: "TransactDetail",
+          query: {
+            data: row,
+            steps: 0
+          },
+        });
       } else {
         this.$router.push({
-          name: 'InterfacesManagement',
-          query: row
-        })
+          name: "InterfacesManagement",
+          query: {
+            data: row,
+            steps: 0
+          },
+        });
       }
     },
     /*
      * 获取指定option的功能点
      */
     getAllFunction() {
-      let _this = this
+      let _this = this;
       Request({
-          url: "/transactController/pagedBatchQueryTransact",
-          method: "post",
-          params: this.changedParams
-        })
+        url: "/transactController/pagedBatchQueryTransact",
+        method: "post",
+        params: this.changedParams,
+      })
         .then(
-          res => {
-            console.log('获取res',res, this.isInterface);
+          (res) => {
+            console.log("获取res", res, this.isInterface);
             if (res.list.length === 0) {
-              this.isInterface? 
-              this.dialogModelFlag = 5:
-              this.dialogModelFlag = 4
+              this.isInterface
+                ? (this.dialogModelFlag = 5)
+                : (this.dialogModelFlag = 4);
               this.dialogVisible = true;
               this.tableData = [];
             } else {
@@ -555,57 +718,64 @@ export default {
               this.tableData = res.list;
               this.totalCount = res.totalCount;
               if (_this.addId) {
-                _this.addRow = res.list.find(item => item.id === _this.addId)
+                _this.addRow = res.list.find((item) => item.id === _this.addId);
               }
-              console.log(_this.addId, _this.addRow, res.list)
+              console.log(_this.addId, _this.addRow, res.list);
             }
           },
-          err => {
+          (err) => {
             console.log("pagination查询出错" + err);
           }
         )
-        .catch(err => {
+        .catch((err) => {
           console.log("pagination查询出错" + err);
         });
     },
     submitForm(formName) {
       let _this = this;
       let status = _this.ruleForm.nameMedium === "";
-      this.$message.info(`nameMedium: ${_this.ruleForm.nameMedium}functionType: ${_this.ruleForm.functionType}
+      this.$message
+        .info(`nameMedium: ${_this.ruleForm.nameMedium}functionType: ${_this.ruleForm.functionType}
       code: ${_this.ruleForm.code}
       descShort: ${_this.ruleForm.descShort}`);
       if (status) {
         this.$message.warning("*为必填项");
       } else {
         if (_this.ruleForm.functionType === "UI") {
-          _this.ruleForm.code = _this.ruleForm.code !== "" ? _this.ruleForm.code : "功能点" + Date.now()
+          _this.ruleForm.code =
+            _this.ruleForm.code !== ""
+              ? _this.ruleForm.code
+              : "功能点" + Date.now();
         } else {
-          _this.ruleForm.code = _this.ruleForm.code !== "" ? _this.ruleForm.code : "接口" + Date.now()
+          _this.ruleForm.code =
+            _this.ruleForm.code !== ""
+              ? _this.ruleForm.code
+              : "接口" + Date.now();
         }
-        console.log('submitForm', this.ruleForm)
-        _this.$refs[formName].validate(valid => {
+        console.log("submitForm", this.ruleForm);
+        _this.$refs[formName].validate((valid) => {
           if (valid) {
             if (document.getElementById("buttonName").innerText == "新增") {
               if (_this.ruleForm.functionType === "UI") {
                 Request({
-                    url: "/transactController/addSingleTransact",
-                    method: "POST",
-                    params: {
-                      autId: _this.autId,
-                      code: _this.ruleForm.code,
-                      descShort: _this.ruleForm.descShort,
-                      nameMedium: _this.ruleForm.nameMedium,
-                      transType: _this.isInterface ? 2 : 1
-                    }
-                  })
-                  .then(res => {
+                  url: "/transactController/addSingleTransact",
+                  method: "POST",
+                  params: {
+                    autId: _this.autId,
+                    code: _this.ruleForm.code,
+                    descShort: _this.ruleForm.descShort,
+                    nameMedium: _this.ruleForm.nameMedium,
+                    transType: _this.isInterface ? 2 : 1,
+                  },
+                })
+                  .then((res) => {
                     console.log("添加成功", res);
                     _this.dialogVisible = false;
                     _this.successDialogVisible = true;
                     _this.getAllFunction();
-                    _this.addId = res.transId
+                    _this.addId = res.transId;
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     console.log("添加失败", err);
                     if (err.respCode == "10011000") {
                       _this.$message.error(err.respMsg);
@@ -613,22 +783,22 @@ export default {
                   });
               } else {
                 Request({
-                    url: "/interface/addSingleInterface",
-                    method: "POST",
-                    params: {
-                      creatorId: "3",
-                      description: _this.ruleForm.descShort,
-                      interfaceCode: _this.ruleForm.code,
-                      name: _this.ruleForm.nameMedium,
-                      systemId: _this.autId
-                    }
-                  })
-                  .then(res => {
+                  url: "/interface/addSingleInterface",
+                  method: "POST",
+                  params: {
+                    creatorId: "3",
+                    description: _this.ruleForm.descShort,
+                    interfaceCode: _this.ruleForm.code,
+                    name: _this.ruleForm.nameMedium,
+                    systemId: _this.autId,
+                  },
+                })
+                  .then((res) => {
                     console.log("接口添加成功", res);
                     _this.dialogVisible = false;
                     _this.getAllFunction();
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     console.log("接口添加失败", err);
                     if (err.respCode == "10011000") {
                       _this.$message.error(err.respMsg);
@@ -639,21 +809,21 @@ export default {
               document.getElementById("buttonName").innerText == "修改"
             ) {
               Request({
-                  url: "/transactController/modifySingleTransact",
-                  method: "POST",
-                  params: {
-                    code: _this.ruleForm.code,
-                    descShort: _this.ruleForm.descShort,
-                    id: _this.updateId,
-                    nameMedium: _this.ruleForm.nameMedium
-                  }
-                })
-                .then(res => {
+                url: "/transactController/modifySingleTransact",
+                method: "POST",
+                params: {
+                  code: _this.ruleForm.code,
+                  descShort: _this.ruleForm.descShort,
+                  id: _this.updateId,
+                  nameMedium: _this.ruleForm.nameMedium,
+                },
+              })
+                .then((res) => {
                   console.log("修改成功", res);
                   _this.dialogVisible = false;
                   _this.getAllFunction();
                 })
-                .catch(err => {
+                .catch((err) => {
                   console.log("添加失败", err);
                   if (err.respCode === "10011000") {
                     this.$message.warning(err.respMsg);
@@ -673,25 +843,27 @@ export default {
     },
     // 导入模板
     importTemplate() {
-      console.log('importTemplate', this.autId)
-      let formData = new FormData(document.getElementById('uploadForm'))
-      formData.append('autId', this.autId)
-      formData.append('creatorId', this.creatorId)
+      console.log("importTemplate", this.autId);
+      let formData = new FormData(document.getElementById("uploadForm"));
+      formData.append("autId", this.autId);
+      formData.append("creatorId", this.creatorId);
       Request({
-        url: '/transactController/batchImportTransact',
-        method: 'POST',
-        params: formData
-      }).then(res => {
-        this.$message.success(res.respMsg)
-        this.dialogImportVisible = false
-        this.getAllFunction()
-        this.fileList = []
-        this.fileName = ""
-      }).catch(res => {
-        this.$message.error('上传失败')
+        url: "/transactController/batchImportTransact",
+        method: "POST",
+        params: formData,
       })
-    }
-  }
+        .then((res) => {
+          this.$message.success(res.respMsg);
+          this.dialogImportVisible = false;
+          this.getAllFunction();
+          this.fileList = [];
+          this.fileName = "";
+        })
+        .catch((res) => {
+          this.$message.error("上传失败");
+        });
+    },
+  },
 };
 </script>
 

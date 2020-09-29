@@ -518,7 +518,7 @@ export default {
     },
     // 管理功能点
     manageFunction() {
-      console.log("code:" + this.manageCode, "id:" + this.manageId);
+      console.log("code:" + this.manageCode, "id:" + this.manageId, 'creatorId: ' + this.creatorId);
       this.$router.push({
         path: "transact",
         query: {
@@ -528,8 +528,9 @@ export default {
       }); //界面跳转
     }
   },
-  mounted() {
+  activated() {
     let dialog = this.$route.query.dialog
+    console.log('测试', dialog)
     if (dialog) {
       this.$message.warning('请选择被测系统！')
       console.log('选择被测系统')

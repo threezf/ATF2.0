@@ -191,11 +191,11 @@ export default {
   props: {
     transId: {
       type: String,
-      default: undefined,
+      default: "",
     },
     autId: {
       type: String,
-      default: undefined,
+      default: "",
     },
   },
   data() {
@@ -324,6 +324,7 @@ export default {
     },
     // 获取元素UI树
     getEleTree() {
+      console.log('getEleTree', this.transId)
       const _this = this;
       this.treeLoading = true;
       Request({
@@ -581,12 +582,11 @@ export default {
       );
     },
   },
-  created() {
-    // this.$message.success(`transId:${this.transId} + autId: ${this.autId}`)
+  mounted() {
+    //  this.$message.success(`transId:${this.transId} + autId: ${this.autId}`)
     this.getEleTree();
     this.getClass();
   },
-  mounted() {},
 };
 </script>
 <style lang="less" scoped>

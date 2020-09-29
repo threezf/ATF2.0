@@ -104,25 +104,84 @@
           </el-row>
         </el-form>
         <el-card class="mainCard">
-          <div class="useCaseTitle">T+0</div>
-          <el-checkbox
-            class="checkAllBox"
-            :indeterminate="isIndeterminate"
-            v-model="checkAll"
-            @change="handleCheckAllChange"
-          >全选</el-checkbox>
-          <el-checkbox-group
-            id="sortableGroup"
-            v-model="checkedSceneTestCases"
-            @change="handleCheckedSceneTestCases">
-            <el-row 
-              class="checkboxs" 
-              v-for="(item) in sceneTestCases" 
-              :key="item.id">
-              <i class="el-icon-sort iconI"></i>
-              <el-checkbox :label="item" :value="item" border>{{item.casecode}}</el-checkbox>
-            </el-row>
-          </el-checkbox-group>
+          <div class="boxRow">
+            <div class="useCaseTitle">T+0</div>
+            <el-button 
+              type="primary" 
+              size="small"
+              icon="el-icon-finished"
+              @click="saveRunnerTime">保存次数</el-button>
+          </div>
+          <div class="home">
+            <el-checkbox
+              v-model="isCheckedAll"
+              :indeterminate="indetermintate"
+              @change="handleCheckAllChange">
+              全选
+            </el-checkbox>
+            <div
+              id="sortableGroup">
+              <div
+                class="divRow"
+                v-for="(caseDtosItem, caseDtosIndex) in sceneTestCases"
+                :key="caseDtosIndex">
+                <div class="leftCheckbox">
+                  <el-checkbox
+                    :key="caseDtosIndex"
+                    :indeterminate="caseDtosItem.indetermintate"
+                    v-model="caseDtosItem.selected"
+                    @change="handleCaseDtosItemChange(
+                      caseDtosIndex, 
+                      caseDtosItem.id, 
+                      $event
+                    )">
+                  </el-checkbox>
+                </div>
+                <div 
+                  class="rightCheckbox">
+                  <div v-if="caseDtosItem.flowNodeDtos">
+                    <div
+                      class="flowItem"
+                      v-for="(flowItem, flowIndex) in caseDtosItem.flowNodeDtos"
+                      :key="flowIndex">
+                      <el-checkbox-button
+                        :key="flowItem.id"
+                        v-model="flowItem.selected"
+                        @change="handleFlowItemchange(
+                          caseDtosIndex,
+                          flowItem.id,
+                          caseDtosItem.id,
+                          $event
+                        )">{{flowItem.casecode}}
+                      </el-checkbox-button>
+                      <el-input
+                        style="width: 50px; height: 40px;"
+                        v-model="flowItem.runNumber">
+                      </el-input>
+                      <i class="el-icon-right"
+                        v-if="flowIndex < caseDtosItem.flowNodeDtos.length - 1">
+                      </i>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <el-checkbox-button
+                      :key="caseDtosItem.id"
+                      v-model="caseDtosItem.selected"
+                      @change="handleCaseDtosItemChange(
+                        caseDtosIndex, 
+                        caseDtosItem.id, 
+                        $event
+                      )">{{caseDtosItem.casecode}}
+                    </el-checkbox-button>
+                    <el-input
+                      style="width: 50px; height: 40px; margin-left: 10px"
+                      v-model="caseDtosItem.runNumber">
+                    </el-input>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <el-drawer
             :class="drawerStyle"
             size="fit-content"
@@ -865,7 +924,13 @@
         hideFun: '',
         isCollapse: true, //折叠时page宽度
         baseWidth: 0,
-        drawerStyle: 'drawer'
+        drawerStyle: 'drawer',
+        /**
+         * 流程与节点控制
+         */
+        selectSceneDto: {},
+        indetermintate: false,
+        isCheckedAll: false
       };
     },
     created() {
@@ -876,8 +941,6 @@
       this.getMobileInfo();
       this.pagedBatchQueryTestCase();
       this.pagedBatchQueryDataPool()
-      // this.isCollapse = true
-      // this.baseWidth = document.getElementsByClassName('right-content')[0].offsetWidth
     },
     mounted() {
       this.sort();
@@ -903,11 +966,11 @@
           preventOnFilter: false,
           onEnd(evt) {
             console.log(evt);
+            const movedRow = _this.sceneTestCases.splice(evt.oldIndex, 1);
             console.log("原先的地址", evt.oldIndex);
             console.log("新的地址", evt.newIndex);
-            const movedRow = _this.sceneTestCases.splice(evt.oldIndex, 1)[0];
-            _this.sceneTestCases.splice(evt.newIndex, 0, movedRow);
-            console.log("地址修改完", _this.sceneTestCases);
+            _this.sceneTestCases.splice(evt.newIndex, 0, ...movedRow);
+            console.log("地址修改完", movedRow, _this.sceneTestCases);
           }
         });
       },
@@ -921,7 +984,6 @@
           }
         })
           .then(res => {
-            this.sceneTestCases = res.selectSceneDto.caseDtos;
             this.length = res.selectSceneDto.caseDtos.length;
             this.addForm.caseIds = [];
             this.removeForm.caseIds = [];
@@ -934,6 +996,25 @@
             this.exeStrategy3Start = this.sceneEntity.exeStrategy3Start? this.sceneEntity.exeStrategy3Start: 1
             this.exeStrategy3Status = this.sceneEntity.exeStrategy3Status? this.sceneEntity.exeStrategy3Status: 1
             this.exeStrategyErr = this.sceneEntity.exeStrategyErr? this.sceneEntity.exeStrategyErr: 1
+            this.selectSceneDto = res.selectSceneDto
+            const { caseDtos } = this.selectSceneDto
+            caseDtos.forEach(element => {
+              this.$set(element, 'selected', false)
+              this.$set(element, 'indetermintate', false)
+              if(!element.runNumber) {
+                element.runNumber = 0
+              }
+              if(Array.isArray(element.flowNodeDtos)) {
+                for(let i = 0, len = element.flowNodeDtos.length; i < len; i++) {
+                  this.$set(element.flowNodeDtos[i], 'selected', false)
+                  if(!element.flowNodeDtos[i].runNumber) {
+                    element.flowNodeDtos[i].runNumber = 0
+                  }
+                }
+              }
+            });
+            this.sceneTestCases = caseDtos
+            console.log(this.sceneTestCases, '测试')
           })
           .catch(error => {
             this.$message.error("场景数据获取失败");
@@ -1568,6 +1649,85 @@
           this.$message.error("保存成功");
         });
       },
+      /**
+       * 节点与流程展示与处理
+       */
+      // 全选事件
+      handleCheckAllChange(val) {
+        this.isCheckedAll = val
+        this.indetermintate = false
+        for(let i = 0, len = this.sceneTestCases.length; i < len; i ++) {
+          // 二级全选反选
+          this.$set(this.sceneTestCases[i], 'selected', val)
+          if(this.sceneTestCases[i].flowNodeDtos) {
+            for(let j = 0, nodeLen = this.sceneTestCases[i].flowNodeDtos.length; j < nodeLen; j ++) {
+              this.$set( this.sceneTestCases[i].flowNodeDtos[j], 'selected', val)
+            }
+          }
+        }
+      },
+      // 设置二级事件切换
+      handleCaseDtosItemChange(index, id, val) {
+        console.log('进行修改', index, this.sceneTestCases[index].selected)
+        if(!val) {
+          this.$set(this.sceneTestCases[index], 'indetermintate', false)
+        }
+        if(this.sceneTestCases[index].flowNodeDtos) {
+          for(let i = 0, len = this.sceneTestCases[index].flowNodeDtos.length; i < len; i ++) {
+            this.$set(this.sceneTestCases[index].flowNodeDtos[i], 'selected', val)
+          }
+        }
+        this.$set(this.sceneTestCases[index], 'selected', val)
+        this.setCheckAll()
+      },
+      // 设置三级事件切换
+      handleFlowItemchange(index, currentId, parentId, val) {
+        let arrayFlow = this.sceneTestCases[index].flowNodeDtos
+        let startCount = 0, endCount = 0, 
+              arrayLength = arrayFlow? arrayFlow.length: 0;
+        for(let i = 0, len = arrayLength; i < len; i++) {
+          if(currentId === arrayFlow[i].id) {
+            this.$set(arrayFlow[i], 'selected', val)
+          }
+          if(arrayFlow[i].selected) startCount ++
+          else endCount ++
+        }
+        if(startCount == arrayLength) {
+          this.$set(this.sceneTestCases[index], 'indetermintate', false)
+          this.$set(this.sceneTestCases[index], 'selected', true)
+        }else if(endCount === arrayLength) {
+          this.$set(this.sceneTestCases[index], 'indetermintate', false)
+          this.$set(this.sceneTestCases[index], 'selected', false)
+        }else {
+          this.$set(this.sceneTestCases[index], 'indetermintate', true)
+          this.$set(this.sceneTestCases[index], 'selected', false)
+        }
+        this.setCheckAll()
+      },
+
+      // 设置全选与二级
+      setCheckAll() {
+        let startCount = 0,
+            endCount = 0,
+            arrayLength = this.sceneTestCases.length
+        for(let i = 0; i < arrayLength; i++) {
+          if(this.sceneTestCases[i].selected) {
+            startCount ++
+          }else {
+            endCount ++ 
+          }
+        }
+        if(startCount == arrayLength) {
+          this.isCheckedAll = true
+          this.indetermintate = false
+        }else if(endCount == arrayLength) {
+          this.isCheckedAll = false
+          this.indetermintate = false
+        }else {
+          this.isCheckedAll = false
+          this.indetermintate = true
+        }
+      },
       // 保存顺序
       sceneTestcaseSortSave() {
         this.caseIdList = [];
@@ -1583,13 +1743,56 @@
             caseIdList: this.caseIdList
           }
         })
-          .then(res => {
-            this.$message.success("保存成功");
-            this.selectScene()
-          })
-          .catch(err => {
-            this.$message.error("保存成功");
-          });
+        .then(res => {
+          this.$message.success("保存成功");
+          this.selectScene()
+        })
+        .catch(err => {
+          this.$message.error("保存成功");
+        });
+      },
+      // 保存执行次数
+      saveRunnerTime() {
+        const flowNodesRunNumberList = []
+        const casesRunNumberList = []
+        this.sceneTestCases.forEach(item => {
+          if(item.flowNodeDtos) {
+            item.flowNodeDtos.forEach(flowItem => {
+              const flowCaseItem = {
+                flowNodeId: flowItem.id,
+                runNumber: Number(flowItem.runNumber)
+              }
+              flowNodesRunNumberList.push(flowCaseItem)
+            })
+          }else {
+            const caseItem = {
+              caseId: item.id,
+              runNumber: Number(item.runNumber)
+            }
+            casesRunNumberList.push(caseItem)
+          }
+        })
+        console.log('params', {
+          sceneId: this.sceneId,
+          casesRunNumberList,
+          flowNodesRunNumberList,
+        })
+        Request({
+          url: '/caseExecuteInstance/setCaseRunTime',
+          method: 'POST',
+          params: {
+            sceneId: this.sceneId,
+          casesRunNumberList,
+          flowNodesRunNumberList
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+
+          }
+          return
+        }).catch(err => {
+          console.log('出现错误')
+        })
       }
     }
   };
@@ -1639,15 +1842,22 @@
     }
   }
   .mainCard {
-    .useCaseTitle {
-      margin-left: 40px;
-      width: 155px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      font-size: 22px;
-      color: #7979a4;
-      border: 1px solid rgb(221, 213, 213);
+    .boxRow {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .useCaseTitle {
+        margin-left: 40px;
+        width: 155px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 22px;
+        color: #7979a4;
+        border: 1px solid rgb(221, 213, 213);
+      }
+
     }
     .checkAllBox {
       margin-top: 15px;
@@ -1826,6 +2036,31 @@
     .el-button {
       margin-top: 10px;
       height: 30px !important;
+    }
+  }
+  .divRow {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    .leftCheckbox {
+      width: 20px;
+      height: 20px;
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+    .rightCheckbox {
+      flex: 1;
+      height: 40px;
+      .flowItem {
+        display: inline-block;
+        margin: 0px 10px 0 0;
+        .el-checkbox-button {
+          margin-right: 10px;
+        }
+      }
     }
   }
 </style>

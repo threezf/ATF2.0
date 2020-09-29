@@ -6,8 +6,9 @@
 
 export default {
     name: 'CGI',
-    mounted(){
+    activated(){
         let testSys = SessionStorage.get("testSysNameStorage")
+        console.log('进入接口测试', this.$route.query)
         if(testSys){
             this.$router.push({
                 name:'Transact',

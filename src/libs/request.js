@@ -59,7 +59,7 @@ axios.interceptors.response.use(function (response) {
     console.log('拦截器捕获了错误' + message)
     return Promise.reject(message)
 }, function (error) {
-    window.location = '/#/error'
+    // window.location = '/#/error'
     console.log('发生错误拦截', error, _Vue)
     return Promise.reject(error)
 })

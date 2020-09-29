@@ -31,7 +31,9 @@
         </el-col>
       </el-row>
     </el-header>
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
     <el-dialog
       :visible.sync="dialogVisible"
       width="25%"

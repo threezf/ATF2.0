@@ -461,7 +461,7 @@ export default {
         }
       })
       .catch(err => {
-        this.$message.error("连接失败");
+        this.$message.error("连接失败"); 
       });
     },
     // 查询全部元素与UI
