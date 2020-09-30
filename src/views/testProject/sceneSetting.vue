@@ -1760,7 +1760,8 @@
             item.flowNodeDtos.forEach(flowItem => {
               const flowCaseItem = {
                 flowNodeId: flowItem.id,
-                runNumber: Number(flowItem.runNumber)
+                runNumber: Number(flowItem.runNumber),
+                caseId: item.id
               }
               flowNodesRunNumberList.push(flowCaseItem)
             })
@@ -1776,22 +1777,23 @@
           sceneId: this.sceneId,
           casesRunNumberList,
           flowNodesRunNumberList,
-        })
+        }, this.sceneTestCases)
         Request({
           url: '/caseExecuteInstance/setCaseRunTime',
           method: 'POST',
           params: {
             sceneId: this.sceneId,
-          casesRunNumberList,
-          flowNodesRunNumberList
+            casesRunNumberList,
+            flowNodesRunNumberList
           }
         }).then(res => {
           if(res.respCode === '0000') {
-
+            this.$message.success('保存成功')
           }
           return
         }).catch(err => {
           console.log('出现错误')
+          this.$message.error('保存执行次数失败')
         })
       }
     }

@@ -883,10 +883,11 @@ export default {
                 }),
                 success: function (data) {
                     if (data.respCode === '0000') {
-                        this.$store.disatch('updateTotalScore', {
-                            userId: sessionStorage.getItem('userId'),
-                            totalScore: Number(sessionStorage.getItem("totalScore")) + 5
-                        })
+                        // this.$store.disatch('updateTotalScore', {
+                        //     userId: sessionStorage.getItem('userId'),
+                        //     totalScore: Number(sessionStorage.getItem("totalScore")) + 5
+                        // })
+                        console.log('查询日志', this.$store)
                         _this.startQueryLog(); //查询日志
                         Vac.ajax({ //因为查询执行信息需要最近执行的批量号因此需要查询批次
                             url: 'batchRunCtrlController/queryLatestBatchIdForTestPlan',
