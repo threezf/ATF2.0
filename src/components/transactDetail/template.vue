@@ -17,6 +17,13 @@
                     @click='deleteTemplateShow'>
                     删除{{name}}
                 </el-button>
+                <el-button
+                    type="primary"
+                    size="small"
+                    icon="el-icon-setting"
+                    @click="debugScript"
+                    >调试脚本               
+                </el-button>
             </el-row>
              <el-table
                 v-loading='templateLoading'
@@ -262,8 +269,8 @@
             @closeDialog = "addItemShow = false"
             @throwTreeInfo = "addTreeInfo"
             :multiselection='true'
-            :transId='transId'
-            :autId='autId'>
+            :transId='transId.toString()'
+            :autId='autId.toString()'>
         </uiEleFunTree>
     </el-dialog>
   </div>
@@ -486,228 +493,236 @@ export default {
         },
         //行拖拽
         rowDrop() {
-        const tbody = document.querySelector('.sortable tbody')
-        const _this = this
-        Sortable.create(tbody, {
-            filter: ".el-input__inner",  // 不需要拖动的元素
-            preventOnFilter: false, //默认true 是否禁用默认绑定的方法
-            animation: 180,// 0.18s 动画时间
-            delay: 0,// 按住、松开0毫秒后触发效果
-            onEnd({ newIndex, oldIndex }) {
-            const currRow = _this.templateInfo.splice(oldIndex, 1)[0]
-            _this.templateInfo.splice(newIndex, 0, currRow)
-            _this.templateInfo.push(_this.templateInfo.pop())
-            }
-        })
-        },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log('multipleSelection',this.multipleSelection)
-      },
-      // 表格中选中元素的上移
-      eleUp(){
-          let flag = false
-          for(let i = 0 ; i < this.templateInfo.length ; i++){
-              if(this.multipleSelection.some( v => (v.sortid === this.templateInfo[i].sortid)) ){
-                  if(flag){
-                      let tmp = this.templateInfo.splice(i,1)[0]
-                      this.templateInfo.splice(i-1,0,tmp)
-                  }
-              }
-              else{
-                  flag = true
-              }
-          }
-      },
-      eleDown(){
-          let flag = false
-          for(let i = this.templateInfo.length-1 ; i >-1 ; i--){
-              
-              if(this.multipleSelection.some( v =>(v.sortid === this.templateInfo[i].sortid)) ){
-                  if(flag){
-                      let tmp = this.templateInfo.splice(i,1)[0]
-                      this.templateInfo.splice(i+1,0,tmp)
-                  }
-              }
-              else{
-                  flag = true
-              }
-          }
-      },
-      //各个模态框的展示
-      addTemplateShow(){
-          this.addTemplateDialog = true
-      },
-      deleteTemplateShow(){
-          if( !this.templateRadio ){
-              this.$message('请选择要删除的'+this.name)
-              return
-          }
-        this.deleteTemplateDialog = true
-      },
-      // 添加template
-      addTemplate(){
-        Request({
-            url: '/scriptTemplate/insert',
-            method: 'post',
-            params: {
-                ...this.addTemplateForm,
-                transId: this.transId
-            }
-        }).then((res) => {
-            this.$message(res.respMsg)
-            this.addTemplateDialog = false
-            let _this = this
-            if (this.isQuick) {
-                Request({
-                    url: '/testcase/addTestcase',
-                    method: 'POST',
-                    params: {
-                        actionList: [],
-                        autId: _this.autId,
-                        author: sessionStorage.getItem('userId') || "3",
-                        automaton: "",
-                        caseCompositeType: "1",
-                        caseLibId: "253",
-                        casecode: "casecode" + Date.now(),
-                        caseproperty: "1",
-                        casetype: "1",
-                        categoryTeam: "",
-                        checkpoint: "",
-                        datarequest: "",
-                        executeMethod: "2",
-                        executor: "3",
-                        expectresult: "1",
-                        functionModule: "",
-                        modifyChannel: "",
-                        modifyChannelNo: "",
-                        note: _this.addTemplateForm.description,
-                        prerequisites: "",
-                        priority: "1",
-                        reviewer: "3",
-                        scriptMode: "1",
-                        scriptModeFlag: res.scriptId,
-                        submissionId: "49",
-                        tags: "",
-                        testdesign: 1,
-                        testpoint: _this.addTemplateForm.name,
-                        teststep: "1",
-                        transId: _this.transId,
-                        useStatus: "1",
-                        version: ""
-                    }
-                }).then(res => {
-
-                }).catch(err => {
-
-                })
-            }
-            this.getTemplates()
-        },(err) => {
-            this.$message(res.respMsg)
-        })
-      },
-      //删除脚本
-      deleteTemplate(){
-        console.log(''+this.templateRadio)
-        Request({
-            url: '/scriptTemplate/delete',
-            method: 'post',
-            params: {id: this.templateRadio}
-        }).then((res) => {
-            this.deleteTemplateDialog = false
-            this.$message(res.respMsg)
-            this.getTemplates()
-        },(err) => {
-            this.$message(err)
-        })
-      },
-      // 获取脚本
-      getTemplates(){
-          console.log("getTemplates")
-          this.templateLoading = true
-        Request({
-            url: '/scriptTemplate/queryTemplateByTransId',
-            method: 'post',
-            params: {id: this.transId}
-        }).then((res) => {
-            this.templateList = []
-            console.log('getTemplates',res)
-            let list = res.scriptTemplateList
-            for(let i = 0;i<list.length;i++){
-                this.templateList.push({
-                    name:list[i].name,
-                    desc:list[i].description,
-                    id:list[i].id,
-                })
-            }
-        },(err) => {
-            this.$message(res.respMsg)
-        }).catch((err) => {
-            this.$message("网络开小差啦！")
-        }).finally(_=>{
-          this.templateLoading = false
-        })
-      },
-      // 获取脚本详情，用于表格展示
-      getTemplateInfo(){
-          this.templateLoading = true
-        Request({
-            url: '/scriptTemplate/queryScriptInfo',
-            method: 'post',
-            params: {
-                scriptId:this.templateRadio,
-                autId: this.autId
-            }
-        }).then((res) => {
-            this.templateInfo = []
-            let list = res.data
-            for(let i = 0;i<list.length;i++){
-                this.getMethods(list[i].elementWidget)
-                for(let j = 0 ; j< list[i].arguments.length; j++){
-                list[i].arguments[j].index = i
-                list[i].arguments[j].newvalue = list[i].arguments[j].value
+            const tbody = document.querySelector('.sortable tbody')
+            const _this = this
+            Sortable.create(tbody, {
+                filter: ".el-input__inner",  // 不需要拖动的元素
+                preventOnFilter: false, //默认true 是否禁用默认绑定的方法
+                animation: 180,// 0.18s 动画时间
+                delay: 0,// 按住、松开0毫秒后触发效果
+                onEnd({ newIndex, oldIndex }) {
+                const currRow = _this.templateInfo.splice(oldIndex, 1)[0]
+                _this.templateInfo.splice(newIndex, 0, currRow)
+                _this.templateInfo.push(_this.templateInfo.pop())
                 }
-                console.log('list[i].arguments',list[i].arguments)
-                this.templateInfo.push({
-                    sortid:this.sortidNum++,
-                    name: 'UI:'+list[i].uiname+" 元素:"+list[i].elementName,
-                    uiname: list[i].uiname,
-                    elementName: list[i].elementName,
-                    elementWidget: list[i].elementWidget,
-                    methodName: list[i].methodName,
-                    arguments: list[i].arguments,
-                    arguShow: true,// 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
-                })
+            })
+        },
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+            console.log('multipleSelection',this.multipleSelection)
+        },
+      // 表格中选中元素的上移
+        eleUp(){
+            let flag = false
+            for(let i = 0 ; i < this.templateInfo.length ; i++){
+                if(this.multipleSelection.some( v => (v.sortid === this.templateInfo[i].sortid)) ){
+                    if(flag){
+                        let tmp = this.templateInfo.splice(i,1)[0]
+                        this.templateInfo.splice(i-1,0,tmp)
+                    }
+                }
+                else{
+                    flag = true
+                }
             }
-        },(err) => {
-            this.templateInfo = []
-        }).finally(_=>{
-          this.templateLoading = false
-        })
-      },
-      // 获取控件方法
-    getMethods(classname){
-        if(this.methods[classname]){
-            //如果存在 则返回
-            return
+        },
+        eleDown(){
+            let flag = false
+            for(let i = this.templateInfo.length-1 ; i >-1 ; i--){
+                
+                if(this.multipleSelection.some( v =>(v.sortid === this.templateInfo[i].sortid)) ){
+                    if(flag){
+                        let tmp = this.templateInfo.splice(i,1)[0]
+                        this.templateInfo.splice(i+1,0,tmp)
+                    }
+                }
+                else{
+                    flag = true
+                }
+            }
+        },
+        //各个模态框的展示
+        addTemplateShow(){
+            this.addTemplateDialog = true
+        },
+        deleteTemplateShow(){
+            if( !this.templateRadio ){
+                this.$message('请选择要删除的'+this.name)
+                return
+            }
+            this.deleteTemplateDialog = true
+        },
+        // 添加template
+        addTemplate(){
+            Request({
+                url: '/scriptTemplate/insert',
+                method: 'post',
+                params: {
+                    ...this.addTemplateForm,
+                    transId: this.transId
+                }
+            }).then((res) => {
+                this.$message(res.respMsg)
+                this.addTemplateDialog = false
+                let _this = this
+                if (this.isQuick) {
+                    Request({
+                        url: '/testcase/addTestcase',
+                        method: 'POST',
+                        params: {
+                            actionList: [],
+                            autId: _this.autId,
+                            author: sessionStorage.getItem('userId') || "3",
+                            automaton: "",
+                            caseCompositeType: "1",
+                            caseLibId: "253",
+                            casecode: "casecode" + Date.now(),
+                            caseproperty: "1",
+                            casetype: "1",
+                            categoryTeam: "",
+                            checkpoint: "",
+                            datarequest: "",
+                            executeMethod: "2",
+                            executor: "3",
+                            expectresult: "1",
+                            functionModule: "",
+                            modifyChannel: "",
+                            modifyChannelNo: "",
+                            note: _this.addTemplateForm.description,
+                            prerequisites: "",
+                            priority: "1",
+                            reviewer: "3",
+                            scriptMode: "1",
+                            scriptModeFlag: res.scriptId,
+                            submissionId: "49",
+                            tags: "",
+                            testdesign: 1,
+                            testpoint: _this.addTemplateForm.name,
+                            teststep: "1",
+                            transId: _this.transId,
+                            useStatus: "1",
+                            version: ""
+                        }
+                    }).then(res => {
+
+                    }).catch(err => {
+
+                    })
+                }
+                this.getTemplates()
+            },(err) => {
+                this.$message(res.respMsg)
+            })
+        },
+        //删除脚本
+        deleteTemplate(){
+            console.log(''+this.templateRadio)
+            Request({
+                url: '/scriptTemplate/delete',
+                method: 'post',
+                params: {id: this.templateRadio}
+            }).then((res) => {
+                this.deleteTemplateDialog = false
+                this.$message(res.respMsg)
+                this.getTemplates()
+            },(err) => {
+                this.$message(err)
+            })
+        },
+        // 获取脚本
+        getTemplates(){
+            console.log("getTemplates")
+            this.templateLoading = true
+            Request({
+                url: '/scriptTemplate/queryTemplateByTransId',
+                method: 'post',
+                params: {id: this.transId}
+            }).then((res) => {
+                this.templateList = []
+                console.log('getTemplates',res)
+                let list = res.scriptTemplateList
+                for(let i = 0;i<list.length;i++){
+                    this.templateList.push({
+                        name:list[i].name,
+                        desc:list[i].description,
+                        id:list[i].id,
+                    })
+                }
+            },(err) => {
+                this.$message(res.respMsg)
+            }).catch((err) => {
+                this.$message("网络开小差啦！")
+            }).finally(_=>{
+            this.templateLoading = false
+            })
+        },
+        // 获取脚本详情，用于表格展示
+        getTemplateInfo(){
+            this.templateLoading = true
+            Request({
+                url: '/scriptTemplate/queryScriptInfo',
+                method: 'post',
+                params: {
+                    scriptId:this.templateRadio,
+                    autId: this.autId
+                }
+            }).then((res) => {
+                this.templateInfo = []
+                let list = res.data
+                for(let i = 0;i<list.length;i++){
+                    this.getMethods(list[i].elementWidget)
+                    for(let j = 0 ; j< list[i].arguments.length; j++){
+                    list[i].arguments[j].index = i
+                    list[i].arguments[j].newvalue = list[i].arguments[j].value
+                    }
+                    console.log('list[i].arguments',list[i].arguments)
+                    this.templateInfo.push({
+                        sortid:this.sortidNum++,
+                        name: 'UI:'+list[i].uiname+" 元素:"+list[i].elementName,
+                        uiname: list[i].uiname,
+                        elementName: list[i].elementName,
+                        elementWidget: list[i].elementWidget,
+                        methodName: list[i].methodName,
+                        arguments: list[i].arguments,
+                        arguShow: true,// 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
+                    })
+                }
+            },(err) => {
+                this.templateInfo = []
+            }).finally(_=>{
+            this.templateLoading = false
+            })
+        },
+        // 获取控件方法
+        getMethods(classname){
+            if(this.methods[classname]){
+                //如果存在 则返回
+                return
+            }
+            return Request({
+                url: '/aut/selectMethod',
+                method: 'post',
+                params: {id: this.autId,classname:classname}
+            }).then((res) => {
+                let list = res.omMethodRespDTOList
+                this.$set(this.methods, classname, list)
+            },(err) => {
+                this.$message(err)
+            })
+        },
+        //选择脚本
+        chooseTemplate(row, column, event){
+            this.templateRadio = row.id
+            this.getTemplateInfo()
+        },
+        // 调试脚本
+        debugScript() {
+            if(this.templateRadio) {
+                this.$message.success(`调试脚本${this.templateRadio}`)
+            }else {
+                this.$message.warning('请选择调试脚本')
+            }
         }
-        return Request({
-            url: '/aut/selectMethod',
-            method: 'post',
-            params: {id: this.autId,classname:classname}
-        }).then((res) => {
-            let list = res.omMethodRespDTOList
-            this.$set(this.methods, classname, list)
-        },(err) => {
-            this.$message(err)
-        })
-      },
-      //选择脚本
-      chooseTemplate(row, column, event){
-          this.templateRadio = row.id
-          this.getTemplateInfo()
-      }
     },
     created() {},
     mounted() {

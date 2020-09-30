@@ -39,6 +39,7 @@
           size="small"
           icon="el-icon-link"
           @click="linkSwagger"
+          v-show="!$route.query.hasOwnProperty('isInterface') || isInterface"
           :disabled="disableFunc"
           >绑定swagger
         </el-button>
@@ -166,10 +167,15 @@
             </el-input>
           </el-form-item>
           <el-form-item label="类型" prop="functionType" v-if="isAdded">
-            <el-select class="addSelect" v-model="ruleForm.functionType">
+            <el-select class="addSelect" v-model="ruleForm.functionType" v-if="$route.query.hasOwnProperty('isInterface')">
               <el-option value="UI" selected="true" v-if="!isInterface">
               </el-option>
               <el-option value="接口" v-else> </el-option>
+            </el-select>
+            <el-select class="addSelect" v-model="ruleForm.functionType" v-else>
+              <el-option value="UI" selected="true" >
+              </el-option>
+              <el-option value="接口"> </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="编码" prop="code">
@@ -381,10 +387,23 @@ export default {
   },
   watch: {
     '$route'(newVal, oldVal) {
-      console.log('路由改变', newVal, oldVal)
+      console.log('路由改变', newVal, newVal.query.isInterface)
+      // this.isInterface = newVal.query.isInterface;
+       this.isInterface = newVal.query.isInterface;
     }
   },
   created() {
+    this.autId = this.$route.query.id;
+    this.ownedSystem = this.$route.query.nameMedium;
+    this.getAllFunction();
+    this.getAllSystem();
+    this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
+    const user = sessionStorage.getItem('userId')
+    console.log('测试数据', this.transInfo, user, this.transInfo.creatorId)
+    this.disableFunc = (user != this.transInfo.creatorId)
+
+  },
+  activated() {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.nameMedium;
     this.isInterface = this.$route.query.isInterface;
@@ -394,21 +413,22 @@ export default {
     this.getAllFunction();
     this.getAllSystem();
     console.log('is interface', this.isInterface, this.$route.query)
-    // this.insertSwaggerAPI()
     this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
     const user = sessionStorage.getItem('userId')
-    console.log('测试数据', this.transInfo, user, this.transInfo.creatorId)
     this.disableFunc = (user != this.transInfo.creatorId)
   },
   computed: {
     changedParams() {
+      console.log('测试数据', this.$route.query.hasOwnProperty('isInterface'))
       let obj = {
         autId: this.autId,
         currentPage: this.currentPage,
         orderColumns: "modified_time",
         orderType: "desc",
         pageSize: this.pageSize,
-        transType: this.isInterface ? 2 : 1,
+        transType: this.$route.query.hasOwnProperty('isInterface')? 
+                   this.isInterface ? 2 : 1
+                   : ""
       };
       return obj;
     },
@@ -720,7 +740,7 @@ export default {
               if (_this.addId) {
                 _this.addRow = res.list.find((item) => item.id === _this.addId);
               }
-              console.log(_this.addId, _this.addRow, res.list);
+              console.log("tableData", this.tableData);
             }
           },
           (err) => {
