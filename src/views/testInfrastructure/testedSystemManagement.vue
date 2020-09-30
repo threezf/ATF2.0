@@ -321,6 +321,7 @@ export default {
       this.row = row;
       this.id = row.id;
       this.nameMedium = row.nameMedium
+      sessionStorage.setItem("testSysNameStorage", "(" + this.row.nameMedium + ")")
     },
     toTransact(index, row) {
       // sessionStorage.setItem('case')
