@@ -19,11 +19,11 @@
           <el-option v-for="(item,key) in autRespDTOList" :key="key" :value="item.nameMedium" :label="item.nameMedium"></el-option>
         </el-select>
       </el-col>
-      <el-col :span="8">
+      <!-- <el-col :span="8">
         <span class="ownedSystem">所属被测系统：</span>
         <el-input style="width: 300px">
         </el-input>
-      </el-col>
+      </el-col> -->
     </el-row>
     <!--表格-->
     <el-table class="tableStyle" ref="singleTable" style="width:fit-content; margin-top: 15px" :data="tableData" :default-sort="{prop:'modifiedTime',order:'descending'}" stripe highlight-current-row border>
@@ -64,9 +64,9 @@
         </el-form-item>
         <el-form-item label="类型" prop="functionType" v-if="isAdded">
           <el-select class="addSelect" v-model="ruleForm.functionType">
-            <el-option value="UI" selected="true" v-if="!isInterface">
+            <el-option value="UI" selected="true">
             </el-option>
-            <el-option value="接口" v-else>
+            <el-option value="接口">
             </el-option>
           </el-select>
         </el-form-item>
@@ -210,7 +210,7 @@ export default {
         orderColumns: "modified_time",
         orderType: "desc",
         pageSize: this.pageSize,
-        transType: this.isInterface ? 2 : 1
+        transType: ""
       };
       return obj;
     },
@@ -523,7 +523,7 @@ export default {
                       code: _this.ruleForm.code,
                       descShort: _this.ruleForm.descShort,
                       nameMedium: _this.ruleForm.nameMedium,
-                      transType: _this.isInterface ? 2 : 1
+                      transType: ""
                     }
                   })
                   .then(res => {

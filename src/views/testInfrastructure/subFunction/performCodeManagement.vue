@@ -127,9 +127,10 @@ export default {
           console.log("信息获取成功", res);
           if (res.respCode === "0000") {
             _this.id = res.id;
-            _this.mainCodeBegin = res.maincodeBegin ? res.mainCodeBegin : initBegin;
-            _this.mainCodeEnd = res.maincodeEnd ? res.mainCodeEnd : initEnd;
+            _this.mainCodeBegin = res.maincodeBegin ? res.maincodeBegin : initBegin;
+            _this.mainCodeEnd = res.maincodeEnd ? res.maincodeEnd : initEnd;
             _this.toolName = res.toolname;
+            console.log('信息获取成功', _this.mainCodeBegin, _this.mainCodeEnd)
           } else {
             console.log("未知错误");
           }
