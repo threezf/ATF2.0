@@ -119,12 +119,12 @@
               @change="handleCheckAllChange">
               全选
             </el-checkbox>
-            <div
+            <ul
               id="sortableGroup">
-              <div
+              <li
                 class="divRow"
                 v-for="(caseDtosItem, caseDtosIndex) in sceneTestCases"
-                :key="caseDtosIndex">
+                :key="caseDtosItem.id">
                 <div class="leftCheckbox">
                   <el-checkbox
                     :key="caseDtosIndex"
@@ -179,8 +179,8 @@
                     </el-input>
                   </div>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
           <el-drawer
             :class="drawerStyle"
@@ -970,7 +970,7 @@
             console.log("原先的地址", evt.oldIndex);
             console.log("新的地址", evt.newIndex);
             _this.sceneTestCases.splice(evt.newIndex, 0, ...movedRow);
-            console.log("地址修改完", movedRow, _this.sceneTestCases);
+            console.log("地址修改完", _this.sceneTestCases);
           }
         });
       },
@@ -982,8 +982,7 @@
           params: {
             id: this.sceneId
           }
-        })
-          .then(res => {
+        }).then(res => {
             this.length = res.selectSceneDto.caseDtos.length;
             this.addForm.caseIds = [];
             this.removeForm.caseIds = [];
@@ -1191,19 +1190,19 @@
         this.drawerVisible = true;
         this.getMobileInfo()
       },
-      // 设置全选
-      handleCheckAllChange(val) {
-        this.removeForm.caseIds = [];
-        console.log("handleCheckAllChange", val);
-        this.checkedSceneTestCases = val ? this.sceneTestCases : [];
-        if (this.checkedSceneTestCases == this.sceneTestCases) {
-          this.sceneTestCases.forEach(item => {
-            this.removeForm.caseIds.push(item.id);
-          });
-        }
-        this.isIndeterminate = false;
-        console.log(this.removeForm);
-      },
+      // // 设置全选
+      // handleCheckAllChange(val) {
+      //   this.removeForm.caseIds = [];
+      //   console.log("handleCheckAllChange", val);
+      //   this.checkedSceneTestCases = val ? this.sceneTestCases : [];
+      //   if (this.checkedSceneTestCases == this.sceneTestCases) {
+      //     this.sceneTestCases.forEach(item => {
+      //       this.removeForm.caseIds.push(item.id);
+      //     });
+      //   }
+      //   this.isIndeterminate = false;
+      //   console.log(this.removeForm);
+      // },
       // 场景用例变换时使用
       handleCheckedSceneTestCases(val) {
         this.removeForm.caseIds = [];
@@ -1773,7 +1772,7 @@
             casesRunNumberList.push(caseItem)
           }
         })
-        console.log('params', {
+        console.log('setCaseRunTime', {
           sceneId: this.sceneId,
           casesRunNumberList,
           flowNodesRunNumberList,
@@ -1782,10 +1781,18 @@
           url: '/caseExecuteInstance/setCaseRunTime',
           method: 'POST',
           params: {
-            sceneId: this.sceneId,
-            casesRunNumberList,
-            flowNodesRunNumberList
-          }
+              casesRunNumberList,
+              flowNodesRunNumberList,
+              sceneId: this.sceneId,
+          },
+          // params: {
+          //   "casesRunNumberList":[],
+          //   "flowNodesRunNumberList":[
+          //     {"flowNodeId":2977,"runNumber":2, "caseId":"25317"},
+          //     {"flowNodeId":2978,"runNumber":3, "caseId":"25317"}
+          //     ],
+          //   "sceneId":"1214"
+          // },
         }).then(res => {
           if(res.respCode === '0000') {
             this.$message.success('保存成功')
