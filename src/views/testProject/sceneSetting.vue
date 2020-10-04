@@ -965,12 +965,8 @@
           delay: 0,
           preventOnFilter: false,
           onEnd(evt) {
-            console.log(evt);
             const movedRow = _this.sceneTestCases.splice(evt.oldIndex, 1);
-            console.log("原先的地址", evt.oldIndex);
-            console.log("新的地址", evt.newIndex);
             _this.sceneTestCases.splice(evt.newIndex, 0, ...movedRow);
-            console.log("地址修改完", _this.sceneTestCases);
           }
         });
       },
@@ -1123,8 +1119,8 @@
           })
             .then(res => {
               this.$message.success("删除成功");
-              this.isIndeterminate = false;
-              this.checkAll = false;
+              this.indetermintate = false
+              this.isCheckedAll = false;
               this.selectScene();
             })
             .catch(error => {
@@ -1189,30 +1185,6 @@
         this.selectedDrawIndex = 4;
         this.drawerVisible = true;
         this.getMobileInfo()
-      },
-      // // 设置全选
-      // handleCheckAllChange(val) {
-      //   this.removeForm.caseIds = [];
-      //   console.log("handleCheckAllChange", val);
-      //   this.checkedSceneTestCases = val ? this.sceneTestCases : [];
-      //   if (this.checkedSceneTestCases == this.sceneTestCases) {
-      //     this.sceneTestCases.forEach(item => {
-      //       this.removeForm.caseIds.push(item.id);
-      //     });
-      //   }
-      //   this.isIndeterminate = false;
-      //   console.log(this.removeForm);
-      // },
-      // 场景用例变换时使用
-      handleCheckedSceneTestCases(val) {
-        this.removeForm.caseIds = [];
-        let length = val.length;
-        this.checkAll = length === this.sceneTestCases.length;
-        this.isIndeterminate = length > 0 && length < this.sceneTestCases.length;
-        val.forEach(item => {
-          this.removeForm.caseIds.push(item.id);
-        });
-        console.log(this.removeForm);
       },
       // elDrawer的关闭事件
       handleBeforeClose(done) {
@@ -1320,7 +1292,6 @@
           this.triggerForm.desc = res.trigerEntity.trigerDesc
           this.triggerForm.name = res.trigerEntity.trigerName
           this.triggerForm.occasions = res.occasions
-          console.log('修改', this.triggerForm, res)
         }).catch(err => {
           console.log('失败')
         })
@@ -1371,7 +1342,6 @@
           }).catch(error => {
             this.$message.error("场景数据添加失败");
           });
-          console.log('修改', params)
         }
         this.triggerVisible = false;
       },
@@ -1452,7 +1422,6 @@
       handleSelectionChange(val) {
         this.selectedTriggerList = val;
         this.triggerId = val[0].id
-        console.log("修改", val, this.triggerId);
       },
       /**
        * 数据资源池
@@ -1655,6 +1624,14 @@
       handleCheckAllChange(val) {
         this.isCheckedAll = val
         this.indetermintate = false
+        // 添加删除id的数组
+        this.removeForm.caseIds = []
+        this.checkedSceneTestCases = val ? this.sceneTestCases : []
+        if (this.checkedSceneTestCases == this.sceneTestCases) {
+          this.sceneTestCases.forEach(item => {
+            this.removeForm.caseIds.push(item.id);
+          });
+        }
         for(let i = 0, len = this.sceneTestCases.length; i < len; i ++) {
           // 二级全选反选
           this.$set(this.sceneTestCases[i], 'selected', val)
@@ -1667,9 +1644,13 @@
       },
       // 设置二级事件切换
       handleCaseDtosItemChange(index, id, val) {
-        console.log('进行修改', index, this.sceneTestCases[index].selected)
         if(!val) {
           this.$set(this.sceneTestCases[index], 'indetermintate', false)
+          this.removeForm.caseIds = this.removeForm.caseIds.filter(
+            item => item != this.sceneTestCases[index].id
+          )
+        }else {
+          this.removeForm.caseIds.push(this.sceneTestCases[index].id)
         }
         if(this.sceneTestCases[index].flowNodeDtos) {
           for(let i = 0, len = this.sceneTestCases[index].flowNodeDtos.length; i < len; i ++) {
@@ -1690,6 +1671,18 @@
           }
           if(arrayFlow[i].selected) startCount ++
           else endCount ++
+        }
+        if(val) {
+          const flag = this.removeForm.caseIds.some(item => item === parentId)
+          if(!flag) {
+            this.removeForm.caseIds.push(parentId)
+          }
+        }else {
+          const length = this.sceneTestCases[index].flowNodeDtos.filter(item => item.selected).length
+          if(length === 0) {
+            this.removeForm.caseIds = this.removeForm.caseIds.filter(
+            item => item != parentId)
+          }
         }
         if(startCount == arrayLength) {
           this.$set(this.sceneTestCases[index], 'indetermintate', false)
