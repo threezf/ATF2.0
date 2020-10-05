@@ -719,6 +719,12 @@ export default {
         debugScript() {
             if(this.templateRadio) {
                 this.$message.success(`调试脚本${this.templateRadio}`)
+                this.$router.push({
+                    name: 'UseCaseDebug',
+                    query: {
+                        
+                    }
+                })
             }else {
                 this.$message.warning('请选择调试脚本')
             }

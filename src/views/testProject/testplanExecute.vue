@@ -274,6 +274,7 @@
                                                                     </p>
                                                                     <!-- <a class="view-case"
                                                                             @click.stop="viewCase(scene.sceneId, case_wrapper.caseId, 'PE6')"><span>查看</span></a> -->
+                                                                    <!-- <span>{{item.runTotalNumber}}</span> -->
                                                                 </div>
                                                                 <i v-if='index != (case_wrapper.flowNodes.length - 1)' class="icon-long-arrow-right"></i>
                                                             </div>

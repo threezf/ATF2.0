@@ -17,6 +17,7 @@ import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 import TransactDetail from '@/views/testInfrastructure/transactDetail'
 import InterfacesManagement from '@/views/testInfrastructure/subFunction/interfacesManagement'
 import ProductLine from '@/views/testInfrastructure/subFunction/productLine'
+import UseCaseDebug from '@/views/testInfrastructure/transactDetail/useCaseDebug'
 
 
 export default {
@@ -62,18 +63,6 @@ export default {
 						hide: true
 					}
 				},
-				// // 接口管理
-				// {
-				// 	path: 'interfacesManagement',
-				// 	name: 'InterfacesManagement',
-				// 	component: InterfacesManagement,
-				// 	meta: {
-				// 		name: '被测系统管理1',
-				// 		parent: 'TestInfrastructure',
-				// 		icon: 'el-icon-view',
-				// 		// hide: true
-				// 	}
-				// },
 				{
 					path: 'autData',
 					name: 'ConfigureSystemData',
@@ -109,7 +98,6 @@ export default {
 				}
 			]
 		},
-		
 		{
 			path: 'transactDetail',
 			name: 'TransactDetail',
@@ -118,6 +106,18 @@ export default {
 				name: 'UI管理',
 				parent: 'TestedSystemManagement',
 				icon: 'el-icon-document-copy',
+				hide: true,
+			},
+			children: [
+			]
+		},
+		{
+			path: 'useCaseDebug',
+			name: 'UseCaseDebug',
+			component: UseCaseDebug,
+			meta: {
+				name: '用例调试',
+				parent: 'TestInfrastructure',
 				hide: true
 			}
 		},
