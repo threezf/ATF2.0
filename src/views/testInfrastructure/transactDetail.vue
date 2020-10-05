@@ -79,9 +79,9 @@
         },
         data() {
             return {
-                userId: undefined,
-                autSelectValue: undefined,
-                tranSelectValue: undefined,
+                userId: "",
+                autSelectValue: "",
+                tranSelectValue: "",
                 activeName: 'elementLibrary',
                 autSelectOptions:[],
                 tranSelectOptions:[],
@@ -98,10 +98,18 @@
                 }
             }
         },
-        mounted(){
-            let data = this.$route.query // 跳转源界面传递的行数据或新增测试功能点的对象数据
-            this.autSelectValue = data.autId
-            this.tranSelectValue =  data.id
+        created() {
+            let data;
+            if(this.$route.query.data) {
+                data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
+                localStorage.setItem('transactId', this.$route.query.data.id)
+                localStorage.setItem('transactAutId', this.$route.query.data.autId)
+                this.autSelectValue = data.autId
+                this.tranSelectValue =  data.id
+            }else {
+                this.autSelectValue = Number(localStorage.getItem('transactAutId'))
+                this.tranSelectValue = Number(localStorage.getItem('transactId'))
+            }
             this.userId = sessionStorage.getItem('userId') || '3'
             this.getAuts();
             this.getTran(this.autSelectValue,true);
