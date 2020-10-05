@@ -239,7 +239,8 @@
           descShort: [
             { required: true, message: '请输入角色描述', blur: 'trigger' }
           ],
-        }
+        },
+        rowId: '', // 修改行数据时使用的id
       }
     },
     watch: {
@@ -257,8 +258,8 @@
       }
     },
     created() {
-      this.pagedBatchQuery(this.pageSize, this.currentPage)
       this.loginInfo = JSON.parse(localStorage.getItem("loginInfo"))
+      this.pagedBatchQuery(this.pageSize, this.currentPage)
     },
     methods: {
       // 获取全部角色信息
@@ -272,8 +273,9 @@
             orderType: 'asc',
             orderColumns: 'id',
             userId: Number(sessionStorage.getItem('userId')),
+            companyId: this.loginInfo.companyId,
             roleName: this.roleName,
-            remark: this.remark
+            remark: this.remark,
           }
         }).then(res => {
           if(res.respCode === "0000") {
@@ -302,6 +304,7 @@
           if(valid) {
             this.ruleForm.createTime = Date.now()
             this.ruleForm.creatorId = sessionStorage.getItem('userId')
+            this.ruleForm.companyId = this.loginInfo.companyId,
             Request({
               url: '/roleController/insert',
               method: 'POST',
@@ -326,6 +329,7 @@
       doUpdateRule(row) {
         this.dialogVisible = true
         this.titleIndex = 1
+        this.rowId = row.id
         const {
           roleName,
           remark,
@@ -338,6 +342,7 @@
         }
         this.inputDisabled = false
         console.log(this.ruleForm)
+
       },
       // 查看单行
       viewRow(row) {
@@ -366,7 +371,8 @@
             params.userId = sessionStorage.getItem("userId")
             params.defaultRole = 2
             params.rolePriority = 3
-            params.companyName = this.loginInfo.companyName
+            params.companyId = this.loginInfo.companyId
+            params.id = this.rowId
             console.log(params)
             Request({
               url: '/roleController/updateByPrimaryKey',

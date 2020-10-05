@@ -150,9 +150,9 @@
               <el-checkbox 
                 v-for="(item, index) in roles"
                 :key="index"
-                :value="item"
-                :label="item"
-                >{{item}}
+                :value="Number(item.id)"
+                :label="Number(item.id)"
+                >{{item.roleName}}
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -185,6 +185,100 @@
               >重置
             </el-button>
           </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-dialog
+        title="展示详情"
+        :visible.sync="detailVisible"
+        width="30%">
+        <el-form
+          :model="showForm"
+          class="showDialogForm"
+          label-width="85px">
+          <el-form-item
+            label="用户名：">
+            <span>{{showForm.username}}</span>
+          </el-form-item>
+          <el-form-item
+            label="真实姓名：">
+            <span>{{showForm.reallyname}}</span>
+          </el-form-item>
+          <el-form-item
+            label="手机号：">
+            <span>{{showForm.telephone}}</span>
+          </el-form-item>
+          <el-form-item
+            label="邮箱：">
+            <span>{{showForm.email}}</span>
+          </el-form-item>
+          <el-form-item 
+            label="用户角色">
+            <el-checkbox 
+              v-for="(item, index) in showForm.roleList"
+              :key="index"
+              :value="item"
+              :label="item"
+              v-model="showForm.checked"
+              disabled
+              >{{item}}
+            </el-checkbox>
+          </el-form-item>
+          <br>
+        </el-form>
+        <el-row>
+          <el-button
+            type="warning"
+            size="small"
+            plain
+            style="margin: 0 auto -10px"
+            @click="detailVisible = false"
+            >关闭
+          </el-button>
+        </el-row>
+      </el-dialog>
+      <el-dialog
+        title="修改用户"
+        width="30%"
+        :visible.sync="updateDialogShow">
+        <el-form
+          label-width="80px">
+          <el-form-item
+            label="用户名">
+            <el-input v-model="updateForm.username" disabled></el-input>
+          </el-form-item>
+          <el-form-item
+            label="真实姓名">
+            <el-input v-model="updateForm.reallyname" disabled></el-input>
+          </el-form-item>
+          <el-form-item 
+            label="用户角色">
+            <el-checkbox-group
+              v-model="updateForm.roleList">
+              <el-checkbox 
+                v-for="(item, index) in roles"
+                :key="index"
+                :value="Number(item.id)"
+                :label="Number(item.id)"
+                >{{item.roleName}}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-row
+            class="updateDialogRow">
+            <el-button
+              type="primary"
+              size="small"
+              @click="updateSure"
+              >确认
+            </el-button>
+            <el-button
+              type="warning"
+              size="small"
+              plain
+              @click="updateSure"
+              >取消
+            </el-button>
+          </el-row>
         </el-form>
       </el-dialog>
     </el-main>
@@ -338,6 +432,23 @@ export default {
       selectedId: -1,
       loginInfo: {},
       switches: [], // switch的数据
+      // 查看用户数据
+      detailVisible: false,
+      showForm: {
+        username: "", // 用户姓名
+        reallyname: "", // 真实姓名
+        email: "", // 邮箱
+        telephone: "", // 联系方式
+        roleList: [],
+        checked: true, // 展示详情时展示的checkbox状态
+      },
+      // 修改用户的数据
+      updateDialogShow: false,
+      updateForm: {
+        username: '',
+        reallyname: '',
+        roleList: []
+      }
     }
   },
   computed: {
@@ -379,8 +490,9 @@ export default {
     }
   },
   created() {
-    this.getUsers()
     this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))
+    this.getUsers()
+    console.log('loginInfo', this.loginInfo)
     this.selectLimitedRoles()
   },
   mounted() {},
@@ -395,7 +507,7 @@ export default {
           companyId: this.loginInfo.companyId
         }
       }).then(res => {
-        this.roles = res.list.map(item => item.roleName)
+        this.roles = res.list.map(item => item)
         console.log('roles', this.roles)
       }).catch(error => {
         console.log(error)
@@ -437,58 +549,66 @@ export default {
     handleDetail(index, row) {
       this.disabled = true
       this.modelFlag = 2
-      this.setForm(row)
-      this.dialogVisible = true
+      this.detailVisible = true
+      this.showForm.username = row.userEntity.username
+      this.showForm.reallyname = row.userEntity.reallyname
+      this.showForm.email = row.userEntity.email
+      this.showForm.telephone = row.userEntity.telephone
+      this.showForm.roleList = row.roleList
+      console.log(this.showForm, row)
     },
     // 掉起form表单 并将modelFlag标志置为 3
     handleEdit(index, row) {
       this.modelFlag = 3
       this.disabled = false
       this.selectedId = row.userEntity.id
-      console.log(row)
-      this.setForm(row)
-      this.dialogVisible = true
-      console.log('roles', this.form, this.selectedId)
+      console.log("updateDialogShow", row)
+      // this.setForm(row)
+      this.updateDialogShow = true
+      this.updateForm.username = row.userEntity.username
+      this.updateForm.reallyname = row.userEntity.reallyname
+      this.updateForm.roleList = row.roleList
+      console.log(this.updateForm, '修改')
     },
-    setForm(row) {
-      const {
-        username,
-        password,
-        reallyname,
-        status,
-        telephone,
-        email,
-        totalScore,
-        mark,
-        companyName,
-        lastLoginDate,
-        lastLoginIp,
-        createTime,
-        modifierId,
-        modifiedTime,
-        creatorId
-      } = row.userEntity
-      const {roleList} = row
-      this.form = {
-        username,
-        reallyname,
-        password,
-        againPassward: password,
-        status: status === 0? 0 : 1,
-        telephone,
-        email,
-        totalScore,
-        mark,
-        companyName,
-        lastLoginDate,
-        lastLoginIp,
-        createTime,
-        modifierId,
-        modifiedTime,
-        creatorId,
-        roleList
-      }
-    },
+    // setForm(row) {
+    //   const {
+    //     username,
+    //     password,
+    //     reallyname,
+    //     status,
+    //     telephone,
+    //     email,
+    //     totalScore,
+    //     mark,
+    //     companyName,
+    //     lastLoginDate,
+    //     lastLoginIp,
+    //     createTime,
+    //     modifierId,
+    //     modifiedTime,
+    //     creatorId
+    //   } = row.userEntity
+    //   const {roleList} = row
+    //   this.form = {
+    //     username,
+    //     reallyname,
+    //     password,
+    //     againPassward: password,
+    //     status: status === 0? 0 : 1,
+    //     telephone,
+    //     email,
+    //     totalScore,
+    //     mark,
+    //     companyName,
+    //     lastLoginDate,
+    //     lastLoginIp,
+    //     createTime,
+    //     modifierId,
+    //     modifiedTime,
+    //     creatorId,
+    //     roleList
+    //   }
+    // },
     //角色一栏处理函数
     roleSwitch(row, column) {
       return row.role && this.roles[row.role];
@@ -537,7 +657,7 @@ export default {
       this.form.createTime = Date.now()
       this.form.modifiedTime = Date.now()
       this.form.creatorId = sessionStorage.getItem('userId')
-      this.form.companyName = this.loginInfo.companyName
+      this.form.companyId = this.loginInfo.companyId
       console.log(this.form)
       Request({
         url: '/userController/insert',
@@ -546,7 +666,7 @@ export default {
       }).then((res) => {
         this.$message(res.respMsg)
         this.dialogVisible = false
-        this.userRoleController(res.userId)
+        this.userRoleController(res.userId, this.form.companyId)
         this.getUsers()
       }, (err) => {
         this.$message(res.respMsg)
@@ -557,13 +677,13 @@ export default {
       })
     },
     // 插入user
-    userRoleController(userId) {
+    userRoleController(userId, companyId) {
       Request({
         url: "/userRoleController/insert",
         method: 'POST',
         params: {
           userId,
-          companyName: this.loginInfo.companyName,
+          companyId,
           roleList: this.form.roleList
         }
       }).then(res => {
@@ -633,21 +753,46 @@ export default {
           id
         }
       }).then(res => {
-        this.$message.success('锁定成功')
+        this.$message.info('锁定成功')
       }).catch(error => {
         console.log(error)
       })
+    },
+    /**
+     * 修改用户角色
+     */
+    updateSure() {
+      this.updateDialogShow = false
+    },
+    updateCancel() {
+      this.updateDialogShow = false
     }
   },
 }
 </script>
 
 <style lang="less" scoped>
-.block {
-  margin: 10px auto
-}
+  .block {
+    margin: 10px auto
+  }
 
-.table {
-  padding-top: 10px
-}
+  .table {
+    padding-top: 10px
+  }
+  .showDialogForm {
+    .el-form-item {
+      height: 40px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      div span {
+        font-weight: 100;
+      }
+    }
+  }
+  .updateDialogRow {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+    margin: -20px auto -20px auto;
+  }
 </style>
