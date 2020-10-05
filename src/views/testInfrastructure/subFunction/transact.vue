@@ -400,7 +400,8 @@
       this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
       const user = sessionStorage.getItem('userId')
       console.log('测试数据', this.transInfo, user, this.transInfo.creatorId)
-      this.disableFunc = (user != this.transInfo.creatorId)
+      // this.disableFunc = (user != this.transInfo.creatorId)
+      this.disableFunc = false
 
     },
     activated() {
@@ -415,7 +416,8 @@
       console.log('is interface', this.isInterface, this.$route.query)
       this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
       const user = sessionStorage.getItem('userId')
-      this.disableFunc = (user != this.transInfo.creatorId)
+      this.disableFunc = false
+      // this.disableFunc = (user != this.transInfo.creatorId)
     },
     computed: {
       changedParams() {

@@ -343,7 +343,7 @@ export default {
     }
   },
   created() {
-    let row = this.$route.query
+    let row = this.$route.query.data
     this.autId = Number(row.autId)
     this.selectSystem = this.autId
     this.transactsForm.id = row.id
