@@ -241,7 +241,7 @@
 				searchItem: 'managerName',
 				inputTips: '请输入经理名称',
 				tableData: [],
-				pageSize: 5,
+				pageSize: 10,
 				pageSizes: [5, 10, 20, 50],
 				currentPage: 1,
 				total: 100,

@@ -402,6 +402,8 @@ export default {
       if (type == 1) {
         this.currentPage = 1;
       }
+      const loginInfo = JSON.parse(localStorage.getItem("loginInfo"))
+      this.params.companyId = loginInfo.companyId
       Request({
           url: "/aut/pagedBatchQueryAut",
           method: "post",

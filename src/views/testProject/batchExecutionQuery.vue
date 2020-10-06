@@ -312,7 +312,7 @@
         params: {
           caseSourceChannel: "",
           currentPage: 1, //当前页码
-          pageSize: 20, //每页数据量
+          pageSize: 10, //每页数据量
           queryEndTime: "", //结束日期
           queryStartTime: "", //开始日期
           runStatus: "", //执行状态

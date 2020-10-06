@@ -288,7 +288,7 @@
 						filterType:filterType,
 						conditionList: conditionListM,
 						currentPage: 1,
-						pageSize: 5,
+						pageSize: 10,
 						orderType:"asc",
 						orderColumn: 'id',
 						caseLibId: sessionStorage.getItem('caselibId')
@@ -328,7 +328,7 @@
 						filterType:filterType,
 						conditionList: [{propertyName: "caseLibId",compareType:"=",propertyValueList:[sessionStorage.getItem("caselibId")]}],
 						currentPage: 1,
-						pageSize: 5,
+						pageSize: 10,
 						orderType:"asc",
 						orderColumn: 'id',
 						caseLibId: sessionStorage.getItem('caselibId')

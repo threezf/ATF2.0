@@ -2577,7 +2577,7 @@ export default {
       radio: "1",
       // apiUrl: '',
       tt: 0, //总条数
-      pageSize: 5, //页面大小
+      pageSize: 10, //页面大小
       currentPage: 1, //当前页
       totalPage: 1, //总页数
       listnum: 5, //页面大小

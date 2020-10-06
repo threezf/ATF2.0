@@ -217,11 +217,14 @@
               v-for="(item, index) in showForm.roleList"
               :key="index"
               :value="item"
-              :label="item"
+              :label="item.roleName"
               v-model="showForm.checked"
               disabled
-              >{{item}}
+              >{{item.roleName}}
             </el-checkbox>
+            <span v-if="showForm.roleList.length === 0">
+              暂未分配角色
+            </span>
           </el-form-item>
           <br>
         </el-form>
@@ -447,7 +450,8 @@ export default {
       updateForm: {
         username: '',
         reallyname: '',
-        roleList: []
+        roleList: [],
+        userId: ''
       }
     }
   },
@@ -554,8 +558,10 @@ export default {
       this.showForm.reallyname = row.userEntity.reallyname
       this.showForm.email = row.userEntity.email
       this.showForm.telephone = row.userEntity.telephone
-      this.showForm.roleList = row.roleList
-      console.log(this.showForm, row)
+      this.showForm.roleList = this.roles.filter(item => {
+        return row.roleList.includes(item.id)
+      })
+      console.log(this.roles, row, this.showForm.roleList)
     },
     // 掉起form表单 并将modelFlag标志置为 3
     handleEdit(index, row) {
@@ -568,7 +574,8 @@ export default {
       this.updateForm.username = row.userEntity.username
       this.updateForm.reallyname = row.userEntity.reallyname
       this.updateForm.roleList = row.roleList
-      console.log(this.updateForm, '修改')
+      this.updateForm.userId = row.userEntity.id
+      console.log(this.updateForm, row, '修改')
     },
     // setForm(row) {
     //   const {
@@ -762,6 +769,23 @@ export default {
      * 修改用户角色
      */
     updateSure() {
+      Request({
+        url: '/userRoleController/updateUserRole',
+        method: 'POST',
+        params: {
+          currentUserId: sessionStorage.getItem('userId'),
+          userId: this.updateForm.userId,
+          roleList: this.updateForm.roleList,
+          companyId: this.loginInfo.companyId
+        }
+      }).then(res => {
+        if(res.respCode === "0000") {
+          this.$message.success("修改成功")
+          this.getUsers()
+        }
+      }).catch(error => {
+        console.log('修改失败')
+      })
       this.updateDialogShow = false
     },
     updateCancel() {

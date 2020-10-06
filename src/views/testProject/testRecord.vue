@@ -179,7 +179,7 @@ export default {
       selectedSceneList: "", //选择的场景
       tableData: [], //表格数据
       casecode: "", //用例编号
-      pageSize: 20, //页面数
+      pageSize: 10, //页面数
       currentPage: 1, //当前页面
       totalCount: 0, //总数
       dialogVisible: false, //对话框是否可视
@@ -220,10 +220,16 @@ export default {
       }).then(res => {
         if(!res.respCode === "0000") {
           this.$message.warning('空记录！请尝试查询！')
+          this.$router.push({
+            name: 'BatchExecutionQuery'
+          })
         }
         this.tableData = res.list
       }).catch(err => {
-        this.$message.warning('空记录！请尝试查询！')
+        this.$message.warning('请选择执行批次！')
+        this.$router.push({
+          name: 'BatchExecutionQuery'
+        })
       })
     },
     //测试轮次查询更新数据

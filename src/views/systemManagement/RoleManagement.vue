@@ -205,7 +205,7 @@
       return {
         total: 100,
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 10,
         pageSizes: [5, 10, 20, 50],
         dialogTitles: ['添加角色', '修改角色', '查看角色'],
         titleIndex: 0,

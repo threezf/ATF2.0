@@ -118,7 +118,7 @@
                 tableData: [],
                 totalCount: 0,
                 currentPage: 1,
-                pageSize: 5,
+                pageSize: 10,
                 dialogVisible: false,
                 modelFlag: 0,
                 //场景ID

@@ -212,7 +212,7 @@
 				role:'',
         total: 0,
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 10,
         pageSizes: [5, 10, 20, 50]
       }
     },
