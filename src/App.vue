@@ -168,6 +168,7 @@
           if(this.activeMenu=='TestProjectIndex'){
             this.activeMenu="TestProject";
           }
+          this.currentUser = sessionStorage.getItem("username")
         },
         immediate: true,
       },
@@ -196,6 +197,7 @@
           cancelButton: '取消',
           type: 'warning'
         }).then(() => {
+          sessionStorage.removeItem("username")
           this.$router.push({
             path: "/login",
           });
@@ -262,15 +264,14 @@
     },
     created() {
       const flag = localStorage.getItem("userType")
-      console.log(this.totalScore, 'totalScore')
       this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))? JSON.parse(localStorage.getItem('loginInfo')): {}
-      this.currentUser = sessionStorage.getItem("username")
       if(flag == 'false') {
         this.userStatus = 1
       }else {
         this.userStatus = 2
       }
       this.initUserState()
+      console.log(this.currentUser, 'totalScore')
     },
   };
 </script>

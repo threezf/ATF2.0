@@ -54,6 +54,7 @@
              */
             getSideBarList() {
                 let routes = this.$router.options.routes
+                console.log('sidebar',this.$router.options)
                 let children = []
                 let path = ''
                 routes.forEach((item) => {

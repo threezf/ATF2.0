@@ -19,7 +19,7 @@
           </el-button>
         </el-row>
         <el-row class="searchRow">
-          <el-select
+          <!-- <el-select
             class="selectStyle"
             v-model="selectParams"
             @change="handleSelectChange">
@@ -33,18 +33,23 @@
               label="角色标识"
               value="remark">
             </el-option>
-          </el-select>
-          <el-input 
-            v-model="searchInfo"
-            placeholder="输入搜索条件"
-            clearable >
-            <el-button 
-              slot="append" 
-              icon="el-icon-search"
-              @click="searchByItem">
-            </el-button>
-          </el-input>
-					</el-col>
+          </el-select> -->
+          <el-form
+            label-width="100px">
+            <el-form-item
+              label="角色名称">
+              <el-input 
+                v-model="searchInfo"
+                placeholder="输入角色名称"
+                clearable >
+                <el-button 
+                  slot="append" 
+                  icon="el-icon-search"
+                  @click="searchByItem">
+                </el-button>
+              </el-input>
+            </el-form-item>
+          </el-form>
         </el-row>
         <el-table
           :data="tableData"
@@ -93,7 +98,7 @@
             <template
               slot-scope="scope">
               <el-button
-                v-if="scope.row.defaultRole != 2"
+                v-if="scope.row.defaultRole != 1"
                 type="primary"
                 size="small"
                 icon="el-icon-edit"
