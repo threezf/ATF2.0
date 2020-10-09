@@ -35,7 +35,7 @@
             </div>
             <div class="content">
               <el-row>
-                <el-col :offset="2" :span="5">
+                <el-col :offset="2" :span="4">
                   <span v-if="infoCardType === true">元素名称 ：</span>
                   <span v-else-if="infoCardType === false">UI名称 ：</span>
                   <span v-else>请选择UI或元素</span>
@@ -68,7 +68,7 @@
                 ref="multipleTable"
                 :data="mainProperties"
                 tooltip-effect="dark"
-                style="width: 100%"
+                style="width: 86%; margin-left: 8%"
                 @selection-change="handleSelectionChange"
               >
                 <el-table-column type="selection" width="55"></el-table-column>
@@ -203,6 +203,7 @@ export default {
       publishActionUrl:
         "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi",
       branchAddEleDialogFlag: false, // 批量添加的dialog
+			userId:sessionStorage.getItem("userId"),
       fileList: [], // 上传文件列表
       editFlag: true, // 元素信息编辑的状态
       infoCardName: "", //信息详情的卡片名称
@@ -263,7 +264,7 @@ export default {
         this.autId
       );
     },
-    
+
   },
   methods: {
     downloadTemp() {
@@ -402,7 +403,10 @@ export default {
       Request({
         url: "/elementRepository/deleteSingleUI",
         method: "post",
-        params: { uiId: this.selectedUI, repositoryId: this.repositoryId },
+        params: { uiId: this.selectedUI,
+					repositoryId: this.repositoryId,
+					userId:this.userId
+				},
       }).then(
         (res) => {
           if (res.respCode == "0000") {
@@ -436,6 +440,7 @@ export default {
           repositoryId: this.repositoryId,
           elementId: this.selectedEle[1],
           uiId: this.selectedEle[0],
+					userId:this.userId
         },
       }).then(
         (res) => {
@@ -468,6 +473,7 @@ export default {
           uis: [
             { uiName: this.addUIform.name }, //支持数组传参单界面未设计 且desc不用传参
           ],
+					userId:this.userId
         },
       }).then(
         (res) => {
@@ -487,6 +493,7 @@ export default {
         params: {
           repositoryId: this.repositoryId,
           uiId: this.selectedUI,
+					userId:this.userId,
           element: {
             elementName: this.addEleform.elementName,
             classType: this.addEleform.classType,
@@ -526,7 +533,8 @@ export default {
           relateIdentifyObjectId: "",
           repositoryId: _this.repositoryId,
           uiId: _this.uiUID,
-          uiName: _this.input
+          uiName: _this.input,
+					userId:this.userId
         }
       }).then(
         (res) => {
@@ -550,6 +558,7 @@ export default {
         params: {
           repositoryId: _this.repositoryId,
           uiId: _this.selectedEle[0],
+					userId:this.userId,
           element: {
             elementId: _this.selectedEle[2].id,
             elementName: _this.input,

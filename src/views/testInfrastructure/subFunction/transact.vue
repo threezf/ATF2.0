@@ -426,7 +426,7 @@ export default {
         orderColumns: "modified_time",
         orderType: "desc",
         pageSize: this.pageSize,
-        transType: this.$route.query.hasOwnProperty('isInterface')? 
+        transType: this.$route.query.hasOwnProperty('isInterface')?
                    this.isInterface ? 2 : 1
                    : ""
       };
@@ -558,10 +558,11 @@ export default {
             method: "POST",
             params: {
               autId: _this.autId,
-              creatorId: "3",
               elementRepositoryId: _this.elementRepositoryId,
               objectRepositoryId: _this.objectRepositoryId,
               transId: _this.updateId,
+							userId:sessionStorage.getItem("userId"),
+							creatorId:sessionStorage.getItem("userId")
             },
           })
             .then((res) => {
@@ -671,7 +672,9 @@ export default {
       Request({
         url: "/aut/queryListAut",
         method: "POST",
-        params: {},
+        params: {
+        	companyId:JSON.parse(sessionStorage.getItem("toTransact")).companyId
+				},
       })
         .then((res) => {
           // console.log('获取成功',res);
@@ -786,6 +789,7 @@ export default {
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
                     transType: _this.isInterface ? 2 : 1,
+										creatorId:sessionStorage.getItem("userId")
                   },
                 })
                   .then((res) => {
@@ -836,6 +840,8 @@ export default {
                   descShort: _this.ruleForm.descShort,
                   id: _this.updateId,
                   nameMedium: _this.ruleForm.nameMedium,
+									userId:sessionStorage.getItem("userId"),
+									creatorId:sessionStorage.getItem("userId")
                 },
               })
                 .then((res) => {
@@ -870,7 +876,10 @@ export default {
       Request({
         url: "/transactController/batchImportTransact",
         method: "POST",
-        params: formData,
+        params: {
+					creatorId:sessionStorage.getItem("userId"),
+        	...formData
+				},
       })
         .then((res) => {
           this.$message.success(res.respMsg);

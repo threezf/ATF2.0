@@ -5,14 +5,14 @@
             <el-row>
                 <el-button
                     icon="el-icon-plus"
-                    size="small" 
+                    size="small"
                     type="primary"
                     @click='addTemplateShow'>
                     添加{{name}}
                 </el-button>
                 <el-button
                     icon="el-icon-delete"
-                    size="small" 
+                    size="small"
                     type="primary"
                     @click='deleteTemplateShow'>
                     删除{{name}}
@@ -22,7 +22,7 @@
                     size="small"
                     icon="el-icon-setting"
                     @click="debugScript"
-                    >调试脚本               
+                    >调试脚本
                 </el-button>
             </el-row>
              <el-table
@@ -63,7 +63,7 @@
                 <div>
                     <el-row v-if='templateRadio !== ""'>
                         <el-button
-                            size="small" 
+                            size="small"
                             type="primary"
                             icon="el-icon-plus"
                             @click='addItemShow = true'>
@@ -71,35 +71,35 @@
                         </el-button>
                         <el-button
                             icon="el-icon-delete"
-                            size="small" 
+                            size="small"
                             type="primary"
                             @click='deleteTemplateInfo'>
                             删除
                         </el-button>
                         <el-button
                             icon="el-icon-arrow-up"
-                            size="small" 
+                            size="small"
                             type="primary"
                             @click='eleUp'>
                             上移
                         </el-button>
                         <el-button
                             icon="el-icon-arrow-down"
-                            size="small" 
+                            size="small"
                             type="primary"
                             @click='eleDown'>
                             下移
                         </el-button>
                         <el-button
                             icon="el-icon-document"
-                            size="small" 
+                            size="small"
                             type="primary"
                             @click='saveInfo'>
                             保存
                         </el-button>
                         <el-button
                             icon="el-icon-printer"
-                            size="small" 
+                            size="small"
                             type="primary"
                             @click='giveParam'>
                             参数化
@@ -136,8 +136,8 @@
                             label="方法"
                             width="180">
                             <template slot-scope="scope">
-                                <el-select 
-                                    v-model="scope.row.methodName" 
+                                <el-select
+                                    v-model="scope.row.methodName"
                                     placeholder="请选择"
                                     @change="changeMethod(scope.row)">
                                     <el-option
@@ -169,20 +169,20 @@
                                     <el-row v-for='item in scope.row.arguments' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.name }}
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
                                             <span>
-                                                 {{ item.value }} 
+                                                 {{ item.value }}
                                             </span>
                                         </el-col>
                                     </el-row>
                                     <el-row >
-                                        <el-button 
-                                            size="mini" 
+                                        <el-button
+                                            size="mini"
                                             type="primary"
-                                            icon="el-icon-edit" 
+                                            icon="el-icon-edit"
                                             @click='scope.row.arguShow = false'>
                                             编辑
                                         </el-button>
@@ -204,11 +204,11 @@
                                     <el-row v-for='item in scope.row.arguments' :key='item.name'>
                                         <el-col :span="5" class='fixedHeight'>
                                             <span>
-                                                 {{ item.name }} 
+                                                 {{ item.name }}
                                             </span>
                                         </el-col>
                                         <el-col :span="10">
-                                            <el-input 
+                                            <el-input
                                                 size="mini"
                                                 @dragenter.stop.prevent="return false"
                                                 @dragover.stop.prevent="return false"
@@ -217,16 +217,16 @@
                                     </el-row>
                                     <el-row >
                                         <el-col :span="5">
-                                            <el-button  
+                                            <el-button
                                                 @click='scope.row.arguments.forEach(v=>{v.newvalue =v.value});scope.row.arguShow = true'
                                                 size="mini">
                                                  取消
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5">
-                                            <el-button 
-                                                type="primary" 
-                                                size="mini"  
+                                            <el-button
+                                                type="primary"
+                                                size="mini"
                                                 @click=' scope.row.arguments.forEach(v=>{v.value=v.newvalue}) ;scope.row.arguShow = true'>
                                                 确认
                                             </el-button>
@@ -291,14 +291,14 @@ export default {
     },
     mixins: [VueMixins],
     props:{
-        transId:{ 
+        transId:{
             default: undefined
         },
-        autId:{ 
+        autId:{
             default: undefined
         },
         // 因为在快速开始时，脚本称之为用例，因此使用变量控制其显示
-        name:{ 
+        name:{
             type: String,
             default: '脚本'
         },
@@ -408,7 +408,9 @@ export default {
                 method: 'post',
                 params: {
                     scriptId:this.templateRadio,
-                    content: this.generateScriptString()
+                    content: this.generateScriptString(),
+									  userId:parseInt(sessionStorage.getItem("userId")),
+									  transId:parseInt(this.transId)
                 }
             }).then((res) => {
                 this.$message(res.respMsg)
@@ -480,9 +482,10 @@ export default {
                 url: '/scriptTemplate/scriptParameterized',
                 method: 'post',
                 params: {
-                    autId: this.autId,
+                    autId: parseInt(this.autId),
                     scriptId: this.templateRadio,
-                    content: this.generateScriptString()
+                    content: this.generateScriptString(),
+									  userId:sessionStorage.getItem("userId")
                 }
             }).then((res) => {
                 this.$message(res.respMsg)
@@ -529,7 +532,7 @@ export default {
         eleDown(){
             let flag = false
             for(let i = this.templateInfo.length-1 ; i >-1 ; i--){
-                
+
                 if(this.multipleSelection.some( v =>(v.sortid === this.templateInfo[i].sortid)) ){
                     if(flag){
                         let tmp = this.templateInfo.splice(i,1)[0]
@@ -559,7 +562,8 @@ export default {
                 method: 'post',
                 params: {
                     ...this.addTemplateForm,
-                    transId: this.transId
+                    transId: this.transId,
+									  userId: sessionStorage.getItem("userId")
                 }
             }).then((res) => {
                 this.$message(res.respMsg)
@@ -620,7 +624,12 @@ export default {
             Request({
                 url: '/scriptTemplate/delete',
                 method: 'post',
-                params: {id: this.templateRadio}
+                params: {
+                	id: this.templateRadio,
+									userId: sessionStorage.getItem("userId"),
+									transId:this.transId,
+									scriptId:this.templateRadio
+                }
             }).then((res) => {
                 this.deleteTemplateDialog = false
                 this.$message(res.respMsg)
@@ -722,7 +731,7 @@ export default {
                 this.$router.push({
                     name: 'UseCaseDebug',
                     query: {
-                        
+
                     }
                 })
             }else {

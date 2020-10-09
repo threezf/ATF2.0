@@ -11,10 +11,9 @@
         <template-manage :transId="String(transId)" :autId="String(autId)" name="用例" :isQuick="true"></template-manage>
       </el-col>
     </el-row>
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="6">
+    <el-row type="flex" justify="center" class="fixButton">
         <el-button type="primary" @click="next()">配置完成并进入下一步</el-button>
-      </el-col>
+				<el-button @click="back()">返回上一步</el-button>
     </el-row>
   </div>
 </template>
@@ -42,9 +41,17 @@ export default {
     next() {
       this.$router.push({ name: "QuicklyRun", query: this.$route.query });
     },
+		back() {
+			this.$router.push({ name: "QuicklyElement", query: this.$route.query });
+		},
   },
 };
 </script>
 
 <style lang="less" scoped>
+	.fixButton{
+		position:fixed;
+		bottom:0;
+		width:100%
+	}
 </style>

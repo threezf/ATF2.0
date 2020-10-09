@@ -16,10 +16,12 @@
         >
       </el-pagination>
     </el-row>
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="6">
-        <el-button type="primary">执行完毕查看结果</el-button>
-      </el-col>
+    <el-row type="flex" justify="center" class="fixButton">
+<!--        <el-button type="primary">执行完毕查看结果</el-button>-->
+				<el-button
+					@click="back"
+				>返回上一步
+				</el-button>
     </el-row>
   </div>
 </template>
@@ -72,6 +74,9 @@ export default {
         console.log('查詢失敗')
       })
     },
+		back() {
+			this.$router.push({ name: "QuicklyRun", query: this.$route.query });
+		},
     handleSizeChange(val) {
       this.pageSize = val
     },
@@ -87,5 +92,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+	.fixButton{
+		position:fixed;
+		bottom:0;
+		width:100%
+	}
 </style>

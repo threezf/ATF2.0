@@ -80,12 +80,12 @@
 					<el-table-column
 						label="创建时间"
 						property="createTime"
-
+						:formatter="transTime"
 					/>
 					<el-table-column
 						label="修改时间"
 						property='modifiedTime'
-
+						:formatter="transTime"
 					/>
 					<el-table-column
 						label="操作" width="200px">
@@ -121,10 +121,10 @@
 				:visible.sync="dialogVisible"
 				width="30%">
 				<el-form ref="form" prop="form" :model="form" :rules="rules" label-width="120px">
-					<el-form-item label="公司名称" prop="dept" >
+					<el-form-item label="企业名称" prop="dept" >
 						<el-input v-model="form.companyName" :disabled='disabled'></el-input>
 					</el-form-item>
-					<el-form-item label="公司介绍" prop="descShort" >
+					<el-form-item label="企业介绍" prop="descShort" >
 						<el-input v-model="form.descShort" :disabled='disabled'></el-input>
 					</el-form-item>
 					<el-form-item label="管理员名称" prop="username" v-show="flag==0" >
@@ -178,9 +178,9 @@
 			};
 			return {
 				form: {
-					// 公司介绍
+					// 企业介绍
 					descShort: '',
-					// 公司名称
+					// 企业名称
 					companyName: '',
 					// 状态
 					status: '',
@@ -210,7 +210,7 @@
 				},
 				selectOptions:[
 					{
-						label:'公司名称',
+						label:'企业名称',
 						value:'companyName'
 					}
 				],
@@ -237,9 +237,9 @@
 			//根据modelFlag 展示弹窗的名字
 			modelName() {
 				var obj = {
-					0: '添加公司',
-					1: '编辑公司信息',
-					2: '查看公司信息',
+					0: '添加企业',
+					1: '编辑企业信息',
+					2: '查看企业信息',
 				}
 				return obj[this.modelFlag]
 			},
@@ -269,7 +269,7 @@
 						dept: '',
 						// 项目组介绍
 						descShort: '',
-						// 所处公司名称
+						// 所处企业名称
 						companyName: '',
 						// 状态
 						status: '',
@@ -312,7 +312,7 @@
 				}
 				this.dialogVisible = !this.dialogVisible
 			},
-			//添加公司
+			//添加企业
 			addEnterprise() {
 				this.form.createTime = new Date().valueOf()
 				this.form.modifierId = null
@@ -326,57 +326,45 @@
 						params: _this.form
 					}).then((res) => {
 						var userId=res.userId
-						Request({
-							url: '/roleController/insertAllDefaultRole',
-							method: 'post',
-							params: {
-								companyName: _this.form.companyName,
-								userId: userId
-							}
-						}).then((res) => {
-							var userId=res.userId
+						var companyId=res.companyId
 							Request({
 								url: '/userRoleController/insert',
 								method: 'post',
 								params: {
-									companyName: _this.form.companyName,
+									companyId:companyId,
 									userId: userId,
-									roleList: ["系统管理员"]
+									roleList: [7]
 								}
 							}).then((res) => {
 								_this.dialogVisible = false
-								_this.$alert('添加公司成功', '成功', {
+								_this.$alert('添加企业成功', '成功', {
 									confirmButtonText: '确定',
 								});
 								_this.getEnterprise(0)
 							}, (err) => {
 								_this.dialogVisible = false
-								_this.$alert('添加公司失败', '失败', {
+								_this.$alert('添加企业失败', '失败', {
 									confirmButtonText: '确定',
 								});
 							}).catch((err) => {
-								_this.$alert('添加公司失败', '失败', {
+								_this.$alert('添加企业失败', '失败', {
 									confirmButtonText: '确定',
 								});
 							})
-						}, (err) => {
-							_this.dialogVisible = false
-							_this.$alert('添加公司失败', '失败', {
-								confirmButtonText: '确定',
-							});
-						}).catch((err) => {
-							_this.$alert('添加公司失败', '失败', {
-								confirmButtonText: '确定',
-							});
-						})
-						// this.getUsers()
 					}, (err) => {
 						_this.dialogVisible = false
-						_this.$alert('添加公司失败', '失败', {
-							confirmButtonText: '确定',
-						});
+						if(respCode=='10011111'){
+							_this.$alert('企业名称已存在，添加企业失败', '失败', {
+								confirmButtonText: '确定',
+							});
+						}else{
+							_this.$alert('添加企业失败', '失败', {
+								confirmButtonText: '确定',
+							});
+						}
 					}).catch((err) => {
-						_this.$alert('添加公司失败', '失败', {
+						_this.dialogVisible = false
+						_this.$alert('添加企业失败', '失败', {
 							confirmButtonText: '确定',
 						});
 					})
@@ -386,7 +374,7 @@
 			editEnterprise(){
 				this.form.modifiedTime=new Date().valueOf()
 				this.form.status = 1
-				this.form.createTime = new Date().valueOf()
+				// this.form.createTime = new Date().valueOf()
 				this.form.creatorId= sessionStorage.getItem("userId")
 				Request({
 					url: '/companyController/updateByPrimaryKey',
@@ -394,18 +382,18 @@
 					params: this.form
 				}).then((res) => {
 					this.dialogVisible = false
-					this.$alert('编辑公司成功', '成功', {
+					this.$alert('编辑企业成功', '成功', {
 						confirmButtonText: '确定',
 					});
 					this.getEnterprise(0)
 					// this.getUsers()
 				},(err) => {
 					this.dialogVisible = false
-					this.$alert('编辑公司失败', '失败', {
+					this.$alert('编辑企业失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				}).catch((err) => {
-					this.$alert('编辑公司失败', '失败', {
+					this.$alert('编辑企业失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})
@@ -490,35 +478,35 @@
 								method: 'post',
 								params: {companyName:_this.selectCompany}
 							}).then((res) => {
-								this.$alert('禁用公司成功', '成功', {
+								this.$alert('禁用企业成功', '成功', {
 									confirmButtonText: '确定',
 								});
 							},(err) => {
 								this.dialogVisible = false
-								this.$alert('禁用公司失败', '失败', {
+								this.$alert('禁用企业失败', '失败', {
 									confirmButtonText: '确定',
 								});
 							}).catch((err) => {
-								this.$alert('禁用公司失败', '失败', {
+								this.$alert('禁用企业失败', '失败', {
 									confirmButtonText: '确定',
 								});
 							})
 						},(err) => {
-							this.$alert('禁用公司失败', '失败', {
+							this.$alert('禁用企业失败', '失败', {
 								confirmButtonText: '确定',
 							});
 						}).catch((err) => {
-							this.$alert('禁用公司失败', '失败', {
+							this.$alert('禁用企业失败', '失败', {
 								confirmButtonText: '确定',
 							});
 						})
 
 					},(err) => {
-						this.$alert('禁用公司失败', '失败', {
+						this.$alert('禁用企业失败', '失败', {
 							confirmButtonText: '确定',
 						});
 					}).catch((err) => {
-						this.$alert('禁用公司失败', '失败', {
+						this.$alert('禁用企业失败', '失败', {
 							confirmButtonText: '确定',
 						});
 					})

@@ -15,7 +15,7 @@
 									 clearable filterable @change="getChange">
 					<el-option
 						v-for="item in transactList"
-						:key="item.id"
+						:key="item.nameMedium"
 						:label="item.nameMedium"
 						:value="item">
 					</el-option>
@@ -30,23 +30,28 @@
             label-position="right"
             label-width="200px"
             :model="formData"
-            :rules="rules"
             ref="form"
           >
             <el-form-item label="功能点名称:" prop="nameMedium">
-              <el-input v-model="formData.nameMedium" :disabled="disabled"></el-input>
+              <el-input v-model="formData.nameMedium" ></el-input>
             </el-form-item>
             <el-form-item label="编码:" prop="code">
-              <el-input v-model="formData.code" :disabled="disabled"></el-input>
+              <el-input v-model="formData.code"  placeholder="选填"></el-input>
             </el-form-item>
-
             <el-form-item label="描述:" prop="descShort" >
-              <el-input v-model="formData.descShort" type="textarea" :disabled="disabled"></el-input>
+              <el-input v-model="formData.descShort" type="textarea" placeholder="选填" ></el-input>
             </el-form-item>
-            <el-form-item>
+						<el-row>
+              <el-col :offset="8" :span="12"  >
               <el-button type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
-            </el-form-item>
+              <el-button @click="resetForm('form')" v-show="!disabled">重置</el-button>
+							</el-col>
+							<el-col :offset="6" :span="18">
+								<el-button type="primary" @click="editTransact('form')" v-show="disabled">修改功能点</el-button>
+								<el-button @click="resetForm('form')" v-show="disabled" >返回添加</el-button>
+								<el-button @click="toElement" v-show="disabled" >下一步</el-button>
+							</el-col>
+						</el-row>
           </el-form>
         </el-card>
       </el-col>
@@ -65,11 +70,6 @@ export default {
 				nameMedium: "",
         code: "",
 				descShort: "",
-      },
-      rules: {
-				nameMedium: [
-          { required: true, message: "请输入功能点名称", trigger: "blur" },
-        ],
       },
 			transactList:[],
 			selectValue:'',
@@ -111,8 +111,8 @@ export default {
                     testPlanId: res.testPlanId,
                   },
                 });
-              } else {
-                this.$message.warning("添加失败");
+              } else if(res.respCode === "10011000") {
+                this.$message.warning("名称在该被测系统下已经存在");
               }
             })
             .catch((err) => {
@@ -124,8 +124,44 @@ export default {
         }
       });
     },
+		//跳转到下一步
+		toElement(){
+			this.$router.push({
+				name: "QuicklyElement",
+				query: {
+					autId: this.formData.autId,
+					transactId: this.formData.id,
+					// sceneId: this.formData.sceneId,
+					// testPlanId: this.formData.testPlanId,
+				},
+			});
+		},
+		//修改功能点
+		editTransact(formName){
+			var _this = this;
+			this.$refs[formName].validate((valid) => {
+				Request({
+					url: "/transactController/modifySingleTransact",
+					method: "POST",
+					params: {
+						nameMedium: _this.formData.nameMedium,
+						descShort: _this.formData.descShort,
+						code: _this.formData.code,
+						creatorId:  _this.formData.creatorId,
+						id:_this.formData.id,
+						userId:sessionStorage.getItem('userId')
+					},
+				}).then(res => {
+					this.$alert("修改成功")
+				})
+					.catch(err => {
+						this.$alert("修改失败")
+					});
+			})
+		},
 		getChange(val){
 			this.formData=val
+			this.selectValue=val.nameMedium
 			this.modelName="查看功能点"
 			this.disabled="true"
 		},
@@ -172,6 +208,7 @@ export default {
     flex: 1;
   }
 }
+
 .el-form {
   width: 500px;
 }
