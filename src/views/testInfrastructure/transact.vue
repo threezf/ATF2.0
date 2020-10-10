@@ -2,20 +2,7 @@
   <div class="page-base-inner">
     <el-container>
       <el-row class="buttonRows">
-        <el-button 
-					type="primary" 
-					icon="el-icon-plus" 
-					size="small"
-					@click="addFunctionButton"
-					>添加
-				</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="small"
-          @click="importFunctionButton"
-        	>批量导入
-				</el-button>
+
         <el-button
           type="primary"
           icon="el-icon-document-copy"
@@ -31,17 +18,17 @@
         	>修改
 				</el-button>
       </el-row>
-      <el-main 
+      <el-main
         class="el-main-base-inner">
-        <div 
+        <div
           class="row">
-          <span 
+          <span
             class="spanRow"
             >功能点
           </span>
         </div>
         <el-row>
-          <el-col 
+          <el-col
             class="systemCol">
             <span class="ownedSystem">所属被测系统</span>
           </el-col>
@@ -391,7 +378,8 @@ export default {
             method: "POST",
             params: {
               autId: _this.autId,
-              creatorId: "3",
+							userId:sessionStorage.getItem("userId"),
+							creatorId:sessionStorage.getItem("userId"),
               elementRepositoryId: _this.elementRepositoryId,
               objectRepositoryId: _this.objectRepositoryId,
               transId: _this.updateId
@@ -504,7 +492,9 @@ export default {
       Request({
         url: "/aut/queryListAut",
         method: "POST",
-        params: {}
+        params: {
+        	companyId:JSON.parse(sessionStorage.getItem("toTransact")).companyId
+        }
       })
         .then(res => {
           // console.log('获取成功',res);
@@ -587,7 +577,8 @@ export default {
                     autId: _this.autId,
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
-                    nameMedium: _this.ruleForm.nameMedium
+                    nameMedium: _this.ruleForm.nameMedium,
+										creatorId:sessionStorage.getItem("userId")
                   }
                 })
                   .then(res => {
@@ -636,7 +627,9 @@ export default {
                   code: _this.ruleForm.code,
                   descShort: _this.ruleForm.descShort,
                   id: _this.updateId,
-                  nameMedium: _this.ruleForm.nameMedium
+                  nameMedium: _this.ruleForm.nameMedium,
+									userId:sessionStorage.getItem("userId"),
+									creatorId:sessionStorage.getItem("userId")
                 }
               })
                 .then(res => {

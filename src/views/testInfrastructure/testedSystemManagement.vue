@@ -25,22 +25,18 @@
           </el-input>
         </el-col>
       </el-row>
-      <el-table 
-        class="table" 
-        ref="singleTable" 
-        border 
-        stripe 
-        highlight-current-row 
-        :default-sort="{prop:'modifiedTime',order:'descending'}" 
+      <el-table
+        class="table"
+        ref="singleTable"
+        border
+        stripe
+        highlight-current-row
+        :default-sort="{prop:'modifiedTime',order:'descending'}"
         :data="tableData">
         <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
-        <el-table-column label="" width="34px" align="center">
+        <el-table-column label="" width="34px">
           <template slot-scope="scope">
-            <el-radio 
-            v-model="radio" 
-            :label="scope.row.id" 
-            @change="handleRadioChange(scope.$index,scope.row)">
-              &nbsp;
+            <el-radio class="radio" v-model="radio" :label="scope.row.id" @change="handleRadioChange(scope.$index,scope.row)">
             </el-radio>
             <!--调用时使用的是scope.row和scope.$index-->
           </template>
@@ -131,7 +127,7 @@ export default {
         nameMedium: "",
         inheriteArcId: 9,
         descShort: "",
-        createId: sessionStorage.getItem('userId')
+        createId: sessionStorage.getItem('userId'),
       },
       id: "", //修改测试系统信息时使用的id
       abstractArchitectureInfo: {},
@@ -214,13 +210,15 @@ export default {
           code,
           nameMedium,
           inheriteArcId,
-          descShort
+          descShort,
+					creatorId
         } = _this.row; //注意此处是_this.row，调用的是操作过的row
         this.form = {
           code,
           nameMedium,
           inheriteArcId,
-          descShort
+          descShort,
+					creatorId
         };
         _this.selectedAbstractArchitectureName =
           _this.abstractArchitectureInfo[this.form.inheriteArcId];
@@ -238,7 +236,8 @@ export default {
         sessionStorage.setItem("testSysNameStorage", "(" + this.row.nameMedium + ")")
         sessionStorage.setItem('toTransact',JSON.stringify({
             id: this.id,
-            nameMedium: this.row.nameMedium
+            nameMedium: this.row.nameMedium,
+					companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId
           }));
         _this.$router.push({
           path: "transact",
@@ -347,6 +346,7 @@ export default {
           id: _this.id,
           code: row.code,
           nameMedium: row.nameMedium,
+				  companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId,
           creatorId: row.creatorId
         }))
       this.$router.push({
@@ -467,7 +467,11 @@ export default {
               Request({
                   url: "/aut/addSingleAut",
                   method: "POST",
-                  params: _this.form
+                  params: {
+                  	creatorId:sessionStorage.getItem("userId"),
+										companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId,
+                  	..._this.form
+                  }
                 })
                 .then(res => {
                   if (res.respCode === "0000") {
@@ -503,7 +507,9 @@ export default {
                     descShort: _this.form.descShort,
                     id: _this.id,
                     inheriteArcId: _this.form.inheriteArcId,
-                    nameMedium: _this.form.nameMedium
+                    nameMedium: _this.form.nameMedium,
+										creatorId:_this.form.creatorId,
+										userId:sessionStorage.getItem("userId"),
                   }
                 })
                 .then(res => {

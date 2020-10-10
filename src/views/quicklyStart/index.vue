@@ -17,6 +17,7 @@
                 active: 0
             }
         },
+
         methods: {
             next() {
                 if (this.active++ > 5) this.active = 0;

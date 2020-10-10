@@ -191,7 +191,7 @@
       <el-dialog
         title="展示详情"
         :visible.sync="detailVisible"
-        width="16%">
+        width="30%">
         <el-form
           :model="showForm"
           class="showDialogForm"
@@ -212,8 +212,7 @@
             label="邮箱：">
             <span>{{showForm.email}}</span>
           </el-form-item>
-          <el-form-item
-            class="roleForm" 
+          <el-form-item 
             label="用户角色">
             <el-checkbox 
               v-for="(item, index) in showForm.roleList"
@@ -280,7 +279,7 @@
               type="warning"
               size="small"
               plain
-              @click="updateCancel"
+              @click="updateSure"
               >取消
             </el-button>
           </el-row>
@@ -806,17 +805,13 @@ export default {
     padding-top: 10px
   }
   .showDialogForm {
-    margin-bottom: -30px;
     .el-form-item {
-      margin-bottom: 10px;
       height: 40px;
+      margin-bottom: 10px;
       font-weight: bold;
-      span {
+      div span {
         font-weight: 100;
       }
-    }
-    .roleForm {
-      height: 100%;
     }
   }
   .updateDialogRow {

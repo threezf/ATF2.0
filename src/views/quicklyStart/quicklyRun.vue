@@ -2,26 +2,26 @@
   <div class="contain">
     <div class="header-content">
       <steps :active="3"></steps>
-    </div> 
+    </div>
     <el-card class="usercaseCard">
       <el-row>
         <h3 class="title">用例列表</h3>
       </el-row>
-      <el-table 
+      <el-table
         :data="testcaseList"
         @selection-change="handleSelectionChange"
         class="table"
-        stripe 
+        stripe
         border
         highlight-current-row >
-        <el-table-column 
+        <el-table-column
           type="selection">
         </el-table-column>
-        <el-table-column 
+        <el-table-column
           prop="testpoint"
           label="用例">
         </el-table-column>
-        <el-table-column 
+        <el-table-column
           prop="note"
           label="描述">
         </el-table-column>
@@ -32,14 +32,14 @@
         <h3 class="title">执行信息</h3>
       </el-row>
       <el-row class="selectRunner">
-        <el-form 
+        <el-form
           label-width="90px"
           :inline="true">
           <el-form-item label="执行机选择">
-            <el-select 
-              v-model="runnerselected" 
+            <el-select
+              v-model="runnerselected"
               :disabled="isRunning"
-              placeholder="选择执行机" 
+              placeholder="选择执行机"
               multiple>
               <el-option
                 v-for="(item,index) in runners"
@@ -49,9 +49,9 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-button 
+          <el-button
             class="executeRunner"
-            type="primary" 
+            type="primary"
             icon="el-icon-video-play"
             plain
             :disabled="isRunning"
@@ -61,19 +61,22 @@
         </el-form>
       </el-row>
     </el-card>
-    <el-row type="flex" justify="center">
-      <el-button 
+    <el-row type="flex" justify="center" class="fixButton">
+      <el-button
         type="primary"
         @click="next"
-        :disabled="!isFinished"
         >执行完毕查看结果
       </el-button>
+			<el-button
+				@click="back"
+			>返回上一步
+			</el-button>
     </el-row>
   </div>
 </template>
 
 <script>
-import steps from "@/components/steps"; 
+import steps from "@/components/steps";
 import Request from '../../libs/request'
 import $ from 'jquery'
 import jQuery from 'jquery'
@@ -90,7 +93,7 @@ export default {
       userId: '',
       testPlanId: '', // 测试计划id
       sceneId: '',
-      isFinished: false,
+      // isFinished: false,
       isRunning: false,
       selectedExeInstances: [], //选择的执行
        //出错查询的时间
@@ -122,8 +125,11 @@ export default {
         },
       });
     },
+		back() {
+			this.$router.push({ name: "QuicklyTemplate", query: this.$route.query });
+		},
     // 查询用例
-    queryQuickStartTestCaseByTransId(transId) { 
+    queryQuickStartTestCaseByTransId(transId) {
       Request({
         url: '/testcase/queryQuickStartTestCaseByTransId',
         method: 'POST',
@@ -180,7 +186,7 @@ export default {
         return this.$message.warning('请选择执行机')
       }
       _this.isRunning = true
-      _this.isFinished = false
+      // _this.isFinished = false
       Vac.ajax({
           url: '/executeController/t1',
           type: 'post',
@@ -188,7 +194,7 @@ export default {
           data: JSON.stringify({
             userId: _this.userId,
             // recordflag: "2",
-            exeScope: "0", 
+            exeScope: "0",
             selectState: "",
             selectedExeInstances: _this.selectedExeInstances,
             testPlanId: _this.testPlanId,
@@ -210,7 +216,7 @@ export default {
                   /**
                    * 执行完成
                    */
-                  this.isFinished = true
+                  // this.isFinished = true
                   this.isRunning = true
                 },
                 error: function(){
@@ -234,7 +240,7 @@ export default {
         data: JSON.stringify({
           batchId: _this.batchId,
           reqSyncNo: null,
-          sessionId:null, 
+          sessionId:null,
         }),
         success: function(data) {
           console.log('startQueryResult', data)
@@ -242,7 +248,7 @@ export default {
             if(data.respSyncNo == -1){
               _this.runId = data.batchId
               _this.$message.success(data.respMsg)
-              _this.isFinished = true
+              // _this.isFinished = true
               _this.isRunning = false
             }
             else{
@@ -267,11 +273,11 @@ export default {
         data: JSON.stringify({
           "batchId": values.batchId,
           "reqSyncNo": values.respSyncNo,
-          "sessionId":values.sessionId, 
+          "sessionId":values.sessionId,
         }),
         success: function(data) {
           if(data.respSyncNo==-1){
-          } 
+          }
           else if(data.respSyncNo==-2){
             _this.syncQueryIncInsStatus(values)
           }
@@ -304,7 +310,7 @@ export default {
           }
           //如果秒数大于0
           if(_this.interruptTime < 1 || _this.interruptExe == 1){
-            //清除定时任务 
+            //清除定时任务
             _this.interruptExe=0;
             clearInterval(name);
             _this.interruptTime = 5;
@@ -328,7 +334,7 @@ export default {
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
-          batchId: _this.interruptData.batchId, 
+          batchId: _this.interruptData.batchId,
           sceneId: _this.interruptData.insStatuses[0].sceneId,
           caseId: _this.interruptData.insStatuses[0].testcaseId,
           errorContinuing: errorContinuing,
@@ -414,4 +420,9 @@ export default {
       }
     }
   }
+	.fixButton{
+		position:fixed;
+		bottom:0;
+		width:100%
+	}
 </style>

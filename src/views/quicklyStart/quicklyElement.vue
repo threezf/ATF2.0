@@ -11,10 +11,11 @@
         <element-library :transId="String(transId)" :autId="String(autId)"></element-library>
       </el-col>
     </el-row>
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="6">
-        <el-button type="primary" @click="next()">添加并进入下一步</el-button>
-      </el-col>
+    <el-row type="flex" class="fixButton" justify="center" >
+
+        <el-button type="primary" @click="next()">保存并进入下一步</el-button>
+				<el-button @click="back()">返回上一步</el-button>
+
     </el-row>
   </div>
 </template>
@@ -41,9 +42,17 @@ export default {
     next() {
       this.$router.push({ name: "QuicklyTemplate", query: this.$route.query });
     },
+		back() {
+			this.$router.push({ name: "QuicklyTransact", query: this.$route.query });
+		},
   },
 };
 </script>
 
 <style lang="less" scoped>
+	.fixButton{
+		position:fixed;
+		bottom:0;
+		width:100%
+	}
 </style>
