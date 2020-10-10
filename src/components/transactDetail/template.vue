@@ -281,8 +281,7 @@
         @throwTreeInfo="addTreeInfo"
         :multiselection="true"
         :transId="transId.toString()"
-        :autId="autId.toString()"
-      >
+        :autId="autId.toString()">
       </uiEleFunTree>
     </el-dialog>
   </div>
@@ -426,6 +425,8 @@ export default {
         params: {
           scriptId: this.templateRadio,
           content: this.generateScriptString(),
+          transId: this.transId,
+          userId: sessionStorage.getItem("userId")
         },
       }).then(
         (res) => {
@@ -767,7 +768,10 @@ export default {
         this.$message.success(`调试脚本${this.templateRadio}`);
         this.$router.push({
           name: "UseCaseDebug",
-          query: {},
+          query: {
+            scriptId: this.templateRadio,
+            autId: this.autId
+          },
         });
       } else {
         this.$message.warning("请选择调试脚本");

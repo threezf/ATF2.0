@@ -2500,7 +2500,7 @@ export default {
         },
         {
           value: "7",
-          label: "级"
+          label: "7级"
         },
         {
           value: "8",

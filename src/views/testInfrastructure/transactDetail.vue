@@ -79,7 +79,8 @@
         },
         data() {
             return {
-                userId: "",
+                userId: "", // 用户id
+                conpanyId: '', // 企业id
                 autSelectValue: "",
                 tranSelectValue: "",
                 activeName: 'elementLibrary',
@@ -110,9 +111,11 @@
                 this.autSelectValue = Number(localStorage.getItem('transactAutId'))
                 this.tranSelectValue = Number(localStorage.getItem('transactId'))
             }
-            this.userId = sessionStorage.getItem('userId') || '3'
+            this.userId = localStorage.getItem('userId') || '3'
+            this.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
             this.getAuts();
             this.getTran(this.autSelectValue,true);
+            console.log('treeData', this.companyId)
         },
         methods: {
             handleClick(tab, event) {
@@ -137,6 +140,9 @@
                 Request({
                     url: '/aut/queryListAut',
                     method: 'post',
+                    params: {
+                        companyId: this.companyId
+                    }
                 }).then((res) => {
                     console.log(res)
                     this.autSelectOptions = res.autRespDTOList

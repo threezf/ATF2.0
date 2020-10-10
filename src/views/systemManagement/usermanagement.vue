@@ -125,6 +125,7 @@
           <el-form-item 
             label="用户状态" 
             prop="status" 
+            v-if="false"
             required>
             <el-select 
               :disabled='disabled' 
