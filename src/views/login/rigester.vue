@@ -1,3 +1,6 @@
+<!--
+  companyId
+-->
 <template>
   <div class="rigesterPageStyle">
     <el-row class="headRow">
@@ -55,17 +58,23 @@
             <el-radio label="0" value="0">企业</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0">
-          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
-        </el-form-item>
         <el-form-item label="手机号" label-width="200px" v-show="ruleForm.mark==1">
           <el-input class="normalInput" placeholder="请输入手机号" v-model="ruleForm.telephone"></el-input>
         </el-form-item>
         <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.mark==1">
           <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="ruleForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0">
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0" prop="companyName">
+          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0" prop="descShort">
           <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.descShort"></el-input>
+        </el-form-item>
+        <el-form-item label="人数限制" label-width="200px" v-show="ruleForm.mark==0" prop="maximumNumber">
+          <el-input class="normalInput" placeholder="请设置最大使用人数" v-model="ruleForm.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0" prop="purchaseYear">
+          <el-input class="normalInput" placeholder="填写数字(如2代表两年)" v-model="ruleForm.purchaseYear"></el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">
           <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
@@ -135,6 +144,20 @@ export default {
       }
       return callback();
     };
+    const checkMaximumNumber = (rule, value, callback) => {
+      if(!value) {
+        return callback(new Error('请设置最大使用人数'))
+      }else {
+        return callback()
+      }
+    }
+    const checkPurchaseYear = (rule, value, callback) => {
+      if(!value) {
+        return callback(new Error('请设置使用期限'))
+      }else {
+        return callback()
+      }
+    }
     const checkAuthCode = (rule, value, callback) => {
       if (!value) {
         return callback("请输入验证码");
@@ -178,6 +201,8 @@ export default {
         status: 1, // 企业状态
         creatorId: '', // 创建者id
         modifierId: '', // 修改者id
+        maximumNumber: '', // 企业注册最大人数限制
+        purchaseYear: '', // 使用期限
       },
       authCode: "", //填写的验证码
       rules: {
@@ -211,6 +236,30 @@ export default {
             trigger: "blur"
           }
         ],
+        maximumNumber: [
+          {
+            validator: checkMaximumNumber,
+            trigger: 'blur'
+          }
+        ],
+        purchaseYear: [
+          {
+            validator: checkPurchaseYear,
+            trigger: 'blur'
+          }
+        ],
+        companyName: [
+          {
+            validator: checkCompanyName,
+            trigger: 'blur'
+          }
+        ],
+        descShort: [
+          {
+            validator: checkCompanyDesc,
+            trigger: 'blur'
+          }
+        ]
       }
     };
   },
@@ -291,7 +340,7 @@ export default {
         .then(res => {
           console.log("注册成功", res);
           if(this.ruleForm.mark == 0) {
-            return this.insertAllDefaultRole(res.userId)
+            return this.insert(res.userId)
           }
           this.$message.success("注册成功");
           this.currentStep = 2;
@@ -315,6 +364,7 @@ export default {
         console.log('insertAllDefaultRole失败')
       })
     },
+    
     insert(userId) {
       Request({
         url: '/userRoleController/insert',

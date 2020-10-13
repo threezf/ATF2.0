@@ -22,7 +22,16 @@
             size="small"
             icon="el-icon-setting"
             @click="debugScript"
-            >调试脚本
+            v-if="caseNotNeedAdd"
+            >调试执行
+          </el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="addScriptTemplateDebug"
+            v-else>
+            <i class="fa fa-plus-circle"></i>
+            添加脚本用例
           </el-button>
         </el-row>
         <el-table
@@ -288,6 +297,8 @@
 </template>
 
 <script>
+// 导入样式
+import 'font-awesome/css/font-awesome.css'
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import draggable from "vuedraggable";
@@ -336,6 +347,8 @@ export default {
       multipleSelection: "",
       addItemShow: false,
       templateLoading: false,
+      caseId: '', //创建测试用例的id
+      caseNotNeedAdd: true, //脚本需要添加
     };
   },
   watch: {
@@ -589,6 +602,7 @@ export default {
         params: {
           ...this.addTemplateForm,
           transId: this.transId,
+          userId: sessionStorage.getItem("userId")
         },
       }).then(
         (res) => {
@@ -762,21 +776,71 @@ export default {
       this.templateRadio = row.id;
       this.getTemplateInfo();
     },
-    // 调试脚本
+    // 调试脚本 
     debugScript() {
       if (this.templateRadio) {
-        this.$message.success(`调试脚本${this.templateRadio}`);
-        this.$router.push({
-          name: "UseCaseDebug",
-          query: {
-            scriptId: this.templateRadio,
-            autId: this.autId
-          },
-        });
+        this.queryScriptTemplateDebugTestCaseByScriptId()
       } else {
         this.$message.warning("请选择调试脚本");
       }
     },
+    // 添加脚本调试接口
+    addScriptTemplateDebug() {
+      if(this.templateRadio) {
+        Request({
+          url: '/scriptTemplate/addScriptTemplateDebug',
+          method: 'POST',
+          params: {
+            autId: this.autId,
+            scriptId: this.templateRadio,
+            transId: this.transId,
+            creatorId: sessionStorage.getItem("userId")
+          }
+        }).then(res => {
+          if(res.respCode === "0000") {
+            // 这里会返回caseId
+            this.$message.success('添加成功，您可以选择脚本进行调试')
+            this.caseId = res.caseId
+            this.caseNotNeedAdd = true
+          }else {
+            return console.log('获取失败')
+          }
+        }).catch(error => {
+          console.log("脚本调试添加失败", error)
+        })
+      }else {
+        this.$message.warning("请选择要调试的脚本")
+      }
+    },
+    // 根据脚本id查询
+    queryScriptTemplateDebugTestCaseByScriptId() {
+      Request({
+        url: '/testcase/queryScriptTemplateDebugTestCaseByScriptId',
+        method: 'POST',
+        params: {
+          scriptId: this.templateRadio,
+        }
+      }).then(res => {
+        if(res.respCode === '0000') {
+          // 返回caseId
+          this.$router.push({
+          name: "UseCaseDebug",
+          query: {
+            scriptId: this.templateRadio,
+            autId: this.autId,
+            caseId: res.caseId
+          },
+        });
+          console.log('debugRes', res)
+        }else {
+          return console.log('数据获取失败')
+        }
+      }).catch(error => {
+        console.log('debug脚本数据查询失败', error)
+        this.$message.warning('请添加脚本执行用例')
+        this.caseNotNeedAdd = false
+      })
+    },   
   },
   created() {},
   mounted() {

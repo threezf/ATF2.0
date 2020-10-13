@@ -44,7 +44,6 @@
               @click="searchByItem">
             </el-button>
           </el-input>
-					</el-col>
         </el-row>
         <el-table
           :data="tableData"

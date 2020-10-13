@@ -28,7 +28,7 @@
       <el-table
         class="table"
         ref="singleTable"
-        border
+        border 
         stripe
         highlight-current-row
         :default-sort="{prop:'modifiedTime',order:'descending'}"
@@ -36,7 +36,10 @@
         <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
         <el-table-column label="" width="34px">
           <template slot-scope="scope">
-            <el-radio class="radio" v-model="radio" :label="scope.row.id" @change="handleRadioChange(scope.$index,scope.row)">
+            <el-radio 
+              v-model="radio" 
+              :label="scope.$index" 
+              @change="handleRadioChange(scope.$index,scope.row)">
             </el-radio>
             <!--调用时使用的是scope.row和scope.$index-->
           </template>

@@ -146,24 +146,42 @@
         const curNode = this.$refs.ueTree
         if("children" in data) {
           return console.log('tree这是父组件数据')
+        }else {
+          this.selectedUEs = this.selectedUEs.filter(item => item.id != data.id)
+          if(checked) {
+            this.$emit('selectMethod', data, data.classType)
+            this.selectedUEs.push({
+              name: `UI:${data.uiName} 元素:${data.elementName}`,
+              elementWidget: data.classType,
+              methodName: data.classType,
+              id: data.id,
+              arguments: [],
+              uiname: data.uiName,
+              elementName: data.elementName,
+              flag: 1, // 标识符1：标识当前添加的是UI和元素
+              myMethods: [],
+            })
+            console.log('tree select', data)
+          }
+          console.log("treeMethod", this.selectedUEs)
         }
-        this.selectedUEs = this.selectedUEs.filter(item => item.id != data.id)
-        if(checked) {
-          this.selectedUEs.push({
-            name: `UI:${data.uiName} 元素:${data.elementName}`,
-            elementWidget: data.classType,
-            methodName: data.classType,
-            id: data.id,
-            arguments: [],
-            methods: []
-          })
-        }
-        // console.log("treeData handleUECheckChange", data, checked, indeterminate)
-        console.log("tree", this.selectedUEs)
       },
       /* 方法点击事件 */
       handleMethodsCheckChange(data, checked, indeterminate) {
         console.log("treeData handleMethodsCheckChange", data, checked, indeterminate)
+        this.selectedFuncs = this.selectedFuncs.filter((item, index) => item.id != data.id)
+        if(checked) {
+          console.log('treeDataMethods', data)
+          this.selectedFuncs.push({
+            name: '公共函数：',
+            methodName: data.name,
+            id: data.id,
+            arguments: [],
+            argStr: data.arguments,
+            myMethods: [],
+            flag: 2, // 标识符2：表示当前添加的是函数
+          })
+        }
       },
       /** 底部按钮事件 */
       // 关闭对话框
@@ -172,13 +190,18 @@
       },
       // 将tree数据添加到table进行渲染
       addTreeDataSure() {
-        this.$emit("dialogSure", this.selectedUEs)
+        const addTable = [...this.selectedUEs, ...this.selectedFuncs]
+        console.log('treeData', addTable)
+        this.$emit("dialogSure", addTable)
+        this.selectedUEs = []
+        this.selectedFuncs = []
       }
     }
   }
 </script>
 
 <style lang="less" scoped>
+
   .uiElementArea {
     margin-bottom: 10px;
   }

@@ -1,8 +1,10 @@
+<!--
+  暂时废弃
+-->
 <template>
   <div class="page-base-inner">
     <el-container>
       <el-row class="buttonRows">
-
         <el-button
           type="primary"
           icon="el-icon-document-copy"
