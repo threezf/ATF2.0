@@ -11,13 +11,11 @@
       <p class="runTitle">脚本执行</p>
       <el-row  class="menuRow" :gutter="20">
         <el-form label-width="100px">
-          <el-col :lg="7" :md="10" :sm="12" :xs="12" hidden>
-            <el-form-item
+          <el-col :lg="7" :md="10" :sm="12" :xs="12">
+            <!-- <el-form-item
               label="当前测试计划">
               <el-tag type="primary">{{testPlanEntity.nameMedium}}</el-tag>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="7" :md="10" :sm="12" :xs="12">
+            </el-form-item> -->
             <el-form-item
               label="执行机选择">
               <el-select
@@ -29,9 +27,13 @@
                   :key="'runner'+index" 
                   :label="item.runnerName" 
                   :value="item.identifiableName">
-
                 </el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="7" :md="10" :sm="12" :xs="12">
+            <el-form-item label="" label-width="20px">
+              <p class="executeStatus" v-html="exeStautShow"></p>
             </el-form-item>
           </el-col>
         </el-form>
@@ -39,9 +41,10 @@
       <el-row class="buttonRow">
         <el-button
           size="small"
-          type="primary">
+          type="primary"
+          @click="startExecution">
           <i class="fa fa-play"></i>
-          批量执行
+          开始执行
         </el-button>
         <el-button
           size="small"
@@ -53,7 +56,7 @@
         <el-button
          size="small"
          type="primary"
-         @click="queryCaseExecuteInstance">
+         @click="queryCaseExecuteInstance(1)">
          <i class="fa fa-eye"></i>
          查询
         </el-button>
@@ -212,25 +215,33 @@
           11: "/index/static/img/warn.png",
           12: "/index/static/img/warn.png",
         }, // 图标
-        userId: sessionStorage.getItem('userId') || '3'
+        userId: sessionStorage.getItem('userId') || '3',
+        exeStauts: true, //执行状态,用与判断该测试计划是否在执行中，确定是否调用执行接口
+        batchId: null, // 批次id
+        selectedSceneCases: [], // 选择的场景用例
+        exeStautShow: '执行状态：<i class="el-icon-info""></i>无计划', // 设置执行状态
+        tagType: "primary",
+        interruptData: {}
       }
     },
     props: {
       caseId: {
-        type: String,
-        default: ""
+        type: Number,
+        default: 0
       },
       autId: {
-        type: String,
-        default: ""
+        type: Number,
+        default: 0
       },
       scriptId: {
-        type: String,
-        default: ""
+        type: Number,
+        default: 0
       }
     },
-    created() {
+    mounted() {
+      // 获取脚本测试计划
       this.queryScriptDebugTestPlan(this.caseId)
+      // 查询执行机
       this.queryRunners()
     },
     methods: {
@@ -249,13 +260,15 @@
             this.caselibId = this.testPlanEntity.caseLibId
             this.testPlanId = this.testPlanEntity.id
             this.queryCaseExecuteInstance()
+            this.getBatchIdForTestPlan(res.testPlanEntity.id)
           }
         }).catch(error => {
-          console.log('debug查询测试计划失败', error)
+          console.log('run查询测试计划失败', error)
+          this.$message.warning('该测试计划尚未发起执行')
         })
       },
       // 查询测试计划下的场景用例
-      queryCaseExecuteInstance() {
+      queryCaseExecuteInstance(num) {
         Request({
           url: '/caseExecuteInstance/queryCaseExecuteInstance',
           method: 'post',
@@ -266,6 +279,9 @@
             scopeFlag: 1
           }
         }).then(res => {
+          if(num === 1) {
+            this.$message.success('查询成功')
+          }
           this.testSceneList = res.executeInstanceResult.testSceneList
           console.log('run', this.testSceneList)
         }).catch(error => {
@@ -292,6 +308,176 @@
           console.log('执行机查询出错', error)
         })
       },
+      // 执行代码
+      startExecution() {
+        if(this.runnersSelected.length === 0) {
+          Vac.alert('请选择执行机')
+        }
+        if(!this.exeStauts) {
+          Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行")
+          return;
+        }
+        let selectedExeInstances = []
+        Request({
+          url: '/executeController/t1',
+          method: 'POST',
+          params: {
+            userId: this.userId,
+            recordflag: this.recordFlag,
+            exeScope: 1,
+            selectState: "",
+            selectedExeInstances: [],
+            testPlanId: this.testPlanId,
+            identifiableRunnerName: "appointed",
+            appointedRunners: [this.runnersSelected],
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success('操作成功!准备发起执行')
+            this.startQueryLog()
+            //因为查询执行信息需要最近执行的批量号因此需要查询批次
+            Request({
+              url: '/batchRunCtrlController/queryLatestBatchIdForTestPlan',
+              method: 'POST',
+              params: {
+                testPlanId: this.testPlanId
+              }
+            }).then(res => {
+              if(res.respCode === '0000') {
+                console.log("run queryLatestBatchIdForTestPlan", res)
+                this.batchId = res.batchId
+                this.startQueryResult();
+              }
+            }).catch(error => {
+              console.log('run网络失败')
+              this.setResultIcon()
+            })
+          }else {
+            return this.$message.warning('发起执行失败')
+          }
+        }).catch(error => {
+          console.log('run发起执行失败')
+        })
+      },
+      // 终止执行
+      stopExecute() {
+        Request({
+          url: '/batchRunCtrlController/terminateBatch',
+          method: 'POST',
+          params: {
+            batchId: this.batchId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success("终止执行成功")
+            this.syncQueryIncInsStatus()
+          }
+        }).catch(error => {
+          console.log('终止失败', error)
+          this.$message.info('批次已结束')
+        })
+      },
+      // 获取最近的执行批次id
+      getBatchIdForTestPlan(testPlanId) {
+        var _this = this;
+        Vac.ajax({
+          url: "/batchRunCtrlController/queryLatestBatchIdForTestPlan",
+          type: "post",
+          contentType: "application/json",
+          data: JSON.stringify({
+            testPlanId: testPlanId,
+          }),
+          success: function (data) {
+            if (data.respCode == "0000") {
+              _this.batchId = data.batchId;
+              _this.getSinglebranchStatus();
+            } else if (data.respCode == "10012000") {
+              _this.exeStautShow =
+                '执行状态：<i class="el-icon-video-play"></i>尚未执行';
+              _this.tagType = "warning";
+              _this.exeStauts = true;
+              Vac.alert(data.respMsg);
+            } else Vac.alert("查询branchId出错啦");
+          },
+          error: function () {
+            Vac.alert("网络错误");
+          },
+        });
+      },
+      getSinglebranchStatus() {
+      //查询单个批次结果 并展示执行状态
+      var _this = this;
+        Vac.ajax({
+          url: "/batchRunCtrlController/syncQueryIncInsStatus",
+          type: "post",
+          contentType: "application/json",
+          data: JSON.stringify({
+            batchId: _this.batchId,
+            reqSyncNo: null,
+            sessionId: null,
+          }),
+          success: function (data) {
+            if (data.respCode == "0000") {
+              if (data.respSyncNo == -1) {
+                _this.setResultIcon(data.insStatuses);
+                _this.exeStautShow =
+                  '执行状态：<i class="el-icon-circle-check"></i>已执行';
+                _this.tagType = "success";
+                _this.exeStauts = true;
+              } else {
+                _this.setResultIcon(data.insStatuses);
+                _this.exeStautShow =
+                  '执行状态：<i class="el-icon-loading"></i>执行中';
+                _this.tagType = "primary";
+                _this.exeStauts = false;
+              }
+            } else {
+              _this.exeStautShow =
+                '执行状态：<i class="el-icon-question"></i>未知';
+              _this.tagType = "info";
+              _this.exeStauts = false;
+              Vac.alert(data.respMsg);
+            }
+          },
+          error: function () {
+            Vac.alert("网络错误！请点击重新查询！");
+          },
+        });
+      },
+      // 异步查询状态
+      syncQueryIncInsStatus(res) {
+        let _this = this
+        Request({
+          url: '/batchRunCtrlController/syncQueryIncInsStatus',
+          method: 'POST',
+          params: {
+            batchId: res.batchId, 
+            reqSyncNo: res.respSyncNo,
+            sessionId: res.sessionId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            if(res.respSyncNo === -1) {
+              _this.exeStautShow = '执行状态：<i class="el-icon-circle-check"></i>已执行'
+              _this.tagType = "success"
+              console.log('run log', res)
+              this.setResultIcon(res.insStatuses)
+            }else if(res.reqSyncNo === -2) {
+              this.syncQueryIncInsStatus(res)
+            }else {
+              this.setResultIcon(res.insStatuses)
+              if(res.insStatuses[0].manualChooseErrExecuting == true && res.insStatuses[0].status == 3) {
+                this.interruptData = res
+                // this.runInterrupt()
+              } else {
+                this.syncQueryIncInsStatus(res)
+              }
+            }
+          }
+        }).catch(error => {
+          console.log('异步查询失败')
+        })
+      },
       // 异步查询日志
       startQueryLog() {
         Request({
@@ -306,11 +492,47 @@
           }
         }).then(res => {
           if(res.respCode === '0000') {
-            
+            let textarea = $("#textarea")
+            textarea.text(res.logSeg)
+            const logarea = document.getElementById("logarea")
+            textarea.scrollTop(99999)
+            syncQueryIncLog(res)
           }
         }).catch(error => {
           console.log('异步查询失败', error)
+          this.$message.warning("消息队列获取失败")
         })
+
+        function syncQueryIncLog(values) {
+          Vac.ajax({
+            url: "executeController/syncQueryLog",
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify({
+              logType: 2,
+              reqSyncNo: values.respSyncNo,
+              sessionId: values.sessionId,
+              testPlanId: values.testPlanId,
+              latestLineNum: 50,
+            }),
+            success: function (data) {
+              if (data.respCode == "0000") {
+                let textarea = $("#logarea");
+                if (data.logSeg != null) {
+                  textarea.text(textarea.text() + data.logSeg);
+                  var logarea = document.getElementById("logarea");
+                }
+                textarea.scrollTop(99999999999);
+                syncQueryIncLog(data);
+              } else {
+                Vac.alert(data.respMsg);
+              }
+            },
+            error: function () {
+              Vac.alert("网络错误！请点击重新查询！");
+            },
+          });
+        }
       },
       /**
        * 日志相关
@@ -345,9 +567,80 @@
       // 展开或者折叠
       operateRow() {
         this.isExpanding = !this.isExpanding
-      }
-    },
-
+      },
+      // 设置图标样式
+      setResultIcon(data) {
+        console.log('run 设置图标', data)
+        if (!data) {
+          console.log('run 图标变量', data);
+          [...document.querySelectorAll('img[id^="img-"]')].forEach((item) => {
+            item.src = this.exeImgs["0"];
+          });
+          return;
+        }
+        for (let d of data) {
+          console.log('run 获取', d)
+          if (d.flowNodeId) {
+            if (
+              document.querySelector(
+                `#img-${d.sceneId}-${d.testcaseId}-${d.flowNodeId}`
+              ) != null
+            ) {
+              document.querySelector(
+                `#img-${d.sceneId}-${d.testcaseId}-${d.flowNodeId}`
+              ).src = this.exeImgs[d.status];
+            }
+          } else {
+            if (
+              document.querySelector(`#img-${d.sceneId}-${d.testcaseId}`) != null
+            ) {
+              document.querySelector(
+                `#img-${d.sceneId}-${d.testcaseId}`
+              ).src = this.exeImgs[d.status];
+            }
+          }
+          let selectNode = "#runner-" + d.sceneId + "-" + d.testcaseId;
+          if ($(selectNode) != null) {
+            console.log(d.runnerName);
+            if (d.runnerName != null) {
+              let runner = d.runnerName.replace(/-/g, "_");
+              let runnerpors = runner.split("/");
+              console.log(
+                $(selectNode)
+                  .children()
+                  .text("分配执行机为：" + runnerpors[0])
+              );
+            }
+          }
+        }
+      },
+      // 查询结果
+      startQueryResult () {
+        Request({
+          url: '/batchRunCtrlController/syncQueryIncInsStatus',
+          method: 'post',
+          params: {
+            batchId: this.batchId,
+            reqSyncNo: null,
+            sessionId: null
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            console.log('run startQueryResult异步查询结果', res)
+            if(res.respSyncNo === -1) {
+              this.setResultIcon(res.insStatuses)
+              this.exeStautShow = '执行状态：<i class="el-icon-circle-check"></i>已执行'
+              this.tagType = 'success'
+            }
+          }else {
+            this.setResultIcon(res.insStatuses);
+            this.syncQueryIncInsStatus(res);
+          }
+        }).catch(error => {
+          this.$message.warning("网络错误，请重新查询")
+        })
+      },
+    }
   }
 </script>
 

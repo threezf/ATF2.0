@@ -50,6 +50,14 @@ export default {
 						icon: 'el-icon-view',
 						hide: true
 					},
+					beforeEnter: (to, from, next) => {
+						if(from.name === 'TransactDetail' || from.name === 'UseCaseDebug' || from.name === 'InterfacesManagement') {
+							history.go(-1)
+							console.log('跳转到testedSystemManagement', to, from)
+						}else {
+							next()
+						}
+					}
 					//考虑此处添加功能点管理路由
 				},
 				{

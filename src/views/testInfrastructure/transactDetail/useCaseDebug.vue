@@ -7,13 +7,14 @@
 <template>
   <div class="page-inner">
     <div class="scriprConfigStyle">
-      <script-data></script-data>
+      <!-- <script-data></script-data> -->
+      <set-datable></set-datable>
     </div>
     <div class="runStyle">
       <run-script
-        :aut-id="autId"
-        :case-id="caseId"
-        :script-id="scriptId"> 
+        :aut-id="Number(autId)"
+        :case-id="Number(caseId)"
+        :script-id="Number(scriptId)"> 
       </run-script>
     </div>
   </div>  
@@ -21,7 +22,9 @@
 
 <script>
   import ScriptData from '@/components/testInfrastructure/useCaseDebug/scriptData'
+  import SetDatable from '@/components/testInfrastructure/useCaseDebug/setDatable'
   import RunScript from '@/components/testInfrastructure/useCaseDebug/runScript'
+  import Request from '@/libs/request'
   export default {
     name: 'UseCaseDebug',
     data() {
@@ -29,11 +32,14 @@
         autId: '', // 被测系统id
         caseId: '', //用例id
         scriptId: '', // 脚本id
+        caselibId: '',
+        testPlanId: ''
       }
     },
     components: {
       ScriptData,
-      RunScript
+      RunScript,
+      SetDatable
     },
     created() {
       console.log('进入用例调试界面')
@@ -41,8 +47,28 @@
       this.autId = query.autId
       this.caseId = query.caseId
       this.scriptId = query.scriptId
+      this.queryScriptDebugTestPlan(this.caseId)
     },
     methods: {
+      queryScriptDebugTestPlan(caseId) {
+        Request({
+          url: '/testPlanController/queryScriptDebugTestPlan',
+          method: 'POST',
+          params: {
+            caseId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.caselibId = res.testPlanEntity.caseLibId
+            this.testPlanId = res.testPlanEntity.id
+            sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
+            this.$message.success('caselibId:' + res.testPlanEntity.caseLibId)
+          }
+        }).catch(error => {
+          console.log('run查询测试计划失败', error)
+          this.$message.warning('该测试计划尚未发起执行')
+        })
+      }
 
     }
   }

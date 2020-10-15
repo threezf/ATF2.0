@@ -517,6 +517,7 @@ export default {
           autId: this.autId,
           scriptId: this.templateRadio,
           content: this.generateScriptString(),
+          userId: sessionStorage.getItem("userId")
         },
       }).then(
         (res) => {

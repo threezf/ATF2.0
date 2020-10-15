@@ -73,7 +73,7 @@
         <el-form-item label="人数限制" label-width="200px" v-show="ruleForm.mark==0" prop="maximumNumber">
           <el-input class="normalInput" placeholder="请设置最大使用人数" v-model="ruleForm.companyName"></el-input>
         </el-form-item>
-        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0" prop="purchaseYear">
+        <el-form-item label="用户期限" label-width="200px" v-show="ruleForm.mark==0" prop="purchaseYear">
           <el-input class="normalInput" placeholder="填写数字(如2代表两年)" v-model="ruleForm.purchaseYear"></el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">

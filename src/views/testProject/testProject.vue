@@ -310,6 +310,7 @@
 				if (type === 1) {
 					this.currentPage = 1
 				}
+				this.params.userId = sessionStorage.getItem("userId")
 				Request({
 					url: '/testProjectController/pagedBatchQueryTestProject',
 					method: 'post',

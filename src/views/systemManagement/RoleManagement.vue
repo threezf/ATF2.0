@@ -19,31 +19,23 @@
           </el-button>
         </el-row>
         <el-row class="searchRow">
-          <el-select
-            class="selectStyle"
-            v-model="selectParams"
-            @change="handleSelectChange">
-            <el-option
-              key="roleName"
+          <el-form
+            class="selectStyle">
+            <el-form-item
               label="角色名称"
-              value="roleName">
-            </el-option>
-            <el-option
-              key="remark"
-              label="角色标识"
-              value="remark">
-            </el-option>
-          </el-select>
-          <el-input 
-            v-model="searchInfo"
-            placeholder="输入搜索条件"
-            clearable >
-            <el-button 
-              slot="append" 
-              icon="el-icon-search"
-              @click="searchByItem">
-            </el-button>
-          </el-input>
+              label-width="80px">
+              <el-input 
+                v-model="searchInfo"
+                placeholder="请输入角色名称 (支持模糊查询)"
+                clearable >
+                <el-button 
+                  slot="append" 
+                  icon="el-icon-search"
+                  @click="searchByItem">
+                </el-button>
+              </el-input>
+            </el-form-item>
+          </el-form>
         </el-row>
         <el-table
           :data="tableData"
@@ -76,15 +68,6 @@
             prop="descShort"
             label="备注">
           </el-table-column>
-          <!-- <el-table-column
-            min-width="25%"
-            label="状态">
-            <template slot-scope="scope">
-              <el-tag>
-                {{scope.row.status}}
-              </el-tag>
-            </template>
-          </el-table-column> -->
           <el-table-column 
             min-width="20%" 
             align="center"
@@ -279,6 +262,7 @@
         }).then(res => {
           if(res.respCode === "0000") {
             this.tableData = res.list
+            console.log('table', res)
             this.total = res.totalCount
           }else {
             this.tableData = []
@@ -304,6 +288,7 @@
             this.ruleForm.createTime = Date.now()
             this.ruleForm.creatorId = sessionStorage.getItem('userId')
             this.ruleForm.companyId = this.loginInfo.companyId,
+            this.ruleForm.rolePriority = 3
             Request({
               url: '/roleController/insert',
               method: 'POST',
@@ -340,7 +325,8 @@
           descShort
         }
         this.inputDisabled = false
-        console.log(this.ruleForm)
+        console.log('row', row)
+        this.ruleForm.rolePriority = row.rolePriority
 
       },
       // 查看单行
@@ -369,10 +355,9 @@
             let params = Object.assign({}, this.ruleForm)
             params.userId = sessionStorage.getItem("userId")
             params.defaultRole = 2
-            params.rolePriority = 3
             params.companyId = this.loginInfo.companyId
             params.id = this.rowId
-            console.log(params)
+            console.log('row', params)
             Request({
               url: '/roleController/updateByPrimaryKey',
               method: 'POST',
@@ -423,6 +408,7 @@
 
 <style scoped lang="less">
   .searchRow {
+    margin-bottom: 0px !important;
     .el-input {
       width: 300px;
     }
