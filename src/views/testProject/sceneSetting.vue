@@ -22,7 +22,15 @@
               icon="el-icon-date"
               plain
               @click="executionTimePlanning"
-            >执行时间规划</el-button>
+            >设置定时执行</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-manage"
+              plain
+              @click="operationTimer"
+              >管理定时任务
+            </el-button>
             <el-button
               type="primary"
               size="small"
@@ -191,18 +199,118 @@
             :direction="direction"
             :modal-append-to-body="true"
             :before-close="handleBeforeClose">
-            <!--执行时间控制-->
-            <el-form v-if="selectedDrawIndex == 0" :model="timeForm" label-width="110px">
-              <el-form-item label="执行时间">
-                <el-date-picker v-model="timeForm.time" type="datetime" placeholder="选择执行时间"></el-date-picker>
-              </el-form-item>
-              <el-form-item label-width="156px" label="执行时间标识T+">
-                <el-input class="timeInput" v-model="timeForm.timeIdentification" clearable></el-input>
-              </el-form-item>
-              <el-form-item class="buttonRow">
-                <el-button type="primary" size="small" @click="saveExecutionTimePlanning">保存</el-button>
-              </el-form-item>
-            </el-form>
+            <!--定时执行设置-->
+            <div v-if="selectedDrawIndex == 0" style="padding: 0 30px" >
+              <!-- <cron @change="changeCron"></cron> -->
+              <span style="color: #E6A23C; font-size: 12px;">corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份</span>
+              <cron-set v-model="cronExpression"></cron-set>
+              <el-form :model="timeForm" label-width="110px">
+                <el-form-item class="buttonRow">
+                  <el-button type="primary" size="small" @click="saveExecutionTimePlanning">
+                    {{isSave? '保存': '添加'}}
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div
+              style="padding: 0 30px 30px "
+              v-if="selectedDrawIndex == 5">
+              <el-row hidden>
+                <el-button
+                  size="small"
+                  type="primary"
+                  icon="el-icon-plus"
+                  @click="setTimerStart"
+                  >新增定时任务
+                </el-button>
+              </el-row>
+              <el-table
+                class="table"
+                height="110"
+                :data="getTimers"
+                stripe
+                border
+                highlight-current-row>
+                <el-table-column
+                  label="序号"
+                  type="index"
+                  width="100px">
+                </el-table-column>
+                <el-table-column
+                  label="状态"
+                  min-width="20%">
+                  <template
+                    slot-scope="scope">
+                    <el-tag
+                      type="success"
+                      v-if="scope.row.status == 0"
+                      >已完成
+                    </el-tag>
+                    <el-tag
+                      type="info"
+                      v-if="scope.row.status == 1"
+                      >等待发起执行
+                    </el-tag>
+                    <el-tag
+                      type="warning"
+                      v-if="scope.row.status == 2"
+                      >发起执行，等待定时器下一次启动
+                    </el-tag>
+                    <el-tag
+                      type="primary"
+                      v-if="scope.row.status == 3"
+                      >定时器正在执行
+                    </el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="上次执行日期"
+                  prop="executedTime"
+                  min-width="20%">
+                </el-table-column>
+                <el-table-column
+                  label="任务描述"
+                  prop="cronExpression"
+                  min-width="50%">
+                </el-table-column>
+                <el-table-column
+                  label="操作"
+                  min-width="30%">
+                  <template
+                    slot-scope="scope">
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      v-if="scope.row.status !== 3"
+                      @click="update(scope.row)"
+                      >更新
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      v-if="scope.row.status !== 0"
+                      @click="setTimerFinished(scope.row)"
+                      >设为完成
+                    </el-button>
+                    <el-button
+                      type="info"
+                      size="mini"
+                      v-if="scope.row.status === 1"
+                      @click="startTimeRun(scope.row)"
+                      >发起执行
+                    </el-button>
+                    <el-button
+                      type="info"
+                      v-if="scope.row.status !== 1"
+                      size="mini"
+                      @click="viewTimer(scope.row)"
+                      >查看
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+
             <!-- 触发器设置 -->
             <div v-if="selectedDrawIndex == 1">
               <el-form class="drawForm">
@@ -777,10 +885,15 @@
 </template>
 
 <script>
+  // 导入定时cron组件库
+  import {cron} from 'vue-cron';
+  // 导入cron反解析
   import Request from "@/libs/request.js";
+  import CronSet from '@/components/utils/cron/index'
   import VueMixins from "@/libs/vueMixins.js";1
   import qs from "qs";
   import Sortable from "sortablejs";
+  import parser from 'cron-parser'
   export default {
     name: "ScenceSetting",
     mixins: [VueMixins],
@@ -814,7 +927,8 @@
           "触发器设置",
           "执行过程控制",
           "数据资源池配置",
-          "配置移动端设备信息"
+          "配置移动端设备信息",
+          "定时任务管理"
         ],
         selectedDrawIndex: 0,
         timeForm: {
@@ -930,8 +1044,19 @@
          */
         selectSceneDto: {},
         indetermintate: false,
-        isCheckedAll: false
+        isCheckedAll: false,
+        cronExpression: '0 45 20 * ? ? 2020',
+        isSave: false,
+        timerId: '', // 定时器id
+        /**
+         * 定时执行与管理
+         */
+        getTimers: []
       };
+    },
+    components: {
+      cron,
+      CronSet
     },
     created() {
       // 获取上个界面传递的sceneId
@@ -941,6 +1066,7 @@
       this.getMobileInfo();
       this.pagedBatchQueryTestCase();
       this.pagedBatchQueryDataPool()
+      console.log('定时', parser.parseExpression("*/5 * * * * ?"))
     },
     mounted() {
       this.sort();
@@ -1129,37 +1255,126 @@
         }
       },
       /**
-       * 时间规划
+       * 定时执行 与 定时管理
        */
-      // 执行时间规划
+      // 打开定时执行抽屉
       executionTimePlanning() {
         this.selectedDrawIndex = 0;
         this.drawerVisible = true;
+        this.isSave = false
       },
-      // 保存执行时间规划数据
-      saveExecutionTimePlanning() {
+      // 获取cron表达式
+      changeCron(val) {
+        console.log('cron', val)
+        this.cronExpression = val
+        this.setTimer()
+      },
+      // 设置定时执行
+      setTimer() {
+        console.log("cron", {
+          sceneId: this.sceneId,
+          creatorId: sessionStorage.getItem('userId'),
+          cronExpression: this.cronExpression
+        })
         Request({
-          url: '/sceneController/sceneTestcaseSetting',
-          method: 'POST',
+          url: '/sceneTimer/setTimer',
+          method: 'post',
           params: {
             sceneId: this.sceneId,
-            caseIds: [],
-            executeTime: this.timeForm.time,
-            executeDateFlag: this.timeForm.timeIdentification,
-            combineGroupName: '',
-            orderNum: 1,
-            runTotalNumber: 2,
-            modifierId: 3
+            creatorId: sessionStorage.getItem('userId'),
+            cronExpression: this.cronExpression
           }
         }).then(res => {
-          if(res.respCode === '0000'){
-              this.$message.success(res.respMsg);
-            } else {
-              this.$message.error(res.respMsg)
-            }
-        }).catch(err => {
-          this.$message.error('保存失败')
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+          }
+        }).catch(error => {
+          this.$message.warning(error)
         })
+      },
+      // 打开新增抽屉
+      setTimerStart() {
+        this.selectedDrawIndex = 0
+      },
+
+      // 查询一个场景下的所有定时器
+      queryAllSceneTimersByScene() {
+        Request({
+          url: '/sceneTimer/queryAllSceneTimersByScene',
+          method: 'post',
+          params: {
+            sceneId: this.sceneId,
+            userId: sessionStorage.getItem('userId')
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.getTimers = res.timers
+            console.log('定时',this.getTimers)
+          }
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      update(row) {
+        this.selectedDrawIndex = 0
+        this.timerId = row.id
+        this.isSave = true
+        this.cronExpression = row.cronExpression
+      },
+      // 更新场景定时器
+      updateTimer(timerId) {
+        Request({
+          url: '/sceneTimer/updateTimer',
+          method: 'post',
+          params: {
+            timerId,
+            sceneId: this.sceneId,
+            cronExpression: this.cronExpression
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+            this.selectedDrawIndex = 5
+            this.queryAllSceneTimersByScene()
+          }
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      // 将定时器设置为已完成，取消对应quartz的job
+      setTimerFinished(row) {
+        Request({
+          url: '/sceneTimer/setTimerFinished',
+          method: 'post',
+          params: {
+            timerId: row.id,
+            sceneId: this.sceneId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+            row.status = 0
+          }
+          return
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      // 定时任务管理
+      operationTimer() {
+        this.drawerVisible = true
+        this.selectedDrawIndex = 5
+        this.queryAllSceneTimersByScene()
+      },
+
+      // 保存执行时间规划数据
+      saveExecutionTimePlanning() {
+        console.log('urls当前定时字符', this.cronExpression)
+        if(!this.isSave) {
+          this.setTimer()
+        }else {
+          this.updateTimer(this.timerId)
+        }
       },
       /**
        * 触发器

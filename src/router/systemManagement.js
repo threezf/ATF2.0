@@ -14,7 +14,8 @@ export default {
     component: SystemManagementIndex,
     redirect: '/systemManagement/enterpriseManagement',
     meta: {
-        name: '系统管理'
+        name: '系统管理',
+        another: 'atf/system'
     },
     children: [
         {
@@ -24,7 +25,8 @@ export default {
             meta: {
                 name: '企业管理',
                 parent: 'SystemManagement',
-                icon: 'el-icon-s-platform'
+                icon: 'el-icon-s-platform',
+                another: 'atf/company'
             }
         },
         {
@@ -34,7 +36,8 @@ export default {
             meta: {
                 name: '角色管理',
                 parent: 'SystemManagement',
-                icon: 'el-icon-user'
+                icon: 'el-icon-user',
+                another: 'atf/role'
             }
         },
         {
@@ -44,7 +47,8 @@ export default {
             meta: {
                 name: '系统菜单',
                 parent: 'SystemManagement',
-                icon: 'el-icon-menu'
+                icon: 'el-icon-menu',
+                another: 'atf/menu'
             }
         },
         {
@@ -54,7 +58,8 @@ export default {
             meta: {
                 name: '用户管理',
                 parent: 'SystemManagement',
-                icon: 'el-icon-s-custom'
+                icon: 'el-icon-s-custom',
+                another: 'atf/user'
             }
         },
         {
@@ -64,7 +69,8 @@ export default {
             meta: {
                 name: '执行机管理',
                 parent: 'SystemManagement',
-                icon: 'el-icon-setting'
+                icon: 'el-icon-setting',
+                another: 'atf/runner'
             }
         },
     ]

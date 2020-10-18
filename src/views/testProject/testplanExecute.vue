@@ -1480,6 +1480,102 @@ export default {
         },
       });
     },
+
+    // 发起定时执行 
+    doTimerExecution() {
+      var _this = this;
+      if (!_this.userId) {
+        Vac.alert("请填写用户id");
+        return;
+      }
+      if (!_this.recordflag) {
+        Vac.alert("请填写recordflag");
+        return;
+      }
+      if (!_this.exeScope) {
+        Vac.alert("请填写执行范围");
+        return;
+      }
+      if (!_this.testPlanId) {
+        Vac.alert("请选择测试计划");
+        return;
+      }
+      if (
+        _this.runnerExecuteType == "appointed" &&
+        _this.runnerselected.length === 0
+      ) {
+        Vac.alert("请选择执行机");
+        return;
+      }
+      if (!_this.exeStauts) {
+        Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行");
+        return;
+      }
+      var selectedExeInstances = [];
+      if (_this.exeScope == 1) {
+      } else {
+        for (var i = 0; i < _this.selectedSceneCases.length; i++) {
+          let temp = {};
+          let selectedSceneCase = _this.selectedSceneCases[i].split("-");
+          temp.caseId = selectedSceneCase[selectedSceneCase.length - 1];
+          temp.sceneId = selectedSceneCase[1];
+          selectedExeInstances.push(temp);
+        }
+      }
+      // _this.logShow = true;
+      _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>执行中';
+      _this.tagType = "primary";
+      Vac.ajax({
+        url: "executeController/t2",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify({
+          userId: _this.userId,
+          recordflag: _this.recordFlag,
+          exeScope: _this.exeScope,
+          selectState: _this.selectState,
+          selectedExeInstances: selectedExeInstances,
+          testPlanId: _this.testPlanId,
+          identifiableRunnerName: _this.runnerExecuteType,
+          appointedRunners: _this.runnerselected,
+        }),
+        success: function (data) {
+          if (data.respCode === "0000") {
+            // this.$store.disatch('updateTotalScore', {
+            //     userId: sessionStorage.getItem('userId'),
+            //     totalScore: Number(sessionStorage.getItem("totalScore")) + 5
+            // })
+            console.log("查询日志", this.$store);
+            _this.startQueryLog(); //查询日志
+            Vac.ajax({
+              //因为查询执行信息需要最近执行的批量号因此需要查询批次
+              url: "batchRunCtrlController/queryLatestBatchIdForTestPlan",
+              type: "post",
+              contentType: "application/json",
+              data: JSON.stringify({
+                testPlanId: _this.testPlanId,
+              }),
+              success: function (data) {
+                _this.batchId = data.batchId;
+                _this.startQueryResult();
+              },
+              error: function () {
+                Vac.alert("网络错误，执行失败！");
+                _this.setResultIcon();
+              },
+            });
+          } else {
+            Vac.alert(data.respMsg);
+            _this.setResultIcon();
+          }
+        },
+        error: function () {
+          Vac.alert("网络错误，执行失败！");
+          _this.setResultIcon();
+        },
+      });
+    },
+
     executeAll: function () {
       var _this = this;
       if (!_this.userId) {

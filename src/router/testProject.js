@@ -29,7 +29,8 @@ export default {
     component: testProjectIndex,
     redirect: '/testProjectIndext/testProject',
     meta: {
-        name: '项目测试'
+				name: '项目测试',
+				another: 'atf/project'
     },
     children: [
 		{

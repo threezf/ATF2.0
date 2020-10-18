@@ -6,7 +6,7 @@ const cronToDate = function (str) {
   } else {
     var result = str.split(' ').join('')
     var nArr = str.split(' ')
-    var countData = this.getPlaceholderCount(result)
+    var countData = getPlaceholderCount(result)
     if (!countData.count1) { // 没有'?'则是按周循环
       toDate.loopType = '周循环'
       var keys = nArr[5]
@@ -40,7 +40,7 @@ const cronToDate = function (str) {
   return toDate
 }
 // 统计字符串中包含某个字符的个数
-getPlaceholderCount = function (strSource) {
+let getPlaceholderCount = function (strSource) {
   var count1 = 0 // ?的个数
   var count2 = 0 // *的个数
   strSource.replace(/\*|\?/g, function (m, i) {

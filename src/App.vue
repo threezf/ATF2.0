@@ -157,13 +157,14 @@
         isStepsShow: true,
         loginInfo: {},
         currentUser: '', // 当前用户
-        totalScore: ''
+        totalScore: '',
+        urls: []
       };
     },
     watch: {
       $route: {
         handler(to, from) {
-          console.log("to.meta.parent", to.meta.parent);
+          console.log("urls路由改变", to.meta.parent);
           this.activeMenu = to.meta.parent || to.name;
           if(this.activeMenu=='TestProjectIndex'){
             this.activeMenu="TestProject";
@@ -175,15 +176,17 @@
     computed: {
       menuList() {
         let menuList = [];
-        this.$router.options.routes.forEach((item) => {
-          console.log(!(item.meta && item.meta.hide), 'item.meta', item.name)
-          // if (item.path != "/" && !(item.meta && item.meta.hide)) {
-          //   if(item.name) {
-          //     menuList.push(item);
-          //   }
-          // }
+        this.$router.options.routes.forEach((item, index) => {
           if(item.path != "/" && !item.meta.hide) {
-            menuList.push(item)
+            // console.log('urls', item.meta)
+            if(index === 2) {
+              menuList.push(item)
+            }else {
+              if(this.urls.indexOf(item.meta.another) > -1) {
+                console.log('urls可添加路由',item.path)
+                menuList.push(item)
+              }
+            }
           }
         });
         return menuList;
@@ -258,12 +261,12 @@
           // localStorage.setItem('userType', 'false')
           // this.$store.state.commit("changeFlag", 'false')
         }
-      }
+      },
     },
     created() {
       const flag = localStorage.getItem("userType")
-      console.log(this.totalScore, 'totalScore')
       this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'))? JSON.parse(localStorage.getItem('loginInfo')): {}
+      this.urls = localStorage.getItem("urls").split(',')
       this.currentUser = sessionStorage.getItem("username")
       if(flag == 'false') {
         this.userStatus = 1
@@ -272,6 +275,12 @@
       }
       this.initUserState()
     },
+    mounted() {
+      this.$bus.on('setUrls', (urls) => {
+        console.log('urls 接收时间总线', urls)
+        this.urls = urls
+      })
+    }
   };
 </script>
 

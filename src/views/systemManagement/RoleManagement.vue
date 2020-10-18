@@ -22,8 +22,8 @@
           <el-form
             class="selectStyle">
             <el-form-item
-              label="角色名称"
-              label-width="80px">
+              label=""
+              label-width="10px">
               <el-input 
                 v-model="searchInfo"
                 placeholder="请输入角色名称 (支持模糊查询)"
@@ -42,7 +42,8 @@
           class="table"
           border
           stripe
-          highlight-current-row>
+          highlight-current-row
+          @select="handleSelectChange">
           <el-table-column
             width="50px"
             label
@@ -75,7 +76,7 @@
             <template
               slot-scope="scope">
               <el-button
-                v-if="scope.row.defaultRole != 2"
+                v-if="scope.row.defaultRole != 1"
                 type="primary"
                 size="small"
                 icon="el-icon-edit"
@@ -173,6 +174,35 @@
         </el-button>
       </el-row>
     </el-dialog>
+    <el-dialog
+      title="分配权限"
+      width="30%"
+      :visible.sync="roleDialogVisible">
+      <el-tree
+        ref="menuTree"
+        node-key="id"
+        :props="defaultProps"
+        :data="menuDtoList"
+        :default-checked-keys="selectedRoles"
+        show-checkbox
+        @check-change="handleCheckChange">
+      </el-tree>
+      <el-row class="roleMenusRow">
+        <el-button
+          size="small"
+          type="primary"
+          @click="assignPermissions"
+          >确认分配
+        </el-button>
+        <el-button
+          size="small"
+          type="warning"
+          plain
+          @click="roleDialogVisible = false"
+          >取消分配
+        </el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -185,6 +215,7 @@
     mixins: [VueMixins],
     data() {
       return {
+        userId: sessionStorage.getItem('userId'),
         total: 100,
         currentPage: 1,
         pageSize: 10,
@@ -210,6 +241,7 @@
         remark: '',
         searchInfo: '', // 查询条件
         selectParams: 'roleName', // 查询条件
+        selectRows: [],
         loginInfo: {},
         rules: {
           roleName: [
@@ -223,6 +255,14 @@
           ],
         },
         rowId: '', // 修改行数据时使用的id
+        menuDtoList: [], //全部的角色权限
+        roleId: '',
+        roleDialogVisible: false,
+        defaultProps: {
+          label: 'name',
+          children: 'childNodeList'
+        },
+        selectedRoles: []
       }
     },
     watch: {
@@ -241,6 +281,7 @@
     },
     created() {
       this.loginInfo = JSON.parse(localStorage.getItem("loginInfo"))
+      this.queryAllMenu()
       this.pagedBatchQuery(this.pageSize, this.currentPage)
     },
     methods: {
@@ -269,7 +310,6 @@
           }
         }).catch(error => {
           this.tableData = []
-
         })
       },
       // 添加角色
@@ -357,7 +397,6 @@
             params.defaultRole = 2
             params.companyId = this.loginInfo.companyId
             params.id = this.rowId
-            console.log('row', params)
             Request({
               url: '/roleController/updateByPrimaryKey',
               method: 'POST',
@@ -381,6 +420,7 @@
       // 修改select
       handleSelectChange(val) {
         this.selectParams = val
+        this.selectRows = val
         this.searchInfo = ""
       },
       searchByItem() {
@@ -392,7 +432,16 @@
       },
       // 分配权限
       doAssignPermissions() {
-
+        console.log("handleSelectChange", this.selectParams.length)
+        if(this.selectRows.length == 0) {
+          this.$message.warning('请选择要分配权限的角色')
+        }else if(this.selectRows.length > 1) {
+          this.$message.warning('只允许为单个角色分配')
+        }else {
+          this.roleDialogVisible = true
+          this.roleId = this.selectRows[0].id
+          this.queryAllPermission()
+        }
       },
       handleCurrentChange(val) {
         this.pagedBatchQuery(this.pageSize, val)
@@ -401,7 +450,76 @@
       handleSizeChange(val) {
         this.pagedBatchQuery(val, this.currentPage)
         this.pageSize = val
-      }
+      },
+       // 获取全部角色权限
+      queryAllMenu() {
+        let _this = this
+        Request({
+          url: '/menuController/queryAllMenu',
+          method: 'post',
+          params: {
+            userId: this.userId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            _this.menuDtoList = res.menuDtoList.filter(item => {
+              return item.level == 0
+            })
+          }
+        }).catch(error => {
+          console.log('error', error)
+        })
+      },
+      // 获取当前角色权限
+      queryAllPermission() {
+        Request({
+          url: '/roleController/queryAllPermission',
+          method: 'post',
+          params: {
+            roleId: this.roleId
+          }
+        }).then(res => {
+          console.log('获取角色权限', res)
+          if(res.respCode === '0000') {
+            this.selectedRoles = res.menuIds
+            console.log(this.selectedRoles)
+          }
+        }).catch(error => {
+          console.log('获取失败', error)
+        })
+      },
+      // 为角色分配权限
+      assignPermissions() {
+        const checkedKeys = this.$refs.menuTree.getCheckedKeys()
+        const halfCheckedKeys = this.$refs.menuTree.getHalfCheckedKeys()
+        const menuIds = [...checkedKeys, ...halfCheckedKeys]
+        console.log(
+          {
+            roleId: this.roleId,
+            menuIds,
+            companyId: this.loginInfo.companyId
+          }
+        )
+        Request({
+          url: '/roleController/assignPermissions',
+          method: 'post',
+          params: {
+            roleId: this.roleId,
+            menuIds,
+            companyId: this.loginInfo.companyId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success('权限分配成功')
+            this.roleDialogVisible = false
+          }
+        }).catch(error => {
+          console.log('分配失败', error)
+        })
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        console.log('handleCheckChange', data, checked)
+      },
     },
   }
 </script>
@@ -424,5 +542,10 @@
   }
   .selectStyle {
     width: 200px;
+  }
+  .roleMenusRow {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
   }
 </style>

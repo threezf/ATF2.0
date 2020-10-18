@@ -1,5 +1,6 @@
 <template>
     <div :class="isCollapse?'narrow-side-bar':'side-bar'">
+        <!-- 展开与折叠样式 -->
         <el-radio-group v-model="isCollapse" style=""  size="small">
             <el-radio-button :label="true"><i class="el-icon-d-arrow-left"></i></el-radio-button>
             <el-radio-button :label="false"><i class="el-icon-d-arrow-right"></i></el-radio-button>
@@ -39,7 +40,8 @@
                 menuList: [],
                 fullPath: '',
                 isCollapse: false,
-                activedPath: this.$route.path
+                activedPath: this.$route.path,
+                urls: [], //登录时或缺的当前页面路由权限
             }
         },
         watch: {
@@ -53,6 +55,7 @@
              * 获取侧边栏应该展示的数据
              */
             getSideBarList() {
+                console.log(this.firstPathName, this.pathName, 'side')
                 let routes = this.$router.options.routes
                 let children = []
                 let path = ''
@@ -61,14 +64,23 @@
                         children = item.children
                         path = item.path
                     }
+                    console.log('side item过滤', children, this.urls)
                 })
                 if(this.firstPathName){
-                    console.log( '-------------------------------------------------------------******************-')
-                    console.log(path[0])
                     children[0].meta.name = this.firstPathName
+                }
+                if(this.pathName === 'SystemManagement') {
+                    children = children.filter(item => {
+                        if(this.urls.indexOf(item.meta.another) > -1) {
+                            return item
+                        }
+                    })
+                }else {
+                    children = children
                 }
                 this.fullPath = path
                 this.menuList = children
+                console.log('side获取侧边栏', this.menuList)
             },
 			needHideAllChildren(menu) {
             	let needHide = true
@@ -84,9 +96,20 @@
             	return needHide
 			}
         },
-        mounted() {
+        created() {
             this.getSideBarList()
-        }
+        },
+        mounted() {
+            this.$bus.on('setUrls', (urls) => {
+                this.urls = urls
+                this.getSideBarList()
+            })
+        },
+        activated() {
+            // console.log('urls系统管理当前路由', localStorage.getItem('urls').split(','))
+            this.urls = localStorage.getItem('urls').split(',')
+            this.getSideBarList()
+        },
     };
 </script>
 <style lang="less" scoped>

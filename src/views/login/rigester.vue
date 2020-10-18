@@ -58,23 +58,23 @@
             <el-radio label="0" value="0">企业</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="手机号" label-width="200px" v-show="ruleForm.mark==1">
-          <el-input class="normalInput" placeholder="请输入手机号" v-model="ruleForm.telephone"></el-input>
+        <el-form-item label="手机号" label-width="200px" prop="telephone">
+          <el-input class="normalInput" placeholder="请输入手机号(必填)" v-model="ruleForm.telephone"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.mark==1">
-          <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="ruleForm.email"></el-input>
+        <el-form-item label="电子邮箱" label-width="200px" prop="email">
+          <el-input class="normalInput" placeholder="请填写电子邮箱(必填)" v-model="ruleForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0" prop="companyName">
-          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0">
+          <el-input class="normalInput" placeholder="请填写企业名称(必填)" v-model="ruleForm.companyName"></el-input>
         </el-form-item>
-        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0" prop="descShort">
-          <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.descShort"></el-input>
+        <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0" >
+          <el-input type="textarea" class="normalInput" placeholder="请填写企业描述(必填)" v-model="ruleForm.descShort"></el-input>
         </el-form-item>
-        <el-form-item label="人数限制" label-width="200px" v-show="ruleForm.mark==0" prop="maximumNumber">
-          <el-input class="normalInput" placeholder="请设置最大使用人数" v-model="ruleForm.companyName"></el-input>
+        <el-form-item label="人数限制" label-width="200px" v-show="ruleForm.mark==0">
+          <el-input class="normalInput" placeholder="请设置最大使用人数(必填)" v-model="ruleForm.maximumNumber"></el-input>
         </el-form-item>
-        <el-form-item label="用户期限" label-width="200px" v-show="ruleForm.mark==0" prop="purchaseYear">
-          <el-input class="normalInput" placeholder="填写数字(如2代表两年)" v-model="ruleForm.purchaseYear"></el-input>
+        <el-form-item label="用户期限" label-width="200px" v-show="ruleForm.mark==0">
+          <el-input class="normalInput" placeholder="填写数字(如2代表两年)(必填)" v-model="ruleForm.purchaseYear"></el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">
           <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
@@ -112,6 +112,10 @@ export default {
   name: "rigester",
   components: { ElSlPanel },
   data() {
+    // 手机号验证规则
+    const phoneExp = /^1[3|4|5|7|8]\d{9}$/
+    // 邮箱验证规则
+    const emailExp = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
     const checkUsername = (rule, value, callback) => {
       const pattern = /[a-z0-9]{4,16}/g;
       if (!value) {
@@ -144,37 +148,25 @@ export default {
       }
       return callback();
     };
-    const checkMaximumNumber = (rule, value, callback) => {
-      if(!value) {
-        return callback(new Error('请设置最大使用人数'))
-      }else {
-        return callback()
-      }
-    }
-    const checkPurchaseYear = (rule, value, callback) => {
-      if(!value) {
-        return callback(new Error('请设置使用期限'))
-      }else {
-        return callback()
-      }
-    }
     const checkAuthCode = (rule, value, callback) => {
       if (!value) {
         return callback("请输入验证码");
       }
       return callback();
     };
-    const checkCompanyName = (rule, value, callback) => {
-      if(!value) {
-        return callback("请输入企业名称")
+    const checkPhone = (rule, value, callback) => {
+      if(!phoneExp.test(value)) {
+        callback(new Error('请输入合适的手机号'))
+      }else {
+        return callback()
       }
-      return callback()
     }
-    const checkCompanyDesc = (rule, value, callback) => {
-      if(!value) {
-        return callback("请输入企业描述")
+    const checkEmail = (rule, value, callback) => {
+      if(!emailExp.test(value)) {
+        callback(new Error('请输入合适的邮箱'))
+      }else {
+        return callback()
       }
-      return callback()
     }
     return {
       title: "ATF",
@@ -236,27 +228,15 @@ export default {
             trigger: "blur"
           }
         ],
-        maximumNumber: [
+        telephone: [
           {
-            validator: checkMaximumNumber,
+            validator: checkPhone,
             trigger: 'blur'
           }
         ],
-        purchaseYear: [
+        email: [
           {
-            validator: checkPurchaseYear,
-            trigger: 'blur'
-          }
-        ],
-        companyName: [
-          {
-            validator: checkCompanyName,
-            trigger: 'blur'
-          }
-        ],
-        descShort: [
-          {
-            validator: checkCompanyDesc,
+            validator: checkEmail,
             trigger: 'blur'
           }
         ]
@@ -307,19 +287,12 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if(this.ruleForm.mark == 1) {
-            const phoneExp = /^1[3|4|5|7|8]\d{9}$/
-            const emailExp = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
-            if(phoneExp.test(this.ruleForm.telephone) && emailExp.test(this.ruleForm.email)){
-              this.sendToPost(this.ruleForm)
-            }else {
-              return this.$message.warning('请输入手机号或邮箱')
-            }
+            this.sendToPost(this.ruleForm)
          }else {
-           if(this.ruleForm.companyName != "" && this.ruleForm.descShort != "") {
+           if(this.ruleForm.companyName != "" && this.ruleForm.descShort != "" && this.ruleForm.maximumNumber != "" && this.ruleForm.purchaseYear != "") {
              this.sendToPost(this.ruleForm)
-
            }else {
-             this.$message.warning('请输入企业信息')
+             this.$message.warning('请输入企业必填信息')
            }
          }
         } else {
@@ -372,7 +345,8 @@ export default {
         params: {
           companyName: this.ruleForm.companyName,
           userId,
-          roleList: ['系统管理员']
+          // 待验证
+          roleList: [7]
         }
       }).then(res => {
         this.$message.success("注册成功");

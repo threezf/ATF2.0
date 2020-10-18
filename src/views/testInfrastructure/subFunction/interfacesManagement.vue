@@ -7,7 +7,7 @@
           <el-select class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
             <el-input v-model="systemNameSearch" class="searchInput">
             </el-input>
-            <el-option v-for="(item) in systemSearch(titleForm.autRespDTOList)" :key="item.id" :value="item.id" :label="item.nameMedium">
+            <el-option v-for="(item) in systemSearch(titleForm.autRespDTOList)" :key="item.id" :value="item.id" :label="item.nameMedium"> 
             </el-option>
           </el-select>
         </el-form-item>
@@ -343,17 +343,26 @@ export default {
     }
   },
   created() {
-    let row = this.$route.query.data
-    this.autId = Number(row.autId)
+    let data 
+    if (this.$route.query.data.hasOwnProperty('id')) {
+      data = this.$route.query.data
+      localStorage.setItem('transactId', this.$route.query.data.id)
+      localStorage.setItem('transactAutId', this.$route.query.data.autId)
+      this.autId = Number(data.autId)
+      this.transactsForm.id =  data.id
+    }else {
+      this.autId = Number(localStorage.getItem('transactAutId'))
+      this.transactsForm.id = localStorage.getItem('transactId')
+    }
+    console.log('transactsForm', this.autId, this.transactsForm.id, this.$route.query.data.hasOwnProperty('id'))
     this.selectSystem = this.autId
-    this.transactsForm.id = row.id
     this.selectedTransact = Number(this.transactsForm.id)
-    console.log('row', row)
     this.selectAllUsername()
     this.queryListAut()
     this.queryTransactsByAutId(this.autId)
     this.querySingleInterface(this.transactsForm.id)
   },
+  
   methods: {
     // 获取全部用户
     selectAllUsername() {
@@ -370,7 +379,7 @@ export default {
           this.$message.warning('获取失败')
         }
       }).catch(error => {
-        this.$message.error('数据获取失败')
+        console.log('数据获取失败')
       })
     },
     // 获取全部被测系统
@@ -390,7 +399,7 @@ export default {
           this.$message.warning('获取失败')
         }
       }).catch(error => {
-        this.$message.error('数据获取失败')
+        console.log('数据获取失败')
       })
     },
     // 获取功能点

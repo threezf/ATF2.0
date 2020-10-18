@@ -149,7 +149,7 @@
 					pageSize: this.pageSize,
 					codeLongAndName: "",
 					orderColumns: "modified_time",
-					orderType: "DESC",
+					orderType: "AES",
 
 				}
 				if(this.searchInput !== ''){
@@ -316,7 +316,7 @@
 					method: 'post',
 					params: this.params
 				}).then((res) => {
-					this.testProjectList = res.list
+					this.testProjectList = res.pagedProjectDtoList
 					this.totalCount = res.totalCount
 					console.log(this.testProjectList)
 				}, (err) => {

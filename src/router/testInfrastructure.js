@@ -26,7 +26,8 @@ export default {
 	component: TestInfrastructureIndex,
 	redirect: '/testInfrastructure/TestedSystemManagementRouter/testedSystemManagement',
 	meta:{
-		name: '测试基础设施'
+		name: '测试基础设施',
+		another: 'atf/aut'
 	},
 	children:[
 		{

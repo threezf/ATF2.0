@@ -15,5 +15,10 @@ export default {
   },
   setTotalScore(state, payload) {
     state.totalScore = payload.totalScore
+  },
+  setUrlList(state, payload) {
+    console.log('设置url', payload)
+    state.urlList = payload.urlList
+    localStorage.setItem('urls', state.urlList)
   }
 }

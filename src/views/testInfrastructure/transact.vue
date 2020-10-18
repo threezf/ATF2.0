@@ -580,7 +580,7 @@ export default {
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
-										creatorId:sessionStorage.getItem("userId")
+										userId: sessionStorage.getItem("userId")
                   }
                 })
                   .then(res => {

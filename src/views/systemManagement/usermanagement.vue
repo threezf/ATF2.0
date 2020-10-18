@@ -20,21 +20,18 @@
           </el-button>
           </el-input>
         </el-col>
-        <el-col :span="4" :offset='1'>
-          
-        </el-col>
       </el-row>
       <el-table stripe border :data="tableData" class='table'>
-        <el-table-column label="用户名" property="userEntity.username" min-width="16%" />
-        <el-table-column label="真实姓名" property="userEntity.reallyname" min-width="16%" />
-        <el-table-column label="公司名称" property="userEntity.companyName" min-width="20%" />
-        <el-table-column label="手机号" property="userEntity.telephone" min-width="20%" />
-        <el-table-column label="邮箱" property="userEntity.email" min-width="15%" />
-        <el-table-column label="修改时间" min-width="20%" prop="userEntity.modifiedTime" :formatter="transTime"/>
+        <el-table-column label="用户名" property="username" min-width="16%" />
+        <el-table-column label="真实姓名" property="reallyname" min-width="16%" />
+        <el-table-column label="公司名称" property="companyName" min-width="20%" />
+        <el-table-column label="手机号" property="telephone" min-width="20%" />
+        <el-table-column label="邮箱" property="email" min-width="15%" />
+        <el-table-column label="修改时间" min-width="20%" prop="modifiedTime" :formatter="transTime"/>
         <el-table-column label="状态" width="80px" align="center" >
           <template slot-scope="scope">
             <el-tag 
-              v-if="scope.row.userEntity.status === 1"
+              v-if="scope.row.status === 1"
               type="primary"
               >正常
             </el-tag>
@@ -51,11 +48,11 @@
               v-model="switches[scope.$index]"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              @change="doSwitchChange(scope.row.userEntity)">
+              @change="doSwitchChange(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="140px" align="center">
+        <el-table-column v-if="params.userId != 3" label="操作" width="140px" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -279,7 +276,7 @@
               type="warning"
               size="small"
               plain
-              @click="updateSure"
+              @click="updateCancel"
               >取消
             </el-button>
           </el-row>
@@ -453,7 +450,8 @@ export default {
         reallyname: '',
         roleList: [],
         userId: ''
-      }
+      },
+
     }
   },
   computed: {
@@ -499,6 +497,7 @@ export default {
     this.getUsers()
     console.log('loginInfo', this.loginInfo)
     this.selectLimitedRoles()
+    this.selectAll()
   },
   mounted() {},
   methods: {
@@ -555,10 +554,10 @@ export default {
       this.disabled = true
       this.modelFlag = 2
       this.detailVisible = true
-      this.showForm.username = row.userEntity.username
-      this.showForm.reallyname = row.userEntity.reallyname
-      this.showForm.email = row.userEntity.email
-      this.showForm.telephone = row.userEntity.telephone
+      this.showForm.username = row.username
+      this.showForm.reallyname = row.reallyname
+      this.showForm.email = row.email
+      this.showForm.telephone = row.telephone
       this.showForm.roleList = this.roles.filter(item => {
         return row.roleList.includes(item.id)
       })
@@ -568,55 +567,16 @@ export default {
     handleEdit(index, row) {
       this.modelFlag = 3
       this.disabled = false
-      this.selectedId = row.userEntity.id
+      this.selectedId = row.id
       console.log("updateDialogShow", row)
       // this.setForm(row)
       this.updateDialogShow = true
-      this.updateForm.username = row.userEntity.username
-      this.updateForm.reallyname = row.userEntity.reallyname
+      this.updateForm.username = row.username
+      this.updateForm.reallyname = row.reallyname
       this.updateForm.roleList = row.roleList
-      this.updateForm.userId = row.userEntity.id
+      this.updateForm.userId = row.id
       console.log(this.updateForm, row, '修改')
     },
-    // setForm(row) {
-    //   const {
-    //     username,
-    //     password,
-    //     reallyname,
-    //     status,
-    //     telephone,
-    //     email,
-    //     totalScore,
-    //     mark,
-    //     companyName,
-    //     lastLoginDate,
-    //     lastLoginIp,
-    //     createTime,
-    //     modifierId,
-    //     modifiedTime,
-    //     creatorId
-    //   } = row.userEntity
-    //   const {roleList} = row
-    //   this.form = {
-    //     username,
-    //     reallyname,
-    //     password,
-    //     againPassward: password,
-    //     status: status === 0? 0 : 1,
-    //     telephone,
-    //     email,
-    //     totalScore,
-    //     mark,
-    //     companyName,
-    //     lastLoginDate,
-    //     lastLoginIp,
-    //     createTime,
-    //     modifierId,
-    //     modifiedTime,
-    //     creatorId,
-    //     roleList
-    //   }
-    // },
     //角色一栏处理函数
     roleSwitch(row, column) {
       return row.role && this.roles[row.role];
@@ -645,7 +605,7 @@ export default {
       }).then((res) => {
         this.tableData = res.userList
         this.totalCount = res.totalCount
-        this.switches = this.tableData.map(obj => (obj.userEntity.status == 1))
+        this.switches = this.tableData.map(obj => (obj.status == 1))
       }, (err) => {
         console.log(err)
         this.tableData = []
@@ -791,6 +751,19 @@ export default {
     },
     updateCancel() {
       this.updateDialogShow = false
+    }, 
+    selectAll() {
+      Request({
+        url: '/roleController/selectAll',
+        method: 'post',
+        params: {
+          companyId: this.loginInfo.companyId
+        }
+      }).then(res => {
+        console.log('selectAll', res)
+      }).catch(error => {
+        console.log('失败')
+      })
     }
   },
 }
