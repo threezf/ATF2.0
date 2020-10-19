@@ -141,7 +141,7 @@ export default {
 				}
 		},{
 			path: 'testplanExecute',
-			name: 'testplanExecute',
+			name: 'TestplanExecute',
 			component: testplanExecute,
 			meta: {
 				name: '测试计划及执行',

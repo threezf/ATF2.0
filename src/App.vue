@@ -178,12 +178,10 @@
         let menuList = [];
         this.$router.options.routes.forEach((item, index) => {
           if(item.path != "/" && !item.meta.hide) {
-            // console.log('urls', item.meta)
             if(index === 2) {
               menuList.push(item)
             }else {
               if(this.urls.indexOf(item.meta.another) > -1) {
-                console.log('urls可添加路由',item.path)
                 menuList.push(item)
               }
             }
@@ -221,7 +219,6 @@
               method: 'POST',
               params: params
             }).then(res => {
-              console.log(res) 
               if(res.respCode === "0000") {
                 this.$message.success(res.respMsg)
                 this.dialogVisible = false
@@ -230,7 +227,6 @@
                 this.$message.warning(res.respMsg)
               }
             }).catch(error => {
-              console.log('修改失败', error)
               this.$message.warning("原密码错误")
             })
           }else {
@@ -252,9 +248,7 @@
       initUserState() {
         this.totalScore = sessionStorage.getItem("totalScore")
         const userType = localStorage.getItem('userType')
-        console.log('userType1', userType)
         this.$store.commit("changeFlag", userType === 'true')
-        console.log('userType2', localStorage.getItem('userType'))
         if(this.totalScore <= 100) {
           // localStorage.setItem('userType', 'true')
         }else {
@@ -277,7 +271,6 @@
     },
     mounted() {
       this.$bus.on('setUrls', (urls) => {
-        console.log('urls 接收时间总线', urls)
         this.urls = urls
       })
     }

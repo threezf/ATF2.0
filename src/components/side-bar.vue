@@ -55,7 +55,6 @@
              * 获取侧边栏应该展示的数据
              */
             getSideBarList() {
-                console.log(this.firstPathName, this.pathName, 'side')
                 let routes = this.$router.options.routes
                 let children = []
                 let path = ''
@@ -64,7 +63,6 @@
                         children = item.children
                         path = item.path
                     }
-                    console.log('side item过滤', children, this.urls)
                 })
                 if(this.firstPathName){
                     children[0].meta.name = this.firstPathName
@@ -80,7 +78,6 @@
                 }
                 this.fullPath = path
                 this.menuList = children
-                console.log('side获取侧边栏', this.menuList)
             },
 			needHideAllChildren(menu) {
             	let needHide = true
@@ -106,7 +103,6 @@
             })
         },
         activated() {
-            // console.log('urls系统管理当前路由', localStorage.getItem('urls').split(','))
             this.urls = localStorage.getItem('urls').split(',')
             this.getSideBarList()
         },

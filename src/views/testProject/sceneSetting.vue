@@ -1366,6 +1366,18 @@
         this.selectedDrawIndex = 5
         this.queryAllSceneTimersByScene()
       },
+      // 发起定时执行
+      startTimeRun(row) {
+        console.log('定时执行', row)
+        // this.$router.push({
+        //   name: 'TestplanExecute',
+        //   query: {
+        //     isTimer: true,
+        //     data: row
+        //   }
+        // })
+      },
+
 
       // 保存执行时间规划数据
       saveExecutionTimePlanning() {

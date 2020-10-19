@@ -1333,13 +1333,6 @@ export default {
   mounted() {
     console.log("sessionId", sessionStorage.getItem("userId"));
     var _this = this;
-    // for(let i in this.exeImgsMap){
-    //     console.log('asdasdasdasdasdasdas')
-    //     this.exeImgs[i] = require(this.exeImgsMap[i])
-    //     // this.exeImgs.push(require(exeImgsMap[i]))
-    //     console.log('asdasdasdasdasdasdas')
-    //     console.log(this.exeImgs)
-    // }
     var tempTestPlanId = sessionStorage.getItem("testPlanId") || undefined;
     _this.caselibId = sessionStorage.getItem("caselibId") || 1241;
     this.addRowData.caseLibId = _this.caselibId;

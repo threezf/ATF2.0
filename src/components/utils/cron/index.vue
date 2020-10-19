@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="cron" :val="value_">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="秒" name="s">
+      <!-- <el-tab-pane label="秒" name="s">
         <second-and-minute v-model="sVal" lable="秒"></second-and-minute >
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="分" name="m">
         <second-and-minute v-model="mVal" lable="分"></second-and-minute >
       </el-tab-pane>
@@ -13,15 +13,15 @@
       <el-tab-pane label="日" name="d">
         <day v-model="dVal" lable="日"></day>
       </el-tab-pane>
-      <el-tab-pane label="月" name="month">
+      <!-- <el-tab-pane label="月" name="month">
         <month v-model="monthVal" lable="月"></month>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="周" name="week">
         <week v-model="weekVal" lable="周"></week>
       </el-tab-pane>
-      <el-tab-pane label="年" name="year">
+      <!-- <el-tab-pane label="年" name="year">
         <year v-model="yearVal" lable="年"></year>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
     <!-- table -->
     <el-table
@@ -83,7 +83,7 @@ export default {
   data () {
     return {
       //
-      activeName: 's',
+      activeName: 'm',
       sVal: '',
       mVal: '',
       hVal: '',
