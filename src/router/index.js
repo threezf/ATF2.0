@@ -48,7 +48,7 @@ export default new Router({
             meta: {
                 name: '首页'
             },
-        }, 
+        },
         {
             path: '/',
             redirect: '/login',
@@ -78,7 +78,6 @@ export default new Router({
             }
         },
         TestProject,
-		RecordFunction,
         QuicklyStart,
         Addition
     ]

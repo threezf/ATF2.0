@@ -94,8 +94,10 @@
 			//得到被测系统数据
 			Request({
 				url: "/aut/queryListAut",
-				method: "get",
-				params: {}
+				method: "post",
+				params: {
+					companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId
+				}
 			}).then(resp => {
 				let options = []
 				resp.autRespDTOList.forEach(item => {
@@ -108,33 +110,33 @@
 					item.itemList = options
 				})
 			})
-			//得到测试任务数据
-			Request({
-				url: "/missionController/pagedBatchQueryTestMission",
-				method: "post",
-				params: {
-					currentPage: 1,
-					pageSize: 10000,
-					orderColumns: "modified_time",
-					orderType: "desc",
-					nameMedium: "",
-					descMedium: "",
-					codeLong: ""
-				}
-			})
-				.then(
-					res => {
-						let options = []
-						res.list.forEach(item => {
-							options.push({
-								value: item.id,
-								label: item.nameMedium,
-							})
-						})
-						this.compareTypeOptions.missionId.forEach(item => {
-							item.itemList = options
-						})
-					})
+			// //得到测试任务数据
+			// Request({
+			// 	url: "/missionController/pagedBatchQueryTestMission",
+			// 	method: "post",
+			// 	params: {
+			// 		currentPage: 1,
+			// 		pageSize: 10000,
+			// 		orderColumns: "modified_time",
+			// 		orderType: "desc",
+			// 		nameMedium: "",
+			// 		descMedium: "",
+			// 		codeLong: ""
+			// 	}
+			// })
+			// 	.then(
+			// 		res => {
+			// 			let options = []
+			// 			res.list.forEach(item => {
+			// 				options.push({
+			// 					value: item.id,
+			// 					label: item.nameMedium,
+			// 				})
+			// 			})
+			// 			this.compareTypeOptions.missionId.forEach(item => {
+			// 				item.itemList = options
+			// 			})
+			// 		})
 			//得到用例性质数据
 			this.compareTypeOptions.caseProperty.forEach(item => {
 				item.itemList = [{
@@ -158,72 +160,35 @@
 						label: "流程级"
 					}]
 			})
-			//得到测试用例类型数据
-			this.compareTypeOptions.caseType.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "联机"
-					},
-					{
-						value: "2",
-						label: "批量"
-					},
-					{
-						value: "3",
-						label: "接口"
-					}
-				]
-			})
-			//得到优先级数据
-			this.compareTypeOptions.priority.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "1级"
-					},
-					{
-						value: "2",
-						label: "2级"
-					},
-					{
-						value: "3",
-						label: "3级"
-					},
-					{
-						value: "4",
-						label: "4级"
-					},
-					{
-						value: "5",
-						label: "5级"
-					},
-					{
-						value: "6",
-						label: "6级"
-					},
-					{
-						value: "7",
-						label: "级"
-					},
-					{
-						value: "8",
-						label: "8级"
-					},
-					{
-						value: "9",
-						label: "9级"
-					}
-				]
-			})
+			// //得到测试用例类型数据
+			// this.compareTypeOptions.caseType.forEach(item => {
+			// 	item.itemList = [
+			// 		{
+			// 			value: "1",
+			// 			label: "联机"
+			// 		},
+			// 		{
+			// 			value: "2",
+			// 			label: "批量"
+			// 		},
+			// 		{
+			// 			value: "3",
+			// 			label: "接口"
+			// 		}
+			// 	]
+			// })
+
 			//得到用户数据
 			Request({
-				url: "/userController/selectAllUsername",
+				url: "/testProjectController/queryAllRelatedUser",
 				method: "post",
-				params: {}
+				params: {
+					userId:sessionStorage.getItem("userId"),
+					projectId:sessionStorage.getItem("selectId"),
+				}
 			}).then(resp => {
 				let options = []
-				resp.list.forEach(item => {
+				resp.userEntityList.forEach(item => {
 					options.push({
 						value: item.id,
 						label: item.username,
@@ -235,32 +200,6 @@
 				this.compareTypeOptions.reviewer.forEach(item => {
 					item.itemList = options
 				})
-			})
-			//得到脚本管理方式数据
-			this.compareTypeOptions.scriptModeFlag.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "模板"
-					}
-				]
-			})
-			//得到执行方式数据
-			this.compareTypeOptions.executeMethod.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "手工"
-					},
-					{
-						value: "2",
-						label: "自动化"
-					},
-					{
-						value: "3",
-						label: "配合"
-					}
-				]
 			})
 		},
 		computed: {

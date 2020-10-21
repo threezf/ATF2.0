@@ -1,23 +1,28 @@
 <!--
+ * @Author: your name
+ * @Date: 2020-10-21 10:20:29
+ * @LastEditTime: 2020-10-21 10:39:02
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \ATF2.0\src\views\testInfrastructure\transactDetail\useCaseDebug.vue
+-->
+<!--
   用例调试界面
   整合了
     1. 测试资源管理
     2. 测试计划及执行
 -->
 <template>
-  <div class="page-inner">
+<div class="page-inner">
     <div class="scriprConfigStyle">
-      <!-- <script-data></script-data> -->
-      <set-datable></set-datable>
+        <!-- <script-data></script-data> -->
+        <set-datable></set-datable>
     </div>
     <div class="runStyle">
-      <run-script
-        :aut-id="Number(autId)"
-        :case-id="Number(caseId)"
-        :script-id="Number(scriptId)"> 
-      </run-script>
+        <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)">
+        </run-script>
     </div>
-  </div>  
+</div>
 </template>
 
 <script>
@@ -75,10 +80,11 @@
 </script>
 
 <style lang="less" scoped>
-  .scriprConfigStyle {
+.scriprConfigStyle {
     height: 410px;
-  }
-  .runStyle {
+}
+
+.runStyle {
     height: calc(100% - 500px);
-  }
+}
 </style>
