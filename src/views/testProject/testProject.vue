@@ -3,10 +3,10 @@
 		<el-container>
 			<el-main>
 				<el-row>
-					<el-col :span="5">
-						<el-input v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
+					<el-col :span="4">
+						<el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
 					</el-col> 
-					<el-col :span="8"  :offset='1'>
+					<el-col :span="8">
 						<el-button
 							@click='getTestProject(1)'
 							icon="el-icon-setting"
@@ -23,7 +23,7 @@
 						</el-button>
 					</el-col>
 				</el-row>
-				<el-row style="height:15px"></el-row>
+
 					<el-table
 						stripe
 						:data="testProjectList"
@@ -87,18 +87,18 @@
 					width="30%">
 					<el-form ref="addForm"  :model="addForm" :rules="rules" label-width="30%">
 						<el-form-item   label="测试项目编号" prop="codeLong"  >
-							<el-input   v-model="addForm.codeLong" placeholder="选填"></el-input>
+							<el-input size="small"  v-model="addForm.codeLong" placeholder="选填"></el-input>
 						</el-form-item>
 						<el-form-item   label="测试项目名称" prop="nameMedium" required >
-							<el-input   v-model="addForm.nameMedium"></el-input>
+							<el-input size="small"  v-model="addForm.nameMedium"></el-input>
 						</el-form-item>
 						<el-form-item   label="描述" prop="projectDesc" >
-							<el-input   v-model="addForm.descMedium" placeholder="选填"></el-input>
+							<el-input size="small"  v-model="addForm.descMedium" placeholder="选填"></el-input>
 						</el-form-item>
-						<el-form-item >
-							<el-button    type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
-							<el-button   @click="resetForm()">重置</el-button>
-						</el-form-item>
+						<el-row class="el-button-margin" type="flex" justify="center">
+							<el-button size="small"   type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
+							<el-button size="small"  @click="resetForm()">重置</el-button>
+						</el-row>
 					</el-form>
 				</el-dialog>
 			</el-main>

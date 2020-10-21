@@ -35,7 +35,7 @@
             <span class="ownedSystem">所属被测系统</span>
           </el-col>
           <el-col :span="4">
-            <el-select v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
+            <el-select size="small" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId">
               <el-option
                 v-for="(item,key) in autRespDTOList"
                 :key="key"
@@ -107,7 +107,7 @@
           :before-close="handleBeforeClose">
           <el-form :model="ruleForm" ref="ruleForm" :rules="rules" status-icon>
             <el-form-item class="formItem" label="名称" label-width="110px" prop="nameMedium">
-              <el-input class="formInput" placeholder="必输项" v-model.lazy="ruleForm.nameMedium"></el-input>
+              <el-input size="small" class="formInput" placeholder="必输项" v-model.lazy="ruleForm.nameMedium"></el-input>
               <span class="spanTextColor">*</span>
             </el-form-item>
             <el-form-item
@@ -117,16 +117,16 @@
               prop="functionType"
               v-if="isAdded"
             >
-              <el-select class="formInput" v-model="ruleForm.functionType">
+              <el-select size="small" class="formInput" v-model="ruleForm.functionType">
                 <el-option value="UI" selected="true"></el-option>
                 <el-option value="接口"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="formItem" label="编码" label-width="110px" prop="code">
-              <el-input class="formInput" placeholder="为空时自动生成" v-model="ruleForm.code"></el-input>
+              <el-input size="small" class="formInput" placeholder="为空时自动生成" v-model="ruleForm.code"></el-input>
             </el-form-item>
             <el-form-item class="formItem" label="描述" label-width="110px" prop="descShort">
-              <textarea class="formInput" cols="5" rows="5" v-model="ruleForm.descShort"></textarea>
+              <textarea class="formInput"  rows="5" v-model="ruleForm.descShort"></textarea>
             </el-form-item>
             <hr color="#F5F5F5" />
             <el-form-item>

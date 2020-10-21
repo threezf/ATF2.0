@@ -15,7 +15,7 @@
                 <el-button size="mini" type="primary" @click="deleteEleShow">删除元素</el-button>
                 <el-button size="mini" type="primary" @click="branchAddEleShow">批量添加</el-button>
               </el-row>
-              <el-input class="keywords" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+              <el-input size="small" class="keywords" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
               <el-tree
                 v-loading="treeLoading"
                 class="filter-tree"
@@ -117,15 +117,15 @@
     <el-dialog title="添加UI" :visible.sync="addUIDialogFlag" width="30%">
       <el-form :model="addUIform" label-width="80px">
         <el-form-item label="UI名称">
-          <el-input v-model="addUIform.name"></el-input>
+          <el-input size="small" v-model="addUIform.name"></el-input>
         </el-form-item>
         <el-form-item label="UI描述">
-          <el-input type="textarea" rows="5" v-model="addUIform.desc"></el-input>
+          <el-input style="width:90%" size="small" type="textarea" rows="5" v-model="addUIform.desc"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addUIDialogFlag = false">取 消</el-button>
-        <el-button type="primary" @click=" addUI">确 定</el-button>
+        <el-button size="small" type="primary" @click=" addUI">确 定</el-button>
+        <el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog title="添加元素" :visible.sync="addEleDialogFlag" width="30%">
@@ -151,8 +151,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addEleDialogFlag = false">取 消</el-button>
         <el-button type="primary" @click=" addEle">确 定</el-button>
+        <el-button @click="addEleDialogFlag = false">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width="30%">

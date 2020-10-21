@@ -2,13 +2,11 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-row>
-          <el-button type="primary" size="small" icon="el-icon-plus">新增</el-button>
-        </el-row>
         <el-row class="searchRow">
-          <el-input placeholder="输入搜索条件" clearable>
+          <el-input size="small" placeholder="输入搜索条件" clearable>
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
+          <el-button style="margin-left: 20px" type="primary" size="small" icon="el-icon-plus">新增</el-button>
         </el-row>
         <el-table class="table" border stripe highlight-current-row>
           <el-table-column 
@@ -95,13 +93,11 @@ export default {
 <style scoped lang="less">
 .searchRow {
   .el-input {
-    width: 300px;
+    width: 200px;
   }
 }
 </style>
-    </el-container>
-  </div>
-</template>
+
 
 <script>
   export default {
@@ -128,7 +124,7 @@ export default {
 <style scoped lang="less">
   .searchRow {
     .el-input {
-      width: 300px;
+      width: 200px;
     }
   }
 </style>

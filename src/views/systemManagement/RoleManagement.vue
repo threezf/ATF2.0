@@ -25,6 +25,7 @@
               label="角色名称"
               label-width="80px">
               <el-input 
+                size="small"
                 v-model="searchInfo"
                 placeholder="请输入角色名称 (支持模糊查询)"
                 clearable >
@@ -120,6 +121,7 @@
           label="角色姓名"
           prop="roleName">
           <el-input 
+            size="small"
             v-model="ruleForm.roleName"
             class="inputStyle" 
             placeholder="请输入角色姓名"
@@ -130,6 +132,7 @@
           label="角色标识"
           prop="remark">
           <el-input 
+            size="small"
             v-model="ruleForm.remark"
             class="inputStyle" 
             placeholder="请输入角色标识"
@@ -140,6 +143,7 @@
           label="角色描述"
           prop="descShort">
           <el-input 
+            size="small"
             v-model="ruleForm.descShort"
             class="inputStyle" 
             type="textarea"
@@ -410,7 +414,7 @@
   .searchRow {
     margin-bottom: 0px !important;
     .el-input {
-      width: 300px;
+      width: 285px;
     }
   }
   .inputStyle {
@@ -419,10 +423,12 @@
   .dialogRowStyle {
     display: flex;
     width: 100%;
-    justify-content: flex-end;
-    padding-right: 30px;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: -15px;
   }
   .selectStyle {
     width: 200px;
   }
+
 </style>

@@ -6,13 +6,14 @@
         <el-container>
             <el-main>
                 <el-row>
-                    <el-col :span="3" class='rightLable'>
+                    <el-col :span="2" class='rightLable'>
                         <span>
                             被测系统 ：
                         </span>
                     </el-col>
-                    <el-col :span="3" >
+                    <el-col :span="4" >
                         <el-select 
+                        size="small"
                         filterable 
                         v-model="autSelectValue" 
                         @change='autChange'>
@@ -24,13 +25,14 @@
                             </el-option>
                         </el-select>
                     </el-col>
-                    <el-col :span="3" class='rightLable'>
+                    <el-col :span="2" class='rightLable'>
                         <span>
                             功能点 ：
                         </span>
                     </el-col>
-                    <el-col :span="3" >
+                    <el-col :span="4" >
                         <el-select 
+                        size="small"
                         filterable 
                         v-model="tranSelectValue" 
                         placeholder="请选择"
@@ -43,7 +45,7 @@
                             </el-option>
                         </el-select>
                     </el-col>
-                    <el-col :span="4" :offset='1'>
+                    <el-col :span="3" >
                         <el-button
                             icon="el-icon-edit-outline"
                             size="small" 

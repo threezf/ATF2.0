@@ -37,6 +37,7 @@
         <el-table
           v-loading="templateLoading"
           border
+          stripe
           ref="singleTable"
           :data="templateList"
           highlight-current-row
@@ -257,20 +258,22 @@
       <el-form :model="addTemplateForm" label-width="80px">
         <el-form-item :label="name + '名称'">
           <el-input
+            size="small"
             v-model="addTemplateForm.name"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item :label="name + '描述'">
           <el-input
+            size="small"
             v-model="addTemplateForm.description"
             autocomplete="off"
           ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addTemplateDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addTemplate">确 定</el-button>
+        <el-button size="small" type="primary" @click="addTemplate">确 定</el-button>
+        <el-button size="small" @click="addTemplateDialog = false">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -280,8 +283,8 @@
     >
       <span :offset="2">确定要删除该{{ name }}吗？</span>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="deleteTemplateDialog = false">取 消</el-button>
-        <el-button type="primary" @click="deleteTemplate">确 定</el-button>
+        <el-button size="small" type="primary" @click="deleteTemplate">确 定</el-button>
+        <el-button size="small" @click="deleteTemplateDialog = false">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog title="添加多项" :visible.sync="addItemShow" width="30%">

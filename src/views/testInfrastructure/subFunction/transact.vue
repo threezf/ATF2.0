@@ -50,6 +50,7 @@
         <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
           <el-select
+            size="small"
             class="selectName"
             v-model="ownedSystem"
             placeholder="所属被测系统"
@@ -163,27 +164,29 @@
           status-icon
         >
           <el-form-item label="名称" prop="nameMedium">
-            <el-input placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
+            <el-input size="small" placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
             </el-input>
           </el-form-item>
           <el-form-item label="类型" prop="functionType" v-if="isAdded">
-            <el-select class="addSelect" v-model="ruleForm.functionType" v-if="$route.query.hasOwnProperty('isInterface')">
+            <el-select size="small" class="addSelect" v-model="ruleForm.functionType" v-if="$route.query.hasOwnProperty('isInterface')">
               <el-option value="UI" selected="true" v-if="!isInterface">
               </el-option>
               <el-option value="接口" v-else> </el-option>
             </el-select>
-            <el-select class="addSelect" v-model="ruleForm.functionType" v-else>
+            <el-select size="small" class="addSelect" v-model="ruleForm.functionType" v-else>
               <el-option value="UI" selected="true" >
               </el-option>
               <el-option value="接口"> </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="编码" prop="code">
-            <el-input placeholder="为空时自动生成" v-model="ruleForm.code">
+            <el-input size="small" placeholder="为空时自动生成" v-model="ruleForm.code">
             </el-input>
           </el-form-item>
           <el-form-item label="描述" prop="descShort">
             <el-input
+              style="width:90%"
+              size="small"
               cols="5"
               rows="5"
               type="textarea"
@@ -232,10 +235,11 @@
             :on-exceed="handleExceed"
             :on-change="handleOnChange"
           >
-            <el-button class="btnSelectFile" type="success" slot="trigger" plain
+            <el-button size="small" class="btnSelectFile" type="success" slot="trigger" plain
               >上传文件
             </el-button>
             <el-input
+              size="small"
               class="formInput"
               placeholder="请选择导入的文件"
               :disabled="true"
@@ -963,14 +967,13 @@ export default {
 .dialogImportBottom,
 .dialogFailBottom {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
+  justify-content: center;
   margin-bottom: -35px;
 }
 
 .formInput {
   width: 300px;
-  margin-left: 20px;
+  
 }
 
 .buttonDownload,

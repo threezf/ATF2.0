@@ -4,7 +4,16 @@
 <template>
 <div class="page-base-inner">
   <el-container>
-    <el-row class="rowMargin">
+    
+    <el-main class="el-main-base-inner">
+      <el-row>
+        <el-col :span="8">
+          <el-input size="small" class="searchInput"  placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
+            <el-button slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
+      <el-row class="rowMargin">
       <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
       <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
       <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
@@ -17,14 +26,6 @@
       </span>
       <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
     </el-row>
-    <el-main class="el-main-base-inner">
-      <el-row>
-        <el-col :span="8">
-          <el-input class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
-            <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
-          </el-input>
-        </el-col>
-      </el-row>
       <el-table
         class="table"
         ref="singleTable"
@@ -60,23 +61,23 @@
       <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
           <el-form-item label="系统名称" prop="nameMedium">
-            <el-input placeholder="请输入测试系统名称" v-model.lazy="form.nameMedium"></el-input>
+            <el-input class="inputStyle" size="small" placeholder="请输入测试系统名称" v-model.lazy="form.nameMedium"></el-input>
           </el-form-item>
           <el-form-item label="系统编号">
-            <el-input placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
+            <el-input class="inputStyle" size="small" placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
           </el-form-item>
-          <el-form-item label="开发架构">
-            <el-select class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
+          <el-form-item size="small" label="开发架构">
+            <el-select  class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
               <el-option v-for=" (value,key) in abstractArchitectureInfo" :value="value" :key="key">{{value}}</el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="描述" prop="descShort">
-            <el-input type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
+          <el-form-item size="small" label="描述" prop="descShort">
+            <el-input class="inputStyle" type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
           </el-form-item>
-          <el-form-item class="buttons_row">
+          <el-row class="el-button-margin" type="flex" justify="center">
             <el-button id="clickButton" type="primary" size="small" @click="submitForm('form')">{{dialogOperateButton}}</el-button>
             <el-button size="small" @click="cancelButtonClicked">取消</el-button>
-          </el-form-item>
+          </el-row>
         </el-form>
       </el-dialog>
       <!--操作成功对话框-->
@@ -646,18 +647,18 @@ div.row {
 
 .rowMargin {
   width: calc(100% - 40px);
-  margin: 0px 20px;
+  margin: 0px 0px;
 }
 
 /**添加对话框选择样式 */
 .addSelect {
-  width: 100%;
+  width: 103%;
 }
 
 /**添加取消按钮样式 */
 .buttons_row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: -10px;
   margin-bottom: -15px;
 }
@@ -667,4 +668,8 @@ div.row {
   margin: 20px auto;
   text-align: center;
 }
+
+.inputStyle {
+    width: 93%;
+  }
 </style>
