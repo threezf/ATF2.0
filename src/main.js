@@ -17,12 +17,14 @@ import 'font-awesome/css/font-awesome.min.css'
 import {SessionStorage} from 'wii-fe-utils'
 import moment from 'moment'
 import store from './store/index'
+import VueBus from 'vue-bus'
 
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VCharts)
 Vue.use(moment)
+Vue.use(VueBus)
 window.activeMenu;
 
 // 路由钩子

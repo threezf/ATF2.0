@@ -1,8 +1,10 @@
+<!--
+  暂时废弃
+-->
 <template>
   <div class="page-base-inner">
     <el-container>
       <el-row class="buttonRows">
-
         <el-button
           type="primary"
           icon="el-icon-document-copy"
@@ -578,7 +580,7 @@ export default {
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
-										creatorId:sessionStorage.getItem("userId")
+										userId: sessionStorage.getItem("userId")
                   }
                 })
                   .then(res => {

@@ -2,10 +2,10 @@
 <div id="app">
     <el-header style="background-color: #FFF " v-if="activeMenu!= 'Login' && activeMenu != 'Rigester' && activeMenu != 'Error'">
         <el-row class="header">
-            <el-col :span="3" class="logo"  >
-<!--							<img src="icon.jpg" alt="" style="width:50px;height:50px" />-->
-							<span ><i class="el-icon-cloudy" style="font-size: 32px;color:var(--blue);padding-right:2px;font-weight: bolder"></i></span>
-							<span  style="color:var(--blue);font-size:32px ">ATF</span>
+            <el-col :span="3" class="logo">
+                <!--		<img src="icon.jpg" alt="" style="width:50px;height:50px" />-->
+                <span><i class="el-icon-cloudy" style="font-size: 32px;color:var(--blue);padding-right:2px;font-weight: bolder"></i></span>
+                <span style="color:var(--blue);font-size:32px ">ATF</span>
             </el-col>
             <el-col :span="18" :offset="1">
                 <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#fff" active-text-color="#44b549">
@@ -17,8 +17,8 @@
             <el-col :span="2" class="button">
                 <el-dropdown>
                     <span class="el-dropdown-link">
-                        <i class="el-icon-user-solid" ></i>
-											   <span style="font-weight: bold">{{currentUser}}</span>
+                        <i class="el-icon-user-solid"></i>
+                        <span style="font-weight: bold">{{currentUser}}</span>
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
@@ -112,125 +112,123 @@ export default {
             isStepsShow: true,
             loginInfo: {},
             currentUser: '', // 当前用户
-            totalScore: ''
+            totalScore: '',
+            urls: []
         };
     },
     watch: {
-        $route: {
-            handler(to, from) {
-                console.log("to.meta.parent", to.meta.parent);
-                this.activeMenu = to.meta.parent || to.name;
-                if (this.activeMenu == 'TestProjectIndex') {
-                    this.activeMenu = "TestProject";
-                }
-                this.currentUser = sessionStorage.getItem("username")
-            },
-            immediate: true,
-        },
-    },
-    computed: {
-        menuList() {
-            let menuList = [];
-            this.$router.options.routes.forEach((item) => {
-                console.log(!(item.meta && item.meta.hide), 'item.meta', item.name)
-                // if (item.path != "/" && !(item.meta && item.meta.hide)) {
-                //   if(item.name) {
-                //     menuList.push(item);
-                //   }
-                // }
-                if (item.path != "/" && !item.meta.hide) {
-                    menuList.push(item)
-                }
-            });
-            return menuList;
-        }
-    },
-    methods: {
-        logout() {
-            this.$confirm('是否注销登录', '警告', {
-                confirmButton: '确定',
-                cancelButton: '取消',
-                type: 'warning'
-            }).then(() => {
-                sessionStorage.removeItem("username")
-                this.$router.push({
-                    path: "/login",
-                });
-            }).catch(() => {})
-        },
-        // 修改密码
-        changePass() {
-            this.dialogVisible = true
-        },
-        submitForm(ruleForm) {
-            let params = {
-                userId: this.loginInfo.userId,
-                oldPassword: this.ruleForm.oldPass,
-                newPassword: this.ruleForm.newPass
-            }
-            this.$refs[ruleForm].validate((valid) => {
-                if (valid) {
-                    Request({
-                        url: '/userController/updatePassword',
-                        method: 'POST',
-                        params: params
-                    }).then(res => {
-                        console.log(res)
-                        if (res.respCode === "0000") {
-                            this.$message.success(res.respMsg)
-                            this.dialogVisible = false
-                            this.$refs['ruleForm'].resetFields()
+			$route: {
+				handler(to, from) {
+					console.log("urls路由改变", to.meta.parent);
+					this.activeMenu = to.meta.parent || to.name;
+					if (this.activeMenu == 'TestProjectIndex') {
+						this.activeMenu = "TestProject";
+					}
+				},
+			},
+		},
+        computed: {
+            menuList() {
+                let menuList = [];
+                this.$router.options.routes.forEach((item, index) => {
+                    if (item.path != "/" && !item.meta.hide) {
+                        if (index === 2) {
+                            menuList.push(item)
                         } else {
-                            this.$message.warning(res.respMsg)
+                            if (this.urls.indexOf(item.meta.another) > -1) {
+                                menuList.push(item)
+                            }
                         }
-                    }).catch(error => {
-                        console.log('修改失败', error)
-                        this.$message.warning("原密码错误")
-                    })
-                } else {
-                    return false
-                }
-            })
-        },
-        cancel() {
-            this.dialogVisible = false
-        },
-        changeUser() {
-            this.statusVisible = true
-        },
-        handleStatusChange(val) {
-            this.$store.commit('changeFlag', val == 2)
-            localStorage.setItem("userType", val == 2)
-        },
-        // 初始化用户状态
-        initUserState() {
-            this.totalScore = sessionStorage.getItem("totalScore")
-            const userType = localStorage.getItem('userType')
-            console.log('userType1', userType)
-            this.$store.commit("changeFlag", userType === 'true')
-            console.log('userType2', localStorage.getItem('userType'))
-            if (this.totalScore <= 100) {
-                // localStorage.setItem('userType', 'true')
-            } else {
-                // localStorage.setItem('userType', 'false')
-                // this.$store.state.commit("changeFlag", 'false')
+                    }
+                });
+                return menuList;
             }
+        },
+        methods: {
+            logout() {
+                this.$confirm('是否注销登录', '警告', {
+                    confirmButton: '确定',
+                    cancelButton: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.push({
+                        path: "/login",
+                    });
+                }).catch(() => {})
+            },
+            // 修改密码
+            changePass() {
+                this.dialogVisible = true
+            },
+            submitForm(ruleForm) {
+                let params = {
+                    userId: this.loginInfo.userId,
+                    oldPassword: this.ruleForm.oldPass,
+                    newPassword: this.ruleForm.newPass
+                }
+                this.$refs[ruleForm].validate((valid) => {
+                    if (valid) {
+                        Request({
+                            url: '/userController/updatePassword',
+                            method: 'POST',
+                            params: params
+                        }).then(res => {
+                            if (res.respCode === "0000") {
+                                this.$message.success(res.respMsg)
+                                this.dialogVisible = false
+                                this.$refs['ruleForm'].resetFields()
+                            } else {
+                                this.$message.warning(res.respMsg)
+                            }
+                        }).catch(error => {
+                            this.$message.warning("原密码错误")
+                        })
+                    } else {
+                        return false
+                    }
+                })
+            },
+            cancel() {
+                this.dialogVisible = false
+            },
+            changeUser() {
+                this.statusVisible = true
+            },
+            handleStatusChange(val) {
+                this.$store.commit('changeFlag', val == 2)
+                localStorage.setItem("userType", val == 2)
+            },
+            // 初始化用户状态
+            initUserState() {
+                this.totalScore = sessionStorage.getItem("totalScore")
+                const userType = localStorage.getItem('userType')
+                this.$store.commit("changeFlag", userType === 'true')
+                if (this.totalScore <= 100) {
+                    // localStorage.setItem('userType', 'true')
+                } else {
+                    // localStorage.setItem('userType', 'false')
+                    // this.$store.state.commit("changeFlag", 'false')
+                }
+            },
+        },
+        created() {
+            const flag = localStorage.getItem("userType")
+            this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
+            this.urls = localStorage.getItem("urls").split(',')
+            this.currentUser = sessionStorage.getItem("username")
+            if (flag == 'false') {
+                this.userStatus = 1
+            } else {
+                this.userStatus = 2
+            }
+            this.initUserState()
+        },
+        mounted() {
+            this.$bus.on('setUrls', (urls) => {
+                this.urls = urls
+            })
         }
-    },
-    created() {
-        const flag = localStorage.getItem("userType")
-        console.log(this.totalScore, 'totalScore')
-        this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
-        this.currentUser = sessionStorage.getItem("username")
-        if (flag == 'false') {
-            this.userStatus = 1
-        } else {
-            this.userStatus = 2
-        }
-        this.initUserState()
-        console.log(this.currentUser, 'totalScore')
-    },
-};
+    }
 </script>
 
 <style lang="less">
@@ -239,8 +237,9 @@ export default {
 .el-menu.el-menu--horizontal {
     border-bottom: solid 0px;
 }
-.header .logo{
-	background-color: #FFF  !important ;
+
+.header .logo {
+    background-color: #FFF !important;
 }
 
 .mainTitle {
@@ -296,21 +295,27 @@ export default {
 .currentUser:hover {
     background: white;
 }
-.header a{
-	padding:0 !important;
+
+.header a {
+    padding: 0 !important;
 }
-.el-menu--horizontal>.el-menu-item a, .el-menu--horizontal>.el-menu-item a:hover {
-	color: #011425;
-	font-size: 17px;
+
+.el-menu--horizontal>.el-menu-item a,
+.el-menu--horizontal>.el-menu-item a:hover {
+    color: #011425;
+    font-size: 17px;
 }
-.el-menu--horizontal>.el-menu-item{
-	width:125px
+
+.el-menu--horizontal>.el-menu-item {
+    width: 125px
 }
-.el-dropdown-link{
-	color: #011425;
-	font-size: 17px;
+
+.el-dropdown-link {
+    color: #011425;
+    font-size: 17px;
 }
-	.el-header{
-		padding:0 5px
-	}
+
+.el-header {
+    padding: 0 5px
+}
 </style>

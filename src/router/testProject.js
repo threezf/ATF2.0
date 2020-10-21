@@ -30,7 +30,8 @@ export default {
     component: testProjectIndex,
     redirect: '/testProjectIndext/testProject',
     meta: {
-        name: '项目测试'
+				name: '项目测试',
+				another: 'atf/project'
     },
     children: [
 		{
@@ -152,7 +153,7 @@ export default {
 				}
 		},{
 			path: 'testplanExecute',
-			name: 'testplanExecute',
+			name: 'TestplanExecute',
 			component: testplanExecute,
 			meta: {
 				name: '测试计划及执行',

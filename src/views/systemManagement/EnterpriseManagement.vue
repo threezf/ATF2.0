@@ -74,9 +74,7 @@
 					<!--					</el-table-column>-->
 					<el-table-column
 						label="企业描述"
-						property="descShort"
-
-					/>
+						property="descShort"/>
 					<el-table-column
 						label="创建时间"
 						property="createTime"
