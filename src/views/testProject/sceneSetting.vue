@@ -1369,6 +1369,7 @@
       // 发起定时执行
       startTimeRun(row) {
         console.log('定时执行', row)
+        
         // this.$router.push({
         //   name: 'TestplanExecute',
         //   query: {
