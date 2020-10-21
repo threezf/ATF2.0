@@ -34,22 +34,27 @@
         :default-sort="{prop:'modifiedTime',order:'descending'}"
         :data="tableData">
         <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
-        <el-table-column label="" width="34px">
+        <el-table-column label="" width="34px" align="center">
           <template slot-scope="scope">
-            <el-radio class="radio" v-model="radio" :label="scope.row.id" @change="handleRadioChange(scope.$index,scope.row)">
+            <el-radio
+            v-model="radio"
+            :label="scope.row.id"
+            @change="handleRadioChange(scope.$index,scope.row)">
+              &nbsp;
             </el-radio>
             <!--调用时使用的是scope.row和scope.$index-->
           </template>
         </el-table-column>
         <el-table-column sortable type="index" label="序号" width="60px" align="center"></el-table-column>
-        <el-table-column prop="code" label="测试系统编号" min-width="20%" align="center">
+        <el-table-column prop="code" label="被测系统编号" min-width="20%" align="center">
           <template slot-scope="scope">
             <a @click="toTransact(scope.$index,scope.row)" class="link" target="_self">{{scope.row.code}}</a>
           </template>
         </el-table-column>
-        <el-table-column prop="nameMedium" label="测试系统名称" min-width="15%"></el-table-column>
+        <el-table-column prop="nameMedium" label="被测系统名称" min-width="15%"></el-table-column>
         <el-table-column prop="inheriteArcName" label="开发架构" min-width="15%"></el-table-column>
-        <el-table-column prop="descShort" label="测试系统描述" min-width="20%"></el-table-column>
+        <el-table-column prop="descShort" label="被测系统描述" min-width="20%"></el-table-column>
+				<el-table-column prop="creatorName" label="创建者" min-width="20%"></el-table-column>
         <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
         <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
       </el-table>
@@ -57,7 +62,7 @@
       <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
           <el-form-item label="系统名称" prop="nameMedium">
-            <el-input placeholder="请输入测试系统名称" v-model.lazy="form.nameMedium"></el-input>
+            <el-input placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
           </el-form-item>
           <el-form-item label="系统编号">
             <el-input placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
@@ -129,7 +134,7 @@ export default {
         descShort: "",
         createId: sessionStorage.getItem('userId'),
       },
-      id: "", //修改测试系统信息时使用的id
+      id: "", //修改被测系统信息时使用的id
       abstractArchitectureInfo: {},
       selectedAbstractArchitectureName: "截图",
       rules: {
@@ -151,10 +156,11 @@ export default {
       showFun: '展示高级功能 >>',
       nameMedium: '',
       creatorId: '', // 创建者id
+			creatorName:'',
     };
   },
   computed: {
-    //查询测试系统的参数对象，因为实现过程中受到搜索条件的影响，因此将此参数放在computed中
+    //查询被测系统的参数对象，因为实现过程中受到搜索条件的影响，因此将此参数放在computed中
     params() {
       let obj = {
         currentPage: this.currentPage,
@@ -169,8 +175,8 @@ export default {
     },
     dialogTitle() {
       let obj = {
-        0: "添加测试系统",
-        1: "修改测试系统",
+        0: "添加被测系统",
+        1: "修改被测系统",
         2: "操作失败"
       };
       return obj[this.dialogModelFlag];
@@ -191,15 +197,16 @@ export default {
     },
     //添加按钮
     addButton() {
-      this.form.code = "";
-      this.form.nameMedium = "";
-      this.form.inheriteArcId = 9;
-      this.form.descShort = "";
-      this.dialogModelFlag = 0;
-      this.dialogVisible = true;
+				this.form.code = "";
+				this.form.nameMedium = "";
+				this.form.inheriteArcId = 9;
+				this.form.descShort = "";
+				this.dialogModelFlag = 0;
+				this.dialogVisible = true;
     },
     //修改按钮
     updateButton() {
+			if(this.creatorId==sessionStorage.getItem("userId")){
       let _this = this;
       if (_this.radio === false) {
         this.$message.warning("请选择一条数据！！");
@@ -225,6 +232,9 @@ export default {
         console.log(inheriteArcId);
         _this.dialogVisible = true;
       }
+			}else{
+				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限修改本被测项目")
+			}
     },
     //管理功能点
     manageFunctionButton() {
@@ -236,8 +246,10 @@ export default {
         sessionStorage.setItem("testSysNameStorage", "(" + this.row.nameMedium + ")")
         sessionStorage.setItem('toTransact',JSON.stringify({
             id: this.id,
+					  creatorName:this.row.creatorName,
+					  creatorId:this.row.creatorId,
             nameMedium: this.row.nameMedium,
-					companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId
+				  	companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId
           }));
         _this.$router.push({
           path: "transact",
@@ -333,6 +345,7 @@ export default {
       this.row = row;
       this.id = row.id;
       this.nameMedium = row.nameMedium
+			this.creatorName=row.creatorName
       this.creatorId = row.creatorId
       sessionStorage.setItem("testSysNameStorage", "(" + this.row.nameMedium + ")")
     },
@@ -346,6 +359,7 @@ export default {
           id: _this.id,
           code: row.code,
           nameMedium: row.nameMedium,
+				  creatorName:row.creatorName,
 				  companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId,
           creatorId: row.creatorId
         }))
@@ -517,10 +531,11 @@ export default {
                   this.$message.success("修改成功");
                   _this.dialogVisible = false;
                   _this.getAllSystem();
-                })
-                .catch(err => {
-                  console.log("修改失败", err);
-                });
+                }, (err) => {
+									this.dialogVisible = false
+								}).catch((err) => {
+								console.log(err)
+							})
             }
           } else {
             this.$message.warning("信息格式有误");

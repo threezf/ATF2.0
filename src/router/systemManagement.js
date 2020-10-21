@@ -7,6 +7,8 @@ import RoleManagement from '@/views/systemManagement/RoleManagement'
 import MenuManagement from '@/views/systemManagement/MenuManagement'
 import UserManagement from '@/views/systemManagement/userManagement'
 import RunnerManagement from '@/views/systemManagement/runnerManagement'
+import AutomatedComponentManagement from '@/views/systemManagement/automatedComponentManagement';
+
 
 export default {
     path: '/systemManagement',
@@ -57,6 +59,16 @@ export default {
                 icon: 'el-icon-s-custom'
             }
         },
+			{
+				path: 'automatedComponentManagement',
+				name: 'AutomatedComponentManagement',
+				component: AutomatedComponentManagement,
+				meta:{
+					name: '自动化构件管理',
+					parent: 'TestInfrastructure',
+					icon: "el-icon-setting"
+				}
+			},
         {
             path: 'runnerManagement',
             name: 'runnerManagement',

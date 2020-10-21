@@ -55,17 +55,37 @@
             <el-radio label="0" value="0">企业</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0">
-          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
-        </el-form-item>
         <el-form-item label="手机号" label-width="200px" v-show="ruleForm.mark==1">
           <el-input class="normalInput" placeholder="请输入手机号" v-model="ruleForm.telephone"></el-input>
         </el-form-item>
         <el-form-item label="电子邮箱" label-width="200px" v-show="ruleForm.mark==1">
           <el-input class="normalInput" placeholder="请填写电子邮箱" v-model="ruleForm.email"></el-input>
         </el-form-item>
+        <el-form-item label="企业名称" label-width="200px" v-show="ruleForm.mark==0">
+          <el-input class="normalInput" placeholder="请填写企业名称" v-model="ruleForm.companyName"></el-input>
+        </el-form-item>
         <el-form-item label="企业描述" label-width="200px" v-if="ruleForm.mark==0">
           <el-input type="textarea" class="normalInput" placeholder="请填写企业描述" v-model="ruleForm.descShort"></el-input>
+        </el-form-item>
+        <el-form-item
+          label-width="200px"
+          v-if="ruleForm.mark==0"
+          label="最大注册人数">
+          <el-input
+            class="normalInput"
+            v-model="ruleForm.maximumNumber"
+            placeholder="请设置最大注册人数">
+          </el-input>
+        </el-form-item>
+        <el-form-item
+          label-width="200px"
+          v-if="ruleForm.mark==0"
+          label="使用期限">
+          <el-input
+            class="normalInput"
+            v-model="ruleForm.purchaseYear"
+            placeholder="示例：2即表示两年">
+          </el-input>
         </el-form-item>
         <el-form-item label="验证码" label-width="200px">
           <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
@@ -153,6 +173,18 @@ export default {
       }
       return callback()
     }
+    const checkMaximumNumber = (rule, value, callback) => {
+      if(!value) {
+        return callback('请设置最大注册人数')
+      }
+      return callback()
+    }
+    const checkPurcharseYear = (rule, value, callback) => {
+      if(!value) {
+        return callback('请设置使用期限')
+      }
+      return callback()
+    }
     return {
       title: "ATF",
       subtitle: "用户注册",
@@ -178,6 +210,8 @@ export default {
         status: 1, // 企业状态
         creatorId: '', // 创建者id
         modifierId: '', // 修改者id
+        maximumNumber: '', // 企业最大使用人数限制
+        purchaseYear: '', // 使用期限
       },
       authCode: "", //填写的验证码
       rules: {
@@ -211,6 +245,18 @@ export default {
             trigger: "blur"
           }
         ],
+        maximumNumber: [
+          {
+            validator: checkMaximumNumber,
+            trigger: 'blur'
+          }
+        ],
+        purchaseYear: [
+          {
+            validator: checkPurcharseYear,
+            trigger: 'blur'
+          }
+        ]
       }
     };
   },
@@ -266,7 +312,7 @@ export default {
               return this.$message.warning('请输入手机号或邮箱')
             }
          }else {
-           if(this.ruleForm.companyName != "" && this.ruleForm.descShort != "") {
+           if(this.ruleForm.companyName != "" && this.ruleForm.descShort != "" && this.ruleForm.maximumNumber != "" && this.ruleForm.purchaseYear != "") {
              this.sendToPost(this.ruleForm)
 
            }else {
@@ -287,42 +333,42 @@ export default {
         url: "/userController/register",
         method: "POST",
         params: qs.stringify(params)
-      })
-        .then(res => {
-          console.log("注册成功", res);
-          if(this.ruleForm.mark == 0) {
-            return this.insertAllDefaultRole(res.userId)
-          }
-          this.$message.success("注册成功");
-          this.currentStep = 2;
-        })
-        .catch(err => {
-          console.log("注册失败", err);
-        });
-    },
-    // 企业插入操作
-    insertAllDefaultRole(userId) {
-      Request({
-        url: '/roleController/insertAllDefaultRole',
-        method: 'POST',
-        params: {
-          companyName: this.ruleForm.companyName,
-          userId
-        }
       }).then(res => {
-        this.insert(res.userId)
-      }).catch(error => {
-        console.log('insertAllDefaultRole失败')
+        console.log("注册成功", res);
+        if(this.ruleForm.mark == 0) {
+          return this.insert(res.userId, res.companyId)
+        }
+        this.$message.success("注册成功");
+        this.currentStep = 2;
       })
+      .catch(err => {
+        console.log("注册失败", err);
+      });
     },
-    insert(userId) {
+    // // 企业插入操作
+    // insertAllDefaultRole(userId) {
+    //   Request({
+    //     url: '/roleController/insertAllDefaultRole',
+    //     method: 'POST',
+    //     params: {
+    //       companyName: this.ruleForm.companyName,
+    //       userId
+    //     }
+    //   }).then(res => {
+    //     this.insert(res.userId)
+    //   }).catch(error => {
+    //     console.log('insertAllDefaultRole失败')
+    //   })
+    // },
+    // 插入用户与角色的关系
+    insert(userId, companyId) {
       Request({
         url: '/userRoleController/insert',
         method: 'POST',
         params: {
-          companyName: this.ruleForm.companyName,
+          companyId,
           userId,
-          roleList: ['系统管理员']
+          roleList: [7]
         }
       }).then(res => {
         this.$message.success("注册成功");

@@ -98,6 +98,7 @@
 						</el-button>
 					</el-col>
 				</el-row>
+
 				<div @contextmenu.prevent>
 					<el-table
 						height="80vh"
@@ -375,9 +376,9 @@
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
 									<el-col :span="12" class='fixedHeight'>
-                                            <span>
-                                                 {{ item.Name }}
-                                            </span>
+										<span>
+													{{ item.Name }}
+										</span>
 									</el-col>
 									<el-col :span="12">
 										<el-input
@@ -473,26 +474,26 @@
 							<div v-if='scope.row.arguShow'>
 								<el-row>
 									<el-col :span="12">
-                                            <span>
-                                                名称
-                                            </span>
+										<span>
+											名称
+										</span>
 									</el-col>
 									<el-col :span="12">
-                                            <span>
-                                                参数值
-                                            </span>
+										<span>
+											参数值
+										</span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
 									<el-col :span="12" class='fixedHeight'>
-                                            <span>
-                                                 {{ item.Name }}
-                                            </span>
+										<span>
+											{{ item.Name }}
+										</span>
 									</el-col>
 									<el-col :span="12">
-                                            <span>
-                                                 {{ item.Value }}
-                                            </span>
+										<span>
+											{{ item.Value }}
+										</span>
 									</el-col>
 								</el-row>
 								<el-row>

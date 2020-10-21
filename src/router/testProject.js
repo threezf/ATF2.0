@@ -12,6 +12,7 @@
 import testProjectIndex from '@/views/testProject/index'
 import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
+import manageTestProject from '../views/testProject/manageTestProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
 import DatatableFlowcase from '@/views/testProject/datatableFlowcase'
@@ -42,6 +43,17 @@ export default {
 						icon: 'el-icon-back'
 				}
 		},
+			{
+				path: 'manageTestProject',
+				name: 'manageTestProject',
+				component: manageTestProject,
+				meta: {
+					name: '管理项目',
+					parent: 'TestProjectIndex',
+					icon: 'el-icon-back',
+					hide:true
+				}
+			},
 		{
 				path: 'testCase',
 				name: 'testCase',

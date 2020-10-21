@@ -8,10 +8,6 @@ let PropertyNameOptions = [
 		label: "用例编号"
 	},
 	{
-		value: "missionId",
-		label: "测试任务"
-	},
-	{
 		value: "autId",
 		label: "被测系统"
 	},
@@ -43,30 +39,26 @@ let PropertyNameOptions = [
 	    value: "caseProperty",
 	    label: "用例性质"
 	},
-	{
-	    value: "caseType",
-	    label: "测试用例类型"
-	},
-	{
-	    value: "priority",
-	    label: "优先级"
-	},
+	// {
+	//     value: "caseType",
+	//     label: "测试用例类型"
+	// },
 	{
 	    value: "author",
 	    label: "作者"
 	},
-	{
-	    value: "reviewer",
-	    label: "执行者"
-	},
-	{
-	    value: "scriptModeFlag",
-	    label: "脚本管理方式"
-	},
-	{
-		value: "executeMethod",
-		label: "执行方式"
-	}
+	// {
+	//     value: "reviewer",
+	//     label: "执行者"
+	// },
+	// {
+	//     value: "scriptModeFlag",
+	//     label: "脚本管理方式"
+	// },
+	// {
+	// 	value: "executeMethod",
+	// 	label: "执行方式"
+	// }
 ]
 let CompareTypeOptions = {
 	caseCompositeType: [
@@ -121,34 +113,6 @@ let CompareTypeOptions = {
 			value: "!C",
 			label: "不包含",
 			itemType: false, // false/输入框; true/下拉框
-		},
-	],
-	missionId: [
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
 		},
 	],
 	autId: [
@@ -279,62 +243,62 @@ let CompareTypeOptions = {
 			itemList: []
 		},
 	],
-	caseType:[
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-	],
-	priority:[
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-	],
+	// caseType:[
+	// 	{
+	// 		value: "=",
+	// 		label: "等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!=",
+	// 		label: "不等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "in",
+	// 		label: "属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!in",
+	// 		label: "不属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// ],
+	// priority:[
+	// 	{
+	// 		value: "=",
+	// 		label: "等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!=",
+	// 		label: "不等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "in",
+	// 		label: "属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!in",
+	// 		label: "不属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// ],
 	author:[
 		{
 			value: "=",
@@ -363,90 +327,34 @@ let CompareTypeOptions = {
 			itemList: []
 		},
 	],
-	reviewer:[
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-	],
-	scriptModeFlag:[
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-	],
-	executeMethod:[
-		{
-			value: "=",
-			label: "等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!=",
-			label: "不等于",
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "in",
-			label: "属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-		{
-			value: "!in",
-			label: "不属于",
-			multiple: true,
-			itemType: true, // false/输入框; true/下拉框
-			itemList: []
-		},
-	]
+	// reviewer:[
+	// 	{
+	// 		value: "=",
+	// 		label: "等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!=",
+	// 		label: "不等于",
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "in",
+	// 		label: "属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// 	{
+	// 		value: "!in",
+	// 		label: "不属于",
+	// 		multiple: true,
+	// 		itemType: true, // false/输入框; true/下拉框
+	// 		itemList: []
+	// 	},
+	// ],
 }
 export {
 	PropertyNameOptions,

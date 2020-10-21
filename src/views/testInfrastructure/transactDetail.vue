@@ -12,9 +12,9 @@
                         </span>
                     </el-col>
                     <el-col :span="3" >
-                        <el-select 
-                        filterable 
-                        v-model="autSelectValue" 
+                        <el-select
+                        filterable
+                        v-model="autSelectValue"
                         @change='autChange'>
                             <el-option
                             v-for="item in autSelectOptions"
@@ -30,9 +30,9 @@
                         </span>
                     </el-col>
                     <el-col :span="3" >
-                        <el-select 
-                        filterable 
-                        v-model="tranSelectValue" 
+                        <el-select
+                        filterable
+                        v-model="tranSelectValue"
                         placeholder="请选择"
                         @change='transChange'>
                             <el-option
@@ -46,7 +46,7 @@
                     <el-col :span="4" :offset='1'>
                         <el-button
                             icon="el-icon-edit-outline"
-                            size="small" 
+                            size="small"
                             @click='copySingleUITransact()'
                             type="primary">
                             复制功能点
@@ -55,10 +55,10 @@
                 </el-row>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="元素库" name="elementLibrary">
-                        <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""'></element-library>
+                        <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :creatorId="creatorId" :creatorName="creatorName"></element-library>
                     </el-tab-pane>
                     <el-tab-pane label="基础脚本" name="template">
-                        <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure"></template-manage>
+                        <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="creatorId" :creatorName="creatorName"></template-manage>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>
@@ -92,7 +92,7 @@
             "$route": {
                 handler(to, from) {
                     console.log('$route',to, from)
-                    to.query.steps === 0? 
+                    to.query.steps === 0?
                     this.activeName = 'elementLibrary':
                     this.activeName = 'template'
                 }
@@ -110,7 +110,9 @@
                 this.autSelectValue = Number(localStorage.getItem('transactAutId'))
                 this.tranSelectValue = Number(localStorage.getItem('transactId'))
             }
-            this.userId = sessionStorage.getItem('userId') || '3'
+            this.creatorId=this.$route.query.creatorId,
+						this.creatorName=this.$route.query.creatorName,
+            this.userId = sessionStorage.getItem('userId')
             this.getAuts();
             this.getTran(this.autSelectValue,true);
         },
@@ -130,7 +132,7 @@
                         query: {
                             steps: 1
                         }
-                    }) 
+                    })
                 }
             },
             getAuts(){
@@ -187,7 +189,7 @@
                 }).then((res) => {
                     this.$message('复制成功')
                 },(err) => {
-                    
+
                 })
             }
         }

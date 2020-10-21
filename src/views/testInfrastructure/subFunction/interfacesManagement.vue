@@ -344,11 +344,17 @@ export default {
   },
   created() {
     let row = this.$route.query.data
-    this.autId = Number(row.autId)
+    if(row.hasOwnProperty('id')) {
+      this.autId = Number(row.autId)
+      this.transactsForm.id = row.id
+      sessionStorage.setItem('interfaceRow', JSON.stringify(row))
+    }else {
+      let getRow  = JSON.parse(sessionStorage.getItem('interfaceRow'))
+      this.autId = Number(getRow.autId)
+      this.transactsForm.id = getRow.id
+    }
     this.selectSystem = this.autId
-    this.transactsForm.id = row.id
     this.selectedTransact = Number(this.transactsForm.id)
-    console.log('row', row)
     this.selectAllUsername()
     this.queryListAut()
     this.queryTransactsByAutId(this.autId)
@@ -480,7 +486,8 @@ export default {
         params: {
           autId: this.autId,
           creatorId: this.manageInfo.creatorId,
-          transId: this.transactsForm.id
+          transId: this.transactsForm.id,
+          userId: sessionStorage.getItem('userId')
         }
       }).then(res => {
         if (res.respCode == "0000") {

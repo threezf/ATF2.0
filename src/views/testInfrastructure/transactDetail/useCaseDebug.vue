@@ -6,20 +6,24 @@
 -->
 <template>
   <div class="page-inner">
-    脚本调试
-    <!-- <el-container>
-      用例调试
-    </el-container> -->
+    <script-data></script-data>
+    <run-script></run-script>
   </div>  
 </template>
 
 <script>
+  import ScriptData from '@/components/testInfrastructure/useCaseDebug/scriptData'
+  import RunScript from '@/components/testInfrastructure/useCaseDebug/runScript'
   export default {
     name: 'UseCaseDebug',
     data() {
       return {
-
+        
       }
+    },
+    components: {
+      ScriptData,
+      RunScript
     },
     created() {
       console.log('进入用例调试界面')
@@ -30,6 +34,12 @@
   }
 </script>
 
-<style lang="less">
-
+<style lang="less" scoped>
+  .debugTitleRow {
+    border-bottom: 1px solid #d3d3d3;
+    padding: 10px 5px ;
+  }
+  .funcButtonRow {
+    margin: 10px 5px;
+  }
 </style>
