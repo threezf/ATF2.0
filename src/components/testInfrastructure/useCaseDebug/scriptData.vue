@@ -2,175 +2,82 @@
   封装了
 -->
 <template>
-  <div>
+<div>
     <el-row class="debugTitleRow">
-      <span>配置脚本数据</span>
+        <span>配置脚本数据</span>
     </el-row>
     <el-row class="funcButtonRow">
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-plus"
-        @click="showAddMultiplyDialog"
-        >添加多项
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-delete"
-        @click="deleteTableRow"
-        >删除
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-arrow-up"
-        @click="rowsUp"
-        >上移
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-arrow-down"
-        @click="rowsDown"
-        >下移
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-document"
-        @click="saveConfigTable"
-        >保存
-      </el-button>
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-printer"
-        @click="doParameterize"
-        >参数化
-      </el-button>
+        <el-button type="primary" size="small" icon="el-icon-plus" @click="showAddMultiplyDialog">添加多项
+        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-delete" @click="deleteTableRow">删除
+        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-arrow-up" @click="rowsUp">上移
+        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-arrow-down" @click="rowsDown">下移
+        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-document" @click="saveConfigTable">保存
+        </el-button>
+        <el-button type="primary" size="small" icon="el-icon-printer" @click="doParameterize">参数化
+        </el-button>
     </el-row>
-    <el-table
-      id="dragableTable"
-      class="table"
-      style="margin: 10px 5px "
-      max-height="350"
-      row-key="id"
-      :data="tableData"
-      stripe
-      border
-      highlight-current-row
-      @select="handleTableRowSelection">
-      <el-table-column
-        width="50px"
-        align="center"
-        label="排序">
-        <template slot-scope="scope">
-          <i class="el-icon-sort" :key="'i' + scope.row.index"></i>
-        </template>
-      </el-table-column>
-      <el-table-column
-        width="50px"
-        type="selection">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        min-width="20%"
-        prop="name"
-        label="操作项">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        min-width="20%"
-        label="方法">
-        <template slot-scope="scope">
-          <el-select
-            @change="handleRowSelectChange(scope.row, $event)"
-            v-model="scope.row.methodName">
-            <el-option
-              v-for="item in scope.row.myMethods"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name">
-            </el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column
-        min-width="60%"
-        label="参数">
-        <template slot-scope="scope">
-          <div 
-            class="paramsCell" 
-            v-for="(item, index) in scope.row.arguments"
-            :key="'div' + index">
-            <div class="topContent">
-              <div class="leftSide">
-                <p>名称</p>
-                <p>{{item.name}}</p>
-              </div>
-              <div class="rightSide">
-                <p>参数值</p>
-                <p>
-                  <el-input
-                    class="cellInput"
-                    v-if="item.isEditing"
-                    v-model="item.value"
-                    size="mini">
-                  </el-input>
-                  <span
-                    v-else
-                    class="cellSpan">
-                    {{item.flag? item.value? item.value: '请配置参数': ''}}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div v-if="item.flag">
-              <p v-if="!item.isEditing">
-                <el-button
-                  size="mini"
-                  type="primary"
-                  icon="el-icon-edit"
-                  @click="doEdit(item)"
-                  >编辑
-                </el-button>
-              </p>
-              <p
-                v-else>
-                <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="cellEditCancel(item)"
-                  >取消
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="cellEditSure(item)"
-                  >确认
-                </el-button>
-              </p>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
+    <el-table id="dragableTable" class="table" style="margin: 10px 5px " max-height="350" row-key="id" :data="tableData" stripe border highlight-current-row @select="handleTableRowSelection">
+        <el-table-column width="50px" align="center" label="排序">
+            <template slot-scope="scope">
+                <i class="el-icon-sort" :key="'i' + scope.row.index"></i>
+            </template>
+        </el-table-column>
+        <el-table-column width="50px" type="selection">
+        </el-table-column>
+        <el-table-column align="center" min-width="20%" prop="name" label="操作项">
+        </el-table-column>
+        <el-table-column align="center" min-width="20%" label="方法">
+            <template slot-scope="scope">
+                <el-select @change="handleRowSelectChange(scope.row, $event)" v-model="scope.row.methodName">
+                    <el-option v-for="item in scope.row.myMethods" :key="item.id" :label="item.name" :value="item.name">
+                    </el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+        <el-table-column min-width="60%" label="参数">
+            <template slot-scope="scope">
+                <div class="paramsCell" v-for="(item, index) in scope.row.arguments" :key="'div' + index">
+                    <div class="topContent">
+                        <div class="leftSide">
+                            <p>名称</p>
+                            <p>{{item.name}}</p>
+                        </div>
+                        <div class="rightSide">
+                            <p>参数值</p>
+                            <p>
+                                <el-input class="cellInput" v-if="item.isEditing" v-model="item.value" size="mini">
+                                </el-input>
+                                <span v-else class="cellSpan">
+                                    {{item.flag? item.value? item.value: '请配置参数': ''}}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div v-if="item.flag">
+                        <p v-if="!item.isEditing">
+                            <el-button size="mini" type="primary" icon="el-icon-edit" @click="doEdit(item)">编辑
+                            </el-button>
+                        </p>
+                        <p v-else>
+                            <el-button size="mini" type="primary" plain @click="cellEditCancel(item)">取消
+                            </el-button>
+                            <el-button size="mini" type="primary" @click="cellEditSure(item)">确认
+                            </el-button>
+                        </p>
+                    </div>
+                </div>
+            </template>
+        </el-table-column>
     </el-table>
-    <el-dialog
-      class="addMultiple"
-      title="添加多项"
-      width="30%"
-      :visible.sync="treeDialogVisible">
-      <script-tree
-        :transact-id="Number(transactId)"
-        :aut-id="Number(autId)"
-        @dialogCancel="addCancel"
-        @dialogSure="addSure"
-        @selectMethod="doClickSelectMethod">
-      </script-tree>
+    <el-dialog class="addMultiple" title="添加多项" width="30%" :visible.sync="treeDialogVisible">
+        <script-tree :transact-id="Number(transactId)" :aut-id="Number(autId)" @dialogCancel="addCancel" @dialogSure="addSure" @selectMethod="doClickSelectMethod">
+        </script-tree>
     </el-dialog>
-  </div>
+</div>
 </template>
 
 <script>
@@ -306,7 +213,7 @@
           }
         }).then(res => {
           if(res.respCode === "0000") {
-            
+
           }else {
             return this.$message.warning('方法获取失败')
           }
@@ -372,7 +279,7 @@
         })
         this.treeDialogVisible = false
       },
-      
+
       // 删除按钮
       deleteTableRow() {
         if(this.selectedTableRows.length === 0) {
@@ -387,7 +294,7 @@
           this.$message.success('移除成功')
         }
       },
-      
+
       // 上移
       rowsUp() {
         /**
@@ -498,7 +405,7 @@
           console.log("参数化失败", error)
         })
       },
-      
+
       /**
        * 处理表格内部事件
        */
@@ -555,43 +462,54 @@
   }
 </script>
 
-<style lang="less" scopde>
-  .debugTitleRow {
+<style lang="less">
+.debugTitleRow {
     margin-bottom: 5px;
-  }
-  .funcButtonRow {
+}
+
+.funcButtonRow {
     padding: 0px 3px;
-  }
-  .addMultiple {
+}
+
+.addMultiple {
     margin-top: -90px;
-  }
-  .paramsCell {
+}
+
+.paramsCell {
     width: 100%;
+
     .topContent {
-      display: flex;
-      justify-content: flex-start;
-      .leftSide {
-        width: 130px;
-        p:nth-child(1) {
-          font-weight: bold;
+        display: flex;
+        justify-content: flex-start;
+
+        .leftSide {
+            width: 130px;
+
+            p:nth-child(1) {
+                font-weight: bold;
+            }
         }
-      }
-      .rightSide {
-        flex: 1;
-        p:first-child {
-          font-weight: bold;
+
+        .rightSide {
+            flex: 1;
+
+            p:first-child {
+                font-weight: bold;
+            }
+
+            p .el-input {
+                max-width: 200px;
+            }
+
+            .cellInput {
+                margin-bottom: 0px !important;
+            }
+
+            .cellSpan {
+                display: block;
+                line-height: 28px;
+            }
         }
-        p .el-input {
-          max-width: 200px;
-        }
-        .cellInput {
-          margin-bottom: 0px !important;
-        }
-        .cellSpan {
-          display: block;
-          line-height: 28px;
-        }
-      }
     }
-  }
+}
 </style>

@@ -6,18 +6,18 @@
           <el-row :gutter="20" class="row1">
             <el-col :span="5" :offset="0">
               <el-form-item label="查询方式">
-                <el-select class="elSelect" v-model="selectedQueryMethod">
+                <el-select size="small" class="elSelect" v-model="selectedQueryMethod">
                   <el-option v-for="(item,index) in queryMethods" :key="index" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item :label="selectedQueryMethod === '按测试轮次'?'测试轮次':'测试计划'">
-                <el-select class="elSelect" v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound"
+                <el-select size="small" class="elSelect" v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound"
                 clearable>
                   <el-option v-for="(item,index) in testRounds" :key="index" :value="item.name"></el-option>
                 </el-select>
-                <el-select class="elSelect" v-else v-model="selectedTestPlan"
+                <el-select size="small" class="elSelect" v-else v-model="selectedTestPlan"
                 clearable>
                   <el-option
                     v-for="(item,index) in testPlans"
@@ -33,6 +33,7 @@
                 label-width="90px"
                 :label="selectedQueryMethod === '按测试轮次'?'记录单状态':'执行轮次'">
                 <el-select
+                   size="small"
                    class="elSelect"
                   v-if="selectedQueryMethod === '按测试轮次'"
                   v-model="selectedStatus"
@@ -69,7 +70,7 @@
           <el-row :gutter="20">
             <el-col :span="5">
               <el-form-item label="执行状态(选)">
-                <el-select class="elInput" v-model="selectedExecutionStatus" @clear="queryByTestRound" clearable>
+                <el-select size="small" class="elInput" v-model="selectedExecutionStatus" @clear="queryByTestRound" clearable>
                   <el-option
                     v-for="(item,index) in executionStatus"
                     :key="index"
@@ -81,14 +82,14 @@
             </el-col>
             <el-col :span="5">
               <el-form-item label="场景列表(选)">
-                <el-select class="elInput" v-model="selectedSceneList">
+                <el-select size="small" class="elInput" v-model="selectedSceneList">
                   <el-option v-for="(item,index) in sceneList" :key="index" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="用例编号(选)">
-                <el-input  class="elInput" placeholder="填写用例编号" v-model="casecode" clearable />
+                <el-input size="small"  class="elInput" placeholder="填写用例编号" v-model="casecode" clearable />
               </el-form-item>
             </el-col>
           </el-row>
@@ -135,7 +136,7 @@
           <h2 class="dialogText">空记录！请尝试查询！</h2>
           <el-divider></el-divider>
           <div class="buttonBottom">
-            <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+            <el-button  size="small" type="primary" @click="dialogVisible = false">确定</el-button>
           </div>
         </el-dialog>
       </el-main>
@@ -451,7 +452,7 @@ export default {
   }
   .buttonBottom {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 15px;
     margin-bottom: -15px;
   }

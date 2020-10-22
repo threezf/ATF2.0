@@ -12,6 +12,7 @@
 import testProjectIndex from '@/views/testProject/index'
 import scene from '@/views/testProject/scene'
 import testProject from '@/views/testProject/testProject'
+import manageTestProject from '../views/testProject/manageTestProject'
 import testCaseManagement from "../views/testProject/testCaseManagement"
 import datatable from "../views/testProject/datatable"
 import DatatableFlowcase from '@/views/testProject/datatableFlowcase'
@@ -29,7 +30,8 @@ export default {
     component: testProjectIndex,
     redirect: '/testProjectIndext/testProject',
     meta: {
-        name: '项目测试'
+				name: '项目测试',
+				another: 'atf/project'
     },
     children: [
 		{
@@ -42,6 +44,17 @@ export default {
 						icon: 'el-icon-back'
 				}
 		},
+			{
+				path: 'manageTestProject',
+				name: 'manageTestProject',
+				component: manageTestProject,
+				meta: {
+					name: '管理项目',
+					parent: 'TestProjectIndex',
+					icon: 'el-icon-back',
+					hide:true
+				}
+			},
 		{
 				path: 'testCase',
 				name: 'testCase',
@@ -140,7 +153,7 @@ export default {
 				}
 		},{
 			path: 'testplanExecute',
-			name: 'testplanExecute',
+			name: 'TestplanExecute',
 			component: testplanExecute,
 			meta: {
 				name: '测试计划及执行',

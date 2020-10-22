@@ -1,91 +1,103 @@
 <template>
   <div class="page-inner">
     <el-container>
-      <el-main>
-        <el-row class="searchRow">
-          <el-input size="small" placeholder="输入搜索条件" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-          <el-button style="margin-left: 20px" type="primary" size="small" icon="el-icon-plus">新增</el-button>
-        </el-row>
-        <el-table class="table" border stripe highlight-current-row>
-          <el-table-column 
-            width="50px" 
-            label 
-            type="selection">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="名称">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="上级菜单">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="图标">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="类型">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="菜单URL">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" 
-            label="授权标识">
-          </el-table-column>
-          <el-table-column 
-            min-width="14.28%" label="操作">
-            <template slot-scope="scope">
-              <el-button 
-                type="primary" 
-                size="small" 
-                icon="el-icon-edit"
-                >编辑
-              </el-button>
-              <el-button 
-                type="primary" 
-                size="small" 
-                icon="el-icon-delete"
-                >删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
-      <el-footer>
-        <el-pagination
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-        ></el-pagination>
-      </el-footer>
+      <el-main style="margin-top: 20px">
+						<el-table
+							:data="treeData"
+							style="width: 100%;margin-bottom: 20px;"
+							row-key="id"
+							border
+							highlight-current-row
+							stripe
+							:tree-props="{children: 'childNodeList'}">
+							<el-table-column label="" type="selection" width="35px">
+							</el-table-column>
+							<el-table-column
+								prop="name"
+								align="center"
+								label="姓名">
+							</el-table-column>
+							<el-table-column
+								label="类型"
+								align="center">
+								<template slot-scope="scope">
+									<el-tag
+										v-if="scope.row.type === 0"
+										type="success"
+									>顶部菜单
+									</el-tag>
+									<el-tag
+										v-else-if="scope.row.type === 1"
+										type="primary"
+									>左侧子菜单
+									</el-tag>
+									<el-tag
+										v-else
+										type="info"
+									>功能
+									</el-tag>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="url"
+								align="center"
+								label="菜单URL">
+							</el-table-column>
+							<el-table-column
+								prop="perms"
+								align="center"
+								label="授权标识">
+							</el-table-column>
+						</el-table>
+			</el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+	import Request from '@/libs/request.js'
+	import VueMixins from '@/libs/vueMixins.js'
 export default {
-  name: "EnterpriseMnagement",
+  name: "MenuManagement",
   data() {
     return {
       total: 100,
       currentPage: 1,
       pageSize: 10,
       pageSizes: [5, 10, 20, 50],
+			treeData:[],
+			defaultProps: {
+				children: 'childNodeList',
+				label: 'name'
+			}
     };
   },
-  methods: {
+	created() {
+  	this.getTree()
+	},
+	methods: {
     handleCurrentChange(val) {},
     handleSizeChange(val) {},
+		getTree(){
+			Request({
+				url: '/menuController/queryAllMenu',
+				method: 'post',
+				params: {
+					userId:sessionStorage.getItem("userId")
+				}
+			}).then((res) => {
+				var treeData=res.menuDtoList
+				for(var i=0;i<treeData.length;i++){
+					if(treeData[i].level==0){
+						this.treeData.push(treeData[i])
+					}
+				}
+			}, (err) => {
+				console.log(err)
+			}).catch((err) => {
+				console.log(err)
+			})
+		}
   },
 };
 </script>
@@ -93,38 +105,6 @@ export default {
 <style scoped lang="less">
 .searchRow {
   .el-input {
-    width: 200px;
+    width: 300px;
   }
 }
-</style>
-
-
-<script>
-  export default {
-    name: "MenuManagement",
-    data() {
-      return {
-        total: 100,
-        currentPage: 1,
-        pageSize: 10,
-        pageSizes: [5, 10, 20, 50]
-      }
-    },
-    methods: {
-      handleCurrentChange(val) {
-
-      },
-      handleSizeChange(val) {
-
-      }
-    },
-  };
-</script>
-
-<style scoped lang="less">
-  .searchRow {
-    .el-input {
-      width: 200px;
-    }
-  }
-</style>

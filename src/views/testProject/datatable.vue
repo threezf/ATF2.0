@@ -2,7 +2,7 @@
 	<div class="page-inner">
 		<el-row class="border">
 			<el-col :span="4">
-				<el-button v-popover:showSearch>筛选用例</el-button>
+				<el-button size="small" v-popover:showSearch>筛选用例</el-button>
 				<el-popover
 					ref="showSearch"
 					placement="right"
@@ -11,6 +11,7 @@
 					<searchtestcase @condition-list='changeCondition'></searchtestcase>
 				</el-popover>
 				<el-button
+				 	size="small"
 					@click='search'
 					type="primary">
 					查询
@@ -18,6 +19,7 @@
 			</el-col>
 			<el-col :span="4">
 				<el-button
+					size="small"
 					@click='checkout'
 					type="primary">
 					切换流程用例展示
@@ -82,7 +84,7 @@
 							type="primary">
 							取消全屏
 						</el-button>
-						<el-select multiple v-model="columnHidden" placeholder="请选择隐藏列">
+						<el-select size="small" multiple v-model="columnHidden" placeholder="请选择隐藏列">
 							<el-option
 								v-for="item in selectOptions"
 								:key="item.value"
@@ -98,6 +100,7 @@
 						</el-button>
 					</el-col>
 				</el-row>
+
 				<div @contextmenu.prevent>
 					<el-table
 						height="80vh"
@@ -237,17 +240,17 @@
 				<el-radio v-model="dataType" label="4">表达式</el-radio>
 			</el-row>
 			<el-row v-show='dataType==1'>
-				<el-input v-model="input1" placeholder="请输入内容"></el-input>
+				<el-input size="small" v-model="input1" placeholder="请输入内容"></el-input>
 			</el-row>
 			<el-row v-show='dataType==2'>
-				<el-input placeholder="nil" disabled></el-input>
+				<el-input size="small" placeholder="nil" disabled></el-input>
 			</el-row>
 			<el-row v-show='dataType==3'>
-				<el-input placeholder="" disabled></el-input>
+				<el-input size="small" placeholder="" disabled></el-input>
 			</el-row>
 			<el-row v-show='dataType==4'>
 				<el-col :span="14">
-					<el-input placeholder="请输入内容" v-model="input4">
+					<el-input size="small" placeholder="请输入内容" v-model="input4">
 						<template slot="prepend">{expr=</template>
 						<template slot="append">}</template>
 					</el-input>
@@ -308,6 +311,7 @@
 						width="180">
 						<template slot-scope="scope">
 							<el-select
+								size="small"
 								v-model="scope.row.functions[0].name"
 								placeholder="请选择"
 								@change="changeMethod(scope.row)">
@@ -375,9 +379,9 @@
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
 									<el-col :span="12" class='fixedHeight'>
-                                            <span>
-                                                 {{ item.Name }}
-                                            </span>
+										<span>
+													{{ item.Name }}
+										</span>
 									</el-col>
 									<el-col :span="12">
 										<el-input
@@ -473,26 +477,26 @@
 							<div v-if='scope.row.arguShow'>
 								<el-row>
 									<el-col :span="12">
-                                            <span>
-                                                名称
-                                            </span>
+										<span>
+											名称
+										</span>
 									</el-col>
 									<el-col :span="12">
-                                            <span>
-                                                参数值
-                                            </span>
+										<span>
+											参数值
+										</span>
 									</el-col>
 								</el-row>
 								<el-row v-for='item in scope.row.parameters' :key='item.name'>
 									<el-col :span="12" class='fixedHeight'>
-                                            <span>
-                                                 {{ item.Name }}
-                                            </span>
+										<span>
+											{{ item.Name }}
+										</span>
 									</el-col>
 									<el-col :span="12">
-                                            <span>
-                                                 {{ item.Value }}
-                                            </span>
+										<span>
+											{{ item.Value }}
+										</span>
 									</el-col>
 								</el-row>
 								<el-row>
@@ -727,10 +731,8 @@
 				</el-table>
 			</div>
 			<el-row type="flex" justify="center">
-				<el-col :span='6'>
-					<el-button type='primary' @click="editDataFlag = false">取消</el-button>
-					<el-button type='primary' @click="transData">保存</el-button>
-				</el-col>
+				<el-button size="small" type='primary' @click="transData">保存</el-button>
+				<el-button size="small" type='primary' @click="editDataFlag = false">取消</el-button>
 			</el-row>
 		</el-dialog>
 		<el-dialog title="添加多项" :visible.sync="addItemShow" width="30%">
@@ -759,7 +761,7 @@
 				<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
 			</el-upload>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="exportDialog = false">关闭</el-button>
+				<el-button size="small" @click="exportDialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>

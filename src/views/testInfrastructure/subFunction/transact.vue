@@ -341,7 +341,7 @@ export default {
       //初始渲染需要的数据
       autId: "", //被测系统管理界面传递过来的值
       autRespDTOList: [], //所有测试系统列表
-      creatorId: 3, // 用户ID
+      creatorId: JSON.parse(sessionStorage.getItem("toTransact")).creatorId, // 用户ID
       ownedSystem: "", //被测系统
       //换页相关信息
       currentPage: 1,
@@ -356,6 +356,7 @@ export default {
       dialogImportVisible: false,
       dialogFailVisible: false,
       successDialogVisible: false,
+			creatorName:JSON.parse(sessionStorage.getItem("toTransact")).creatorName,
       //表单数据
       ruleForm: {
         nameMedium: "",
@@ -496,21 +497,30 @@ export default {
      * 顶部按钮方法
      **/
     addFunctionButton() {
-      let _this = this;
-      _this.isAdded = true;
-      _this.dialogModelFlag = 0;
-      _this.dialogVisible = true;
-      _this.ruleForm.nameMedium = "";
-      _this.ruleForm.functionType = !this.isInterface ? "UI" : "接口";
-      _this.ruleForm.code = "";
-      _this.ruleForm.descShort = "";
+    	if(this.creatorId==sessionStorage.getItem("userId")) {
+				let _this = this;
+				_this.isAdded = true;
+				_this.dialogModelFlag = 0;
+				_this.dialogVisible = true;
+				_this.ruleForm.nameMedium = "";
+				_this.ruleForm.functionType = !this.isInterface ? "UI" : "接口";
+				_this.ruleForm.code = "";
+				_this.ruleForm.descShort = "";
+			}else{
+				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限添加功能点")
+			}
     },
     importFunctionButton() {
+			if(this.creatorId==sessionStorage.getItem("userId")) {
       let _this = this;
       _this.dialogModelFlag = 1;
       _this.dialogImportVisible = true;
+			}else{
+				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限导入功能点")
+			}
     },
     updateFunctionButton() {
+			if(this.creatorId==sessionStorage.getItem("userId")) {
       let _this = this;
       if (_this.selectedRowIndex === "") {
         _this.$message.error("请先选中一个功能点");
@@ -525,6 +535,9 @@ export default {
           descShort,
         };
       }
+			}else{
+				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限修改功能点")
+			}
     },
     copyFunction() {
       let _this = this;
@@ -702,6 +715,8 @@ export default {
           name: "TransactDetail",
           query: {
             data: row,
+						creatorId:this.creatorId,
+						creatorName:this.creatorName,
             steps: 0
           },
         });
@@ -710,6 +725,8 @@ export default {
           name: "InterfacesManagement",
           query: {
             data: row,
+						creatorId:this.creatorId,
+						creatorName:this.creatorName,
             steps: 0
           },
         });

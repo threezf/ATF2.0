@@ -14,7 +14,8 @@ export default {
     component: quicklyStart,
     redirect: '/quicklyStart/quicklyTransact',
     meta: {
-        name: '快速开始'
+        name: '快速开始',
+        another: 'atf/quickStart'
     },
     children: [
         {

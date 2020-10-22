@@ -107,9 +107,7 @@
       //提交表单，点击登陆
       submitForm(FormName) {
         let _this = this;
-        console.log('userId 1')
         if (_this.ruleForm.uid == "1") {
-          console.log('userId 1')
           SessionStorage.set("userId", "3");
           this.$router.push({
             path: "/index",
@@ -117,7 +115,6 @@
           return;
         }
         this.$refs[FormName].validate((valid) => {
-          console.log("进入验证", valid);
           if (valid) {
             let qs = require("qs");
             Request({
@@ -129,7 +126,6 @@
                 }),
               })
               .then((res) => {
-                console.log("验证成功", res);
                 Request({
                     url: "/userController/login",
                     method: "post",
@@ -141,21 +137,28 @@
                     }),
                   })
                   .then((res) => {
-                    console.log("登录成功", res);
                     if(res.respCode === '0000') {
                       sessionStorage.setItem("userId", res.userId);
                       sessionStorage.setItem("username", this.ruleForm.uid);
+                      this.queryAllRelated(res.userId)
                       this.$store.commit('setLoginInfo', {
                         companyId: res.companyId,
                         companyName: res.companyName,
                         userId: res.userId
                       })
-                      // this.toMainPage(res.userId)
-                      this.$router.push({
-                        path: "/index",
-                      });
+                      if(res.respMsg === '服务器时间可能被更改，无法校验license，请联系管理员' || (res.respCode === '用户所属公司可在线人数已达上限')) {
+                          this.$message.warning(res.respMsg)
+                      }else {
+                          if(res.respMsg.startsWith('license使用时间不足')) {
+                              this.$message.warning('license使用时间不足，请注意充值')
+                          }
+                          
+                          this.$router.push({
+                            path: "/index",
+                          });
+                      }
                     }else {
-                      this.$$message.console.warning('请验证登录信息');
+                      this.$message.warning('请验证登录信息');
                     }
                   })
                   .catch((e) => {
@@ -170,23 +173,6 @@
             this.$message.error("请输入信息");
           }
         });
-        // 测试map
-        // const map = new Map()
-        // map.set('key1', 'value1')
-        // map.set('key2', 'value3')
-        // map.set('key3', 'value3')
-        // console.log(map)
-        // Request({
-        //   url: 'aaa',
-        //   method: 'POST',
-        //   params: {
-        //     map: map.toString()
-        //   }
-        // }).then(res => {
-        //   console.log(res)
-        // }).catch(err => {
-        //   console.log(err)
-        // })
       },
       // 更新用户积分
       updateTotalScore(userId, totalScore) {
@@ -194,7 +180,6 @@
           userId,
           totalScore
         }).then(res => {
-          console.log('路由跳转')
           // this.$router.push({
           //   path: "/index",
           // });
@@ -202,22 +187,24 @@
       },
       //获取验证码
       getSessionId() {
-        console.log("获取验证码");
         let _this = this;
         Request({
             url: "/userController/getSessionId",
             method: "POST",
           })
           .then((res) => {
-            console.log(res, "获取资源");
             _this.storedSessionId = res.sessionId;
             _this.userId = res.obj;
+            // _this.imageURL =
+            //   "http://10.28.204.206:8080/atfcloud2.0a/userController/authCode?abc=" +
+            //   Math.random() +
+            //   "&sessionId=" +
+            //   res.sessionId;
             _this.imageURL =
               "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
               "&sessionId=" +
               res.sessionId;
-            console.log("获取资源", _this.imageURL, _this.storedSessionId);
           })
           .catch((e) => {
             console.log("登录出错", e);
@@ -225,9 +212,7 @@
       },
       // 跳转并传递参数
       toMainPage(userId) {
-        console.log(this.$store)
         this.$store.dispatch('getTotalScore', userId).then(data => {
-          console.log('积分获取成功', data)
           this.updateTotalScore(userId, Number(data.totalScore) + 1) 
         })
       },
@@ -235,6 +220,28 @@
       toRigester() {
         this.$router.push("/rigester");
       },
+      // 查询具有的权限
+      queryAllRelated(userId) {
+        Request({
+          url: '/menuController/queryAllRelated',
+          method: 'post',
+          params: {
+            userId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$store.commit('setUrlList', {
+              urlList: res.urlList
+            })
+            localStorage.setItem('urls', res.urlList)
+            console.log('urls emit事件总线')
+            this.$bus.emit('setUrls', res.urlList)
+          }
+          return
+        }).catch(error => {
+          console.log('权限获取失败')
+        })
+      }
     },
     
   };

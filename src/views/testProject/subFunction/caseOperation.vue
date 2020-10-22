@@ -4,10 +4,10 @@
     <el-row class="topRow">
       <el-form label-width="120px">
         <el-form-item label="测试项目">
-          <el-input disabled></el-input>
+          <el-input size="small" disabled></el-input>
         </el-form-item>
         <el-form-item label="用例编号">
-          <el-input v-model="testcaseViewRespDTO.casecode" disabled></el-input>
+          <el-input size="small" v-model="testcaseViewRespDTO.casecode" disabled></el-input>
         </el-form-item>
       </el-form>
     </el-row>
@@ -188,7 +188,7 @@
         <el-form class="detailFormStyle" label-width="100px">
           <el-row>
             <el-form-item label="用例编号">
-              <el-input v-model="testcaseViewRespDTO.casecode" disabled></el-input>
+              <el-input size="small" v-model="testcaseViewRespDTO.casecode" disabled></el-input>
             </el-form-item>
           </el-row>
           <div class="threeDiv">
@@ -197,7 +197,7 @@
               :key="item.id"
               :label="item.value"
             >
-              <el-input v-model="threeInputParams[index]" disabled></el-input>
+              <el-input size="small" v-model="threeInputParams[index]" disabled></el-input>
             </el-form-item>
 
             <el-form-item
@@ -205,7 +205,7 @@
               :key="item.id"
               :label="item.value"
             >
-              <el-select v-model="selectParams[index]" disabled>
+              <el-select size="small" v-model="selectParams[index]" disabled>
                 <el-option
                   v-for="(item) in selectParamsList[index]"
                   :key="item.type"

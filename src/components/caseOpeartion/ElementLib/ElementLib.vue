@@ -308,8 +308,8 @@
         </el-form-item>
         <span>若要添加多个，请以英文逗号“,”隔开。</span>
         <el-row type="flex" justify="center">
-          <el-button type="warning" size="small" plain @click="dialogCancel">取消</el-button>
           <el-button type="primary" size="small" @click="dialogSure">添加</el-button>
+          <el-button type="warning" size="small" plain @click="dialogCancel">取消</el-button>
         </el-row>
       </el-form>
     </el-dialog>
@@ -318,8 +318,8 @@
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObjUI"></el-tree>
       </div>
       <el-row type="flex" justify="center">
-        <el-button type="warning" size="small" plain @click="objectDialogVisibleUI=false">取消</el-button>
         <el-button type="primary" size="small" @click="objectDialogVisibleUI=false">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectDialogVisibleUI=false">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog class="objDialog" width="600px" title="对象库" :visible.sync="objectDialogVisible">
@@ -327,8 +327,8 @@
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObj"></el-tree>
       </div>
       <el-row type="flex" justify="center">
-        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
         <el-button type="primary" size="small" @click="objectSure">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog class="objDialog" width="600px" title="对象库" :visible.sync="objectDialogVisibleEle">
@@ -336,8 +336,8 @@
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObjEle"></el-tree>
       </div>
       <el-row type="flex" justify="center">
-        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
         <el-button type="primary" size="small" @click="objectSureEle">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
       </el-row>
     </el-dialog>
   </div>
@@ -1007,7 +1007,7 @@ export default {
   }
   .el-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     border-top: 1px solid #e5e5e5;
     margin-top: 40px;
     padding-top: 10px;
@@ -1023,7 +1023,7 @@ export default {
   }
   .el-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding-right: 10px;
     margin-bottom: -15px;
     margin-top: -10px;

@@ -22,7 +22,15 @@
               icon="el-icon-date"
               plain
               @click="executionTimePlanning"
-            >执行时间规划</el-button>
+            >设置定时执行</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-manage"
+              plain
+              @click="operationTimer"
+              >管理定时任务
+            </el-button>
             <el-button
               type="primary"
               size="small"
@@ -191,18 +199,118 @@
             :direction="direction"
             :modal-append-to-body="true"
             :before-close="handleBeforeClose">
-            <!--执行时间控制-->
-            <el-form v-if="selectedDrawIndex == 0" :model="timeForm" label-width="110px">
-              <el-form-item label="执行时间">
-                <el-date-picker v-model="timeForm.time" type="datetime" placeholder="选择执行时间"></el-date-picker>
-              </el-form-item>
-              <el-form-item label-width="156px" label="执行时间标识T+">
-                <el-input class="timeInput" v-model="timeForm.timeIdentification" clearable></el-input>
-              </el-form-item>
-              <el-form-item class="buttonRow">
-                <el-button type="primary" size="small" @click="saveExecutionTimePlanning">保存</el-button>
-              </el-form-item>
-            </el-form>
+            <!--定时执行设置-->
+            <div v-if="selectedDrawIndex == 0" style="padding: 0 30px" >
+              <!-- <cron @change="changeCron"></cron> -->
+              <span style="color: #E6A23C; font-size: 12px;">corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份</span>
+              <cron-set v-model="cronExpression"></cron-set>
+              <el-form :model="timeForm" label-width="110px">
+                <el-form-item class="buttonRow">
+                  <el-button type="primary" size="small" @click="saveExecutionTimePlanning">
+                    {{isSave? '保存': '添加'}}
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div
+              style="padding: 0 30px 30px "
+              v-if="selectedDrawIndex == 5">
+              <el-row hidden>
+                <el-button
+                  size="small"
+                  type="primary"
+                  icon="el-icon-plus"
+                  @click="setTimerStart"
+                  >新增定时任务
+                </el-button>
+              </el-row>
+              <el-table
+                class="table"
+                height="110"
+                :data="getTimers"
+                stripe
+                border
+                highlight-current-row>
+                <el-table-column
+                  label="序号"
+                  type="index"
+                  width="100px">
+                </el-table-column>
+                <el-table-column
+                  label="状态"
+                  min-width="20%">
+                  <template
+                    slot-scope="scope">
+                    <el-tag
+                      type="success"
+                      v-if="scope.row.status == 0"
+                      >已完成
+                    </el-tag>
+                    <el-tag
+                      type="info"
+                      v-if="scope.row.status == 1"
+                      >等待发起执行
+                    </el-tag>
+                    <el-tag
+                      type="warning"
+                      v-if="scope.row.status == 2"
+                      >发起执行，等待定时器下一次启动
+                    </el-tag>
+                    <el-tag
+                      type="primary"
+                      v-if="scope.row.status == 3"
+                      >定时器正在执行
+                    </el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="上次执行日期"
+                  prop="executedTime"
+                  min-width="20%">
+                </el-table-column>
+                <el-table-column
+                  label="任务描述"
+                  prop="cronExpression"
+                  min-width="50%">
+                </el-table-column>
+                <el-table-column
+                  label="操作"
+                  min-width="30%">
+                  <template
+                    slot-scope="scope">
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      v-if="scope.row.status !== 3"
+                      @click="update(scope.row)"
+                      >更新
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      v-if="scope.row.status !== 0"
+                      @click="setTimerFinished(scope.row)"
+                      >设为完成
+                    </el-button>
+                    <el-button
+                      type="info"
+                      size="mini"
+                      v-if="scope.row.status === 1"
+                      @click="startTimeRun(scope.row)"
+                      >发起执行
+                    </el-button>
+                    <el-button
+                      type="info"
+                      v-if="scope.row.status !== 1"
+                      size="mini"
+                      @click="viewTimer(scope.row)"
+                      >查看
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+
             <!-- 触发器设置 -->
             <div v-if="selectedDrawIndex == 1">
               <el-form class="drawForm">
@@ -257,7 +365,7 @@
               <el-row :gutter="20">
                 <el-col :span="5">
                   <el-form-item label="执行状态策略">
-                    <el-select v-model="exeStrategy1Status">
+                    <el-select size="small" v-model="exeStrategy1Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -272,7 +380,7 @@
               <el-row :gutter="20">
                 <el-col :span="4">
                   <el-form-item label="起始节点策略">
-                    <el-select v-model="exeStrategy2Start">
+                    <el-select size="small" v-model="exeStrategy2Start">
                       <el-option
                         v-for="(item,index) in startStrategy"
                         :key="index"
@@ -284,7 +392,7 @@
                 </el-col>
                 <el-col :span="5" :offset="1">
                   <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select v-model="exeStrategy2Order">
+                    <el-select size="small" v-model="exeStrategy2Order">
                       <el-option
                         v-for="(item,index) in orderStrategy"
                         :key="index"
@@ -296,7 +404,7 @@
                 </el-col>
                 <el-col :span="4" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select v-model="exeStrategy2Status">
+                    <el-select size="small" v-model="exeStrategy2Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -311,7 +419,7 @@
               <el-row :gutter="20">
                 <el-col :span="5">
                   <el-form-item label="起始用例策略">
-                    <el-select v-model="exeStrategy3Start">
+                    <el-select size="small" v-model="exeStrategy3Start">
                       <el-option
                         v-for="(item,index) in startStrategy"
                         :key="index"
@@ -323,7 +431,7 @@
                 </el-col>
                 <el-col :span="5">
                   <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select v-model="exeStrategy3Order">
+                    <el-select size="small" v-model="exeStrategy3Order">
                       <el-option
                         v-for="(item,index) in orderStrategy"
                         :key="index"
@@ -335,7 +443,7 @@
                 </el-col>
                 <el-col :span="5" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select v-model="exeStrategy3Status">
+                    <el-select size="small" v-model="exeStrategy3Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -350,7 +458,7 @@
               <el-row :gutter="20">
                 <el-col :span="4">
                   <el-form-item label="出错操作">
-                    <el-select v-model="exeStrategyErr">
+                    <el-select size="small" v-model="exeStrategyErr">
                       <el-option
                         v-for="(item,index) in errorOperations"
                         :key="index.id"
@@ -423,34 +531,34 @@
               <el-row :gutter="20">
                 <el-col :span="7">
                   <el-form-item label="设备类型">
-                    <el-input v-model="mobileForm.deviceType"></el-input>
+                    <el-input size="small" v-model="mobileForm.deviceType"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="设备名称">
-                    <el-input v-model="mobileForm.deviceName"></el-input>
+                    <el-input size="small" v-model="mobileForm.deviceName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="自动化类型">
-                    <el-input v-model="mobileForm.autoType"></el-input>
+                    <el-input size="small" v-model="mobileForm.autoType"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="7">
                   <el-form-item label="应用包名">
-                    <el-input v-model="mobileForm.packageName"></el-input>
+                    <el-input size="small" v-model="mobileForm.packageName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="启动appActivity">
-                    <el-input v-model="mobileForm.appActivy"></el-input>
+                    <el-input size="small" v-model="mobileForm.appActivy"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="是否重置">
-                    <el-select v-model="mobileForm.isReset">
+                    <el-select style="width:110%" size="small" v-model="mobileForm.isReset">
                       <el-option :value="true" label="是"></el-option>
                       <el-option :value="false" label="否"></el-option>
                     </el-select>
@@ -460,7 +568,7 @@
               <el-row>
                 <el-col :span="21">
                   <el-form-item label="接口路径">
-                    <el-input v-model="mobileForm.interfacePath"></el-input>
+                    <el-input size="small" v-model="mobileForm.interfacePath"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -476,6 +584,7 @@
           <el-form :model="addForm" label-width="70px">
             <el-form-item label="添加用例">
               <el-select
+                size="small"
                 v-model="addForm.caseIds"
                 :default-first-option="true"
                 @change="changeSelect"
@@ -491,10 +600,10 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item class="addButtons">
+            <el-row type="flex" justify="center">
               <el-button type="primary" size="small" @click="addSure">添加</el-button>
               <el-button type="warning" size="small" @click="addCancel" plain>取消</el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
         <el-dialog 
@@ -508,6 +617,8 @@
             <el-form-item 
               label="数据池名称">
               <el-select 
+                size="small"
+                style="width:100%"
                 v-model="dataPoolForm.dataPoolName">
                 <el-option 
                   value="场景数据池" 
@@ -518,6 +629,8 @@
             <el-form-item 
               label="数据池对象id">
               <el-select 
+                size="small"
+                style="width:100%"
                 v-model="dataPoolForm.objectId">
                 <el-option 
                   label="2" 
@@ -528,26 +641,28 @@
             <el-form-item 
               label="数据名称">
               <el-input 
+                size="small"
                 v-model="dataPoolForm.dataName">
               </el-input>
             </el-form-item>
             <el-form-item 
               label="数据值">
               <el-input 
+                size="small"
                 v-model="dataPoolForm.dataValue">
               </el-input>
             </el-form-item>
             <el-form-item 
               label="数据描述">
               <el-input 
+                style="width:90%"
                 class="textarea" 
                 type="textarea" 
                 rows="5" 
                 v-model="dataPoolForm.dataDesc">
               </el-input>
             </el-form-item>
-            <el-form-item 
-              class="buttonRow">
+            <el-row type="flex" justify="center">
               <el-button 
                 type="primary" 
                 size="small" 
@@ -561,10 +676,10 @@
                 @click="addDataPoolCancel"
                 >取消
               </el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
-        <el-dialog></el-dialog>
+
         <el-dialog 
           class="triggerDialog"
           width="40%" 
@@ -578,6 +693,8 @@
             <el-form-item 
               label="触发器名称：">
               <el-input 
+                size="small"
+                style="width:100%"
                 placeholder="请输入触发器名称"
                 v-model="triggerForm.name" 
                 clearable>
@@ -586,6 +703,7 @@
             <el-form-item 
               label="触发器描述：">
               <el-input 
+                size="small"
                 type="textarea" 
                 rows="4" 
                 placeholder="请输入描述"
@@ -632,6 +750,7 @@
                 <template 
                   slot-scope="scope">
                   <el-select 
+                    size="small"
                     v-model="scope.row.objectName">
                     <el-option
                       v-for="(item,index) in conditionNames"
@@ -648,6 +767,7 @@
                 <template 
                   slot-scope="scope">
                   <el-select 
+                    size="small"
                     v-model="triggerForm.conditions[scope.$index].matchType">
                     <el-option 
                       value="1" 
@@ -662,6 +782,7 @@
                 <template 
                   slot-scope="scope">
                   <el-input 
+                    size="small"
                     v-model="scope.row.value"
                     placeholder="请输入匹配值">
                   </el-input>
@@ -690,6 +811,7 @@
               </el-table-column>
             </el-table>
             <el-form-item 
+              style="margin-bottom:0"
               label="执行动作：">
               <el-button 
                 type="primary" 
@@ -709,6 +831,7 @@
                   <el-form-item 
                     label="选择操作">
                     <el-select 
+                      size="small"
                       v-model="triggerForm.actions[index].actionName">
                       <el-option 
                         value="1" 
@@ -730,6 +853,7 @@
                   <el-form-item 
                     label="脚本类型">
                     <el-select 
+                      size="small"
                       v-model="triggerForm.actions[index].actionType">
                       <el-option 
                         label="groovy" 
@@ -753,8 +877,7 @@
                 </el-form>
               </li>
             </ul>
-            <el-form-item 
-              class="buttonRow">
+            <el-row type="flex" justify="center" style="margin-top:10px">
               <el-button 
                 type="primary" 
                 size="small" 
@@ -768,7 +891,7 @@
                 @click="triggerCancel"
                 >取消
               </el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
       </el-main>
@@ -777,10 +900,15 @@
 </template>
 
 <script>
+  // 导入定时cron组件库
+  import {cron} from 'vue-cron';
+  // 导入cron反解析
   import Request from "@/libs/request.js";
+  import CronSet from '@/components/utils/cron/index'
   import VueMixins from "@/libs/vueMixins.js";1
   import qs from "qs";
   import Sortable from "sortablejs";
+  import parser from 'cron-parser'
   export default {
     name: "ScenceSetting",
     mixins: [VueMixins],
@@ -814,7 +942,8 @@
           "触发器设置",
           "执行过程控制",
           "数据资源池配置",
-          "配置移动端设备信息"
+          "配置移动端设备信息",
+          "定时任务管理"
         ],
         selectedDrawIndex: 0,
         timeForm: {
@@ -930,8 +1059,19 @@
          */
         selectSceneDto: {},
         indetermintate: false,
-        isCheckedAll: false
+        isCheckedAll: false,
+        cronExpression: '0 45 20 * ? ? 2020',
+        isSave: false,
+        timerId: '', // 定时器id
+        /**
+         * 定时执行与管理
+         */
+        getTimers: []
       };
+    },
+    components: {
+      cron,
+      CronSet
     },
     created() {
       // 获取上个界面传递的sceneId
@@ -941,6 +1081,7 @@
       this.getMobileInfo();
       this.pagedBatchQueryTestCase();
       this.pagedBatchQueryDataPool()
+      console.log('定时', parser.parseExpression("*/5 * * * * ?"))
     },
     mounted() {
       this.sort();
@@ -1129,37 +1270,139 @@
         }
       },
       /**
-       * 时间规划
+       * 定时执行 与 定时管理
        */
-      // 执行时间规划
+      // 打开定时执行抽屉
       executionTimePlanning() {
         this.selectedDrawIndex = 0;
         this.drawerVisible = true;
+        this.isSave = false
       },
-      // 保存执行时间规划数据
-      saveExecutionTimePlanning() {
+      // 获取cron表达式
+      changeCron(val) {
+        console.log('cron', val)
+        this.cronExpression = val
+        this.setTimer()
+      },
+      // 设置定时执行
+      setTimer() {
+        console.log("cron", {
+          sceneId: this.sceneId,
+          creatorId: sessionStorage.getItem('userId'),
+          cronExpression: this.cronExpression
+        })
         Request({
-          url: '/sceneController/sceneTestcaseSetting',
-          method: 'POST',
+          url: '/sceneTimer/setTimer',
+          method: 'post',
           params: {
             sceneId: this.sceneId,
-            caseIds: [],
-            executeTime: this.timeForm.time,
-            executeDateFlag: this.timeForm.timeIdentification,
-            combineGroupName: '',
-            orderNum: 1,
-            runTotalNumber: 2,
-            modifierId: 3
+            creatorId: sessionStorage.getItem('userId'),
+            cronExpression: this.cronExpression
           }
         }).then(res => {
-          if(res.respCode === '0000'){
-              this.$message.success(res.respMsg);
-            } else {
-              this.$message.error(res.respMsg)
-            }
-        }).catch(err => {
-          this.$message.error('保存失败')
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+          }
+        }).catch(error => {
+          this.$message.warning(error)
         })
+      },
+      // 打开新增抽屉
+      setTimerStart() {
+        this.selectedDrawIndex = 0
+      },
+
+      // 查询一个场景下的所有定时器
+      queryAllSceneTimersByScene() {
+        Request({
+          url: '/sceneTimer/queryAllSceneTimersByScene',
+          method: 'post',
+          params: {
+            sceneId: this.sceneId,
+            userId: sessionStorage.getItem('userId')
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.getTimers = res.timers
+            console.log('定时',this.getTimers)
+          }
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      update(row) {
+        this.selectedDrawIndex = 0
+        this.timerId = row.id
+        this.isSave = true
+        this.cronExpression = row.cronExpression
+      },
+      // 更新场景定时器
+      updateTimer(timerId) {
+        Request({
+          url: '/sceneTimer/updateTimer',
+          method: 'post',
+          params: {
+            timerId,
+            sceneId: this.sceneId,
+            cronExpression: this.cronExpression
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+            this.selectedDrawIndex = 5
+            this.queryAllSceneTimersByScene()
+          }
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      // 将定时器设置为已完成，取消对应quartz的job
+      setTimerFinished(row) {
+        Request({
+          url: '/sceneTimer/setTimerFinished',
+          method: 'post',
+          params: {
+            timerId: row.id,
+            sceneId: this.sceneId
+          }
+        }).then(res => {
+          if(res.respCode === '0000') {
+            this.$message.success(res.respMsg)
+            row.status = 0
+          }
+          return
+        }).catch(error => {
+          this.$message.warning(error)
+        })
+      },
+      // 定时任务管理
+      operationTimer() {
+        this.drawerVisible = true
+        this.selectedDrawIndex = 5
+        this.queryAllSceneTimersByScene()
+      },
+      // 发起定时执行
+      startTimeRun(row) {
+        console.log('定时执行', row)
+        
+        // this.$router.push({
+        //   name: 'TestplanExecute',
+        //   query: {
+        //     isTimer: true,
+        //     data: row
+        //   }
+        // })
+      },
+
+
+      // 保存执行时间规划数据
+      saveExecutionTimePlanning() {
+        console.log('urls当前定时字符', this.cronExpression)
+        if(!this.isSave) {
+          this.setTimer()
+        }else {
+          this.updateTimer(this.timerId)
+        }
       },
       /**
        * 触发器
@@ -1900,9 +2143,8 @@
   .drawerHide {
     .buttonRow {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       margin-top: 10px;
-      padding-right: 20px;
     }
     .timeInput {
       width: 175px;
@@ -2033,8 +2275,8 @@
   }
   .triggerButtonRow {
     display: flex;
-    justify-content: flex-end;
-    padding-right: 20px;
+    justify-content: center;
+
     .el-button {
       margin-top: 10px;
       height: 30px !important;

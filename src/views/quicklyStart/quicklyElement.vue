@@ -13,8 +13,8 @@
     </el-row>
     <el-row type="flex" class="fixButton" justify="center" >
 
-        <el-button type="primary" @click="next()">保存并进入下一步</el-button>
-				<el-button @click="back()">返回上一步</el-button>
+        <el-button size="small" type="primary" @click="next()">保存并进入下一步</el-button>
+				<el-button size="small" @click="back()">返回上一步</el-button>
 
     </el-row>
   </div>

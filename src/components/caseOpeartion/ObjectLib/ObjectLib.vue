@@ -4,6 +4,7 @@
 			<div class="title">对象库</div>
 			<el-card>
 				<el-input
+					size="small"
 					v-model="filterText"
 					placeholder="输入关键字进行过滤">
 					<el-button 
@@ -49,11 +50,12 @@
 					<el-row>
 						<el-form-item
 							label="对象名称">
-							<el-input v-model="selectObject.objectName"></el-input>
+							<el-input size="small" v-model="selectObject.objectName"></el-input>
 						</el-form-item>
 						<el-form-item
 							label="类型">
 							<el-select 
+								size="small"
 								placeholder="--选择控件类型--"
 								v-model="selectObject.classType">
 								<el-option 
@@ -324,24 +326,25 @@
 				<el-form-item
 					label="对象名称">
 					<el-input
+					 	size="small"
 						placeholder="请输入UI名称"
 						v-model="objectName">
 					</el-input>
 				</el-form-item>
 				<span>若要添加多个，请以英文逗号“,”隔开。</span>
-				<el-row>
+				<el-row type="flex" justify="center">
+					<el-button
+						type="primary"
+						size="small"
+						@click="dialogSure"
+						>添加
+					</el-button>
 					<el-button
 						type="warning"
 						size="small"
 						plain
 						@click="dialogCancel"
 						>取消
-					</el-button>
-					<el-button
-						type="primary"
-						size="small"
-						@click="dialogSure"
-						>添加
 					</el-button>
 				</el-row>
 			</el-form>
@@ -757,7 +760,7 @@
 		}
 		.el-row {
 			display: flex;
-			justify-content: flex-end;
+			justify-content: center;
 			border-top: 1px solid #e5e5e5;
 			margin-top: 40px;
 			padding-top: 10px;

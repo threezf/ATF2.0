@@ -4,7 +4,7 @@
             <el-main>
                 <el-row :gutter="20">
                     <el-col :span="4">
-                        <el-input  v-model="selectInfo" placeholder="请输入内容"></el-input>
+                        <el-input size="small"  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
                     <el-col :span="5" >
                         <el-button
@@ -83,15 +83,15 @@
                     width="30%">
                     <el-form ref="form"  :model="form" label-width="80px">
                         <el-form-item   label="场景名称" prop="senceName" required >
-                            <el-input   v-model="form.senceName"></el-input>
+                            <el-input size="small" v-model="form.senceName"></el-input>
                         </el-form-item>
                         <el-form-item   label="场景描述" prop="senceDesc" >
-                            <el-input   v-model="form.senceDesc"></el-input>
+                            <el-input  size="small" v-model="form.senceDesc"></el-input>
                         </el-form-item>
-                        <el-form-item >
-                            <el-button    type="primary" @click="submitForm()">{{buttonName}}</el-button>
-                            <el-button   @click="resetForm('form')">重置</el-button>
-                        </el-form-item>
+                        <el-row type="flex" justify="center">
+                            <el-button  size="small"  type="primary" @click="submitForm()">{{buttonName}}</el-button>
+                            <el-button size="small"  @click="resetForm('form')">重置</el-button>
+                        </el-row>
                     </el-form>
                 </el-dialog>
             </el-main>

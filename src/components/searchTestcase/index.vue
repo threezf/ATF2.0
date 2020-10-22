@@ -25,7 +25,7 @@
 				取消筛选
 			</el-button>
 			<div class='searchRow' v-for='(condition,index) in conditionList' :key="searchTestcase">
-				<el-select v-model="condition.propertyName" @change='itemChange(condition)' placeholder="请选择筛选项目">
+				<el-select size="small" v-model="condition.propertyName" @change='itemChange(condition)' placeholder="请选择筛选项目">
 					<el-option
 						v-for="item in propertyNameOptions"
 						:key="item.value"
@@ -33,7 +33,7 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-select v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
+				<el-select size="small" v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
 					<el-option
 						v-for="item in compareTypeOptions[condition.propertyName]"
 						:key="item.value"
@@ -41,9 +41,9 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-input v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值"
+				<el-input size="small" v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值"
 									@change='valueChange(condition)'></el-input>
-				<el-select v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值"
+				<el-select size="small" v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值"
 									 :multiple='true' @change='valueChange()'>
 					<el-option
 						v-for="item in getConf(condition).itemList"
@@ -52,7 +52,7 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-select v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'>
+				<el-select size="small" v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'>
 					<el-option
 						v-for="item in getConf(condition).itemList"
 						:key="item.value"
@@ -94,8 +94,10 @@
 			//得到被测系统数据
 			Request({
 				url: "/aut/queryListAut",
-				method: "get",
-				params: {}
+				method: "post",
+				params: {
+					companyId:JSON.parse(localStorage.getItem("loginInfo")).companyId
+				}
 			}).then(resp => {
 				let options = []
 				resp.autRespDTOList.forEach(item => {
@@ -108,33 +110,33 @@
 					item.itemList = options
 				})
 			})
-			//得到测试任务数据
-			Request({
-				url: "/missionController/pagedBatchQueryTestMission",
-				method: "post",
-				params: {
-					currentPage: 1,
-					pageSize: 10000,
-					orderColumns: "modified_time",
-					orderType: "desc",
-					nameMedium: "",
-					descMedium: "",
-					codeLong: ""
-				}
-			})
-				.then(
-					res => {
-						let options = []
-						res.list.forEach(item => {
-							options.push({
-								value: item.id,
-								label: item.nameMedium,
-							})
-						})
-						this.compareTypeOptions.missionId.forEach(item => {
-							item.itemList = options
-						})
-					})
+			// //得到测试任务数据
+			// Request({
+			// 	url: "/missionController/pagedBatchQueryTestMission",
+			// 	method: "post",
+			// 	params: {
+			// 		currentPage: 1,
+			// 		pageSize: 10000,
+			// 		orderColumns: "modified_time",
+			// 		orderType: "desc",
+			// 		nameMedium: "",
+			// 		descMedium: "",
+			// 		codeLong: ""
+			// 	}
+			// })
+			// 	.then(
+			// 		res => {
+			// 			let options = []
+			// 			res.list.forEach(item => {
+			// 				options.push({
+			// 					value: item.id,
+			// 					label: item.nameMedium,
+			// 				})
+			// 			})
+			// 			this.compareTypeOptions.missionId.forEach(item => {
+			// 				item.itemList = options
+			// 			})
+			// 		})
 			//得到用例性质数据
 			this.compareTypeOptions.caseProperty.forEach(item => {
 				item.itemList = [{
@@ -158,72 +160,35 @@
 						label: "流程级"
 					}]
 			})
-			//得到测试用例类型数据
-			this.compareTypeOptions.caseType.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "联机"
-					},
-					{
-						value: "2",
-						label: "批量"
-					},
-					{
-						value: "3",
-						label: "接口"
-					}
-				]
-			})
-			//得到优先级数据
-			this.compareTypeOptions.priority.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "1级"
-					},
-					{
-						value: "2",
-						label: "2级"
-					},
-					{
-						value: "3",
-						label: "3级"
-					},
-					{
-						value: "4",
-						label: "4级"
-					},
-					{
-						value: "5",
-						label: "5级"
-					},
-					{
-						value: "6",
-						label: "6级"
-					},
-					{
-						value: "7",
-						label: "级"
-					},
-					{
-						value: "8",
-						label: "8级"
-					},
-					{
-						value: "9",
-						label: "9级"
-					}
-				]
-			})
+			// //得到测试用例类型数据
+			// this.compareTypeOptions.caseType.forEach(item => {
+			// 	item.itemList = [
+			// 		{
+			// 			value: "1",
+			// 			label: "联机"
+			// 		},
+			// 		{
+			// 			value: "2",
+			// 			label: "批量"
+			// 		},
+			// 		{
+			// 			value: "3",
+			// 			label: "接口"
+			// 		}
+			// 	]
+			// })
+
 			//得到用户数据
 			Request({
-				url: "/userController/selectAllUsername",
+				url: "/testProjectController/queryAllRelatedUser",
 				method: "post",
-				params: {}
+				params: {
+					userId:sessionStorage.getItem("userId"),
+					projectId:sessionStorage.getItem("selectId"),
+				}
 			}).then(resp => {
 				let options = []
-				resp.list.forEach(item => {
+				resp.userEntityList.forEach(item => {
 					options.push({
 						value: item.id,
 						label: item.username,
@@ -235,32 +200,6 @@
 				this.compareTypeOptions.reviewer.forEach(item => {
 					item.itemList = options
 				})
-			})
-			//得到脚本管理方式数据
-			this.compareTypeOptions.scriptModeFlag.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "模板"
-					}
-				]
-			})
-			//得到执行方式数据
-			this.compareTypeOptions.executeMethod.forEach(item => {
-				item.itemList = [
-					{
-						value: "1",
-						label: "手工"
-					},
-					{
-						value: "2",
-						label: "自动化"
-					},
-					{
-						value: "3",
-						label: "配合"
-					}
-				]
 			})
 		},
 		computed: {

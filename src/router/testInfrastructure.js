@@ -5,7 +5,6 @@
 import TestInfrastructureIndex from '@/views/testInfrastructure/index';
 import TestedSystemManagementRouter from '@/views/testInfrastructure/testedSystemManagementRouter';
 import TestedSystemManagement from '@/views/testInfrastructure/testedSystemManagement';
-import AutomatedComponentManagement from '@/views/testInfrastructure/automatedComponentManagement';
 import MockApi from '@/views/testInfrastructure/mockApi';
 import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
@@ -26,7 +25,8 @@ export default {
 	component: TestInfrastructureIndex,
 	redirect: '/testInfrastructure/TestedSystemManagementRouter/testedSystemManagement',
 	meta:{
-		name: '测试基础设施'
+		name: '测试基础设施',
+		another: 'atf/aut'
 	},
 	children:[
 		{
@@ -36,7 +36,7 @@ export default {
 			redirect: '/testInfrastructure/TestedSystemManagementRouter/testedSystemManagement',
 			meta: {
 				name: "被测系统管理",
-				parent: 'TestInfrastructure', 
+				parent: 'TestInfrastructure',
 				icon: 'el-icon-back'
 			},
 			children: [
@@ -127,16 +127,6 @@ export default {
 				name: '用例调试',
 				parent: 'TestInfrastructure',
 				hide: true
-			}
-		},
-		{
-			path: 'automatedComponentManagement',
-			name: 'AutomatedComponentManagement',
-			component: AutomatedComponentManagement,
-			meta:{
-				name: '自动化构件管理',
-				parent: 'TestInfrastructure',
-				icon: "el-icon-setting"
 			}
 		},
 		{
