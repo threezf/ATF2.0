@@ -1,23 +1,5 @@
 <template>
 <page>
-    <el-row>
-        <el-button type="primary" size="small" icon="el-icon-plus" @click="show(0)">新增
-        </el-button>
-        <!--		<el-button-->
-        <!--		type="primary"-->
-        <!--		size="small"-->
-        <!--		icon="el-icon-close"-->
-        <!--		@click="close()"-->
-        <!--		>禁用企业-->
-        <!--		</el-button>-->
-        <!--		<el-button-->
-        <!--		type="primary"-->
-        <!--		size="small"-->
-        <!--		icon="el-icon-check"-->
-        <!--		@click="open()"-->
-        <!--		>启用企业-->
-        <!--		</el-button>-->
-    </el-row>
     <el-row class="searchRow">
         <el-col :span="3">
             <el-select size="small" v-model="selectValue" placeholder="请选择">

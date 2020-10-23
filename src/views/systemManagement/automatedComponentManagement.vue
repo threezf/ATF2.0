@@ -157,8 +157,8 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21" >
-							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="22.5%">
+						<el-col :span="19" >
+							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="23%">
 									<el-table
 									stripe
 									border
@@ -197,7 +197,7 @@
 								style="margin-left: 20px;margin-top:0">
 								添加
 							</el-button>
-						</el-col>						
+						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="21">
@@ -394,7 +394,7 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
-							
+
 						</el-row>
 						<el-row>
 							<el-col :span="20">
@@ -468,7 +468,7 @@
 							<el-col :span="20">
 								<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
 								</el-form-item>
-								<el-form-item>	
+								<el-form-item>
 									<el-input
 										style="margin-left:70px"
 										type="textarea"
@@ -478,7 +478,7 @@
 										show-word-limit>
 									</el-input>
 								</el-form-item>
-								
+
 							</el-col>
 						</el-row>
 						<el-row type="flex" justify="center">
@@ -1158,7 +1158,7 @@
 					url: '/arcClass/queryArcVisibleOmMethods',
 					method: 'post',
 					params: {
-                        id: id, 
+                        id: id,
                         userId: sessionStorage.getItem('userId')
                     }
 				}).then((res) => {

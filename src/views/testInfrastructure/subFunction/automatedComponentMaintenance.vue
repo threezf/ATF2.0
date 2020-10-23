@@ -165,7 +165,7 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
+						<el-col :span="16">
 							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="22.5%">
 									<el-table
 										stripe
@@ -239,7 +239,7 @@
 											</template>
 										</el-table-column>
 									</el-table>
-								
+
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
@@ -283,7 +283,7 @@
 											</template>
 										</el-table-column>
 									</el-table>
-								
+
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
@@ -360,7 +360,7 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
-							
+
 						</el-row>
 						<el-row>
 							<el-col :span="20">
@@ -434,7 +434,7 @@
 							<el-col :span="20">
 								<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
 								</el-form-item>
-								<el-form-item>	
+								<el-form-item>
 									<el-input
 										style="margin-left:70px"
 										type="textarea"
@@ -444,7 +444,7 @@
 										show-word-limit>
 									</el-input>
 								</el-form-item>
-								
+
 							</el-col>
 						</el-row>
 						<el-row type="flex" justify="center">
