@@ -21,102 +21,87 @@
               <div
                 class="main-content"
                 id="testround-main"
-                style="padding: 15px 0"
+                style="padding: 15px 0px"
               >
-                <el-row>
-                  <form class="form-horizontal col-lg-12 topRow">
-                    <div class="form-group col-lg-3">
-                      <label
-                        class="option-name control-label col-lg-3"
-                        style="margin-right: -15px"
-                        >测试计划</label
-                      >
-                      <div class="col-lg-6">
-                        <el-select v-model="testPlanId" placeholder="请选择">
-                          <el-option
+                
+                  <el-form class="testplan" label-width="120px">
+                    <el-row :gutter="20">
+                      <el-col :span="7">
+                        <el-form-item label="测试计划">
+                          <el-select size="small" v-model="testPlanId" placeholder="请选择">
+                            <el-option
                             v-for="(item, index) in testPlans"
                             :key="'testplans' + index"
                             :label="item.nameMedium"
                             :value="item.id"
-                          >
-                          </el-option>
-                        </el-select>
-                        <p class="executeStatus" v-html="exeStautShow"></p>
-                      </div>
-                      <div class="col-lg-1">
+                            >
+                            </el-option>
+                          </el-select>
+                          <label label-width=50% class="executeStatus" v-html="exeStautShow"></label>
+                        </el-form-item>>
+                      </el-col>
+                      <el-col :span="2">
                         <el-button
+                          style="margin:5px 10px"
                           type="primary"
                           size="mini"
                           @click="testPlanManager()"
                           >测试计划管理</el-button
                         >
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-2">
-                      <label
-                        class="option-name col-lg-6 control-label"
-                        style="text-align: "
-                      >
-                        执行范围
-                      </label>
-                      <div class="col-lg-6">
-                        <el-select v-model="exeScope" placeholder="请选择">
-                          <el-option label="所有" value="1"></el-option>
-                          <el-option label="已选择" value="0"></el-option>
-                        </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-3">
-                      <label class="option-name control-label col-lg-6"
-                        >执行机分配模式</label
-                      >
-                      <div class="col-lg-6">
-                        <el-select
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="执行范围">
+                          <el-select style="width:80%" size="small" v-model="exeScope" placeholder="请选择">
+                            <el-option label="所有" value="1"></el-option>
+                            <el-option label="已选择" value="0"></el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                     <el-col :span="5">
+                        <el-form-item label="执行机分配模式">
+                          <el-select
+                          size="small"
                           v-model="runnerExecuteType"
                           placeholder="请选择"
-                        >
+                          >
                           <el-option
                             label="指定执行机"
                             value="appointed"
                           ></el-option>
                           <el-option label="自动分配" value="auto"></el-option>
                         </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-3">
-                      <label class="option-name control-label col-lg-4"
-                        >执行机选择</label
-                      >
-                      <div class="col-lg-6">
-                        <el-select
+                        </el-form-item>
+                     </el-col>
+                      <el-col :span="5">
+                        <el-form-item label="执行机选择">
+                          <el-select
+                          size="small"
                           v-model="runnerselected"
                           placeholder="请选择执行机"
                           :multiple="true"
-                        >
-                          <el-option
+                          >
+                            <el-option
                             v-for="(item, index) in runners"
                             :key="'runner' + index"
                             :label="item.runnerName"
                             :value="item.identifiableName"
-                          >
-                          </el-option>
-                        </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-2" hidden>
-                      <label class="option-name col-lg-13 control-label">
-                        当前测试轮次
-                      </label>
-                      <div class="col-lg-9">
-                        <span
-                          id="currentRound"
-                          class="execute-range form-control"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="0">
+                        <el-form-item label="当前执行轮次" hidden>
+                          <span
+                            id="currentRound"
+                            class="execute-range form-control"
                           >正在等待数据加载</span
-                        >
-                      </div>
-                    </div>
-                  </form>
-                </el-row>
+                          >
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-form>
+                
                 <div class="test-control container" style="margin: 15px 5px">
                   <div style="font-size: 12px; color: #999"></div>
                   <el-button type="primary" size="mini" @click="executeAll()" v-if="notTimerFlag"
@@ -722,7 +707,7 @@
           <thead>
             <tr>
               <th scope="th">
-                <input type="checkbox" @change="selectAll($event)" />全选
+                <input size="small" type="checkbox" @change="selectAll($event)" />全选
               </th>
               <th scope="col">场景名称</th>
               <th scope="col">场景描述</th>
@@ -733,6 +718,7 @@
               <td v-if="senceAddedStatus(scene.id)">已选择</td>
               <td v-else>
                 <input
+                  size="small"
                   type="checkbox"
                   v-model="selectedScene"
                   v-bind:value="scene.id"
@@ -848,6 +834,7 @@
               :class="isPageNumberError ? 'input-group error' : 'input-group'"
             >
               <input
+                size="small"
                 class="form-control"
                 type="number"
                 v-model="goToPage"
@@ -871,21 +858,21 @@
           </p>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
-          取消
-        </button>
-        <button type="button" class="btn btn-primary" @click="sendSceneData()">
+      <el-row type="flex" justify="center" style="margin-top:10px">
+        <el-button size="small" type="primary" @click="sendSceneData()">
           确认
-        </button>
-      </div>
+        </el-button>
+        <el-button size="small" type="waring" data-dismiss="modal">
+          取消
+        </el-button>
+      </el-row>
     </el-dialog>
     <!-- /.modal -->
 
     <el-dialog title="测试计划管理" :visible.sync="testPlanDialog" width="50%">
       <el-row>
         <el-col>
-          <el-button @click="showAddModal()"> 新增 </el-button>
+          <el-button size="small" @click="showAddModal()"> 新增 </el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -949,6 +936,7 @@
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
                   <input
+                    size="small"
                     type="text"
                     v-model="addRoundRowData.roundName"
                     class="form-control"
@@ -971,6 +959,7 @@
                 <label class="col-sm-2 control-label">记录单保存方式</label>
                 <div class="col-sm-10">
                   <select
+                    size="small"
                     class="form-control"
                     v-model="addRoundRowData.recordmanagementflag"
                   >
@@ -991,6 +980,7 @@
                 <label class="col-sm-2 control-label">定时执行方式</label>
                 <div class="col-sm-10">
                   <input
+                    size="small"
                     type="text"
                     v-model="addRoundRowData.timeexecutesetting"
                     class="form-control"
@@ -999,22 +989,21 @@
                 </div>
               </div>
             </form>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-default"
+            <el-row type="flex" justify="center" style="margin-top:10px">
+              <el-button
+                size="small"
                 data-dismiss="modal"
               >
                 关闭
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
+              </el-button>
+              <el-button
+                size="small"
+                type="primary"
                 @click="addTestRound()"
               >
                 确认
-              </button>
-            </div>
+              </el-button>
+            </el-row>
           </div>
         </div>
       </div>
@@ -1034,6 +1023,7 @@
             >
             <div class="col-sm-10">
               <input
+                size="small"
                 type="text"
                 v-model="addRowData.nameMedium"
                 class="form-control"
@@ -1047,6 +1037,7 @@
             >
             <div class="col-sm-10">
               <input
+                size="small"
                 type="text"
                 v-model="addRowData.descMedium"
                 class="form-control"
@@ -1058,6 +1049,7 @@
             <label class="col-sm-2 control-label">测试阶段</label>
             <div class="col-sm-10">
               <select
+                size="small"
                 name="testPhaseId"
                 id=""
                 class="form-control"
@@ -1077,6 +1069,7 @@
             <label class="col-sm-2 control-label">测试轮次</label>
             <div class="col-sm-10">
               <select
+                size="small"
                 name="testRoundId"
                 v-model="addRowData.testRoundId"
                 style="width: 80%; height: 34px"
@@ -1094,19 +1087,19 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default" type="button">
-          取消
-        </button>
-        <button
-          class="btn btn-success"
-          type="button"
+      <el-row type="flex" justify="center" style="margin-top:10px">
+        <el-button
+          size="small"
+          type="primary"
           id="btn-add"
           @click="add()"
         >
           确定
-        </button>
-      </div>
+        </el-button>
+        <el-button size="small" data-dismiss="modal">
+          取消
+        </el-button>
+      </el-row>
     </el-dialog>
     <!--出错信息提示-->
     <div
@@ -1142,16 +1135,16 @@
               </div>
             </form>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-default"
+              <el-button
+                size="small"
+                type="primary"
                 @click="runContinue()"
               >
                 继续执行
-              </button>
-              <button type="button" class="btn btn-primary" @click="runStop()">
+              </el-button>
+              <el-button size="small" @click="runStop()">
                 取消
-              </button>
+              </el-button>
             </div>
           </div>
         </div>
@@ -2957,11 +2950,10 @@ export default {
 }
 
 #main-content .content-wrapper .main .main-content .caseFlow {
-  margin-right: 5px;
   display: inline-block;
   margin-bottom: 0;
   min-width: 50px;
-  width: 175px;
+  width: 155px;
   height: 30px;
   border: 0px solid #ddd5d5;
 }
@@ -3084,7 +3076,7 @@ export default {
       .main-content {
         position: relative;
         flex: 1 0 auto;
-        overflow: auto;
+        overflow: hidden;
         background-color: #fff;
         padding: 0px 0px;
         min-width: 100%;
@@ -3481,11 +3473,8 @@ export default {
   }
 
   .modal-footer {
-    padding: 8px 10px;
-
-    button {
-      padding: 3px 8px;
-    }
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -3571,11 +3560,22 @@ export default {
 }
 
 .executeStatus {
-  margin-top: 5px !important;
   font-family: "宋体";
 }
 
 .form-group {
   margin-bottom: 0px !important;
 }
+.testplan {
+      .el-select {
+        width: 200px;
+      }
+      .el-col-4,
+      .el-col-5 {
+        height: 40px;
+      }
+      .el-form-item {
+        margin: 0px;
+      }
+    }
 </style>

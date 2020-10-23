@@ -9,7 +9,7 @@
 						</div>
 						<div class="content">
 							<el-row style="margin-bottom: 0;padding-bottom: 0;margin-left: 10px">
-								<el-input class="keywords" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+								<el-input size="small" class="keywords" placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
 							</el-row>
 							<el-row style="margin-top: 0; padding-top: 0;margin-left: 10px">
 								<el-button size="mini" type="primary" @click="addUIShow" :disabled="showFlag">添加UI</el-button>
@@ -128,24 +128,24 @@
 		<el-dialog title="添加UI" :visible.sync="addUIDialogFlag" width="30%">
 			<el-form :model="addUIform" label-width="80px">
 				<el-form-item label="UI名称">
-					<el-input v-model="addUIform.name"></el-input>
+					<el-input size="small" v-model="addUIform.name"></el-input>
 				</el-form-item>
 				<el-form-item label="UI描述">
-					<el-input type="textarea" rows="5" v-model="addUIform.desc"></el-input>
+					<el-input size="small" type="textarea" rows="5" v-model="addUIform.desc"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="addUIDialogFlag = false">取 消</el-button>
-				<el-button type="primary" @click=" addUI">确 定</el-button>
+				<el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
+				<el-button size="small" type="primary" @click=" addUI">确 定</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog title="添加元素" :visible.sync="addEleDialogFlag" width="30%">
 			<el-form :model="addEleform" label-width="80px">
 				<el-form-item label="元素名称">
-					<el-input v-model="addEleform.elementName"></el-input>
+					<el-input size="small" v-model="addEleform.elementName"></el-input>
 				</el-form-item>
 				<el-form-item label="控件类型">
-					<el-select v-model="addEleform.classType" placeholder="请选择类型">
+					<el-select size="small" v-model="addEleform.classType" placeholder="请选择类型">
 						<el-option
 							v-for="item in classselectOptions"
 							:key="item.id"
@@ -155,15 +155,15 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="主属性">
-					<el-input v-model="addEleform.name"></el-input>
+					<el-input size="small" v-model="addEleform.name"></el-input>
 				</el-form-item>
 				<el-form-item label="主属性值">
-					<el-input v-model="addEleform.value"></el-input>
+					<el-input size="small" v-model="addEleform.value"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="addEleDialogFlag = false">取 消</el-button>
-				<el-button type="primary" @click=" addEle">确 定</el-button>
+				<el-button size="small" @click="addEleDialogFlag = false">取 消</el-button>
+				<el-button size="small" type="primary" @click=" addEle">确 定</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width="30%">
@@ -176,7 +176,7 @@
 				:limit="1"
 				:auto-upload="false"
 			>
-				<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+				<el-buttonsize="small" slot="trigger" size="small" type="primary">选取文件</el-button>
 				<el-button
 					style="margin-left: 10px;"
 					size="small"
@@ -188,7 +188,7 @@
 				<div slot="tip" class="el-upload__tip">下载模板，填写完毕后进行上传</div>
 			</el-upload>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="branchAddEleDialogFlag = false">关闭</el-button>
+				<el-button size="small" @click="branchAddEleDialogFlag = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>

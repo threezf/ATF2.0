@@ -25,7 +25,7 @@
 				取消筛选
 			</el-button>
 			<div class='searchRow' v-for='(condition,index) in conditionList' :key="searchTestcase">
-				<el-select v-model="condition.propertyName" @change='itemChange(condition)' placeholder="请选择筛选项目">
+				<el-select size="small" v-model="condition.propertyName" @change='itemChange(condition)' placeholder="请选择筛选项目">
 					<el-option
 						v-for="item in propertyNameOptions"
 						:key="item.value"
@@ -33,7 +33,7 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-select v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
+				<el-select size="small" v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
 					<el-option
 						v-for="item in compareTypeOptions[condition.propertyName]"
 						:key="item.value"
@@ -41,9 +41,9 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-input v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值"
+				<el-input size="small" v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值"
 									@change='valueChange(condition)'></el-input>
-				<el-select v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值"
+				<el-select size="small" v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值"
 									 :multiple='true' @change='valueChange()'>
 					<el-option
 						v-for="item in getConf(condition).itemList"
@@ -52,7 +52,7 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-select v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'>
+				<el-select size="small" v-else v-model="condition.propertyValueList[0]" placeholder="比较值" @change='valueChange(condition)'>
 					<el-option
 						v-for="item in getConf(condition).itemList"
 						:key="item.value"

@@ -2,7 +2,7 @@
   <div class="page-base-inner">
     <el-container>
       <el-main>
-        <el-row class="buttonRowTop">
+        <el-row style="margin:0px 0px 10px 10px">
           <el-button type="primary" size="small" icon="el-icon-plus" @click="addButton">添加</el-button>
           <el-button type="primary" size="small" icon="el-icon-delete" @click="deleteButton">删除</el-button>
           <el-button type="primary" size="small" icon="el-icon-edit" @click="updateButton">修改</el-button>
@@ -39,13 +39,13 @@
           :before-close="handleBeforeClose">
           <el-form>
             <el-form-item label="名称" label-width="70px">
-              <el-input class="inputStyle" placeholder="请输入名称" v-model="ruleForm.dataName"></el-input>
+              <el-input size="small" class="inputStyle" placeholder="请输入名称" v-model="ruleForm.dataName"></el-input>
             </el-form-item>
             <el-form-item label="值" label-width="70px">
-              <el-input class="inputStyle" placeholder="请输入值" v-model="ruleForm.dataValue"></el-input>
+              <el-input size="small" class="inputStyle" placeholder="请输入值" v-model="ruleForm.dataValue"></el-input>
             </el-form-item>
             <el-form-item label="描述" label-width="70px">
-              <el-input type="textarea" class="textareaStyle" cols="27" rows="5" v-model="ruleForm.dataDesc"></el-input>
+              <el-input style="padding-left:0px" size="small" type="textarea" class="textareaStyle"  rows="5" v-model="ruleForm.dataDesc"></el-input>
             </el-form-item>
             <hr width="100%" color="#F5F5F5" />
             <div class="buttonRow">
@@ -286,7 +286,7 @@ export default {
   }
   .buttonRow {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-bottom: -10px;
   }
   .textareaStyle {

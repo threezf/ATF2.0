@@ -2,20 +2,15 @@
 <div class="page-inner">
   <el-container>
     <el-main>
-      <el-row>
-        <el-button size="small" @click='addUserButtom' type="primary" icon="el-icon-plus">
-          添加用户
-        </el-button>
-      </el-row>
-      <el-row :gutter="15">
+      <el-row class="searchRow">
         <el-col :span="3">
-          <el-select v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
+          <el-select size="small" v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
             <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="5" :offset='0'>
-          <el-input v-model="selectInfo" placeholder="请输入内容" clearable>
+        <el-col :span="4" style="margin-left: 10px">
+          <el-input size="small" v-model="selectInfo" placeholder="请输入内容" clearable>
             <el-button icon="el-icon-search" @click='getUsers(1)' slot="append">
           </el-button>
           </el-input>
@@ -82,6 +77,7 @@
             label="用户名" 
             prop="username">
             <el-input 
+              size="small"
               :disabled='disabled' 
               v-model="form.username">
             </el-input>
@@ -91,6 +87,7 @@
             prop="reallyname" 
             required>
             <el-input 
+              size="small"
               :disabled='disabled' 
               v-model="form.reallyname">
             </el-input>
@@ -100,6 +97,7 @@
             prop="password" 
             required>
             <el-input 
+              size="small"
               :disabled='disabled' 
               type="password" 
               v-model="form.password" 
@@ -112,6 +110,7 @@
             prop="againPassward" 
             required>
             <el-input 
+              size="small"
               :disabled='disabled' 
               type="password" 
               show-password
@@ -125,6 +124,7 @@
             v-if="false"
             required>
             <el-select 
+              size="small"
               :disabled='disabled' 
               v-model="form.status" 
               placeholder="请选择用户状态">
@@ -158,6 +158,7 @@
             label="手机号" 
             prop="telephone">
             <el-input 
+              size="small"
               :disabled='disabled' 
               v-model="form.telephone">
             </el-input>
@@ -166,23 +167,26 @@
             label="邮箱" 
             prop="email">
             <el-input 
+              size="small"
               :disabled='disabled' 
               v-model="form.email">
           </el-input>
           </el-form-item>
-          <el-form-item>
+          <el-row class="el-button-margin" type="flex" justify="center">
             <el-button 
+              size="small"
               :disabled='disabled' 
               type="primary" 
               @click="submitForm('form')"
               >{{buttonName}}
             </el-button>
             <el-button 
+              size="small"
               :disabled='disabled' 
               @click="resetForm('form')"
               >重置
             </el-button>
-          </el-form-item>
+          </el-row>
         </el-form>
       </el-dialog>
       <el-dialog
@@ -227,7 +231,7 @@
           </el-form-item>
           <br>
         </el-form>
-        <el-row>
+        <el-row class="el-button-margin" type="flex" justify="center">
           <el-button
             type="warning"
             size="small"
@@ -775,9 +779,7 @@ export default {
     margin: 10px auto
   }
 
-  .table {
-    padding-top: 10px
-  }
+
   .showDialogForm {
     margin-bottom: -30px;
     .el-form-item {
@@ -794,8 +796,12 @@ export default {
   }
   .updateDialogRow {
     display: flex;
-    justify-content: flex-end;
-    padding-right: 30px;
-    margin: -20px auto -20px auto;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  .searchRow {
+    .el-input {
+      width: 200px;
+    }
   }
 </style>

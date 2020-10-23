@@ -4,8 +4,8 @@
       <p class="title">元素列表</p>
       <div class="body">
         <el-row>
-          <el-input class="searchInput" placeholder="请输入关键字" v-model="filterText" clearable>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input size="small" class="searchInput" placeholder="请输入关键字" v-model="filterText" clearable>
+            <el-button size="small" slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-row>
         <el-row class="buttonRow">
@@ -35,10 +35,10 @@
           <div v-show="isUI">
             <el-form class="uiForm" label-width="150px">
               <el-form-item label="UI名称">
-                <el-input class="uiNameInput" v-model="uiFrom.uiName"></el-input>
+                <el-input  size="small" class="uiNameInput" v-model="uiFrom.uiName"></el-input>
               </el-form-item>
               <el-form-item label="关联对象库中对象">
-                <el-input v-model="uiFrom.relateIdentifyObjectId" disabled></el-input>
+                <el-input  size="small" v-model="uiFrom.relateIdentifyObjectId" disabled></el-input>
                 <el-button type="primary" size="small" @click="uiLinkLib">关联对象</el-button>
                 <el-button type="warning" size="small">解除关联</el-button>
                 <el-button type="success" size="small" @click="modifySingleUI">保存</el-button>
@@ -48,10 +48,10 @@
           <div v-show="!isUI">
             <el-form class="eleForm" label-width="140px" :inline="true">
               <el-form-item label="元素名称">
-                <el-input v-model="element.elementName" placeholder="元素名称"></el-input>
+                <el-input  size="small" v-model="element.elementName" placeholder="元素名称"></el-input>
               </el-form-item>
               <el-form-item label="类型">
-                <el-select v-model="element.classType" placeholder="类型">
+                <el-select  size="small" v-model="element.classType" placeholder="类型">
                   <el-option
                     v-for="item in omClassRespDTOList"
                     :key="item.id"
@@ -63,6 +63,7 @@
               <el-row>
                 <el-form-item label="对象库中父对象" class="linkRow">
                   <el-input
+                    size="small"
                     v-model="elementForm.relateIdentifyObjectId"
                     placeholder="对象库中的父对象"
                     disabled
@@ -74,6 +75,7 @@
               <el-row>
                 <el-form-item label="对象库中关联对象" class="linkRow">
                   <el-input
+                    size="small"
                     v-model="elementForm.relateParentIdentifyObjectId"
                     placeholder="对象库中关联对象"
                     disabled
@@ -91,14 +93,6 @@
                   <span>主属性</span>
                   <div>
                     <el-button
-                      type="danger"
-                      size="mini"
-                      icon="el-icon-delete"
-                      title="删除"
-                      plain
-                      @click="deleteAttrTable(1)"
-                    ></el-button>
-                    <el-button
                       type="success"
                       size="mini"
                       icon="el-icon-plus"
@@ -106,6 +100,15 @@
                       @click="addAttrTable(1)"
                       plain
                     ></el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      icon="el-icon-delete"
+                      title="删除"
+                      plain
+                      @click="deleteAttrTable(1)"
+                    ></el-button>
+                    
                   </div>
                 </el-row>
                 <el-table
@@ -118,12 +121,12 @@
                   <el-table-column type="selection" width="55px"></el-table-column>
                   <el-table-column min-width="40%" label="属性名">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column min-width="40%" label="属性值">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small" v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -132,20 +135,20 @@
                 <el-row>
                   <span>附加属性</span>
                   <div>
+                     <el-button
+                      type="success"
+                      size="mini"
+                      icon="el-icon-plus"
+                      title="添加"
+                      @click="addAttrTable(2)"
+                      plain
+                    ></el-button>
                     <el-button
                       type="danger"
                       size="mini"
                       icon="el-icon-delete"
                       title="删除"
                       @click="deleteAttrTable(2)"
-                      plain
-                    ></el-button>
-                    <el-button
-                      type="success"
-                      size="mini"
-                      icon="el-icon-plus"
-                      title="添加"
-                      @click="addAttrTable(2)"
                       plain
                     ></el-button>
                   </div>
@@ -160,12 +163,12 @@
                   <el-table-column type="selection" width="55px"></el-table-column>
                   <el-table-column min-width="40%" label="属性名">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column min-width="40%" label="属性值">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small" v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -175,19 +178,19 @@
                   <span>辅助属性</span>
                   <div>
                     <el-button
-                      type="danger"
-                      size="mini"
-                      icon="el-icon-delete"
-                      title="删除"
-                      @click="deleteAttrTable(3)"
-                      plain
-                    ></el-button>
-                    <el-button
                       type="success"
                       size="mini"
                       icon="el-icon-plus"
                       title="添加"
                       @click="addAttrTable(3)"
+                      plain
+                    ></el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      icon="el-icon-delete"
+                      title="删除"
+                      @click="deleteAttrTable(3)"
                       plain
                     ></el-button>
                   </div>
@@ -202,12 +205,12 @@
                   <el-table-column type="selection" width="55px"></el-table-column>
                   <el-table-column min-width="40%" label="属性名">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column min-width="40%" label="属性值">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small" v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -215,6 +218,14 @@
               <div class="attrTable">
                 <el-row>
                   <span>关联属性</span>
+                  <el-button
+                      type="success"
+                      size="mini"
+                      icon="el-icon-plus"
+                      title="添加"
+                      @click="addAttrTable(4)"
+                      plain
+                    ></el-button>
                   <div>
                     <el-button
                       type="danger"
@@ -222,14 +233,6 @@
                       icon="el-icon-delete"
                       title="删除"
                       @click="deleteAttrTable(4)"
-                      plain
-                    ></el-button>
-                    <el-button
-                      type="success"
-                      size="mini"
-                      icon="el-icon-plus"
-                      title="添加"
-                      @click="addAttrTable(4)"
                       plain
                     ></el-button>
                   </div>
@@ -244,12 +247,12 @@
                   <el-table-column type="selection" width="55px"></el-table-column>
                   <el-table-column min-width="40%" label="属性名">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column min-width="40%" label="属性值">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small" v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -265,19 +268,19 @@
     <el-dialog title="添加UI" width="25%" class="uiDialog" :visible.sync="addUIVisible">
       <el-form label-width="100px">
         <el-form-item label="UI名称">
-          <el-input placeholder="请输入UI名称" v-model="dialogUiName"></el-input>
+          <el-input size="small" placeholder="请输入UI名称" v-model="dialogUiName"></el-input>
           <p>若要添加多个，请以英文逗号“,”隔开。</p>
         </el-form-item>
       </el-form>
       <el-row class="bottomRowButton">
-        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
         <el-button type="primary" size="small" @click="batchAddUI">添加</el-button>
+        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog title="添加元素" width="25%" class="elementDialog" :visible.sync="addElementVisible">
       <el-form label-width="100px">
         <el-form-item label="元素名称">
-          <el-input placeholder="请输入元素名称" v-model="elementName"></el-input>
+          <el-input size="small" placeholder="请输入元素名称" v-model="elementName"></el-input>
         </el-form-item>
         <el-form-item label="控件类型">
           <el-select placeholder="请选择控件类型" v-model="classType">
@@ -290,15 +293,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="主属性名">
-          <el-input placeholder="请输入主属性名" v-model="mainPropertyName"></el-input>
+          <el-input size="small" placeholder="请输入主属性名" v-model="mainPropertyName"></el-input>
         </el-form-item>
         <el-form-item label="主属性值">
-          <el-input placeholder="请输入主属性值" v-model="mainPropertyValue"></el-input>
+          <el-input size="small" placeholder="请输入主属性值" v-model="mainPropertyValue"></el-input>
         </el-form-item>
       </el-form>
       <el-row class="bottomRowButton">
-        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
         <el-button type="primary" size="small" @click="addSingleElement">添加</el-button>
+        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog title="批量添加" width="25%" class="batchDialog" :visible.sync="addBatchVisible">
@@ -326,8 +329,8 @@
             @click="dowmloadTemplate"
           >模板下载</el-button>
           <div class="bottomRowButton">
-            <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
             <el-button type="primary" size="small" @click="submitForm">添加</el-button>
+            <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
           </div>
         </el-row>
       </el-form>
@@ -335,23 +338,23 @@
     <el-dialog title="对象库" width="30%" class="objectLibDialog" :visible.sync="UIObjectVisible">
       <div class="body"></div>
       <el-row>
-        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
         <el-button type="primary" size="small" @click="uilLinkSure">确定</el-button>
+        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog class="ruleRecordDialog" title="录制规则录入" width="25%" :visible.sync="recordRuleVisible">
       <el-form label-width="100px">
         <el-form-item label="规则名称">
-          <el-input class="inputRule" v-model="ruleName" placeholder="请输入规则名称"></el-input>
+          <el-input size="small" class="inputRule" v-model="ruleName" placeholder="请输入规则名称"></el-input>
         </el-form-item>
         <el-form-item label="规则描述">
-          <el-input class="inputRule" v-model="ruleDesc" placeholder="请输入规则描述"></el-input>
+          <el-input size="small" class="inputRule" v-model="ruleDesc" placeholder="请输入规则描述"></el-input>
         </el-form-item>
       </el-form>
       <hr>
       <el-row class="ruleButton">
-        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
         <el-button type="primary" size="small" @click="ruleSure">确定</el-button>
+        <el-button type="warning" size="small" plain @click="cancelDialog">取消</el-button>
       </el-row>
     </el-dialog>
   </div>
@@ -945,8 +948,7 @@ export default {
       }
       .bottomButton {
         display: flex;
-        justify-content: flex-end;
-        padding-right: 30px;
+        justify-content: center;
       }
     }
   }
@@ -997,11 +999,10 @@ export default {
   }
   .bottomRowButton {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     border-top: 1px solid #d3d3d3;
     padding-top: 15px;
     margin-bottom: -25px;
-    padding-right: 10px;
   }
 }
 .objectLibDialog {
@@ -1028,10 +1029,9 @@ export default {
     }
     .ruleButton {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       margin-bottom: -10px;
       margin-top: 0px;
-      padding-right: 10px;
     }
   }
 </style>

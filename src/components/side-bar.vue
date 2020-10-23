@@ -101,8 +101,7 @@ export default {
     created() {
         console.log('sidebar创建 urls')
          this.$bus.on('setUrls', (url) => {
-            this.urls = url
-            console.log('urls side接收', this.urls)
+            this.urls = url.urlList
         })
     },
     mounted() {

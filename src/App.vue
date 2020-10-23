@@ -119,7 +119,6 @@ export default {
     watch: {
 			$route: {
 				handler(to, from) {
-					console.log("urls路由改变", to.meta.parent);
 					this.activeMenu = to.meta.parent || to.name;
 					if (this.activeMenu == 'TestProjectIndex') {
 						this.activeMenu = "TestProject";
@@ -238,7 +237,6 @@ export default {
         },
         mounted() {
             this.$bus.on('setUrls', (urls) => {
-                console.log('urls 获取', urls)
                 this.urls = urls.urlList
                 this.currentUser = urls.currentName
                 localStorage.setItem('username', urls.currentName)

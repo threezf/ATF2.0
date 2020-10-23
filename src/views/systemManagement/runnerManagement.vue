@@ -1,8 +1,8 @@
 <template>
     <div class="page-inner">
         <el-container>
-
-            <el-header>
+            <el-main>
+                <el-row>
                 <el-button
                     size="small"
                     type="primary"
@@ -23,12 +23,12 @@
                     <p>3. 修改目录下的setting.properties文件（执行机名称）。</p>
                     <p>4. 双击.bat文件，开启dos窗口等待命令自动执行完毕，启动执行机。</p>
                     <p>5. 刷新执行机查询页面，此使出现已启动的执行机。</p>
-                    <el-button size="small" type="primary" slot="reference" icon='el-icon-info'>执行机使用说明</el-button>
+                    <el-button style="margin-left:10px" size="small" type="primary" slot="reference" icon='el-icon-info'>执行机使用说明</el-button>
                 </el-popover>
-            </el-header>
-            <el-main>
+                </el-row>
                 <el-table
                     stripe
+                    border
                     :data="tableData"
                     class='table'>
                     <el-table-column

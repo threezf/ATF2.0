@@ -7,6 +7,8 @@
             <el-col :span="5" :offset="0">
               <el-form-item label="开始日期:">
                 <el-date-picker
+                  style="width:90%"
+                  size="small"
                   class="timeStyle"
                   v-model="startTime"
                   type="datetime"
@@ -19,6 +21,8 @@
               <el-form-item
                 label="结束日期:">
                 <el-date-picker
+                  style="width:90%"
+                  size="small"
                   class="timeStyle"
                   v-model="endTime"
                   type="datetime"
@@ -32,6 +36,7 @@
                 label-width="88px"
                 label="时间段">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="timeSlot" 
@@ -66,6 +71,7 @@
               <el-form-item 
                 label="用例来源">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="selectedCaseSource">
@@ -81,6 +87,7 @@
               <el-form-item 
                 label="测试计划">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="params.testPlanId" 
@@ -99,6 +106,7 @@
                 label-width="88px" 
                 label="执行状态">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="selectedExecutionStatus" 

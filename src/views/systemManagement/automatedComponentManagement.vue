@@ -4,11 +4,7 @@
 			<el-main>
 				<el-form  class="fistForm" label-width="100%">
 					<el-row>
-						<el-col :span="4" :offset="2">
-							<el-input size="small" id="componentInput" v-model="automated" :disabled="true"
-												placeholder="选择的开发架构"></el-input>
-						</el-col>
-						<el-col :span="3" style="margin-left: 15px">
+						<el-col :span="2" style="margin-left: 90px" >
 							<el-button
 								@click="componentFormButton"
 								icon="el-icon-setting"
@@ -17,7 +13,11 @@
 								选择开发架构
 							</el-button>
 						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
+						<el-col :span="6" style="margin-left: 30px">
+							<el-input style="width: 85%" size="small" id="componentInput" v-model="automated" :disabled="true"
+												placeholder="选择的开发架构"></el-input>
+						</el-col>
+						<el-col :span="1">
 							<el-button
 								@click="addArch(0)"
 								icon="el-icon-plus"
@@ -31,9 +31,9 @@
 								size="small">
 							</el-button>
 						</el-col>
-						<el-col :span="6" :offset="1">
+						<el-col :span="8" style="margin-left: -22px">
 							<el-form-item label="控件名称" label-width="30%" style="margin-top: 7px">
-								<el-select v-model="classValue" filterable placeholder="请选择控件" size="small"
+								<el-select style="width: 100%" v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"
@@ -137,7 +137,7 @@
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="8" :offset="3">
+						<el-col :span="8" >
 							<el-button
 								size="small"
 								@click="drawer = true"
@@ -159,11 +159,9 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="20">
-
-							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="24.5%">
-								<el-col :span="18">
-								<el-table
+						<el-col :span="21" >
+							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="22.5%">
+									<el-table
 									stripe
 									border
 									:data="secondForm.runtimeArgs"
@@ -191,24 +189,21 @@
 											</el-button>
 										</template>
 									</el-table-column>
-								</el-table>
-								</el-col>
-								<el-col :span="2">
-								<el-button
-									size="small"
-									@click="addArg"
-									style="margin-left: 20px;margin-top:0">
-									添加
-								</el-button>
-								</el-col>
+									</el-table>
 							</el-form-item>
 						</el-col>
-
+						<el-col :span="5">
+							<el-button
+								size="small"
+								@click="addArg"
+								style="margin-left: 20px;margin-top:0">
+								添加
+							</el-button>
+						</el-col>						
 					</el-row>
 					<el-row>
-						<el-col :span="20">
-							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="24.5%">
-								<el-col :span="18">
+						<el-col :span="21">
+							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="22.5%">
 								<el-table
 									stripe
 									border
@@ -238,22 +233,20 @@
 										</template>
 									</el-table-column>
 								</el-table>
-								</el-col>
-								<el-col :span="2">
-									<el-button
-										size="small"
-										@click="addArgS"
-										style="margin-left: 20px;margin-top:0">
-										添加
-									</el-button>
-								</el-col>
 							</el-form-item>
+						</el-col>
+						<el-col :span="5">
+							<el-button
+								size="small"
+								@click="addArgS"
+								style="margin-left: 20px;margin-top:0">
+								添加
+							</el-button>
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="20">
-							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="24.5%">
-								<el-col :span="18">
+						<el-col :span="21">
+							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="22.5%">
 								<el-table
 									stripe
 									border
@@ -283,22 +276,20 @@
 										</template>
 									</el-table-column>
 								</el-table>
-								</el-col>
-								<el-col :span="2">
-									<el-button
-										size="small"
-										@click="addArgE"
-										style="margin-left: 20px;margin-top:0">
-										添加
-									</el-button>
-								</el-col>
 							</el-form-item>
+						</el-col>
+						<el-col :span="5">
+							<el-button
+								size="small"
+								@click="addArgE"
+								style="margin-left: 20px;margin-top:0">
+								添加
+							</el-button>
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="20">
-							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="24.5%">
-								<el-col :span="18">
+						<el-col :span="21">
+							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="22.5%">
 								<el-table
 									stripe
 									border
@@ -328,21 +319,19 @@
 										</template>
 									</el-table-column>
 								</el-table>
-								</el-col>
-								<el-col :span="2">
-									<el-button
-										size="small"
-										@click="addArgA"
-										style="margin-left: 20px;margin-top:0">
-										添加
-									</el-button>
-								</el-col>
 							</el-form-item>
 						</el-col>
+						<el-col :span="5">
+							<el-button
+								size="small"
+								@click="addArgA"
+								style="margin-left: 20px;margin-top:0">
+								添加
+							</el-button>
+						</el-col>
 					</el-row>
-					<el-row class="space"></el-row>
-					<el-row>
-						<el-col :offset="20">
+
+					<el-row type="flex" justify="center">
 							<el-button
 								@click="storeClass"
 								icon="el-icon-setting"
@@ -350,7 +339,6 @@
 								type="primary">
 								保存
 							</el-button>
-						</el-col>
 					</el-row>
 				</el-form>
 				<el-drawer
@@ -408,7 +396,12 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
-							<el-col :span="2" :offset="3">
+							
+						</el-row>
+						<el-row>
+							<el-col :span="20">
+							<el-form-item label="参数列表" prop="arguments" label-width="23%">
+							<el-col :span="2" :offset="18">
 								<el-button
 									size="small"
 									@click="addArgP"
@@ -416,10 +409,7 @@
 									添加参数
 								</el-button>
 							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :span="20">
-								<el-form-item label="参数列表" prop="arguments" label-width="23%"></el-form-item>
+								</el-form-item>
 								<el-table
 									stripe
 									border
@@ -479,7 +469,10 @@
 						<el-row>
 							<el-col :span="20">
 								<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
+								</el-form-item>
+								<el-form-item>	
 									<el-input
+										style="margin-left:70px"
 										type="textarea"
 										v-model="textarea"
 										maxlength="1000"
@@ -487,10 +480,10 @@
 										show-word-limit>
 									</el-input>
 								</el-form-item>
+								
 							</el-col>
 						</el-row>
-						<el-row>
-							<el-col :span="2" :offset="10">
+						<el-row type="flex" justify="center">
 								<el-button
 									@click="storeMethod"
 									icon="el-icon-setting"
@@ -498,7 +491,6 @@
 									type="primary">
 									保存
 								</el-button>
-							</el-col>
 						</el-row>
 					</el-form>
 
@@ -527,16 +519,12 @@
 								</el-tree>
 							</div>
 						</div>
-						<el-form-item>
-							<el-row>
-								<el-col :span="1" :offset="15">
-									<el-button type="primary" size="small"
-														 @click="submitComponentForm('componentForm')">确定
-									</el-button>
-								</el-col>
-							</el-row>
-						</el-form-item>
 					</el-form>
+					<el-row class="el-button-margin" type="flex" justify="center">
+						<el-button type="primary" size="small"
+									 @click="submitComponentForm('componentForm')">确定
+						</el-button>
+					</el-row>
 				</el-dialog>
 				<el-dialog
 					:title="modelName"
@@ -544,10 +532,10 @@
 					width="30%">
 					<el-form ref="addForm" :model="addForm" label-width="30%">
 						<el-form-item label="编码" prop="code">
-							<el-input v-model="addForm.code"></el-input>
+							<el-input size="small" v-model="addForm.code"></el-input>
 						</el-form-item>
 						<el-form-item label="中文名称" prop="name">
-							<el-input v-model="addForm.name"></el-input>
+							<el-input size="small" v-model="addForm.name"></el-input>
 						</el-form-item>
 						<el-form-item label="父架构" prop="parentArcId">
 							<el-select
@@ -573,13 +561,13 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="描述" prop="descShort">
-							<el-input v-model="addForm.descShort"></el-input>
+							<el-input size="small" v-model="addForm.descShort"></el-input>
 						</el-form-item>
-						<el-form-item>
-							<el-button type="primary" v-if="addFlag" @click="add()">{{buttonName}}</el-button>
-							<el-button type="primary" v-else @click="edit()">{{buttonName}}</el-button>
-							<el-button @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
-						</el-form-item>
+						<el-row class="el-button-margin" type="flex" justify="center">
+							<el-button size="small" type="primary" v-if="addFlag" @click="add()">{{buttonName}}</el-button>
+							<el-button size="small" type="primary" v-else @click="edit()">{{buttonName}}</el-button>
+							<el-button size="small" @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
+						</el-row>
 					</el-form>
 				</el-dialog>
 				<el-dialog
@@ -588,15 +576,15 @@
 					width="30%">
 					<el-form ref="addClassForm" :model="addClassForm" label-width="30%">
 						<el-form-item label="英文名称" prop="name">
-							<el-input v-model="addClassForm.name"></el-input>
+							<el-input size="small" v-model="addClassForm.name"></el-input>
 						</el-form-item>
 						<el-form-item label="中文名称" prop="chsName">
-							<el-input v-model="addClassForm.chsName"></el-input>
+							<el-input size="small" v-model="addClassForm.chsName"></el-input>
 						</el-form-item>
-						<el-form-item>
-							<el-button type="primary"  @click="addClass">添加</el-button>
-							<el-button @click="dialogVisibleA=!dialogVisibleA">取消</el-button>
-						</el-form-item>
+						<el-row class="el-button-margin" type="flex" justify="center">
+							<el-button size="small" type="primary"  @click="addClass">添加</el-button>
+							<el-button size="small" @click="dialogVisibleA=!dialogVisibleA">取消</el-button>
+						</el-row>
 					</el-form>
 				</el-dialog>
 				<el-dialog
@@ -605,13 +593,14 @@
 					width="30%">
 					<el-form :model="addMethodForm" label-width="30%">
 						<el-form-item label="名称" prop="name">
-							<el-input v-model="addMethodForm.name"></el-input>
+							<el-input size="small" v-model="addMethodForm.name"></el-input>
 						</el-form-item>
 						<el-form-item label="方法描述" prop="descShort">
-							<el-input v-model="addMethodForm.descShort"></el-input>
+							<el-input size="small" v-model="addMethodForm.descShort"></el-input>
 						</el-form-item>
 						<el-form-item label="有无参数" prop="isparameter">
 							<el-select
+								style="width:100%"
 								v-model="
 												addMethodForm.isparameter
 											"
@@ -626,20 +615,19 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="等待时间" prop="waittime">
-							<el-input v-model="addMethodForm.waittime"></el-input>
+							<el-input size="small" v-model="addMethodForm.waittime"></el-input>
 						</el-form-item>
 						<el-form-item label="超过时间" prop="timeout">
-							<el-input v-model="addMethodForm.timeout"></el-input>
+							<el-input size="small" v-model="addMethodForm.timeout"></el-input>
 						</el-form-item>
 						<el-form-item label="目标代码" prop="targetCodeContent">
-							<el-input type="textarea" maxlength="1000" rows="10" v-model="addMethodForm.targetCodeContent"></el-input>
+							<el-input style="width:90%" size="small" type="textarea" maxlength="1000" rows="10" v-model="addMethodForm.targetCodeContent"></el-input>
 						</el-form-item>
 						<el-row></el-row>
-						<el-row></el-row>
-						<el-form-item>
-							<el-button type="primary"  @click="addMethod">添加</el-button>
-							<el-button @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
-						</el-form-item>
+						<el-row class="el-button-margin" type="flex" justify="center">
+							<el-button size="small" type="primary"  @click="addMethod">添加</el-button>
+							<el-button size="small" @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
+						</el-row>
 					</el-form>
 				</el-dialog>
 			</el-main>

@@ -2,44 +2,44 @@
 	<div class="page-inner">
 		<el-container>
 			<el-main>
-				<el-row>
-					<el-button
-						type="primary"
-						size="small"
-						icon="el-icon-plus"
-						@click="show(0)"
-					>新增
-					</el-button>
-					<!--					<el-button-->
-					<!--						type="primary"-->
-					<!--						size="small"-->
-					<!--						icon="el-icon-close"-->
-					<!--						@click="close()"-->
-					<!--					>禁用企业-->
-					<!--					</el-button>-->
-					<!--					<el-button-->
-					<!--						type="primary"-->
-					<!--						size="small"-->
-					<!--						icon="el-icon-check"-->
-					<!--						@click="open()"-->
-					<!--					>启用企业-->
-					<!--					</el-button>-->
-				</el-row>
 				<el-row class="searchRow">
-					<el-col :span="3">
-						<el-select v-model="selectValue" placeholder="请选择">
-							<el-option
-								v-for="item in selectOptions"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value">
-							</el-option>
-						</el-select>
-					</el-col>
-					<el-col :span="4" style="margin-left: 10px">
-						<el-input placeholder="请输入搜索内容" v-model="searchRole" clearable>
-							<el-button slot="append" icon="el-icon-search" @click="getEnterprise(1)"></el-button>
-						</el-input>
+			<el-col :span="3">
+				<el-select size="small" v-model="selectValue" placeholder="请选择">
+					<el-option
+						v-for="item in selectOptions"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+					</el-option>
+				</el-select>
+			</el-col>
+			<el-col :span="4" style="margin-left: 10px">
+				<el-input size="small"  placeholder="请输入搜索内容" v-model="searchRole" clearable>
+					<el-button slot="append" icon="el-icon-search" @click="getEnterprise(1)"></el-button>
+				</el-input>
+			</el-col>
+			<el-col :span="4" style="margin-left: 20px">
+				<el-button 
+            	type="primary"
+            	size="small"
+            	icon="el-icon-plus"
+						@click="show(0)"
+            	>新增
+          		</el-button>
+<!--					<el-button-->
+<!--						type="primary"-->
+<!--						size="small"-->
+<!--						icon="el-icon-close"-->
+<!--						@click="close()"-->
+<!--					>禁用企业-->
+<!--					</el-button>-->
+<!--					<el-button-->
+<!--						type="primary"-->
+<!--						size="small"-->
+<!--						icon="el-icon-check"-->
+<!--						@click="open()"-->
+<!--					>启用企业-->
+<!--					</el-button>-->
 					</el-col>
 				</el-row>
 				<el-table
@@ -193,12 +193,10 @@
 							</el-form-item>
 						</el-col>
 					</el-row>
-					<el-row  :class="flag==0?'button1':'button2'">
-					<el-form-item >
-						<el-button v-if="flag==0" type="primary" @click="addEnterprise()">添加</el-button>
-						<el-button v-else-if="flag==1" type="primary" @click="editEnterprise()">编辑</el-button>
-						<el-button @click="dialogVisible=!dialogVisible">取消</el-button>
-					</el-form-item>
+					<el-row  type="flex" justify="center" :class="flag==0?'button1':'button2'">
+						<el-button size="small" v-if="flag==0" type="primary" @click="addEnterprise()">添加</el-button>
+						<el-button size="small" v-else-if="flag==1" type="primary" @click="editEnterprise()">编辑</el-button>
+						<el-button size="small" @click="dialogVisible=!dialogVisible">取消</el-button>
 					</el-row>
 				</el-form>
 			</el-dialog>
@@ -603,7 +601,7 @@
 <style scoped lang="less">
 	.searchRow {
 		.el-input {
-			width: 300px;
+			width: 200px;
 		}
 	}
 
@@ -623,12 +621,12 @@
 		left:25%
 	}
 	.button1{
-		margin-top: 20px;
-		margin-left:20%
+		margin-left:0;
+		margin-bottom: -10px;
 	}
 	.button2{
-		margin-top: 5px;
-		margin-left:0
+		margin-left:0;
+		margin-bottom: -10px;
 	}
 
 </style>

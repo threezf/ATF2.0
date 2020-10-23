@@ -365,7 +365,7 @@
               <el-row :gutter="20">
                 <el-col :span="5">
                   <el-form-item label="执行状态策略">
-                    <el-select v-model="exeStrategy1Status">
+                    <el-select size="small" v-model="exeStrategy1Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -380,7 +380,7 @@
               <el-row :gutter="20">
                 <el-col :span="4">
                   <el-form-item label="起始节点策略">
-                    <el-select v-model="exeStrategy2Start">
+                    <el-select size="small" v-model="exeStrategy2Start">
                       <el-option
                         v-for="(item,index) in startStrategy"
                         :key="index"
@@ -392,7 +392,7 @@
                 </el-col>
                 <el-col :span="5" :offset="1">
                   <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select v-model="exeStrategy2Order">
+                    <el-select size="small" v-model="exeStrategy2Order">
                       <el-option
                         v-for="(item,index) in orderStrategy"
                         :key="index"
@@ -404,7 +404,7 @@
                 </el-col>
                 <el-col :span="4" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select v-model="exeStrategy2Status">
+                    <el-select size="small" v-model="exeStrategy2Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -419,7 +419,7 @@
               <el-row :gutter="20">
                 <el-col :span="5">
                   <el-form-item label="起始用例策略">
-                    <el-select v-model="exeStrategy3Start">
+                    <el-select size="small" v-model="exeStrategy3Start">
                       <el-option
                         v-for="(item,index) in startStrategy"
                         :key="index"
@@ -431,7 +431,7 @@
                 </el-col>
                 <el-col :span="5">
                   <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select v-model="exeStrategy3Order">
+                    <el-select size="small" v-model="exeStrategy3Order">
                       <el-option
                         v-for="(item,index) in orderStrategy"
                         :key="index"
@@ -443,7 +443,7 @@
                 </el-col>
                 <el-col :span="5" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select v-model="exeStrategy3Status">
+                    <el-select size="small" v-model="exeStrategy3Status">
                       <el-option
                         v-for="(item,index) in executionStrategy"
                         :key="index"
@@ -458,7 +458,7 @@
               <el-row :gutter="20">
                 <el-col :span="4">
                   <el-form-item label="出错操作">
-                    <el-select v-model="exeStrategyErr">
+                    <el-select size="small" v-model="exeStrategyErr">
                       <el-option
                         v-for="(item,index) in errorOperations"
                         :key="index.id"
@@ -531,34 +531,34 @@
               <el-row :gutter="20">
                 <el-col :span="7">
                   <el-form-item label="设备类型">
-                    <el-input v-model="mobileForm.deviceType"></el-input>
+                    <el-input size="small" v-model="mobileForm.deviceType"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="设备名称">
-                    <el-input v-model="mobileForm.deviceName"></el-input>
+                    <el-input size="small" v-model="mobileForm.deviceName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="自动化类型">
-                    <el-input v-model="mobileForm.autoType"></el-input>
+                    <el-input size="small" v-model="mobileForm.autoType"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="7">
                   <el-form-item label="应用包名">
-                    <el-input v-model="mobileForm.packageName"></el-input>
+                    <el-input size="small" v-model="mobileForm.packageName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="启动appActivity">
-                    <el-input v-model="mobileForm.appActivy"></el-input>
+                    <el-input size="small" v-model="mobileForm.appActivy"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="是否重置">
-                    <el-select v-model="mobileForm.isReset">
+                    <el-select style="width:110%" size="small" v-model="mobileForm.isReset">
                       <el-option :value="true" label="是"></el-option>
                       <el-option :value="false" label="否"></el-option>
                     </el-select>
@@ -568,7 +568,7 @@
               <el-row>
                 <el-col :span="21">
                   <el-form-item label="接口路径">
-                    <el-input v-model="mobileForm.interfacePath"></el-input>
+                    <el-input size="small" v-model="mobileForm.interfacePath"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -584,6 +584,7 @@
           <el-form :model="addForm" label-width="70px">
             <el-form-item label="添加用例">
               <el-select
+                size="small"
                 v-model="addForm.caseIds"
                 :default-first-option="true"
                 @change="changeSelect"
@@ -599,10 +600,10 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item class="addButtons">
+            <el-row type="flex" justify="center">
               <el-button type="primary" size="small" @click="addSure">添加</el-button>
               <el-button type="warning" size="small" @click="addCancel" plain>取消</el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
         <el-dialog 
@@ -616,6 +617,8 @@
             <el-form-item 
               label="数据池名称">
               <el-select 
+                size="small"
+                style="width:100%"
                 v-model="dataPoolForm.dataPoolName">
                 <el-option 
                   value="场景数据池" 
@@ -626,6 +629,8 @@
             <el-form-item 
               label="数据池对象id">
               <el-select 
+                size="small"
+                style="width:100%"
                 v-model="dataPoolForm.objectId">
                 <el-option 
                   label="2" 
@@ -636,26 +641,28 @@
             <el-form-item 
               label="数据名称">
               <el-input 
+                size="small"
                 v-model="dataPoolForm.dataName">
               </el-input>
             </el-form-item>
             <el-form-item 
               label="数据值">
               <el-input 
+                size="small"
                 v-model="dataPoolForm.dataValue">
               </el-input>
             </el-form-item>
             <el-form-item 
               label="数据描述">
               <el-input 
+                style="width:90%"
                 class="textarea" 
                 type="textarea" 
                 rows="5" 
                 v-model="dataPoolForm.dataDesc">
               </el-input>
             </el-form-item>
-            <el-form-item 
-              class="buttonRow">
+            <el-row type="flex" justify="center">
               <el-button 
                 type="primary" 
                 size="small" 
@@ -669,10 +676,10 @@
                 @click="addDataPoolCancel"
                 >取消
               </el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
-        <el-dialog></el-dialog>
+
         <el-dialog 
           class="triggerDialog"
           width="40%" 
@@ -686,6 +693,8 @@
             <el-form-item 
               label="触发器名称：">
               <el-input 
+                size="small"
+                style="width:100%"
                 placeholder="请输入触发器名称"
                 v-model="triggerForm.name" 
                 clearable>
@@ -694,6 +703,7 @@
             <el-form-item 
               label="触发器描述：">
               <el-input 
+                size="small"
                 type="textarea" 
                 rows="4" 
                 placeholder="请输入描述"
@@ -740,6 +750,7 @@
                 <template 
                   slot-scope="scope">
                   <el-select 
+                    size="small"
                     v-model="scope.row.objectName">
                     <el-option
                       v-for="(item,index) in conditionNames"
@@ -756,6 +767,7 @@
                 <template 
                   slot-scope="scope">
                   <el-select 
+                    size="small"
                     v-model="triggerForm.conditions[scope.$index].matchType">
                     <el-option 
                       value="1" 
@@ -770,6 +782,7 @@
                 <template 
                   slot-scope="scope">
                   <el-input 
+                    size="small"
                     v-model="scope.row.value"
                     placeholder="请输入匹配值">
                   </el-input>
@@ -798,6 +811,7 @@
               </el-table-column>
             </el-table>
             <el-form-item 
+              style="margin-bottom:0"
               label="执行动作：">
               <el-button 
                 type="primary" 
@@ -817,6 +831,7 @@
                   <el-form-item 
                     label="选择操作">
                     <el-select 
+                      size="small"
                       v-model="triggerForm.actions[index].actionName">
                       <el-option 
                         value="1" 
@@ -838,6 +853,7 @@
                   <el-form-item 
                     label="脚本类型">
                     <el-select 
+                      size="small"
                       v-model="triggerForm.actions[index].actionType">
                       <el-option 
                         label="groovy" 
@@ -861,8 +877,7 @@
                 </el-form>
               </li>
             </ul>
-            <el-form-item 
-              class="buttonRow">
+            <el-row type="flex" justify="center" style="margin-top:10px">
               <el-button 
                 type="primary" 
                 size="small" 
@@ -876,7 +891,7 @@
                 @click="triggerCancel"
                 >取消
               </el-button>
-            </el-form-item>
+            </el-row>
           </el-form>
         </el-dialog>
       </el-main>
@@ -2128,9 +2143,8 @@
   .drawerHide {
     .buttonRow {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       margin-top: 10px;
-      padding-right: 20px;
     }
     .timeInput {
       width: 175px;
@@ -2261,8 +2275,8 @@
   }
   .triggerButtonRow {
     display: flex;
-    justify-content: flex-end;
-    padding-right: 20px;
+    justify-content: center;
+
     .el-button {
       margin-top: 10px;
       height: 30px !important;

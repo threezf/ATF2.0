@@ -6,25 +6,22 @@
     <div class="header-content">
       <steps :active="0"></steps>
     </div>
-    <div></div>
-    <el-row type="flex" class="row-bg">
-      <el-col :span="4">
-        <el-select
-          v-model="selectValue"
-          style="margin-top: 12px"
-          placeholder="请选择要查询的功能点"
-          clearable
-          filterable
-          @change="getChange">
-          <el-option
-            v-for="item in transactList"
-            :key="item.nameMedium"
-            :label="item.nameMedium"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="12" :offset="2">
+		<div >
+
+		</div>
+    <el-row type="flex" class="row-bg" >
+			<el-col :span="4">
+				<el-select size="small" v-model="selectValue"  style="margin-top: 12px" placeholder="请选择要查询的功能点"
+									 clearable filterable @change="getChange">
+					<el-option
+						v-for="item in transactList"
+						:key="item.nameMedium"
+						:label="item.nameMedium"
+						:value="item">
+					</el-option>
+				</el-select>
+			</el-col>
+      <el-col :span="10" :offset="3">
         <el-card shadow="always">
           <div slot="header" class="clearfix">
             <span>{{ modelName }}</span>
@@ -35,10 +32,10 @@
             :model="formData"
             ref="form">
             <el-form-item label="功能点名称:" prop="nameMedium">
-              <el-input v-model="formData.nameMedium"></el-input>
+              <el-input style="width:100%" size="small" v-model="formData.nameMedium" ></el-input>
             </el-form-item>
             <el-form-item label="编码:" prop="code">
-              <el-input v-model="formData.code" placeholder="选填"></el-input>
+              <el-input style="width:100%" size="small" v-model="formData.code"  placeholder="选填"></el-input>
             </el-form-item>
             <el-form-item label="描述:" prop="descShort">
               <el-input
@@ -47,33 +44,17 @@
                 placeholder="选填"
               ></el-input>
             </el-form-item>
-            <el-row>
-              <el-col :offset="8" :span="12">
-                <el-button
-                  type="primary"
-                  @click="submitForm('form')"
-                  v-show="!disabled"
-                  >添加并进入下一步
-                </el-button>
-                <el-button @click="resetForm('form')" v-show="!disabled"
-                  >重置
-                </el-button>
-              </el-col>
-              <el-col :offset="6" :span="18">
-                <el-button
-                  type="primary"
-                  @click="editTransact('form')"
-                  v-show="disabled"
-                  >修改功能点
-                </el-button>
-                <el-button @click="resetForm('form')" v-show="disabled"
-                  >返回添加
-                </el-button>
-                <el-button @click="toElement" v-show="disabled"
-                  >下一步
-                </el-button>
-              </el-col>
-            </el-row>
+						<el-row>
+              <el-col :offset="12" :span="12"  >
+              <el-button size="small" type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
+              <el-button size="small" @click="resetForm('form')" v-show="!disabled">重置</el-button>
+							</el-col>
+							<el-col :offset="8" :span="16">
+								<el-button size="small" type="primary" @click="editTransact('form')" v-show="disabled">修改功能点</el-button>
+								<el-button size="small" @click="resetForm('form')" v-show="disabled" >返回添加</el-button>
+								<el-button size="small" @click="toElement" v-show="disabled" >下一步</el-button>
+							</el-col>
+						</el-row>
           </el-form>
         </el-card>
       </el-col>

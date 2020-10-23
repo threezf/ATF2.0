@@ -4,8 +4,14 @@
 <template>
 <div class="page-base-inner">
     <el-container>
-        <el-row class="rowMargin">
-            <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
+        <el-main class="el-main-base-inner">
+            <el-row class="rowMargin">
+                <el-col :span="5">
+                    <el-input size="small" class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
+                        <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
+                    </el-input>
+                </el-col>
+                <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
             <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
             <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
             <span class="high" v-if="highIsActive">
@@ -16,15 +22,8 @@
                 <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>
             </span>
             <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
-        </el-row>
-        <el-main class="el-main-base-inner">
-            <el-row>
-                <el-col :span="8">
-                    <el-input class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
-                        <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
-                    </el-input>
-                </el-col>
             </el-row>
+
             <el-table class="table" ref="singleTable" border stripe highlight-current-row :default-sort="{prop:'modifiedTime',order:'descending'}" :data="tableData">
                 <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
                 <el-table-column label="" width="34px" align="center">
@@ -578,7 +577,7 @@ export default {
 
 /** 搜索框样式 */
 .searchInput {
-    width: 300px;
+    width: 260px;
 }
 
 .successTitle {
@@ -649,7 +648,7 @@ div.row {
 
 .rowMargin {
     width: calc(100% - 40px);
-    margin: 0px 20px;
+    margin: 10px 0px;
 }
 
 /**添加对话框选择样式 */
@@ -670,4 +669,8 @@ div.row {
     margin: 20px auto;
     text-align: center;
 }
+
+.inputStyle {
+    width: 93%;
+  }
 </style>

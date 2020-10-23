@@ -4,7 +4,7 @@
         <el-form :model="titleForm" label-width="90px">
             <el-col :span="6">
                 <el-form-item label="被测系统">
-                    <el-select class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
+                    <el-select size="small" class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
                         <el-input v-model="systemNameSearch" class="searchInput">
                         </el-input>
                         <el-option v-for="(item) in systemSearch(titleForm.autRespDTOList)" :key="item.id" :value="item.id" :label="item.nameMedium">
@@ -14,7 +14,7 @@
             </el-col>
             <el-col :span='6'>
                 <el-form-item label="功能点">
-                    <el-select class="systemSelectFun" v-model="selectedTransact" placeholder="Nothing Selected" @change="tranctChanged" clearable>
+                    <el-select size="small" class="systemSelectFun" v-model="selectedTransact" placeholder="Nothing Selected" @change="tranctChanged" clearable>
                         <el-input v-model="transactSearchInput"></el-input>
                         <el-option v-for="(item,index) in transactSearch(titleForm.transactRespDTOs)" :key="index" :label="item.nameMedium" :value="item.id">
                         </el-option>
@@ -29,164 +29,165 @@
         </el-form>
     </el-row>
     <el-card class="mainCard">
-        <p>接口管理</p>
-        <hr color="#eff2f7" />
-        <el-form :model="manageInfo" ref="interfaceRule" label-width="70px">
-            <el-row class="manageRow">
-                <el-col :span="5">
-                    <el-form-item prop="interfaceCode" label="接口编码">
-                        <el-input v-model="manageInfo.interfaceCode">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item prop="name" label="接口名称">
-                        <el-input v-model="manageInfo.name">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <!-- <el-col :span="5" :offset="1">
-                    <el-form-item label="版本号">
-                        <el-input v-model="manageInfo.version">
-                        </el-input>
-                    </el-form-item>
-                </el-col> -->
-                 <el-col :span="5" :offset="1">
-                    <el-form-item label="认证方法">
-                        <el-select class="mainSelect" v-model="manageInfo.authenticationMethod">
-                            <el-option v-for="(item,index) in authenticationMethodList" :key="index" :value="item" :label="item">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="创建时间">
-                        <el-input v-model="manageInfo.createTime" disabled>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                
-            </el-row>
-            <el-row class="manageRow" hidden>
-                <!-- <el-col :span="5">
-                    <el-form-item label="创建者">
-                        <el-select class="mainSelect" v-model="manageInfo.creatorId">
-                            <el-option v-for="(item) in manageInfo.creatorList" :key="item.id" :label="item.username" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="维护者">
-                        <el-select class="mainSelect" v-model="manageInfo.maintainerId">
-                            <el-option v-for="(item) in manageInfo.maintainerList" :key="item.id" :label="item.username" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col> -->
-               
-               
-            </el-row>
-            <el-row class="manageRow" style="margin-bottom: 10px">
-                <el-col :span="5">
-                    <el-form-item label="开发状态">
-                        <el-select class="mainSelect" v-model="manageInfo.status">
-                            <el-option v-for="(item) in statusList" :key="item.id" :label="item.status" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="通信类型">
-                        <el-select class="mainSelect" v-model="manageInfo.protocol">
-                            <el-option v-for="(item,index) in protocolList" :key="index" :value="item.id" :label="item.type">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="请求方法">
-                        <el-select class="mainSelect" v-model="manageInfo.method">
-                            <el-option v-for="(item,index) in methodList" :key="index" :value="item.id" :label="item.type">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                 <el-col :span="5" :offset="1">
-                    <el-form-item label="修改时间">
-                        <el-input v-model="manageInfo.modifyTime" disabled>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-form-item prop="urlPath" label="接口路径" style="margin-bottom: 10px">
-                    <el-input v-model="manageInfo.urlPath" class="inputPath">
-                    </el-input>
-                </el-form-item>
-            </el-row>
-            <el-row class="saveRow" >
-                <el-form-item label="接口简介">
-                    <el-input class="description" v-model="manageInfo.description" type="textarea">
-                    </el-input>
-                    <el-button class="saveButton" type="primary" size="small" @click="saveContent" hidden>保存
-                    </el-button>
-                </el-form-item>
-            </el-row>
-            <el-tabs class="bottomCard" type="border-card">
-                <el-tab-pane label="Authorization">
-                    <el-form-item class="bottomForm" label="type">
-                        <el-select class="typeSelect" v-model="manageInfo.selectedAuthorization">
-                            <el-option v-for="(item,index) in authorizationList" :key="index" :value="item.id" :label="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-tab-pane>
-                <el-tab-pane label="Header">
-                    <el-row v-for="(item, index) in manageInfo.selectedHeader" :key="index">
-                        <el-col :span="6">
-                            <el-form-item label-width="100px" label="header">
-                                <el-input placeholdr="请填写header" v-model="item.name">
-                                </el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="5">
-                            <el-form-item label-width="100px" label="value">
-                                <el-input placeholdr="请填写value" v-model="item.val">
-                                </el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="7">
-                            <el-form-item label-width="100px" label="备注">
-                                <el-input placeholdr="请填写备注" v-model="item.desc">
-                                </el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-button type="success" icon="el-icon-plus" size="mini" class="deleteRow" title="添加" plain @click="addRow(index)">
-                        </el-button>
-                        <el-button type="danger" icon="el-icon-close" size="mini" class="deleteRow" title="删除" plain @click="removeRowHeader(index)">
-                        </el-button>
-                    </el-row>
-                </el-tab-pane>
-                <el-tab-pane label="Body">
-                    <el-form-item prop="bodyFormat" class="bottomForm" label-width="100px" label="报文格式">
-                        <el-select v-model="manageInfo.bodyFormat">
-                            <el-option v-for="(item,index) in bodyFormats" :key="index" :value="item.id" :label="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-button class="decode" type="primary" size="small" style="display: none" @click="decode">解码
-                        </el-button>
-                    </el-form-item>
-                    <el-form-item prop="bodyContent" class="descForm" label-width="100px" label="报文内容">
-                        <el-input class="bodyDes" type="textarea" v-model="manageInfo.bodyContent">
-                        </el-input>
-                    </el-form-item>
-                </el-tab-pane>
-            </el-tabs>
-            <el-button class="buttonBottom" type="primary" size="small" @click="saveBottom">保存
+    <p>接口管理</p>
+    <hr color="#eff2f7" />
+    <el-form :model="manageInfo" ref="interfaceRule" label-width="70px">
+      <el-row class="manageRow">
+        <el-col :span="5">
+          <el-form-item prop="interfaceCode" label="接口编码">
+            <el-input size="small" v-model="manageInfo.interfaceCode">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item prop="name" label="接口名称">
+            <el-input size="small" v-model="manageInfo.name">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="版本号">
+            <el-input size="small" v-model="manageInfo.version">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="创建时间">
+            <el-input size="small" v-model="manageInfo.createTime" disabled>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row class="manageRow">
+        <el-col :span="5">
+          <el-form-item label="创建者">
+            <el-select  size="small" class="mainSelect" v-model="manageInfo.creatorId">
+              <el-option v-for="(item) in manageInfo.creatorList" :key="item.id" :label="item.username" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="维护者">
+            <el-select  size="small" class="mainSelect" v-model="manageInfo.maintainerId">
+              <el-option v-for="(item) in manageInfo.maintainerList" :key="item.id" :label="item.username" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="认证方法">
+            <el-select  size="small" class="mainSelect" v-model="manageInfo.authenticationMethod">
+              <el-option v-for="(item,index) in authenticationMethodList" :key="index" :value="item" :label="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="修改时间">
+            <el-input size="small" v-model="manageInfo.modifyTime" disabled>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row class="manageRow">
+        <el-col :span="5">
+          <el-form-item label="开发状态">
+            <el-select  size="small" class="mainSelect" v-model="manageInfo.status">
+              <el-option v-for="(item) in statusList" :key="item.id" :label="item.status" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="通信类型">
+            <el-select size="small" class="mainSelect" v-model="manageInfo.protocol">
+              <el-option v-for="(item,index) in protocolList" :key="index" :value="item.id" :label="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" :offset="1">
+          <el-form-item label="请求方法">
+            <el-select  size="small" class="mainSelect" v-model="manageInfo.method">
+              <el-option v-for="(item,index) in methodList" :key="index" :value="item.id" :label="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-form-item prop="urlPath" label="接口路径">
+          <el-input size="small" v-model="manageInfo.urlPath" class="inputPath">
+          </el-input>
+        </el-form-item>
+      </el-row>
+      <el-row class="saveRow">
+        <el-form-item label="接口简介">
+          <el-input size="small" class="description" v-model="manageInfo.description" type="textarea" rows="4">
+          </el-input>
+        </el-form-item>
+      </el-row>
+      <el-row type="flex" justify="center" style="margin-bottom:10px">
+        <el-button type="primary" size="small" @click="saveContent">保存
+        </el-button>
+      </el-row>
+      <el-tabs class="bottomCard" type="border-card">
+        <el-tab-pane label="Authorization">
+          <el-form-item class="bottomForm" label="type">
+            <el-select style="width:240px" size="small" class="typeSelect" v-model="manageInfo.selectedAuthorization">
+              <el-option v-for="(item,index) in authorizationList" :key="index" :value="item.id" :label="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane label="Header">
+          <el-row v-for="(item, index) in manageInfo.selectedHeader" :key="index">
+            <el-col :span="6">
+              <el-form-item label-width="100px" label="header">
+                <el-input size="small" placeholdr="请填写header" v-model="item.name">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label-width="100px" label="value">
+                <el-input size="small" placeholdr="请填写value" v-model="item.val">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label-width="100px" label="备注">
+                <el-input size="small" placeholdr="请填写备注" v-model="item.desc">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-button type="success" icon="el-icon-plus" size="mini" class="deleteRow" title="添加" plain @click="addRow(index)">
             </el-button>
-        </el-form>
-    </el-card>
+            <el-button type="danger" icon="el-icon-close" size="mini" class="deleteRow" title="删除" plain @click="removeRowHeader(index)">
+            </el-button>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="Body">
+          <el-form-item prop="bodyFormat" class="bottomForm" label-width="100px" label="报文格式">
+            <el-select  size="small" v-model="manageInfo.bodyFormat">
+              <el-option v-for="(item,index) in bodyFormats" :key="index" :value="item.id" :label="item.value">
+              </el-option>
+            </el-select>
+            <el-button class="decode" type="primary" size="small" style="display: none" @click="decode">解码
+            </el-button>
+          </el-form-item>
+          <el-form-item prop="bodyContent" class="descForm" label-width="100px" label="报文内容">
+            <el-input class="bodyDes" type="textarea" v-model="manageInfo.bodyContent">
+            </el-input>
+          </el-form-item>
+        </el-tab-pane>
+      </el-tabs>
+      <el-row type="flex" justify="center" >
+        <el-button class="buttonBottom" type="primary" size="small" @click="saveBottom">保存
+        </el-button>
+      </el-row>
+    </el-form>
+  </el-card>
 </div>
 </template>
 
@@ -668,12 +669,12 @@ export default {
     }
 
     .inputPath {
-        width: 69.6%;
+        width: 67.5%;
     }
 
     .description {
         resize: none;
-        width: 69.6%;
+        width: 67.5%;
         height: 120px;
     }
 
