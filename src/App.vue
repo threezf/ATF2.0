@@ -119,7 +119,6 @@ export default {
     watch: {
 			$route: {
 				handler(to, from) {
-					console.log("urls路由改变", to.meta.parent);
 					this.activeMenu = to.meta.parent || to.name;
 					if (this.activeMenu == 'TestProjectIndex') {
 						this.activeMenu = "TestProject";
@@ -151,9 +150,22 @@ export default {
                     cancelButton: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.push({
-                        path: "/login",
-                    });
+                    Request({
+                        url: '/limitLoginNumberController/minusCompanyRedisKey',
+                        method: 'post',
+                        params: {
+                            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                        }
+                    }).then(res => {
+                        if(res.respCode === '0000') {
+                            this.$message.success(res.respMsg)
+                            this.$router.push({
+                                path: "/login",
+                            });
+                        }
+                    }).catch(err => {
+
+                    })
                 }).catch(() => {})
             },
             // 修改密码
@@ -225,7 +237,9 @@ export default {
         },
         mounted() {
             this.$bus.on('setUrls', (urls) => {
-                this.urls = urls
+                this.urls = urls.urlList
+                this.currentUser = urls.currentName
+                localStorage.setItem('username', urls.currentName)
             })
         }
     }

@@ -577,7 +577,8 @@ export default {
         url: "/aut/queryAutVisibleOmClasses",
         method: "POST",
         params: {
-          id
+          id,
+          companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
         }
       })
         .then(res => {

@@ -123,7 +123,8 @@
           url: '/aut/selectFunctionSet',
           method: 'POST',
           params: {
-            id: this.autId
+            id: this.autId,
+            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
           }
         }).then(res => {
           if(res.respCode === '0000') {

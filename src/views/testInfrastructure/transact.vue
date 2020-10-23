@@ -356,11 +356,12 @@ export default {
             params: {
               autId: _this.autId,
               creatorId: "3",
-              transId: _this.updateId
+              transId: _this.updateId,
+              userId: sessionStorage.getItem('userId')
             }
           })
             .then(res => {
-              console.log("复制成功", res);
+              this.$message.success('复制成功')
               if (res.respCode) {
                 _this.$message.success(res.respMsg);
                 _this.getAllFunction();
@@ -561,10 +562,6 @@ export default {
     submitForm(formName) {
       let _this = this;
       let status = _this.ruleForm.nameMedium === "";
-      this.$message.info(`nameMedium: ${_this.ruleForm.nameMedium}
-									functionType: ${_this.ruleForm.functionType}
-									code: ${_this.ruleForm.code}
-									descShort: ${_this.ruleForm.descShort}`);
       if (status) {
         this.$message.warning("*为必填项");
       } else {

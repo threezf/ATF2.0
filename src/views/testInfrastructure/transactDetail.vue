@@ -82,6 +82,7 @@ export default {
     },
     created() {
         let data;
+        console.log('data', this.$$route.query.data)
         if (this.$route.query.data) {
             data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
             localStorage.setItem('transactId', this.$route.query.data.id)

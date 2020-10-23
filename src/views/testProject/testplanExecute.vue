@@ -24,7 +24,7 @@
                 style="padding: 15px 0px"
               >
                 
-                  <el-form class="testplan" label-width="120px">
+                  <el-form class="testplan" label-width="80px">
                     <el-row :gutter="20">
                       <el-col :span="7">
                         <el-form-item label="测试计划">
@@ -38,7 +38,7 @@
                             </el-option>
                           </el-select>
                           <label label-width=50% class="executeStatus" v-html="exeStautShow"></label>
-                        </el-form-item>>
+                        </el-form-item>
                       </el-col>
                       <el-col :span="2">
                         <el-button
@@ -58,7 +58,7 @@
                         </el-form-item>
                       </el-col>
                      <el-col :span="5">
-                        <el-form-item label="执行机分配模式">
+                        <el-form-item label="分配模式">
                           <el-select
                           size="small"
                           v-model="runnerExecuteType"
@@ -104,9 +104,15 @@
                 
                 <div class="test-control container" style="margin: 15px 5px">
                   <div style="font-size: 12px; color: #999"></div>
-                  <el-button type="primary" size="mini" @click="executeAll()"
-                    ><i class="icon-play"></i> 批量执行</el-button
+                  <el-button type="primary" size="mini" @click="executeAll()" v-if="notTimerFlag"
+                    ><i class="icon-play" ></i> 批量执行</el-button
                   >
+                  <el-button type="primary" size="mini" @click="executeAllT2()" v-if="!notTimerFlag">
+                      <i class="icon-play"></i> 定时执行
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="timerView()" v-if="!notTimerFlag">
+                      <i class="icon-eye-open"></i> 定时查询
+                  </el-button>
                   <el-button type="primary" size="mini" @click="stopExe()"
                     ><i class="icon-stop"></i> 终止执行</el-button
                   >
@@ -125,6 +131,7 @@
                   <el-button type="primary" size="mini" @click="reQuery()"
                     ><i class="icon-refresh"></i> 重新查询执行结果</el-button
                   >
+                  
                 </div>
                 <div id="">
                   <div class="logcontainer">
@@ -1321,9 +1328,15 @@ export default {
       senceDialog: false,
       testPlanDialog: false,
       addTestPlanDialog: false,
+      notTimerFlag: true,
     };
   },
   mounted() {
+      if(this.$route.query.sceneId) {
+          this.notTimerFlag = this.$route.query.notTimer
+        this.sceneId = this.$route.query.sceneId
+          console.log('定时执行发起的', this.notTimerFlag, this.sceneId)
+      }
     console.log("sessionId", sessionStorage.getItem("userId"));
     var _this = this;
     var tempTestPlanId = sessionStorage.getItem("testPlanId") || undefined;
@@ -1418,6 +1431,7 @@ export default {
         contentType: "application/json",
         data: JSON.stringify({
           serviceName: "web.ui",
+          userId: sessionStorage.getItem('userId')
         }),
         success: function (data) {
           if (data.respCode == "0000") {
@@ -1468,7 +1482,7 @@ export default {
     },
 
     // 发起定时执行 
-    doTimerExecution() {
+    executeAllT2() {
       var _this = this;
       if (!_this.userId) {
         Vac.alert("请填写用户id");
@@ -1497,6 +1511,7 @@ export default {
         Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行");
         return;
       }
+      
       var selectedExeInstances = [];
       if (_this.exeScope == 1) {
       } else {
@@ -1516,42 +1531,45 @@ export default {
         type: "post",
         contentType: "application/json",
         data: JSON.stringify({
-          userId: _this.userId,
-          recordflag: _this.recordFlag,
-          exeScope: _this.exeScope,
-          selectState: _this.selectState,
-          selectedExeInstances: selectedExeInstances,
-          testPlanId: _this.testPlanId,
-          identifiableRunnerName: _this.runnerExecuteType,
-          appointedRunners: _this.runnerselected,
+            sceneId: this.sceneId,
+            t1ReqDto: {
+                userId: _this.userId,
+                recordflag: _this.recordFlag,
+                exeScope: _this.exeScope,
+                selectState: _this.selectState,
+                selectedExeInstances: selectedExeInstances,
+                testPlanId: _this.testPlanId,
+                identifiableRunnerName: _this.runnerExecuteType,
+                appointedRunners: _this.runnerselected,
+            }
         }),
         success: function (data) {
           if (data.respCode === "0000") {
-            // this.$store.disatch('updateTotalScore', {
-            //     userId: sessionStorage.getItem('userId'),
-            //     totalScore: Number(sessionStorage.getItem("totalScore")) + 5
-            // })
             console.log("查询日志", this.$store);
-            _this.startQueryLog(); //查询日志
-            Vac.ajax({
-              //因为查询执行信息需要最近执行的批量号因此需要查询批次
-              url: "batchRunCtrlController/queryLatestBatchIdForTestPlan",
-              type: "post",
-              contentType: "application/json",
-              data: JSON.stringify({
-                testPlanId: _this.testPlanId,
-              }),
-              success: function (data) {
-                _this.batchId = data.batchId;
-                _this.startQueryResult();
-              },
-              error: function () {
-                Vac.alert("网络错误，执行失败！");
-                _this.setResultIcon();
-              },
-            });
+            // _this.startQueryLog(); //查询日志
+            // Vac.ajax({
+            //   //因为查询执行信息需要最近执行的批量号因此需要查询批次
+            //   url: "batchRunCtrlController/queryLatestBatchIdForTestPlan",
+            //   type: "post",
+            //   contentType: "application/json",
+            //   data: JSON.stringify({
+            //     testPlanId: _this.testPlanId,
+            //   }),
+            //   success: function (data) {
+            //     _this.batchId = data.batchId;
+            //     _this.$message.success(data.respMsg)
+            //     _this.startQueryResult();
+            //   },
+            //   error: function () {
+            //     Vac.alert("网络错误，执行失败！");
+            //     _this.setResultIcon();
+            //   },
+            // });
+            _this.timerView()
+            _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>任务等待执行';
           } else {
             Vac.alert(data.respMsg);
+            _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>任务等待执行';
             _this.setResultIcon();
           }
         },
@@ -1562,6 +1580,34 @@ export default {
       });
     },
 
+    timerView() {
+        Request({
+            url: '/sceneTimer/queryAllSceneTimersByScene',
+            method: 'post',
+            params: {
+                sceneId: Number(this.sceneId),
+                userId: Number(sessionStorage.getItem('userId'))
+            }
+        }).then(res => {
+            console.log('查看', res)
+            switch(Number(res.timers[0].status)) {
+                case 0:
+                    this.$alert('当前状态：已完成')
+                    break;
+                case 1:
+                    this.$alert('当前状态：等待发起执行')
+                    break;
+                case 2:
+                    this.$alert('当前状态：发起执行，等待定时器下一次启动')
+                    break;
+                default:
+                    this.$alert('当前状态：定时器正在执行')
+                    break
+            }
+        }).catch(err => {
+            console.log('查询失败')
+        })
+    },
     executeAll: function () {
       var _this = this;
       if (!_this.userId) {

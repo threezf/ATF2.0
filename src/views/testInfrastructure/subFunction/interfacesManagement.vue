@@ -391,7 +391,9 @@ export default {
             Request({
                 url: '/aut/queryListAut',
                 method: 'POST',
-                params: {}
+                params: {
+                    companyId: Number(JSON.parse(localStorage.getItem("loginInfo")).companyId)
+                }
             }).then(res => {
                 if (res.respCode == '0000') {
                     this.titleForm.autRespDTOList = res.autRespDTOList
@@ -452,6 +454,7 @@ export default {
                     _this.manageInfo.protocol = res.protocol // 通信类型
                     _this.manageInfo.bodyFormat = res.bodyFormat ? res.bodyFormat : '1' // 报文格式
                     _this.manageInfo.selectedHeader = []
+                    _this.manageInfo.creatorId = res.creatorId || sessionStorage.getItem('userId')
                     if (res.header === '[]' || res.header === null) {
                         _this.manageInfo.selectedHeader.push({
                             name: '',
@@ -559,7 +562,9 @@ export default {
                     status: this.manageInfo.status,
                     systemId: this.autId,
                     urlPath: this.manageInfo.urlPath,
-                    version: this.manageInfo.version
+                    version: this.manageInfo.version,
+                    userId: sessionStorage.getItem('userId'),
+                    creatorId: this.manageInfo.creatorId
                 }
                 Request({
                     url: '/interface/modifySingleInterface',

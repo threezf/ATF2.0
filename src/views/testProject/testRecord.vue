@@ -2,7 +2,7 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-form class="formTop" label-width="94px">
+        <el-form class="formTop" label-width="94px" hidden>
           <el-row :gutter="20" class="row1">
             <el-col :span="5" :offset="0">
               <el-form-item label="查询方式">
@@ -122,16 +122,18 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          class="pagination"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-size="pageSize"
-          :page-sizes="[5,10,20,50]"
-          :current-page="currentPage"
-          :total="totalCount"
-          layout="total,sizes,prev,pager,next,jumper"
-        ></el-pagination>
+        <div style="width: 100%">
+          <el-pagination
+            class="pagination"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-size="pageSize"
+            :page-sizes="[5,10,20,50]"
+            :current-page="currentPage"
+            :total="totalCount"
+            layout="total,sizes,prev,pager,next,jumper"
+            ></el-pagination>
+        </div>
         <el-dialog title="提示" width="30%" visible.sync="false">
           <h2 class="dialogText">空记录！请尝试查询！</h2>
           <el-divider></el-divider>
@@ -193,12 +195,8 @@ export default {
   },
   created() {
     this.runId = this.$route.query.batchId
+    // this.$message.success(this.runId)
     this.testPlanId = this.$route.query.testPlan
-    console.log('传递的参数',this.runId, this.testPlanId)
-    this.selectAllScene();
-    this.selectAllTestPlan();
-    this.pagedBatchQueryScene();
-    this.checkTableData();
     this.pagedBatchQueryTestRecordByRunId()
   },
   methods: {
@@ -226,11 +224,12 @@ export default {
           })
         }
         this.tableData = res.list
+        this.totalCount = res.totalCount
       }).catch(err => {
-        this.$message.warning('请选择执行批次！')
-        this.$router.push({
-          name: 'BatchExecutionQuery'
-        })
+        this.$message.warning('查询为空')
+        // this.$router.push({
+        //   name: 'BatchExecutionQuery'
+        // })
       })
     },
     //测试轮次查询更新数据
@@ -251,7 +250,6 @@ export default {
         }
       })
         .then(res => {
-          console.log("查询成功", res);
           if (res.totalCount == 0) {
             this.tableData = [];
             this.totalCount = res.totalCount;
@@ -259,6 +257,8 @@ export default {
           } else {
             this.tableData = res.list;
             this.totalCount = res.totalCount;
+            console.log("查询成功", res);
+
           }
         })
         .catch(error => {
@@ -443,8 +443,8 @@ export default {
     color: red;
   }
   .pagination {
-    text-align: center;
-    margin-top: 20px;
+      margin: 20px auto;
+      width: 420px;
   }
   .dialogText {
     margin-bottom: 30px;
