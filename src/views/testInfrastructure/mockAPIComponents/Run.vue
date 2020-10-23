@@ -11,10 +11,10 @@
     <div class="contentDiv">
       <el-form>
         <el-form-item class="basicSettingRow" label="接口路径" label-width="100px">
-          <el-select v-model="selectedParseMethod" disabled>
+          <el-select size="small" v-model="selectedParseMethod" disabled>
             <el-option v-for="(item,index) in parseMethods" :key="index" :value="item"></el-option>
           </el-select>
-          <el-input class="path" v-model="path" disabled></el-input>
+          <el-input size="small" class="path" v-model="path" disabled></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -55,8 +55,9 @@
             <el-col :span="15">
               <el-form>
                 <el-form-item label="请求参数" label-width="100px">
-                  <el-input style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]" disabled></el-input>
+                  <el-input size="small" style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]" disabled></el-input>
                   <el-input
+                    size="small"
                     style="width: 400px;margin-left: 10px"
                     placeholder="参数值"
                     v-model="paramsQueryValue[index]"
@@ -95,12 +96,14 @@
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsHeadersKey[index]"
                       disabled
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsHeadersValue[index]"
@@ -140,12 +143,14 @@
                 <el-form>
                   <el-form-item label="cookies" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsCookiesKey[index]"
                       disabled
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsCookiesValue[index]"
@@ -181,14 +186,14 @@
         <el-form>
           <el-col :span="11">
             <el-form-item label="secure" label-width="100px">
-              <el-select v-model="selectedSecure" disabled>
+              <el-select size="small" v-model="selectedSecure" disabled>
                 <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="10">
             <el-form-item label="keepalive" label-width="100px">
-              <el-select v-model="selectedKeepalive" disabled>
+              <el-select size="small" v-model="selectedKeepalive" disabled>
                 <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
@@ -578,7 +583,6 @@
   .forwardSetting {
     width: 110px;
     height: 38px;
-    margin-top: -10px;
     display: inline-block;
     background: #409eff;
     padding-top: 6px;
@@ -588,7 +592,6 @@
     white-space: nowrap;
     color: #fff;
     text-align: center;
-    margin-bottom: -10px;
   }
   .requestParams,
   .forwardSetting {

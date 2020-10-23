@@ -53,13 +53,13 @@
         :before-close="handleBeforeClose">
         <el-form>
           <el-form-item label="创建人" label-width="120px">
-            <el-input class="dialogInput" v-model="creatorName"></el-input>
+            <el-input size="small" class="dialogInput" v-model="creatorName"></el-input>
           </el-form-item>
           <el-form-item label="期望名称" label-width="120px">
-            <el-input class="dialogInput" v-model="expectedName"></el-input>
+            <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
           </el-form-item>
           <el-form-item label="动作" label-width="120px">
-            <el-select v-model="selectedAction">
+            <el-select style="width:90%" size="small" v-model="selectedAction">
               <el-option v-for="(item,index) in actions" :value="item" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -70,7 +70,7 @@
           <hr class="hrStyleRight" width="20%" color="#f5f5f5" />
         </el-row>
         <el-row>
-          <hr width="100%" color="#F5F5F5" style="margin-top:45px" />
+          <hr width="100%" color="#F5F5F5" style="margin-top:10px" />
         </el-row>
         <el-row class="buttonRow">
           <el-button class="buttonStyle" type="primary" size="small" @click="sureButton">提交</el-button>
@@ -385,7 +385,8 @@ export default {
 }
 .buttonRow {
   overflow: hidden;
-  margin-top: 15px;
+  display: flex;
+  justify-content: center;
   margin-bottom: -12px;
 }
 .buttonStyle {

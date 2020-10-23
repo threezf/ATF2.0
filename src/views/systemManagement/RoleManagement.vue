@@ -38,7 +38,7 @@
             </el-table>
 
         </el-main>
-        <el-footer>
+        <el-footer class="dialog-footer">
             <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
             </el-pagination>
         </el-footer>

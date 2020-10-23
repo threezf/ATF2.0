@@ -94,7 +94,7 @@
             </el-col>
           </el-row>
         </el-form>
-        <el-table width="100%" class="table" style="margin-top: 15px" border scrope :highlight-current-row="true" :data="tableData" @selection-change="handleSelctionChange">
+        <el-table width="100%" class="table" style="margin-top: 15px" stripe border scrope :highlight-current-row="true" :data="tableData" @selection-change="handleSelctionChange">
           <el-table-column min-width="4.95%" align="center" type="selection"></el-table-column>
           <el-table-column min-width="12.95%" align="center" prop="sceneName" label="场景名称"></el-table-column>
           <el-table-column min-width="6.46%" align="center" prop="executeRound" label="执行轮次"></el-table-column>
@@ -122,7 +122,16 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style="width: 100%">
+        
+        <el-dialog title="提示" width="30%" visible.sync="false">
+          <h2 class="dialogText">空记录！请尝试查询！</h2>
+          <el-divider></el-divider>
+          <div class="buttonBottom">
+            <el-button  size="small" type="primary" @click="dialogVisible = false">确定</el-button>
+          </div>
+        </el-dialog>
+      </el-main>
+      <el-footer class="dialog-footer">
           <el-pagination
             class="pagination"
             @size-change="handleSizeChange"
@@ -133,15 +142,7 @@
             :total="totalCount"
             layout="total,sizes,prev,pager,next,jumper"
             ></el-pagination>
-        </div>
-        <el-dialog title="提示" width="30%" visible.sync="false">
-          <h2 class="dialogText">空记录！请尝试查询！</h2>
-          <el-divider></el-divider>
-          <div class="buttonBottom">
-            <el-button  size="small" type="primary" @click="dialogVisible = false">确定</el-button>
-          </div>
-        </el-dialog>
-      </el-main>
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -443,7 +444,6 @@ export default {
     color: red;
   }
   .pagination {
-      margin: 20px auto;
       width: 420px;
   }
   .dialogText {

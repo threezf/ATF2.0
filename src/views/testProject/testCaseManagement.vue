@@ -32,10 +32,9 @@
                     更改多种用例信息
                 </el-button>
             </el-row>
-            <el-row style="padding-top:20px;padding-bottom:10px">
+            <el-row style="padding-top:10px;padding-bottom:10px">
                 <search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
             </el-row>
-            <el-scrollbar style="width:100%">
                 <el-table stripe :data="testCaseList" border :row-class-name="tableRowClassName" class="table" @expand-change="subShow" @selection-change="handleSelectionChange">
                     <el-table-column type="expand">
                         <template slot-scope="scope">
@@ -97,21 +96,14 @@
                     </el-table-column>
                     <el-table-column label="操作" width="200">
                         <template slot-scope="scope">
-                            <el-button size="mini" @click="showInfo(scope.row,'1')">查看
+                            <el-button size="small" @click="showInfo(scope.row,'1')">查看
                             </el-button>
-                            <el-button size="mini" type="info" @click="showInfo(scope.row,'2')">修改
+                            <el-button size="small" type="info" @click="showInfo(scope.row,'2')">修改
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-            </el-scrollbar>
-
-            <div class="block">
-                <el-col :span="10" :offset="4">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-                    </el-pagination>
-                </el-col>
-            </div>
+           
             <el-dialog title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
                 <el-tabs v-model="activeName" type="card">
                     <el-tab-pane label="单用例" name="first" class="addTab">
@@ -181,37 +173,37 @@
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
-                                            <el-form-item label="测试意图" prop="testdesign" label-width="25%" size="small" required>
-                                                <el-input v-model="addForm.testdesign"></el-input>
+                                            <el-form-item label="测试意图" prop="testdesign" label-width="25%"  required>
+                                                <el-input size="small" v-model="addForm.testdesign"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
-                                            <el-form-item label="前置条件" prop="prerequisites" label-width="25%" size="small" required>
-                                                <el-input v-model="addForm.prerequisites"></el-input>
+                                            <el-form-item label="前置条件" prop="prerequisites" label-width="25%" required>
+                                                <el-input size="small" v-model="addForm.prerequisites"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
-                                            <el-form-item label="测试步骤" prop="teststep" label-width="25%" size="small" required>
-                                                <el-input v-model="addForm.teststep"></el-input>
+                                            <el-form-item label="测试步骤" prop="teststep" label-width="25%" required>
+                                                <el-input size="small" v-model="addForm.teststep"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
-                                            <el-form-item label="数据需求" prop="datarequest" label-width="25%" size="small">
-                                                <el-input v-model="addForm.datarequest"></el-input>
+                                            <el-form-item label="数据需求" prop="datarequest" label-width="25%">
+                                                <el-input size="small" v-model="addForm.datarequest"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
-                                            <el-form-item label="预期结果" prop="expectresult" size="small" label-width="25%" required>
-                                                <el-input v-model="addForm.expectresult"></el-input>
+                                            <el-form-item label="预期结果" prop="expectresult" label-width="25%" required>
+                                                <el-input size="small" v-model="addForm.expectresult"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
-                                            <el-form-item label="附加检查点" prop="checkpoint" size="small" label-width="25%" required>
-                                                <el-input v-model="addForm.checkpoint"></el-input>
+                                            <el-form-item label="附加检查点" prop="checkpoint" label-width="25%" required>
+                                                <el-input size="small" v-model="addForm.checkpoint"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
@@ -225,7 +217,7 @@
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
-                                    <el-row type="flex" justify="center" style="margin-top:10px">
+                                    <el-row type="flex" justify="center" >
                                             <el-button type="primary" size="small" @click="insert(1)">添加</el-button>
                                             <el-button type="primary" size="small" @click="dialogVisible = !dialogVisible">取消
                                             </el-button>
@@ -416,43 +408,43 @@
                                                 <el-row>
                                                     <el-col :span="11">
                                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" required>
-                                                            <el-input v-model="item.addNodeForm.testdesign"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.testdesign"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="11" style="margin-left: 6.5%">
                                                         <el-form-item label="前置条件" prop="prerequisites" label-width="25%" required>
-                                                            <el-input v-model="item.addNodeForm.prerequisites"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.prerequisites"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
                                                 <el-row>
                                                     <el-col :span="11">
                                                         <el-form-item label="测试步骤" prop="teststep" label-width="25%" required>
-                                                            <el-input v-model="item.addNodeForm.teststep"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.teststep"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="11" style="margin-left: 6.5%">
                                                         <el-form-item label="数据需求" prop="datarequest" label-width="25%">
-                                                            <el-input v-model="item.addNodeForm.datarequest"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.datarequest"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
                                                 <el-row>
                                                     <el-col :span="11">
                                                         <el-form-item label="预期结果" prop="expectresult" label-width="25%" required>
-                                                            <el-input v-model="item.addNodeForm.expectresult"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.expectresult"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                     <el-col :span="11" style="margin-left: 6.5%">
                                                         <el-form-item label="附加检查点" prop="checkpoint" label-width="25%" required>
-                                                            <el-input v-model="item.addNodeForm.checkpoint"></el-input>
+                                                            <el-input size="small" v-model="item.addNodeForm.checkpoint"></el-input>
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
                                                 <el-row>
-                                                    <el-col style="width:94%">
+                                                    <el-col>
                                                         <el-form-item label="备注" prop="note" label-width="11.5%">
-                                                            <el-col :span="23">
+                                                            <el-col  style="width:94%">
                                                                 <el-input type="textarea" placeholder="请输入内容" v-model="item.addNodeForm.note">
                                                                 </el-input>
                                                             </el-col>
@@ -545,43 +537,43 @@
                                 <el-row>
                                     <el-col :span="11">
                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" required>
-                                            <el-input v-model="item.addNodeForm.testdesign"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.testdesign"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11" style="margin-left: 6.5%">
                                         <el-form-item label="前置条件" prop="prerequisites" label-width="25%" required>
-                                            <el-input v-model="item.addNodeForm.prerequisites"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.prerequisites"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
                                     <el-col :span="11">
                                         <el-form-item label="测试步骤" prop="teststep" label-width="25%" required>
-                                            <el-input v-model="item.addNodeForm.teststep"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.teststep"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11" style="margin-left: 6.5%">
                                         <el-form-item label="数据需求" prop="datarequest" label-width="25%">
-                                            <el-input v-model="item.addNodeForm.datarequest"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.datarequest"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
                                     <el-col :span="11">
                                         <el-form-item label="预期结果" prop="expectresult" label-width="25%" required>
-                                            <el-input v-model="item.addNodeForm.expectresult"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.expectresult"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11" style="margin-left: 6.5%">
                                         <el-form-item label="附加检查点" prop="checkpoint" label-width="25%" required>
-                                            <el-input v-model="item.addNodeForm.checkpoint"></el-input>
+                                            <el-input size="small" v-model="item.addNodeForm.checkpoint"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col style="width:98.5%">
+                                    <el-col>
                                         <el-form-item label="备注" prop="note" label-width="11.5%">
-                                            <el-col :span="23">
+                                            <el-col style="width:94%">
                                                 <el-input type="textarea" placeholder="请输入内容" v-model="item.addNodeForm.note">
                                                 </el-input>
                                             </el-col>
@@ -779,7 +771,10 @@
                 </el-row>
             </el-dialog>
         </el-main>
-        <el-footer></el-footer>
+        <el-footer class="dialog-footer">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+                </el-pagination>
+        </el-footer>
     </el-container>
 </div>
 </template>
@@ -1885,7 +1880,7 @@ export default {
 }
 
 .addTab .el-row {
-    padding-bottom: 3px;
+    padding-bottom: 10px;
 }
 
 .addTab .el-form-item {

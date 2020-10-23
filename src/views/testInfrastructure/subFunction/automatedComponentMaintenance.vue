@@ -167,7 +167,7 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
+						<el-col :span="19">
 							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="22.5%">
 									<el-table
 										stripe
@@ -210,7 +210,7 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
+						<el-col :span="19">
 							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="22.5%">
 									<el-table
 										stripe
@@ -254,7 +254,7 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
+						<el-col :span="19">
 							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="22.5%">
 									<el-table
 										stripe

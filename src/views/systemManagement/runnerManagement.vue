@@ -2,7 +2,7 @@
     <div class="page-inner">
         <el-container>
             <el-main>
-                <el-row>
+                <el-row style="margin-bottom:10px">
                 <el-button
                     size="small"
                     type="primary"

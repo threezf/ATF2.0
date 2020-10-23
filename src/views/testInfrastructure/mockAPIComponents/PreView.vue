@@ -140,7 +140,7 @@
   .returnData {
     width: 110px;
     height: 38px;
-    margin-top: -10px;
+
     display: inline-block;
     background: #409eff;
     padding-top: 6px;
@@ -150,7 +150,7 @@
     white-space: nowrap;
     color: #fff;
     text-align: center;
-    margin-bottom: -10px;
+
   }
   .returnData {
     margin-top: 30px;

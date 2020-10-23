@@ -46,8 +46,8 @@
                 <!--		:formatter="transTime"/>-->
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
-                        <el-button size="mini" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium)">进入</el-button>
-                        <el-button size="mini" type="info" @click="updateProjectButton(scope.$index, scope.row)">修改</el-button>
+                        <el-button size="small" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium)">进入</el-button>
+                        <el-button size="small" type="info" @click="updateProjectButton(scope.$index, scope.row)">修改</el-button>
                         <!-- <el-button
 
 size="mini"
@@ -59,37 +59,34 @@ type="danger"
                 </el-table-column>
             </el-table>
         </el-main>
+        <el-footer  class="dialog-footer">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+            </el-pagination>
+        </el-footer>
     </el-container>
             <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
                 <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
                     <el-form-item label="测试项目编号" prop="codeLong">
-                        <el-input v-model="addForm.codeLong" placeholder="选填"></el-input>
+                        <el-input size="small" v-model="addForm.codeLong" placeholder="选填"></el-input>
                     </el-form-item>
                     <el-form-item label="测试项目名称" prop="nameMedium" required>
-                        <el-input v-model="addForm.nameMedium"></el-input>
+                        <el-input size="small" v-model="addForm.nameMedium"></el-input>
                     </el-form-item>
                     <el-form-item label="项目时间" required>
-                        <el-date-picker v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right">
+                        <el-date-picker size="small" v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="描述" prop="projectDesc">
-                        <el-input v-model="addForm.descMedium" placeholder="选填"></el-input>
+                        <el-input size="small" v-model="addForm.descMedium" placeholder="选填"></el-input>
                     </el-form-item>
-                    <el-form-item style="margin-left: 20%">
-                        <el-button type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
-                        <el-button @click="resetForm()">重置</el-button>
-                    </el-form-item>
+                    <el-row type="flex" justify="center" style="margin-bottom:-10px">
+                        <el-button size="small" type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
+                        <el-button size="small" @click="resetForm()">重置</el-button>
+                    </el-row>
                 </el-form>
             </el-dialog>
 
-        <el-footer>
-            <div class="block">
-                <el-col :span="10" :offset='4'>
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-                    </el-pagination>
-                </el-col>
-            </div>
-        </el-footer>
+        
 </div>
 </template>
 

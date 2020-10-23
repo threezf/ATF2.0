@@ -861,7 +861,7 @@
           </p>
         </div>
       </div>
-      <el-row type="flex" justify="center" style="margin-top:10px">
+      <el-row type="flex" justify="center" style="margin:10px 0px -10px 0px">
         <el-button size="small" type="primary" @click="sendSceneData()">
           确认
         </el-button>
@@ -992,7 +992,7 @@
                 </div>
               </div>
             </form>
-            <el-row type="flex" justify="center" style="margin-top:10px">
+            <el-row type="flex" justify="center" style="margin:10px 0px -10px 0px">
               <el-button
                 size="small"
                 data-dismiss="modal"
@@ -1090,7 +1090,7 @@
           </div>
         </form>
       </div>
-      <el-row type="flex" justify="center" style="margin-top:10px">
+      <el-row type="flex" justify="center" style="margin:10px 0px -10px 0px">
         <el-button
           size="small"
           type="primary"
@@ -3417,6 +3417,7 @@ export default {
   .modal-footer {
     display: flex;
     justify-content: center;
+    margin:10px 0px -10px 0px
   }
 }
 

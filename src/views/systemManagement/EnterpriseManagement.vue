@@ -103,7 +103,7 @@
 					</el-table-column>
 				</el-table>
 			</el-main>
-			<el-footer>
+			<el-footer class="dialog-footer">
 				<el-pagination
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"

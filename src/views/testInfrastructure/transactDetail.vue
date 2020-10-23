@@ -12,7 +12,7 @@
                     </span>
                 </el-col>
                 <el-col :span="3">
-                    <el-select filterable v-model="autSelectValue" @change='autChange'>
+                    <el-select size="small" filterable v-model="autSelectValue" @change='autChange'>
                         <el-option v-for="item in autSelectOptions" :key="item.id" :label="item.code" :value="item.id">
                         </el-option>
                     </el-select>
@@ -23,7 +23,7 @@
                     </span>
                 </el-col>
                 <el-col :span="3">
-                    <el-select filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
+                    <el-select size="small" filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
                         <el-option v-for="(item,index) in tranSelectOptions" :key="index" :label="item.code" :value="item.id">
                         </el-option>
                     </el-select>

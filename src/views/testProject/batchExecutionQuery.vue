@@ -122,7 +122,7 @@
           </el-row>
         </el-form>
         <el-table 
-          scripe 
+          stripe
           border 
           class="table tableStyle" 
           :data="tableData">
@@ -252,17 +252,7 @@
             :formatter="transTime">
           </el-table-column>
         </el-table>
-        <div class="paginationStyle">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-size="params.pageSize"
-            :page-sizes="[5,10,20,50]"
-            :current-page="params.currentPage"
-            :total="total"
-            layout="total,sizes,prev,pager,next,jumper"
-          ></el-pagination>
-        </div>
+        
         <el-dialog
           width="40%"
           :title="cakeTitle"
@@ -291,13 +281,21 @@
           </div>
           <hr class="hrDiv" />
           <el-row class="cancelRowStyle">
-            <el-col :span="22" :offset="0"></el-col>
-            <el-col :span="1" :offset="0">
               <el-button type="danger" size="small" @click="cancelPicDialog">取消</el-button>
-            </el-col>
           </el-row>
         </el-dialog>
       </el-main>
+      <el-footer class="dialog-footer">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-size="params.pageSize"
+            :page-sizes="[5,10,20,50]"
+            :current-page="params.currentPage"
+            :total="total"
+            layout="total,sizes,prev,pager,next,jumper"
+          ></el-pagination>
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -544,10 +542,9 @@
   }
   .cancelRowStyle {
     margin-top: 10px;
-  }
-  .cancelRowStyle {
     margin-bottom: -15px;
-    margin-left: 5px;
+    display: flex;
+    justify-content: center;
   }
   .tableStyle {
     margin-top: 15px;

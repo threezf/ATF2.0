@@ -40,13 +40,9 @@
                 @check-change="funCheckChange">
             </el-tree>
         </div>
-        <el-row>
-            <el-col :span="5" :offset='7'>
+        <el-row type="flex" justify="center">
                 <el-button size="small" type="primary" @click="throwInfo">确 定</el-button>
-            </el-col>
-            <el-col :span="5" >
                 <el-button size="small" @click="closeDialog">取 消</el-button>
-            </el-col>
         </el-row>
     </div>
 </template>

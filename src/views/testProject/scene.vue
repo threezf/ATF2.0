@@ -2,7 +2,7 @@
     <div class="page-inner">
         <el-container>
             <el-main>
-                <el-row :gutter="20">
+                <el-row :gutter="20" style="margin-bottom:10px">
                     <el-col :span="4">
                         <el-input size="small"  v-model="selectInfo" placeholder="请输入内容"></el-input>
                     </el-col>
@@ -26,6 +26,7 @@
                 </el-row>
                 <el-table
                     stripe
+                    border
                     :data="tableData"
                     :loading='tableLoading'
                     class='table'>
@@ -63,19 +64,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block">
-                    <el-col :span="10" :offset='4'>
-                        <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-sizes="[5, 10, 20, 50]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="totalCount">
-                        </el-pagination>
-                    </el-col>
-                </div>
+                
                 <el-dialog
                     :title="modelName"
                     :visible.sync="dialogVisible"
@@ -88,14 +77,23 @@
                         <el-form-item   label="场景描述" prop="senceDesc" >
                             <el-input  size="small" v-model="form.senceDesc"></el-input>
                         </el-form-item>
-                        <el-row type="flex" justify="center">
+                        <el-row type="flex" justify="center" style="margin-bottom:-10px">
                             <el-button  size="small"  type="primary" @click="submitForm()">{{buttonName}}</el-button>
                             <el-button size="small"  @click="resetForm('form')">重置</el-button>
                         </el-row>
                     </el-form>
                 </el-dialog>
             </el-main>
-            <el-footer>
+            <el-footer class="dialog-footer">
+                <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 20, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalCount">
+                </el-pagination>
             </el-footer>
         </el-container>
     </div>
@@ -365,7 +363,5 @@
     .block{
         margin: 10px auto
     }
-    .table{
-        padding-top:10px
-    }
+
 </style>

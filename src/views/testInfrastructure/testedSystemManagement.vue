@@ -46,8 +46,8 @@
                 <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
                 <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
             </el-table>
-            <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper"></el-pagination>
-            <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
+        </el-main>
+                    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
                 <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
                     <el-form-item label="系统名称" prop="nameMedium">
                         <el-input style="width:100%" size="small" placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
@@ -82,8 +82,10 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
-        </el-main>
-        <el-footer></el-footer>
+        <el-footer class="dialog-footer">
+            <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper">
+            </el-pagination>
+        </el-footer>
     </el-container>
 </div>
 </template>
@@ -666,7 +668,7 @@ div.row {
 
 /**底部分页*/
 .pagination {
-    margin: 20px auto;
+
     text-align: center;
 }
 

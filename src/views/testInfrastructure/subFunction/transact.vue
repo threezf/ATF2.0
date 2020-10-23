@@ -134,19 +134,7 @@
           sortable
         ></el-table-column>
       </el-table>
-      <!--底部换页-->
-
-        <el-footer class="footSelect">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-sizes="[5, 10, 20, 50]"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="totalCount"
-            layout="total, sizes, prev ,pager ,next, jumper"
-          ></el-pagination>
-        </el-footer>
+      
 
 
       <!--新增和修改对话框-->
@@ -316,6 +304,19 @@
         </el-form>
       </el-dialog>
     </el-main>
+    <!--底部换页-->
+
+        <el-footer class="dialog-footer">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[5, 10, 20, 50]"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalCount"
+            layout="total, sizes, prev ,pager ,next, jumper"
+          ></el-pagination>
+        </el-footer>
   </div>
 </template>
 

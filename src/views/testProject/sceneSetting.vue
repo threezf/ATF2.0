@@ -601,7 +601,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-row type="flex" justify="center">
+            <el-row type="flex" justify="center" style="margin-bottom:-10px">
               <el-button type="primary" size="small" @click="addSure">添加</el-button>
               <el-button type="warning" size="small" @click="addCancel" plain>取消</el-button>
             </el-row>

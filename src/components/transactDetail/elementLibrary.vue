@@ -50,13 +50,13 @@
 									<span>请选择UI或元素</span>
 								</el-col>
 								<el-col :span="5" class="rightLable" v-if="infoCardType !== undefined">
-									<el-input v-model="input" placeholder="请输入内容" :disabled="editFlag"></el-input>
+									<el-input size="small" v-model="input" placeholder="请输入内容" :disabled="editFlag"></el-input>
 								</el-col>
 								<el-col :span="4" class="rightLable" v-if="infoCardType">
 									<span>类型 ：</span>
 								</el-col>
 								<el-col :span="5" v-if="infoCardType">
-									<el-select filterable v-model="classType" placeholder="请选择" :disabled="editFlag">
+									<el-select size="small" filterable v-model="classType" placeholder="请选择" :disabled="editFlag">
 										<el-option
 											v-for="item in classselectOptions"
 											:key="item.id"
@@ -135,8 +135,8 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
 				<el-button size="small" type="primary" @click=" addUI">确 定</el-button>
+				<el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog title="添加元素" :visible.sync="addEleDialogFlag" width="30%">
@@ -162,8 +162,8 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
+				<el-button size="small" type="primary" @click=" addUI">确 定</el-button>
 				<el-button size="small" @click="addEleDialogFlag = false">取 消</el-button>
-				<el-button size="small" type="primary" @click=" addEle">确 定</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width="30%">
@@ -176,7 +176,7 @@
 				:limit="1"
 				:auto-upload="false"
 			>
-				<el-buttonsize="small" slot="trigger" size="small" type="primary">选取文件</el-button>
+				<el-button size="small" slot="trigger" type="primary">选取文件</el-button>
 				<el-button
 					style="margin-left: 10px;"
 					size="small"

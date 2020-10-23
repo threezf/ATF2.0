@@ -11,13 +11,13 @@
     <div class="contentDiv">
       <el-form>
         <el-form-item class="basicSettingRow" label="期望名称" label-width="100px">
-          <el-input class="expectInput" v-model="expectationName"></el-input>
+          <el-input size="small" class="expectInput" v-model="expectationName"></el-input>
         </el-form-item>
         <el-form-item class="basicSettingRow" label="接口路径" label-width="100px">
-          <el-select v-model="selectedParseMethod">
+          <el-select style="width:255px" size="small" v-model="selectedParseMethod">
             <el-option v-for="(item,index) in parseMethods" :key="index" :value="item"></el-option>
           </el-select>
-          <el-input class="path" v-model="path"></el-input>
+          <el-input size="small" class="path" v-model="path"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -57,8 +57,9 @@
             <el-col :span="15">
               <el-form>
                 <el-form-item label="请求参数" label-width="100px">
-                  <el-input style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
+                  <el-input size="small" style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
                   <el-input
+                    size="small"
                     style="width: 400px;margin-left: 10px"
                     placeholder="参数值"
                     v-model="paramsQueryValue[index]"
@@ -96,11 +97,13 @@
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsHeadersKey[index]"
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsHeadersValue[index]"
@@ -139,11 +142,13 @@
                 <el-form>
                   <el-form-item label="cookies" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="paramsCookiesKey[index]"
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsCookiesValue[index]"
@@ -178,14 +183,14 @@
         <el-form>
           <el-col :span="11">
             <el-form-item label="secure" label-width="100px">
-              <el-select v-model="selectedSecure">
+              <el-select size="small" v-model="selectedSecure">
                 <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="10">
             <el-form-item label="keepalive" label-width="100px">
-              <el-select v-model="selectedKeepalive">
+              <el-select size="small" v-model="selectedKeepalive">
                 <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
@@ -202,18 +207,18 @@
           <el-row class="rowForward">
             <el-col :span="11">
               <el-form-item class="basicSettingRow" label="host" label-width="100px">
-                <el-input class="expectInput" v-model="hostContent"></el-input>
+                <el-input size="small" class="expectInput" v-model="hostContent"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
               <el-form-item class="basicSettingRow" label="port" label-width="100px">
-                <el-input class="expectInput" v-model="portContent"></el-input>
+                <el-input size="small" class="expectInput" v-model="portContent"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-form-item label="协议" label-width="100px">
-            <el-select v-model="selectedProtocol">
+            <el-select size="small" v-model="selectedProtocol">
               <el-option v-for="(item,index) in protocols" :key="index" :value="item"></el-option>
             </el-select>
           </el-form-item>
@@ -241,12 +246,12 @@
         <el-form>
           <el-col :span="10">
             <el-form-item label="状态码" label-width="100px">
-              <el-input v-model="statusCode"></el-input>
+              <el-input size="small" v-model="statusCode"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8" :offset="2">
             <el-form-item label="延时时间" label-width="100px">
-              <el-input v-model="delayTime"></el-input>
+              <el-input size="small" v-model="delayTime"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="1" style="margin-left: 3px">
@@ -271,7 +276,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item class="Error" label="报错信息：" label-width="100px">
-                <el-input class="expectInput" v-model="reasonPhrase"></el-input>
+                <el-input size="small" class="expectInput" v-model="reasonPhrase"></el-input>
               </el-form-item>
             </el-col>
           </el-form>
@@ -287,11 +292,13 @@
                 <el-form>
                   <el-form-item label="请求参数" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="returnHeadersKey[index]"
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="returnHeadersValue[index]"
@@ -328,11 +335,13 @@
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
+                      size="small"
                       style="width: 200px"
                       placeholder="参数名称"
                       v-model="returnCookiesKey[index]"
                     ></el-input>
                     <el-input
+                      size="small"
                       style="width: 400px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="returnCookiesValue[index]"
@@ -842,7 +851,6 @@
   .forwardSetting {
     width: 110px;
     height: 38px;
-    margin-top: -10px;
     display: inline-block;
     background: #409eff;
     padding-top: 6px;
@@ -852,7 +860,6 @@
     white-space: nowrap;
     color: #fff;
     text-align: center;
-    margin-bottom: -10px;
   }
   .requestParams,
   .forwardSetting {
