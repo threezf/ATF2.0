@@ -135,8 +135,8 @@
         ></el-table-column>
       </el-table>
       <!--底部换页-->
-      <div>
-        <el-col class="footSelect">
+
+        <el-footer class="footSelect">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -146,8 +146,8 @@
             :total="totalCount"
             layout="total, sizes, prev ,pager ,next, jumper"
           ></el-pagination>
-        </el-col>
-      </div>
+        </el-footer>
+
 
       <!--新增和修改对话框-->
       <el-dialog
@@ -973,7 +973,7 @@ export default {
 .footSelect {
   text-align: center;
   overflow: hidden;
-  margin: 30px auto 10px auto;
+  margin: 20px auto 10px auto;
 }
 
 .addSelect {

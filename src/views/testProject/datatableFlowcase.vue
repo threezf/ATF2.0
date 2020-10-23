@@ -57,62 +57,85 @@
 					<el-form
 						:model="mainForm"
 						class="main"
-						label-width="100px">
+						label-width="220px">
 						<el-row>
 							<span class="detailSpan">
 								用例详情
 							</span>
 						</el-row>
-						<el-form-item
-							label="测试点">
-							<el-input
-								v-model="mainForm.testPoint" 
-								:disabled="flag">
-							</el-input>
-						</el-form-item>
-						<el-form-item
-							label="测试任务">
-							<el-select
-								v-model="mainForm.missionId" 
-								:disabled="flag">
-								<el-option
-									v-for="item in missionList"
-									:key="item.id"
-									:value="item.id"
-									:label="item.nameMedium">
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item
-							label="测试意图">
-							<el-input
-								v-model="mainForm.testDesign" 
-								:disabled="flag">
-							</el-input>
-						</el-form-item>
-						<el-form-item
-							label="检查点">
-							<el-input
-								v-model="mainForm.checkPoint" 
-								:disabled="flag">
-							</el-input>
-						</el-form-item>
-						<el-form-item
-							label="预计结果">
-							<el-input
-								v-model="mainForm.expectResult" 
-								:disabled="flag">
-							</el-input>
-						</el-form-item>
-						<el-form-item
-							label="测试步骤">
-							<el-input
-								class="textarea"
-								type="textarea"
-								v-model="mainForm.testStep" 
-								:disabled="flag">
-							</el-input>
-						</el-form-item>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item
+									label="测试点">
+									<el-input
+										size="small"
+										v-model="mainForm.testPoint" 
+										:disabled="flag">
+									</el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item
+									label="测试任务">
+									<el-select
+										size="small"
+										v-model="mainForm.missionId" 
+										:disabled="flag">
+										<el-option
+											v-for="item in missionList"
+											:key="item.id"
+											:value="item.id"
+											:label="item.nameMedium">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item
+									label="测试意图">
+									<el-input
+										size="small"
+										v-model="mainForm.testDesign" 
+										:disabled="flag">
+									</el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item
+									label="检查点">
+									<el-input
+										size="small"
+										v-model="mainForm.checkPoint" 
+										:disabled="flag">
+									</el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item
+									label="预计结果">
+									<el-input
+										size="small"
+										v-model="mainForm.expectResult" 
+										:disabled="flag">
+									</el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="10">
+								<el-form-item
+									label="测试步骤">
+									<el-input
+										class="textarea"
+										type="textarea"
+										v-model="mainForm.testStep" 
+										:disabled="flag">
+									</el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
 					</el-form>
 					<div 
 						class="nodeInfoList"
@@ -124,45 +147,60 @@
 						</el-row>
 						<el-form
 							class="formInfo"
-							label-width="100px"
+							label-width="220px"
 							:inline="true">
-							<el-form-item label="被测系统">
-								<el-select 
-									v-model="item.autName"
-									:disabled="flag"
-									filterable
-									placeholder="被测系统名称">
-									<el-option 
-										v-for="(item) in autRespDTOList"
-										:key="item.id"
-										:value="item.nameMedium"
-										:label="item.nameMedium">
-									</el-option>
-								</el-select>
-							</el-form-item>
-							<el-form-item label="功能点">
-								<el-select
-									v-model="item.transName"
-									placeholder="修改被测系统名称"
-									filterable
-									:disabled="flag">
-								</el-select>
-							</el-form-item>
-							<el-form-item label="动作标识">
-								<el-input 
-									placeholder="修改动作标识"
-									v-model="item.casecode"
-									:disabled="flag">
-								</el-input>
-							</el-form-item>
-							<el-form-item label="步骤序号">
-								<el-input 
-									placeholder="请输入关键序号"
-									v-model="item.steporder"
-									:disabled="flag">
-								</el-input>
-							</el-form-item>
-							<br/>
+							<el-row>
+								<el-col :span="10">
+									<el-form-item label="被测系统">
+										<el-select 
+											size="small"
+											v-model="item.autName"
+											:disabled="flag"
+											filterable
+											placeholder="被测系统名称">
+											<el-option 
+												v-for="(item) in autRespDTOList"
+												:key="item.id"
+												:value="item.nameMedium"
+												:label="item.nameMedium">
+											</el-option>
+										</el-select>
+									</el-form-item>
+								</el-col>
+								<el-col :span="10">
+									<el-form-item label="功能点">
+										<el-select
+											size="small"
+											v-model="item.transName"
+											placeholder="修改被测系统名称"
+											filterable
+											:disabled="flag">
+										</el-select>
+									</el-form-item>
+									</el-col>
+							</el-row>
+							<el-row>
+								<el-col :span="10">
+									<el-form-item label="动作标识">
+										<el-input 
+											size="small"
+											placeholder="修改动作标识"
+											v-model="item.casecode"
+											:disabled="flag">
+										</el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="10">
+									<el-form-item label="步骤序号">
+										<el-input 
+											size="small"
+											placeholder="请输入关键序号"
+											v-model="item.steporder"
+											:disabled="flag">
+										</el-input>
+									</el-form-item>
+								</el-col>
+							</el-row>
 							<el-form-item label="关联脚本">
 								<el-button 
 									type="primary"
@@ -176,11 +214,11 @@
 							<el-row>
 								<p>节点数据</p>
 							</el-row>
-							<el-form :inline="true" label-width="140px">
+							<el-form :inline="true" label-width="220px">
 								<el-form-item v-for="(it, ind) in item.nodeData" :label="it.widgetName+it.colName" :key="ind">
-									<p>
-										<el-input placeholder="节点数据" v-model="it.data" :disabled="flag"></el-input>
-										<el-button icon="el-icon-setting" size="small" plain></el-button>
+									<p>										
+										<el-input size="small" placeholder="节点数据" v-model="it.data" :disabled="flag"></el-input>
+										<el-button icon="el-icon-setting" size="small" plain></el-button>										
 									</p>
 								</el-form-item>
 							</el-form>
@@ -526,7 +564,6 @@
 			}
 			.main {
 				overflow: hidden;
-				margin-bottom: -20px;
 				.detailSpan {
 					display: block;
 					width: 100px;
@@ -549,47 +586,50 @@
 					float: left;
 					margin-left: 10px;
 					margin-bottom: 5px;
-					.el-input,
-					.textarea,
-					.el-select {
-						min-width: 400px;
+					.el-input{
+						width: 100%;
+					}
+					.textarea{
+						width: 103%;
+					}
+					.el-select{
+						width: 103%;
 					}
 				}
 			}
 			.nodeInfoList {
 				width: 100%;
 				padding: 0px 40px;
-				margin-bottom: -10px;
 				.nodeTitle {
 					width: 70px;
 					text-align: center;
 					padding: 3px 0px;
-					margin-top: -10px;
 					background: #8175c7;
 					color: white;
 					border-radius: 5px;
 					font-family: '微软雅黑';
 					font-size: 15px;
 					font-weight: bold;
-					margin-left: 50px;
+					
 				}
 				.formInfo {
 					overflow: hidden;
-					margin-left: 45px;
 					.el-form-item {
-						margin-bottom: 10px !important;
+						margin-left: 10px;
+						margin-bottom: 10px;
 					}
 					.el-input {
-						min-width: 400px;
+						width: 100%;
 						float: left;
+					}
+					.el-select{
+						width: 103%;
 					}
 				}
 				.nodeData {
 					.el-row {
-						margin-bottom: -20px;
 						p {
 							width: 70px;
-							margin-left: 60px;
 							padding: 3px 0;
 							text-align: center;
 							border-radius: 5px;
@@ -601,9 +641,9 @@
 						}
 					}
 					.el-form {
-						margin-left: 70px;
 						.el-form-item {
-							margin-bottom: 0px;
+							margin-left: 10px;
+							margin-bottom: 10px;
 							.el-form-item__label {
 								font-size: 12px !important;
 								white-space: nowrap !important;
@@ -614,7 +654,7 @@
 							p {
 								display: flex;
 								.el-input {
-									min-width: 280px;
+									width: 200px;
 								}
 								.el-button {
 									margin-left: 10px;

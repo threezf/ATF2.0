@@ -4,7 +4,7 @@
 			<el-main>
 				<el-form  class="fistForm" label-width="100%">
 					<el-row>
-						<el-col :span="2" style="margin-left: 90px" >
+						<el-col :span="3" style="margin-left: 90px" >
 							<el-button
 								@click="componentFormButton"
 								icon="el-icon-setting"
@@ -13,11 +13,11 @@
 								选择开发架构
 							</el-button>
 						</el-col>
-						<el-col :span="6" style="margin-left: 30px">
-							<el-input style="width: 85%" size="small" id="componentInput" v-model="automated" :disabled="true"
+						<el-col :span="5">
+							<el-input style="width: 100% " size="small" id="componentInput" v-model="automated" :disabled="true"
 												placeholder="选择的开发架构"></el-input>
 						</el-col>
-						<el-col :span="1">
+						<el-col :span="1" style="margin-left: 10px">
 							<el-button
 								@click="addArch(0)"
 								icon="el-icon-plus"
@@ -31,9 +31,9 @@
 								size="small">
 							</el-button>
 						</el-col>
-						<el-col :span="8" style="margin-left: -22px">
-							<el-form-item label="控件名称" label-width="30%" style="margin-top: 7px">
-								<el-select style="width: 100%" v-model="classValue" filterable placeholder="请选择控件" size="small"
+						<el-col :span="8" >
+							<el-form-item label="控件名称" label-width="36%" style="margin-top: 7px">
+								<el-select style="width: 110%" v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"

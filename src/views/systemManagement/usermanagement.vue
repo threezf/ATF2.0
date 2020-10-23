@@ -54,12 +54,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
-        <el-col :span="10" :offset='4'>
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-          </el-pagination>
-        </el-col>
-      </div>
+    </el-main>
+  </el-container>  
       <el-dialog 
         :title="modelName" 
         :visible.sync="dialogVisible" 
@@ -287,10 +283,15 @@
           </el-row>
         </el-form>
       </el-dialog>
-    </el-main>
+    
     <el-footer>
+      <div class="block">
+        <el-col :span="10" :offset='4'>
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+          </el-pagination>
+        </el-col>
+      </div>
     </el-footer>
-  </el-container>
 </div>
 </template>
 
@@ -800,6 +801,7 @@ export default {
     margin-bottom: 15px;
   }
   .searchRow {
+    margin-bottom: 10px;
     .el-input {
       width: 200px;
     }

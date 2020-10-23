@@ -600,6 +600,7 @@
 
 <style scoped lang="less">
 	.searchRow {
+		margin-bottom: 10px;
 		.el-input {
 			width: 200px;
 		}

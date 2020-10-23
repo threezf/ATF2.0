@@ -403,7 +403,7 @@ export default {
 
 <style lang="less" scoped>
 .searchRow {
-    margin-bottom: 0px !important;
+    margin-bottom: 10px;
 
     .el-input {
         width: 285px;

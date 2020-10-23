@@ -50,18 +50,18 @@
             <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
                 <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
                     <el-form-item label="系统名称" prop="nameMedium">
-                        <el-input placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
+                        <el-input style="width:100%" size="small" placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
                     </el-form-item>
                     <el-form-item label="系统编号">
-                        <el-input placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
+                        <el-input style="width:100%" size="small" placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
                     </el-form-item>
                     <el-form-item label="开发架构">
-                        <el-select class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
+                        <el-select style="width:110%" size="small" class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
                             <el-option v-for=" (value,key) in abstractArchitectureInfo" :value="value" :key="key">{{value}}</el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="描述" prop="descShort">
-                        <el-input type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
+                        <el-input size="small" type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
                     </el-form-item>
                     <el-form-item class="buttons_row">
                         <el-button id="clickButton" type="primary" size="small" @click="submitForm('form')">{{dialogOperateButton}}</el-button>
@@ -76,7 +76,7 @@
                         <h4 class="successTitle">操作成功</h4>
                     </el-form-item>
                     <hr width="100%" color="#F5F5F5" />
-                    <el-form-item class="formFoot buttonRowManage">
+                    <el-form-item class="buttons_row">
                         <el-button type="primary" size="small" @click="cancelButtonClicked">确定</el-button>
                         <el-button type="success" size="small" @click="manageFunction">管理功能点</el-button>
                     </el-form-item>
@@ -662,7 +662,7 @@ div.row {
 /**添加取消按钮样式 */
 .buttons_row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: -10px;
     margin-bottom: -15px;
 }
