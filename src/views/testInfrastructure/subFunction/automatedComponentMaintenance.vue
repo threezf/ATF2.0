@@ -1,7 +1,5 @@
 <template>
-	<div class="page-inner">
-		<el-container>
-			<el-main>
+	<page>
 				<el-form ref="firstForm" class="fistForm" label-width="100%">
 					<el-row>
 						<el-col :span="8" :offset="2">
@@ -528,9 +526,7 @@
 						</el-form-item>
 					</el-form>
 				</el-dialog>
-			</el-main>
-		</el-container>
-	</div>
+	</page>
 </template>
 
 <script>

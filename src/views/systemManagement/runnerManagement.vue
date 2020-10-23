@@ -1,7 +1,5 @@
 <template>
-    <div class="page-inner">
-        <el-container>
-
+  <page>
             <el-header>
                 <el-button
                     size="small"
@@ -59,9 +57,9 @@
                 <el-card class="box-card"  shadow="always" v-show='logVisible'>
                     <div slot="header" class="clearfix">
                         <span>执行机日志</span>
-                        <el-button 
-                            style="float: right; padding: 3px 0" 
-                            type="text" 
+                        <el-button
+                            style="float: right; padding: 3px 0"
+                            type="text"
                             @click="logVisible=false">
                             隐藏
                         </el-button>
@@ -81,8 +79,7 @@
             </el-main>
             <el-footer>
             </el-footer>
-        </el-container>
-    </div>
+	</page>
 </template>
 
 <script>

@@ -209,7 +209,9 @@
           url: '/aut/selectFunctionSet',
           method: 'POST',
           params: {
-            id: this.autId
+            id: this.autId,
+						companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+						autId:this.autId,
           }
         }).then(res => {
           if(res.respCode === "0000") {
@@ -227,7 +229,7 @@
       showAddMultiplyDialog() {
         this.treeDialogVisible = true
       },
-      // 添加多项取消     
+      // 添加多项取消
       addCancel() {
         this.treeDialogVisible = false
       },
@@ -390,7 +392,7 @@
           url: '/scriptTemplate/scriptParameterized',
           method: 'POST',
           params: {
-            autId: this.autId, 
+            autId: this.autId,
             content: content,
             scriptId: this.scriptId,
             userId: sessionStorage.getItem("userId"),

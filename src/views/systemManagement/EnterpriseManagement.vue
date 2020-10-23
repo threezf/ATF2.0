@@ -1,7 +1,5 @@
 <template>
-	<div class="page-inner">
-		<el-container>
-			<el-main>
+	<page>
 				<el-row>
 					<el-button
 						type="primary"
@@ -102,7 +100,6 @@
 						</template>
 					</el-table-column>
 				</el-table>
-			</el-main>
 			<el-footer>
 				<el-pagination
 					@current-change="handleCurrentChange"
@@ -202,8 +199,7 @@
 					</el-row>
 				</el-form>
 			</el-dialog>
-		</el-container>
-	</div>
+	</page>
 </template>
 <script>
 	import Request from '@/libs/request.js'

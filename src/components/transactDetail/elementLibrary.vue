@@ -16,9 +16,9 @@
 								<el-button size="mini" type="primary" @click="deleteUIShow" :disabled="showFlag">删除UI</el-button>
 								<el-button size="mini" type="primary" @click="addEleShow" :disabled="showFlag">添加元素</el-button>
 								<el-button size="mini" type="primary" @click="deleteEleShow" :disabled="showFlag">删除元素</el-button>
-								<el-button size="mini" type="primary" @click="branchAddEleShow" :disabled="showFlag">批量添加</el-button>
 							</el-row>
 							<el-row style="margin-top: 0; padding-top: 0;margin-left: 10px">
+								<el-button size="mini" type="primary" @click="branchAddEleShow" :disabled="showFlag">批量添加</el-button>
 								<el-button size="mini" type="primary" @click="downloadTools">录制工具下载</el-button>
 							</el-row>
 							<el-tree
@@ -286,12 +286,16 @@
 
 		},
 		created() {
-			this.creatorId=this.creatorId.toString()
-			if (this.creatorId == sessionStorage.getItem("userId")) {
-				this.showFlag=false
+			if(this.creatorId){
+				this.creatorId=this.creatorId.toString()
+				if (this.creatorId == sessionStorage.getItem("userId")) {
+					this.showFlag=false
+				}else{
+					this.showFlag=true
+				}
 			}else{
-				this.showFlag=true
-			}
+				this.showFlag=false			}
+
 		},
 		methods: {
 			// 录制工具下载
@@ -405,10 +409,15 @@
 			},
 			//获取该测试系统下 所有的控件类型
 			getClass() {
+				console.log("唉呀妈呀",sessionStorage.getItem("toTransact"))
 				Request({
 					url: "/aut/queryAutVisibleOmClasses",
 					method: "post",
-					params: {id: this.autId},
+					params: {
+						id: this.autId,
+						companyId:JSON.parse(sessionStorage.getItem("toTransact")).companyId,
+						autId:JSON.parse(sessionStorage.getItem("toTransact")).id
+					},
 				}).then(
 					(res) => {
 						if (res.respCode == "0000") {

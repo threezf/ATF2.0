@@ -2,8 +2,7 @@
  * 被测系统管理
  */
 <template>
-<div class="page-base-inner">
-    <el-container>
+<page>
         <el-row class="rowMargin">
             <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
             <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
@@ -17,7 +16,6 @@
             </span>
             <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
         </el-row>
-        <el-main class="el-main-base-inner">
             <el-row>
                 <el-col :span="8">
                     <el-input class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
@@ -83,10 +81,8 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
-        </el-main>
         <el-footer></el-footer>
-    </el-container>
-</div>
+</page>
 </template>
 
 <script>
@@ -414,8 +410,8 @@ export default {
             if (type == 1) {
                 this.currentPage = 1;
             }
-            const loginInfo = JSON.parse(localStorage.getItem("loginInfo"))
-            this.params.companyId = loginInfo.companyId
+           const loginInfo = JSON.parse(localStorage.getItem("loginInfo"))
+					 this.params.companyId = loginInfo.companyId
             Request({
                     url: "/aut/pagedBatchQueryAut",
                     method: "post",
@@ -446,7 +442,9 @@ export default {
             Request({
                     url: "/abstractArchitecture/queryArchitectureList",
                     method: "POST",
-                    params: {}
+                    params: {
+                    	companyId:parseInt(JSON.parse(localStorage.getItem("loginInfo")).companyId)
+										}
                 })
                 .then(res => {
                     let needData = res.architectureRespDTOList;

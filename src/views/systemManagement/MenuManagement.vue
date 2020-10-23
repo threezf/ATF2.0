@@ -1,7 +1,5 @@
 <template>
-  <div class="page-inner">
-    <el-container>
-      <el-main style="margin-top: 20px">
+  <page>
 						<el-table
 							:data="treeData"
 							style="width: 100%;margin-bottom: 20px;"
@@ -49,9 +47,7 @@
 								label="授权标识">
 							</el-table-column>
 						</el-table>
-			</el-main>
-    </el-container>
-  </div>
+	</page>
 </template>
 
 <script>

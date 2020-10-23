@@ -1,6 +1,5 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
+  <page>
       <el-row class="buttonsRow">
         <el-button
           type="primary"
@@ -44,8 +43,6 @@
           >绑定swagger
         </el-button>
       </el-row>
-    </el-container>
-    <el-main class="el-main-base-inner">
       <el-row>
         <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
@@ -311,8 +308,7 @@
           </el-row>
         </el-form>
       </el-dialog>
-    </el-main>
-  </div>
+	</page>
 </template>
 
 <script>
@@ -802,6 +798,7 @@ export default {
                   method: "POST",
                   params: {
                     autId: _this.autId,
+										userId:sessionStorage.getItem("userId"),
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,

@@ -1,7 +1,5 @@
 <template>
-<div class="page-inner">
-    <el-container>
-        <el-main>
+<page>
             <el-row>
                 <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRule">新增
                 </el-button>
@@ -38,13 +36,10 @@
                     </template>
                 </el-table-column>
             </el-table>
-
-        </el-main>
         <el-footer>
             <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
             </el-pagination>
         </el-footer>
-    </el-container>
     <el-dialog width="24%" :title="dialogTitles[titleIndex]" :visible.sync="dialogVisible">
         <el-form ref="ruleForm" label-width="100px" :model="ruleForm" :rules="rules">
             <el-form-item label="角色姓名" prop="roleName">
@@ -76,7 +71,7 @@
             </el-button>
         </el-row>
     </el-dialog>
-</div>
+</page>
 </template>
 
 <script>

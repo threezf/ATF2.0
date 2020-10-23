@@ -2,10 +2,10 @@
 <div id="app">
     <el-header style="background-color: #FFF " v-if="activeMenu!= 'Login' && activeMenu != 'Rigester' && activeMenu != 'Error'">
         <el-row class="header">
-            <el-col :span="3" class="logo">
-                <!--		<img src="icon.jpg" alt="" style="width:50px;height:50px" />-->
-                <span><i class="el-icon-cloudy" style="font-size: 32px;color:var(--blue);padding-right:2px;font-weight: bolder"></i></span>
-                <span style="color:var(--blue);font-size:32px ">ATF</span>
+            <el-col :span="3" class="logo"  >
+<!--							<img src="icon.jpg" alt="" style="width:50px;height:50px" />-->
+							<span ><i class="el-icon-cloudy" style="font-size: 32px;color:var(--blue);padding-right:2px;font-weight: bolder"></i></span>
+							<span  style="color:var(--blue);font-size:32px ">ATF</span>
             </el-col>
             <el-col :span="18" :offset="1">
                 <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#fff" active-text-color="#44b549">
@@ -30,6 +30,9 @@
             </el-col>
         </el-row>
     </el-header>
+	   <div>
+			 <BreadCrumb></BreadCrumb>
+		 </div>
     <keep-alive>
         <router-view />
     </keep-alive>
@@ -72,7 +75,12 @@
 
 <script>
 import Request from "@/libs/request.js";
+import BreadCrumb from '@/components/breadCrumb/breadCrumb.vue';
+import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
+	components: {
+		BreadCrumb
+	},
     name: "App",
     data() {
         let activeMenu = window.activeMenu;
@@ -215,7 +223,6 @@ export default {
             const flag = localStorage.getItem("userType")
             this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
             this.urls = localStorage.getItem("urls").split(',')
-            this.currentUser = sessionStorage.getItem("username")
             if (flag == 'false') {
                 this.userStatus = 1
             } else {
@@ -226,6 +233,7 @@ export default {
         mounted() {
             this.$bus.on('setUrls', (urls) => {
                 this.urls = urls
+							this.currentUser = sessionStorage.getItem("username")
             })
         }
     }

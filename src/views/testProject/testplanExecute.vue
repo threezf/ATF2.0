@@ -24,7 +24,7 @@
                 style="padding: 15px 0"
               >
                 <el-row>
-                  <form class="form-horizontal col-lg-12 topRow">
+                  <form class="form-horizontal col-lg-24 topRow">
                     <div class="form-group col-lg-3">
                       <label
                         class="option-name control-label col-lg-3"
@@ -1474,7 +1474,7 @@ export default {
       });
     },
 
-    // 发起定时执行 
+    // 发起定时执行
     doTimerExecution() {
       var _this = this;
       if (!_this.userId) {

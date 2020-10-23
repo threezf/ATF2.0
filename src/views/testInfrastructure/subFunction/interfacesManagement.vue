@@ -1,5 +1,5 @@
 <template>
-<div class="page-base-inner">
+<page>
     <el-row :gutter="20" class="titleClass">
         <el-form :model="titleForm" label-width="90px">
             <el-col :span="6">
@@ -184,7 +184,7 @@
             </el-button>
         </el-form>
     </el-card>
-</div>
+</page>
 </template>
 
 <script>
@@ -242,7 +242,7 @@ export default {
                 urlPath: '', // 接口路径
                 selectedAuthorization: 'inherit auth from parent', // Authorization
                 selectedHeader: [{}],
-                rawFormat: '', // 
+                rawFormat: '', //
             },
             authenticationMethodList: [
                 'HTTP Basic',
@@ -387,7 +387,9 @@ export default {
             Request({
                 url: '/aut/queryListAut',
                 method: 'POST',
-                params: {}
+                params: {
+									companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId)
+								}
             }).then(res => {
                 if (res.respCode == '0000') {
                     this.titleForm.autRespDTOList = res.autRespDTOList
@@ -560,7 +562,10 @@ export default {
                 Request({
                     url: '/interface/modifySingleInterface',
                     method: 'POST',
-                    params: uploadForm
+                    params: {
+                    	...uploadForm,
+											userId:sessionStorage.getItem("userId")
+                    }
                 }).then(res => {
                     if (res.respCode == "0000") {
                         this.$message.success("保存成功")

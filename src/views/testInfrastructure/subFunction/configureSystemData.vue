@@ -1,7 +1,5 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
-      <el-main>
+  <page>
         <el-row class="buttonRowTop">
           <el-button type="primary" size="small" icon="el-icon-plus" @click="addButton">添加</el-button>
           <el-button type="primary" size="small" icon="el-icon-delete" @click="deleteButton">删除</el-button>
@@ -54,9 +52,7 @@
             </div>
           </el-form>
         </el-dialog>
-      </el-main>
-    </el-container>
-  </div>
+	</page>
 </template>
 
 <script>

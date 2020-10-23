@@ -15,12 +15,12 @@
                     </span>
                 </el-col>
             </el-row>
-            <el-tree 
+            <el-tree
                 default-expand-all
                 :show-checkbox='multiselection'
-                :data="UITree" 
-                :props="defaultProps" 
-                check-on-click-node	
+                :data="UITree"
+                :props="defaultProps"
+                check-on-click-node
                 @check-change="eleCheckChange">
             </el-tree>
         </div>
@@ -32,11 +32,11 @@
                     </span>
                 </el-col>
             </el-row>
-            <el-tree 
+            <el-tree
                 :show-checkbox='multiselection'
-                :data="funTree"  
+                :data="funTree"
                 check-on-click-node
-                :props="defaultProps" 
+                :props="defaultProps"
                 @check-change="funCheckChange">
             </el-tree>
         </div>
@@ -55,11 +55,11 @@
 import Request from '@/libs/request.js'
 export default {
     props:{
-        transId:{ 
+        transId:{
             type: String,
             default: '1708'
         },
-        autId:{ 
+        autId:{
             type: String,
             default: '1574'
         },
@@ -196,7 +196,11 @@ export default {
             Request({
                 url: this.addItemFlag==3? '/aut/selectCheckFunctionSet' : '/aut/selectFunctionSet',
                 method: 'post',
-                params:{'id':this.autId}
+                params:{
+                	id:this.autId,
+									companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+									autId:this.autId,
+                }
             }).then((res) => {
                 let tree =[]
                 for (let i = 0 ;i < res.omMethodRespDTOList.length;i++){

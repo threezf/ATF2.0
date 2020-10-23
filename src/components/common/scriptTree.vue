@@ -16,7 +16,7 @@
         show-checkbox
         default-expand-all
         check-on-click-node
-        highlight-current	
+        highlight-current
         @check-change="handleUECheckChange">
       </el-tree>
     </div>
@@ -28,7 +28,7 @@
         show-checkbox
         default-expand-all
         check-on-click-node
-        highlight-current	
+        highlight-current
         @check-change="handleMethodsCheckChange">
       </el-tree>
     </div>
@@ -123,7 +123,9 @@
           url: '/aut/selectFunctionSet',
           method: 'POST',
           params: {
-            id: this.autId
+            id: this.autId,
+						companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+						autId:parseInt(this.autId),
           }
         }).then(res => {
           if(res.respCode === '0000') {

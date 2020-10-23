@@ -131,7 +131,7 @@ export default {
 				query: {
 					autId: this.formData.autId,
 					transactId: this.formData.id,
-					// sceneId: this.formData.sceneId,
+					creatorId:sessionStorage.getItem("userId")
 					// testPlanId: this.formData.testPlanId,
 				},
 			});

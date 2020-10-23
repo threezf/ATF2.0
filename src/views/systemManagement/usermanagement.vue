@@ -1,7 +1,5 @@
 <template>
-<div class="page-inner">
-  <el-container>
-    <el-main>
+<page>
       <el-row>
         <el-button size="small" @click='addUserButtom' type="primary" icon="el-icon-plus">
           添加用户
@@ -30,12 +28,12 @@
         <el-table-column label="修改时间" min-width="20%" prop="modifiedTime" :formatter="transTime"/>
         <el-table-column label="状态" width="80px" align="center" >
           <template slot-scope="scope">
-            <el-tag 
+            <el-tag
               v-if="scope.row.status === 1"
               type="primary"
               >正常
             </el-tag>
-            <el-tag 
+            <el-tag
               v-else
               type="warning"
               >锁定
@@ -44,7 +42,7 @@
         </el-table-column>
         <el-table-column label="启用" width="100px" align="center">
           <template slot-scope="scope">
-            <el-switch 
+            <el-switch
               v-model="switches[scope.$index]"
               active-color="#13ce66"
               inactive-color="#ff4949"
@@ -65,87 +63,87 @@
           </el-pagination>
         </el-col>
       </div>
-      <el-dialog 
-        :title="modelName" 
-        :visible.sync="dialogVisible" 
-        :before-close="handleClose" 
-        width="30%" 
+      <el-dialog
+        :title="modelName"
+        :visible.sync="dialogVisible"
+        :before-close="handleClose"
+        width="30%"
         style="margin-top: -60px">
-        <el-form 
+        <el-form
           class="demo-ruleForm"
-          ref="form" 
-          prop="form" 
-          :rules="rules" 
-          :model="form" 
+          ref="form"
+          prop="form"
+          :rules="rules"
+          :model="form"
           label-width="80px">
-          <el-form-item 
-            label="用户名" 
+          <el-form-item
+            label="用户名"
             prop="username">
-            <el-input 
-              :disabled='disabled' 
+            <el-input
+              :disabled='disabled'
               v-model="form.username">
             </el-input>
           </el-form-item>
-          <el-form-item 
-            label="真实姓名" 
-            prop="reallyname" 
+          <el-form-item
+            label="真实姓名"
+            prop="reallyname"
             required>
-            <el-input 
-              :disabled='disabled' 
+            <el-input
+              :disabled='disabled'
               v-model="form.reallyname">
             </el-input>
           </el-form-item>
-          <el-form-item 
-            label="密码" 
-            prop="password" 
+          <el-form-item
+            label="密码"
+            prop="password"
             required>
-            <el-input 
-              :disabled='disabled' 
-              type="password" 
-              v-model="form.password" 
+            <el-input
+              :disabled='disabled'
+              type="password"
+              v-model="form.password"
               show-password
               auto-complete="off">
             </el-input>
           </el-form-item>
-          <el-form-item 
-            label="确认密码" 
-            prop="againPassward" 
+          <el-form-item
+            label="确认密码"
+            prop="againPassward"
             required>
-            <el-input 
-              :disabled='disabled' 
-              type="password" 
+            <el-input
+              :disabled='disabled'
+              type="password"
               show-password
-              v-model="form.againPassward" 
+              v-model="form.againPassward"
               auto-complete="off">
             </el-input>
           </el-form-item>
-          <el-form-item 
-            label="用户状态" 
-            prop="status" 
+          <el-form-item
+            label="用户状态"
+            prop="status"
             v-if="false"
             required>
-            <el-select 
-              :disabled='disabled' 
-              v-model="form.status" 
+            <el-select
+              :disabled='disabled'
+              v-model="form.status"
               placeholder="请选择用户状态">
-              <el-option 
-                label="锁定" 
+              <el-option
+                label="锁定"
                 :value="0">
               </el-option>
-              <el-option 
-                label="正常" 
+              <el-option
+                label="正常"
                 :value="1">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item 
-            label="用户角色" 
-            prop="roleList" 
+          <el-form-item
+            label="用户角色"
+            prop="roleList"
             required>
             <el-checkbox-group
               :disabled='disabled'
               v-model="form.roleList">
-              <el-checkbox 
+              <el-checkbox
                 v-for="(item, index) in roles"
                 :key="index"
                 :value="Number(item.id)"
@@ -154,31 +152,31 @@
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item 
-            label="手机号" 
+          <el-form-item
+            label="手机号"
             prop="telephone">
-            <el-input 
-              :disabled='disabled' 
+            <el-input
+              :disabled='disabled'
               v-model="form.telephone">
             </el-input>
           </el-form-item>
-          <el-form-item 
-            label="邮箱" 
+          <el-form-item
+            label="邮箱"
             prop="email">
-            <el-input 
-              :disabled='disabled' 
+            <el-input
+              :disabled='disabled'
               v-model="form.email">
           </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button 
-              :disabled='disabled' 
-              type="primary" 
+            <el-button
+              :disabled='disabled'
+              type="primary"
               @click="submitForm('form')"
               >{{buttonName}}
             </el-button>
-            <el-button 
-              :disabled='disabled' 
+            <el-button
+              :disabled='disabled'
               @click="resetForm('form')"
               >重置
             </el-button>
@@ -210,9 +208,9 @@
             <span>{{showForm.email}}</span>
           </el-form-item>
           <el-form-item
-            class="roleForm" 
+            class="roleForm"
             label="用户角色">
-            <el-checkbox 
+            <el-checkbox
               v-for="(item, index) in showForm.roleList"
               :key="index"
               :value="item"
@@ -252,11 +250,11 @@
             label="真实姓名">
             <el-input v-model="updateForm.reallyname" disabled></el-input>
           </el-form-item>
-          <el-form-item 
+          <el-form-item
             label="用户角色">
             <el-checkbox-group
               v-model="updateForm.roleList">
-              <el-checkbox 
+              <el-checkbox
                 v-for="(item, index) in roles"
                 :key="index"
                 :value="Number(item.id)"
@@ -283,11 +281,7 @@
           </el-row>
         </el-form>
       </el-dialog>
-    </el-main>
-    <el-footer>
-    </el-footer>
-  </el-container>
-</div>
+</page>
 </template>
 
 <script>
@@ -355,7 +349,7 @@ export default {
         status: 1, // 状态
         lastLoginDate: '', // 上次登录时间
         lastLoginIp: '', // 上次登录ip
-        createTime: '', // 创建时间 
+        createTime: '', // 创建时间
         modifiedTime: '', // 修改时间
         modifierId: '', // 修改者id
         creatorId: '', // 创建者id
@@ -752,7 +746,7 @@ export default {
     },
     updateCancel() {
       this.updateDialogShow = false
-    }, 
+    },
     selectAll() {
       Request({
         url: '/roleController/selectAll',
