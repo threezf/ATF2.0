@@ -286,7 +286,7 @@
 
 		},
 		created() {
-			this.creatorId=this.creatorId.toString()
+			this.creatorId = this.creatorId.toString()
 			if (this.creatorId == sessionStorage.getItem("userId")) {
 				this.showFlag=false
 			}else{
@@ -408,7 +408,7 @@
 				Request({
 					url: "/aut/queryAutVisibleOmClasses",
 					method: "post",
-					params: {id: this.autId},
+					params: {id: this.autId, companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId},
 				}).then(
 					(res) => {
 						if (res.respCode == "0000") {
@@ -424,6 +424,7 @@
 			},
 			// 以下为点击按钮时，清空弹框 并再次展示弹窗
 			addUIShow() {
+                console.log('add', sessionStorage.getItem('userId'))
 				if (this.creatorId == sessionStorage.getItem("userId")) {
 					this.addUIDialogFlag = true;
 				} else {

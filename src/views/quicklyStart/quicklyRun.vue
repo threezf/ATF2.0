@@ -166,7 +166,8 @@ export default {
         url: '/executeController/queryRunners',
         method: 'POST',
         params: {
-          serviceName: "web.ui"
+          serviceName: "web.ui",
+          userId: sessionStorage.getItem('userId')
         }
       }).then(res => {
         if(res.respCode !== "0000") {

@@ -1045,7 +1045,7 @@
         selectSceneDto: {},
         indetermintate: false,
         isCheckedAll: false,
-        cronExpression: '0 45 20 * ? ? 2020',
+        cronExpression: '0 45 20 * * ? 2020',
         isSave: false,
         timerId: '', // 定时器id
         /**
@@ -1369,14 +1369,14 @@
       // 发起定时执行
       startTimeRun(row) {
         console.log('定时执行', row)
-        
-        // this.$router.push({
-        //   name: 'TestplanExecute',
-        //   query: {
-        //     isTimer: true,
-        //     data: row
-        //   }
-        // })
+        this.$router.push({
+          name: 'TestplanExecute',
+          query: {
+            notTimer: false,
+            data: row,
+            sceneId: row.sceneId
+          }
+        })
       },
 
 

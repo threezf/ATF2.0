@@ -179,11 +179,6 @@ export default {
         this.getAllSystem();
         this.getAbstractArchitectureList();
     },
-    // mounted() {
-    //   this.$bus.on('setUrls', (data) => {
-    //     console.log('测试基础设施接收 urls', data)
-    //   })
-    // },
     methods: {
         //点击展示和隐藏高级功能
         showHighFunction: function () {
@@ -446,7 +441,9 @@ export default {
             Request({
                     url: "/abstractArchitecture/queryArchitectureList",
                     method: "POST",
-                    params: {}
+                    params: {
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                    }
                 })
                 .then(res => {
                     let needData = res.architectureRespDTOList;

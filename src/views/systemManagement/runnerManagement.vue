@@ -116,7 +116,7 @@
                 Request({
                     url: '/executeController/queryRunners',
                     method: 'post',
-                    params: {"serviceName":"web.ui"}
+                    params: {"serviceName":"web.ui", userId: sessionStorage.getItem('userId')}
                 }).then((res) => {
                     this.tableData = res.runners
                 },(err) => {

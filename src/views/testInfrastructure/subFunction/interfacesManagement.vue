@@ -45,10 +45,18 @@
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="5" :offset="1">
+                <!-- <el-col :span="5" :offset="1">
                     <el-form-item label="版本号">
                         <el-input v-model="manageInfo.version">
                         </el-input>
+                    </el-form-item>
+                </el-col> -->
+                 <el-col :span="5" :offset="1">
+                    <el-form-item label="认证方法">
+                        <el-select class="mainSelect" v-model="manageInfo.authenticationMethod">
+                            <el-option v-for="(item,index) in authenticationMethodList" :key="index" :value="item" :label="item">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5" :offset="1">
@@ -57,9 +65,10 @@
                         </el-input>
                     </el-form-item>
                 </el-col>
+                
             </el-row>
-            <el-row class="manageRow">
-                <el-col :span="5">
+            <el-row class="manageRow" hidden>
+                <!-- <el-col :span="5">
                     <el-form-item label="创建者">
                         <el-select class="mainSelect" v-model="manageInfo.creatorId">
                             <el-option v-for="(item) in manageInfo.creatorList" :key="item.id" :label="item.username" :value="item.id">
@@ -74,23 +83,11 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="认证方法">
-                        <el-select class="mainSelect" v-model="manageInfo.authenticationMethod">
-                            <el-option v-for="(item,index) in authenticationMethodList" :key="index" :value="item" :label="item">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="修改时间">
-                        <el-input v-model="manageInfo.modifyTime" disabled>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
+                </el-col> -->
+               
+               
             </el-row>
-            <el-row class="manageRow">
+            <el-row class="manageRow" style="margin-bottom: 10px">
                 <el-col :span="5">
                     <el-form-item label="开发状态">
                         <el-select class="mainSelect" v-model="manageInfo.status">
@@ -115,18 +112,24 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+                 <el-col :span="5" :offset="1">
+                    <el-form-item label="修改时间">
+                        <el-input v-model="manageInfo.modifyTime" disabled>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
             </el-row>
             <el-row>
-                <el-form-item prop="urlPath" label="接口路径">
+                <el-form-item prop="urlPath" label="接口路径" style="margin-bottom: 10px">
                     <el-input v-model="manageInfo.urlPath" class="inputPath">
                     </el-input>
                 </el-form-item>
             </el-row>
-            <el-row class="saveRow">
+            <el-row class="saveRow" >
                 <el-form-item label="接口简介">
                     <el-input class="description" v-model="manageInfo.description" type="textarea">
                     </el-input>
-                    <el-button class="saveButton" type="primary" size="small" @click="saveContent">保存
+                    <el-button class="saveButton" type="primary" size="small" @click="saveContent" hidden>保存
                     </el-button>
                 </el-form-item>
             </el-row>
@@ -387,7 +390,9 @@ export default {
             Request({
                 url: '/aut/queryListAut',
                 method: 'POST',
-                params: {}
+                params: {
+                    companyId: Number(JSON.parse(localStorage.getItem("loginInfo")).companyId)
+                }
             }).then(res => {
                 if (res.respCode == '0000') {
                     this.titleForm.autRespDTOList = res.autRespDTOList
@@ -448,6 +453,7 @@ export default {
                     _this.manageInfo.protocol = res.protocol // 通信类型
                     _this.manageInfo.bodyFormat = res.bodyFormat ? res.bodyFormat : '1' // 报文格式
                     _this.manageInfo.selectedHeader = []
+                    _this.manageInfo.creatorId = res.creatorId || sessionStorage.getItem('userId')
                     if (res.header === '[]' || res.header === null) {
                         _this.manageInfo.selectedHeader.push({
                             name: '',
@@ -555,7 +561,9 @@ export default {
                     status: this.manageInfo.status,
                     systemId: this.autId,
                     urlPath: this.manageInfo.urlPath,
-                    version: this.manageInfo.version
+                    version: this.manageInfo.version,
+                    userId: sessionStorage.getItem('userId'),
+                    creatorId: this.manageInfo.creatorId
                 }
                 Request({
                     url: '/interface/modifySingleInterface',

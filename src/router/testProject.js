@@ -179,7 +179,8 @@ export default {
 			meta: {
 				name: '执行记录查询',
 				parent: 'TestProjectIndex',
-				icon: 'el-icon-search'
+                icon: 'el-icon-search',
+                hide: true
 			}
 		},
 		{

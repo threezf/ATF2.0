@@ -38,11 +38,11 @@ export default {
     },
     data() {
         return {
-            menuList: [],
             fullPath: '',
             isCollapse: false,
             activedPath: this.$route.path,
             flag: true,
+            urls: []
         }
     },
     watch: {
@@ -50,12 +50,8 @@ export default {
             this.activedPath = this.$route.path
         }
     },
-    computed: {},
-    methods: {
-        /**
-         * 获取侧边栏应该展示的数据
-         */
-        getSideBarList() {
+    computed: {
+        menuList() {
             let routes = this.$router.options.routes
             console.log('sidebar', this.$router.options)
             let children = []
@@ -72,7 +68,21 @@ export default {
                 children[0].meta.name = this.firstPathName
             }
             this.fullPath = path
-            this.menuList = children
+            if(this.pathName === 'SystemManagement') {
+                return children.filter(item => {
+                    return this.urls.indexOf(item.meta.another) > -1
+                })
+            }else {
+                return children
+            }
+        }
+    },
+    methods: {
+        /**
+         * 获取侧边栏应该展示的数据
+         */
+        getSideBarList() {
+            
         },
         needHideAllChildren(menu) {
             let needHide = true
@@ -88,8 +98,15 @@ export default {
             return needHide
         }
     },
+    created() {
+        console.log('sidebar创建 urls')
+         this.$bus.on('setUrls', (url) => {
+            this.urls = url
+            console.log('urls side接收', this.urls)
+        })
+    },
     mounted() {
-        this.getSideBarList()
+        this.urls = localStorage.getItem('urls').split(',')
     }
 };
 </script>

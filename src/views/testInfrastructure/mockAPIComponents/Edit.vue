@@ -669,26 +669,27 @@
           this.httpForwardEntity.port = this.portContent;
           this.httpForwardEntity.scheme = this.selectedProtocol;
         }
-        console.log("creator", this.creator);
-        console.log("expectationName", this.expectationName);
-        console.log("httpForwardEntity", this.httpForwardEntity);
-        console.log("httpRequest", this.httpRequest);
-        console.log("httpResponse", this.httpResponse);
-        console.log("id", this.id);
-        console.log("type", this.type);
+        // console.log("creator", this.creator);
+        // console.log("expectationName", this.expectationName);
+        // console.log("httpForwardEntity", this.httpForwardEntity);
+        // console.log("httpRequest", this.httpRequest);
+        // console.log("httpResponse", this.httpResponse);
+        // console.log("id", this.id);
+        // console.log("type", this.type);
 
         Request({
-          url: "//mockServer/updateExpectation",
+          url: "/mockServer/updateExpectation",
           method: "POST",
           params: {
             creator: this.creator,
             expectationName: this.expectationName,
-            httpForwardEntity:
-              this.httpForwardEntity === null ? null : this.httpForwardEntity,
+            httpForwardEntity: this.httpForwardEntity === null ? null : this.httpForwardEntity,
             httpRequest: this.httpRequest,
             httpResponse: this.httpResponse === null ? null : this.httpResponse,
             id: this.id,
-            type: this.type
+            type: this.type,
+            userId: Number(sessionStorage.getItem('userId')),
+            creatorId: this.creatorId
           }
         })
           .then(res => {

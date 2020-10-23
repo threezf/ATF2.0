@@ -234,8 +234,11 @@
               urlList: res.urlList
             })
             localStorage.setItem('urls', res.urlList)
-            console.log('urls emit事件总线')
-            this.$bus.emit('setUrls', res.urlList)
+            console.log('urls emit事件总线', res)
+            this.$bus.emit('setUrls', {
+                urlList: res.urlList,
+                currentName: this.ruleForm.uid
+            })
           }
           return
         }).catch(error => {

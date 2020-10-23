@@ -779,11 +779,14 @@
 					children: "childNodeList",
 					label: "name"
 				},
-				flag: 1,
+                flag: 1,
+                companyId: ''
 			}
 		},
 		created() {
-			this.getArch()
+            this.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
+            console.log('company', this.companyId)
+            this.getArch()
 		},
 		computed:{
 			modelName(){
@@ -924,7 +927,8 @@
 						classId: this.classId0,
 						creatorId:sessionStorage.getItem("userId"),
 						mtype:1,
-						...this.addMethodForm
+                        ...this.addMethodForm,
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
 						this.dialogVisibleB=!this.dialogVisibleB
@@ -948,7 +952,8 @@
 					url: '/arcMethod/deleteSingleArcOmMethod',
 					method: 'post',
 					params: {
-						id: this.classId
+                        id: this.classId,
+                        userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
 					this.$alert('删除控件成功', '成功', {
@@ -980,7 +985,9 @@
 						assistRecognitionPros: '',
 						overideFlag: '',
 						visibilityFlag: '',
-						...this.addClassForm
+                        ...this.addClassForm,
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId,
+                        creatorId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
 					this.dialogVisibleA=!this.dialogVisibleA
@@ -1013,7 +1020,8 @@
 					url: '/arcClass/deleteSingleArcOmClass',
 					method: 'post',
 					params:{
-						id:this.secondForm.id
+                        id:this.secondForm.id,
+                        userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
 					this.$alert('删除控件成功', '成功', {
@@ -1051,8 +1059,9 @@
 					url: '/abstractArchitecture/addAbstractArchitecture',
 					method: 'post',
 					params:{
-            creatorId:sessionStorage.getItem("userId"),
-						...this.addForm
+                        ...this.addForm,
+                        creatorId: sessionStorage.getItem('userId'),
+                        companyId: this.companyId
 					}
 				}).then((res) => {
 					this.dialogVisibleD=!this.dialogVisibleD
@@ -1077,7 +1086,10 @@
 					method: 'post',
 					params:{
 						modifierId:sessionStorage.getItem("userId"),
-						...this.addForm
+                        ...this.addForm,
+                        userId: sessionStorage.getItem("userId"),
+                        creatorId: sessionStorage.getItem("userId"),
+                        companyId: this.companyId
 					}
 				}).then((res) => {
 					this.dialogVisibleD=!this.dialogVisibleD
@@ -1132,7 +1144,8 @@
 					url: '/arcClass/queryArcVisibleOmClasses',
 					method: 'post',
 					params: {
-						id: this.arcId
+                        id: this.arcId,
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
 					_this.classList = res.arcClassRespDTOList
@@ -1160,7 +1173,10 @@
 				Request({
 					url: '/arcClass/queryArcVisibleOmMethods',
 					method: 'post',
-					params: {id: id}
+					params: {
+                        id: id, 
+                        userId: sessionStorage.getItem('userId')
+                    }
 				}).then((res) => {
 					_this.methodList = res.arcMethodRespDTOList
 					_this.methodValue = _this.methodList[0].name
@@ -1255,7 +1271,10 @@
 			getArch(){
 				Request({
 					url: '/abstractArchitecture/queryArchitectureList',
-					method: 'post',
+                    method: 'post',
+                    params: {
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                    }
 				}).then((res) => {
 					this.parentList= res.architectureRespDTOList
 				}, (err) => {
@@ -1271,7 +1290,10 @@
 				if (node.level == 0) {
 					Request({
 						url: '/abstractArchitecture/queryArchitectureList',
-						method: 'post',
+                        method: 'post',
+                        params: {
+                            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                        }
 					}).then((res) => {
 						_this.componentChildData = res.architectureRespDTOList
 						for (var i = 0; i < _this.componentChildData.length; i++) {
@@ -1320,7 +1342,10 @@
 					}else{
 						submitForm[item]=''
 					}
-				}
+                }
+                submitForm.userId = sessionStorage.getItem('userId')
+                submitForm.creatorId = sessionStorage.getItem('userId')
+                submitForm.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
 				Request({
 					url: '/arcClass/modifySingleArcOmClass',
 					method: 'post',
@@ -1356,7 +1381,10 @@
 					method: 'post',
 					params: {
 						author: "",
-						...submitForm,
+                        ...submitForm,
+                        userId: sessionStorage.getItem('userId'),
+                        creatorId: sessionStorage.getItem('userId'),
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
 					this.drawer = !this.drawer

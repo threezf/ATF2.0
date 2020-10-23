@@ -196,7 +196,7 @@ export default {
             Request({
                 url: this.addItemFlag==3? '/aut/selectCheckFunctionSet' : '/aut/selectFunctionSet',
                 method: 'post',
-                params:{'id':this.autId}
+                params:{'autId':this.autId, companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId}
             }).then((res) => {
                 let tree =[]
                 for (let i = 0 ;i < res.omMethodRespDTOList.length;i++){
