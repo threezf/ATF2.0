@@ -19,6 +19,7 @@
     <el-row type="flex" justify="center" class="fixButton">
 <!--        <el-button type="primary">执行完毕查看结果</el-button>-->
 				<el-button
+          size="small"
 					@click="back"
 				>返回上一步
 				</el-button>

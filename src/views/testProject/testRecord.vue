@@ -2,22 +2,22 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-form class="formTop" label-width="94px">
+        <el-form class="formTop" label-width="94px" hidden>
           <el-row :gutter="20" class="row1">
             <el-col :span="5" :offset="0">
               <el-form-item label="查询方式">
-                <el-select class="elSelect" v-model="selectedQueryMethod">
+                <el-select size="small" class="elSelect" v-model="selectedQueryMethod">
                   <el-option v-for="(item,index) in queryMethods" :key="index" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item :label="selectedQueryMethod === '按测试轮次'?'测试轮次':'测试计划'">
-                <el-select class="elSelect" v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound"
+                <el-select size="small" class="elSelect" v-if="selectedQueryMethod === '按测试轮次'" v-model="selectedTestRound"
                 clearable>
                   <el-option v-for="(item,index) in testRounds" :key="index" :value="item.name"></el-option>
                 </el-select>
-                <el-select class="elSelect" v-else v-model="selectedTestPlan"
+                <el-select size="small" class="elSelect" v-else v-model="selectedTestPlan"
                 clearable>
                   <el-option
                     v-for="(item,index) in testPlans"
@@ -33,6 +33,7 @@
                 label-width="90px"
                 :label="selectedQueryMethod === '按测试轮次'?'记录单状态':'执行轮次'">
                 <el-select
+                   size="small"
                    class="elSelect"
                   v-if="selectedQueryMethod === '按测试轮次'"
                   v-model="selectedStatus"
@@ -69,7 +70,7 @@
           <el-row :gutter="20">
             <el-col :span="5">
               <el-form-item label="执行状态(选)">
-                <el-select class="elInput" v-model="selectedExecutionStatus" @clear="queryByTestRound" clearable>
+                <el-select size="small" class="elInput" v-model="selectedExecutionStatus" @clear="queryByTestRound" clearable>
                   <el-option
                     v-for="(item,index) in executionStatus"
                     :key="index"
@@ -81,14 +82,14 @@
             </el-col>
             <el-col :span="5">
               <el-form-item label="场景列表(选)">
-                <el-select class="elInput" v-model="selectedSceneList">
+                <el-select size="small" class="elInput" v-model="selectedSceneList">
                   <el-option v-for="(item,index) in sceneList" :key="index" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5">
               <el-form-item label="用例编号(选)">
-                <el-input  class="elInput" placeholder="填写用例编号" v-model="casecode" clearable />
+                <el-input size="small"  class="elInput" placeholder="填写用例编号" v-model="casecode" clearable />
               </el-form-item>
             </el-col>
           </el-row>
@@ -121,21 +122,23 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          class="pagination"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-size="pageSize"
-          :page-sizes="[5,10,20,50]"
-          :current-page="currentPage"
-          :total="totalCount"
-          layout="total,sizes,prev,pager,next,jumper"
-        ></el-pagination>
+        <div style="width: 100%">
+          <el-pagination
+            class="pagination"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-size="pageSize"
+            :page-sizes="[5,10,20,50]"
+            :current-page="currentPage"
+            :total="totalCount"
+            layout="total,sizes,prev,pager,next,jumper"
+            ></el-pagination>
+        </div>
         <el-dialog title="提示" width="30%" visible.sync="false">
           <h2 class="dialogText">空记录！请尝试查询！</h2>
           <el-divider></el-divider>
           <div class="buttonBottom">
-            <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+            <el-button  size="small" type="primary" @click="dialogVisible = false">确定</el-button>
           </div>
         </el-dialog>
       </el-main>
@@ -192,12 +195,8 @@ export default {
   },
   created() {
     this.runId = this.$route.query.batchId
+    // this.$message.success(this.runId)
     this.testPlanId = this.$route.query.testPlan
-    console.log('传递的参数',this.runId, this.testPlanId)
-    this.selectAllScene();
-    this.selectAllTestPlan();
-    this.pagedBatchQueryScene();
-    this.checkTableData();
     this.pagedBatchQueryTestRecordByRunId()
   },
   methods: {
@@ -225,11 +224,12 @@ export default {
           })
         }
         this.tableData = res.list
+        this.totalCount = res.totalCount
       }).catch(err => {
-        this.$message.warning('请选择执行批次！')
-        this.$router.push({
-          name: 'BatchExecutionQuery'
-        })
+        this.$message.warning('查询为空')
+        // this.$router.push({
+        //   name: 'BatchExecutionQuery'
+        // })
       })
     },
     //测试轮次查询更新数据
@@ -250,7 +250,6 @@ export default {
         }
       })
         .then(res => {
-          console.log("查询成功", res);
           if (res.totalCount == 0) {
             this.tableData = [];
             this.totalCount = res.totalCount;
@@ -258,6 +257,8 @@ export default {
           } else {
             this.tableData = res.list;
             this.totalCount = res.totalCount;
+            console.log("查询成功", res);
+
           }
         })
         .catch(error => {
@@ -442,8 +443,8 @@ export default {
     color: red;
   }
   .pagination {
-    text-align: center;
-    margin-top: 20px;
+      margin: 20px auto;
+      width: 420px;
   }
   .dialogText {
     margin-bottom: 30px;
@@ -451,7 +452,7 @@ export default {
   }
   .buttonBottom {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 15px;
     margin-bottom: -15px;
   }

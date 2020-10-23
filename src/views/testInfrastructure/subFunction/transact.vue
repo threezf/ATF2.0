@@ -47,6 +47,7 @@
         <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
           <el-select
+            size="small"
             class="selectName"
             v-model="ownedSystem"
             placeholder="所属被测系统"
@@ -131,8 +132,8 @@
         ></el-table-column>
       </el-table>
       <!--底部换页-->
-      <div>
-        <el-col class="footSelect">
+
+        <el-footer class="footSelect">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -142,8 +143,8 @@
             :total="totalCount"
             layout="total, sizes, prev ,pager ,next, jumper"
           ></el-pagination>
-        </el-col>
-      </div>
+        </el-footer>
+
 
       <!--新增和修改对话框-->
       <el-dialog
@@ -160,27 +161,29 @@
           status-icon
         >
           <el-form-item label="名称" prop="nameMedium">
-            <el-input placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
+            <el-input size="small" placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
             </el-input>
           </el-form-item>
           <el-form-item label="类型" prop="functionType" v-if="isAdded">
-            <el-select class="addSelect" v-model="ruleForm.functionType" v-if="$route.query.hasOwnProperty('isInterface')">
+            <el-select size="small" class="addSelect" v-model="ruleForm.functionType" v-if="$route.query.hasOwnProperty('isInterface')">
               <el-option value="UI" selected="true" v-if="!isInterface">
               </el-option>
               <el-option value="接口" v-else> </el-option>
             </el-select>
-            <el-select class="addSelect" v-model="ruleForm.functionType" v-else>
+            <el-select size="small" class="addSelect" v-model="ruleForm.functionType" v-else>
               <el-option value="UI" selected="true" >
               </el-option>
               <el-option value="接口"> </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="编码" prop="code">
-            <el-input placeholder="为空时自动生成" v-model="ruleForm.code">
+            <el-input size="small" placeholder="为空时自动生成" v-model="ruleForm.code">
             </el-input>
           </el-form-item>
           <el-form-item label="描述" prop="descShort">
             <el-input
+              style="width:90%"
+              size="small"
               cols="5"
               rows="5"
               type="textarea"
@@ -229,10 +232,11 @@
             :on-exceed="handleExceed"
             :on-change="handleOnChange"
           >
-            <el-button class="btnSelectFile" type="success" slot="trigger" plain
+            <el-button size="small" class="btnSelectFile" type="success" slot="trigger" plain
               >上传文件
             </el-button>
             <el-input
+              size="small"
               class="formInput"
               placeholder="请选择导入的文件"
               :disabled="true"
@@ -333,7 +337,7 @@ export default {
       //初始渲染需要的数据
       autId: "", //被测系统管理界面传递过来的值
       autRespDTOList: [], //所有测试系统列表
-      creatorId: JSON.parse(sessionStorage.getItem("toTransact")).creatorId, // 用户ID
+      creatorId: '', // 用户ID
       ownedSystem: "", //被测系统
       //换页相关信息
       currentPage: 1,
@@ -348,7 +352,7 @@ export default {
       dialogImportVisible: false,
       dialogFailVisible: false,
       successDialogVisible: false,
-			creatorName:JSON.parse(sessionStorage.getItem("toTransact")).creatorName,
+      creatorName: "",
       //表单数据
       ruleForm: {
         nameMedium: "",
@@ -384,14 +388,14 @@ export default {
   },
   watch: {
     '$route'(newVal, oldVal) {
-      console.log('路由改变', newVal, newVal.query.isInterface)
-      // this.isInterface = newVal.query.isInterface;
        this.isInterface = newVal.query.isInterface;
     }
   },
   created() {
     this.autId = this.$route.query.id;
     this.ownedSystem = this.$route.query.nameMedium;
+    this.creatorId = JSON.parse(sessionStorage.getItem("toTransact")).creatorId
+    this.creatorName = JSON.parse(sessionStorage.getItem("toTransact")).creatorName
     this.getAllFunction();
     this.getAllSystem();
     this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
@@ -537,7 +541,6 @@ export default {
         _this.failedOperation();
       } else {
         if (_this.rowInfo.transType === "接口") {
-          console.log("复制功能点", _this.rowInfo.transType);
           Request({
             url: "/transactController/copySingleInterfaceTransact",
             method: "POST",
@@ -545,10 +548,11 @@ export default {
               autId: _this.autId,
               creatorId: "3",
               transId: _this.updateId,
+              userId: sessionStorage.getItem('userId')
             },
           })
             .then((res) => {
-              console.log("复制成功", res);
+              this.$message.success('复制成功')
               if (res.respCode) {
                 _this.$message.success(res.respMsg);
                 _this.getAllFunction();
@@ -803,11 +807,12 @@ export default {
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
                     transType: _this.isInterface ? 2 : 1,
-										creatorId:sessionStorage.getItem("userId")
+                    creatorId: sessionStorage.getItem("userId"),
+                    userId: sessionStorage.getItem('userId')
                   },
                 })
                   .then((res) => {
-                    console.log("添加成功", res);
+                    this.$message.success('添加成功')
                     _this.dialogVisible = false;
                     _this.successDialogVisible = true;
                     _this.getAllFunction();
@@ -824,15 +829,16 @@ export default {
                   url: "/interface/addSingleInterface",
                   method: "POST",
                   params: {
-                    creatorId: "3",
+                    creatorId: sessionStorage.getItem('userId'),
                     description: _this.ruleForm.descShort,
                     interfaceCode: _this.ruleForm.code,
                     name: _this.ruleForm.nameMedium,
                     systemId: _this.autId,
+                    userId: sessionStorage.getItem('userId')
                   },
                 })
                   .then((res) => {
-                    console.log("接口添加成功", res);
+                    this.$message(res.respMsg)
                     _this.dialogVisible = false;
                     _this.getAllFunction();
                   })
@@ -854,20 +860,19 @@ export default {
                   descShort: _this.ruleForm.descShort,
                   id: _this.updateId,
                   nameMedium: _this.ruleForm.nameMedium,
-									userId:sessionStorage.getItem("userId"),
-									creatorId:sessionStorage.getItem("userId")
+                  userId: sessionStorage.getItem("userId"),
+                  creatorId: sessionStorage.getItem("userId")
                 },
               })
                 .then((res) => {
-                  console.log("修改成功", res);
+                  this.$message.success('修改成功')
                   _this.dialogVisible = false;
                   _this.getAllFunction();
                 })
                 .catch((err) => {
                   console.log("添加失败", err);
-                  if (err.respCode === "10011000") {
-                    this.$message.warning(err.respMsg);
-                  }
+                  this.$message.warning(err.respMsg);
+                  
                 });
             }
           } else {
@@ -966,7 +971,7 @@ export default {
 .footSelect {
   text-align: center;
   overflow: hidden;
-  margin: 30px auto 10px auto;
+  margin: 20px auto 10px auto;
 }
 
 .addSelect {
@@ -977,14 +982,13 @@ export default {
 .dialogImportBottom,
 .dialogFailBottom {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
+  justify-content: center;
   margin-bottom: -35px;
 }
 
 .formInput {
   width: 300px;
-  margin-left: 20px;
+  
 }
 
 .buttonDownload,

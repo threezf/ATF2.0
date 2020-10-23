@@ -2,11 +2,13 @@
   <div class="page-inner">
     <el-container>
       <el-main>
-        <el-form class="formTop" label-width="94px">
+        <el-form class="formTop" label-width="94px" hidden>
           <el-row :gutter="20">
             <el-col :span="5" :offset="0">
               <el-form-item label="开始日期:">
                 <el-date-picker
+                  style="width:90%"
+                  size="small"
                   class="timeStyle"
                   v-model="startTime"
                   type="datetime"
@@ -19,6 +21,8 @@
               <el-form-item
                 label="结束日期:">
                 <el-date-picker
+                  style="width:90%"
+                  size="small"
                   class="timeStyle"
                   v-model="endTime"
                   type="datetime"
@@ -32,6 +36,7 @@
                 label-width="88px"
                 label="时间段">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="timeSlot" 
@@ -66,6 +71,7 @@
               <el-form-item 
                 label="用例来源">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="selectedCaseSource">
@@ -81,6 +87,7 @@
               <el-form-item 
                 label="测试计划">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="params.testPlanId" 
@@ -99,6 +106,7 @@
                 label-width="88px" 
                 label="执行状态">
                 <el-select 
+                  size="small"
                   class="elSelect"
                   clearable
                   v-model="selectedExecutionStatus" 
@@ -156,12 +164,9 @@
             label="测试计划">
             <template 
               slot-scope="scope">
-              <el-button 
-                type="primary" 
-                size="mini"
-                @click="toTextPlan(scope.row.textPlan)"
-                >{{scope.row.testPlanName}}
-              </el-button>
+              <el-tag>
+                  {{scope.row.testPlanName}}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column 
@@ -310,12 +315,8 @@
         timeSlot: "左侧日历表选择", //时间段
         dateDisabled: false, //日期是否可用
         params: {
-          caseSourceChannel: "",
           currentPage: 1, //当前页码
           pageSize: 10, //每页数据量
-          queryEndTime: "", //结束日期
-          queryStartTime: "", //开始日期
-          runStatus: "", //执行状态
           testPlanId: ""
         },
         caseSources: ["测试计划", "场景", "数据编写", "模块调试"], //用例来源
@@ -329,17 +330,13 @@
         cakePicVisable: false, //饼状图可见
         cakeTitle: "饼状图详情",
         chartData: {},
-        useColor: ["#22ee55", "#e72210", "#53becc"]
+        useColor: ["#22ee55", "#e72210", "#53becc"],
+        caseLibId: ''
       };
     },
     created() {
-      this.selectAllTestPlan();
-      this.params.queryEndTime = Date.now();
-      this.params.queryStartTime =
-        this.params.queryEndTime - 1 * 24 * 60 * 60 * 1000;
-      this.startTime = new Date(this.params.queryStartTime);
-      this.endTime = new Date(this.params.queryEndTime);
-      this.executeQuery();
+      this.caseLibId = sessionStorage.getItem('caselibId')
+      this.getTestPlanId()
     },
     mounted() {},
     methods: {
@@ -395,9 +392,26 @@
           this.endTime = "";
         }
       },
-      executeQuery() {
-        this.params.queryStartTime = new Date(this.startTime).getTime();
-        this.params.queryEndTime = new Date(this.endTime).getTime();
+      // 获取testPlanId
+      getTestPlanId() {
+        Request({
+            url: '/testPlanController/queryTestPlan',
+            method: 'post',
+            params: {
+                caseLibId: Number(this.caseLibId),
+                descMedium: "",
+                nameMedium: ""
+            }
+        }).then(res => {
+            this.executeQuery(res.testPlanEntityList[0].id)
+        }).catch(error => {
+            console.log('id获取失败')
+        })
+      },
+      
+      // 执行查询
+      executeQuery(testplanId) {
+        this.params.testPlanId = testplanId
         Request({
           url: "/batchRunCtrlController/pagedBatchQueryBatchRunCtrl",
           method: "POST",

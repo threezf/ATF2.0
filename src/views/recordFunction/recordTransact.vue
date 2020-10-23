@@ -510,10 +510,6 @@
 			submitForm(formName) {
 				let _this = this;
 				let status = _this.ruleForm.nameMedium === "";
-				this.$message.info(`nameMedium: ${_this.ruleForm.nameMedium}
-										functionType: ${_this.ruleForm.functionType}
-										code: ${_this.ruleForm.code}
-										descShort: ${_this.ruleForm.descShort}`);
 				if (status) {
 					this.$message.warning("*为必填项");
 				} else {

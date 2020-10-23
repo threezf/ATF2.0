@@ -150,7 +150,8 @@
           method: 'POST',
           params: {
             classname,
-            id: this.autId
+            id: this.autId,
+            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
           }
         }).then(res => {
           if(res.respCode === "0000") {
@@ -186,7 +187,8 @@
           method: 'POST',
           params: {
             classname,
-            id: this.autId
+            id: this.autId,
+            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
           }
         }).then(res => {
           if(res.respCode === "0000") {
@@ -210,8 +212,10 @@
           method: 'POST',
           params: {
             id: this.autId,
-						companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
-						autId:this.autId,
+
+companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+
+autId:this.autId,
           }
         }).then(res => {
           if(res.respCode === "0000") {

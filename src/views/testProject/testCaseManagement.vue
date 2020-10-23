@@ -221,12 +221,10 @@
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
-                                    <el-row style="margin-top:10px">
-                                        <el-col :span="6" :offset="18">
+                                    <el-row type="flex" justify="center" style="margin-top:10px">
                                             <el-button type="primary" size="small" @click="insert(1)">添加</el-button>
                                             <el-button type="primary" size="small" @click="dialogVisible = !dialogVisible">取消
                                             </el-button>
-                                        </el-col>
                                     </el-row>
                                 </div>
                             </el-form>
@@ -455,12 +453,10 @@
                                     </el-row>
 
                                     <el-divider></el-divider>
-                                    <el-row>
-                                        <el-col :span="6" :offset="18">
+                                    <el-row type="flex" justify="center">
                                             <el-button type="primary" size="small" @click="insert(2)">添加</el-button>
                                             <el-button type="primary" size="small" @click="dialogVisible = !dialogVisible">取消
                                             </el-button>
-                                        </el-col>
                                     </el-row>
                                 </div>
                             </el-form>
@@ -573,11 +569,9 @@
                     </div>
                     <el-row style="height:50px"></el-row>
 
-                    <el-row>
-                        <el-col :span="6" :offset="18">
-                            <el-button type="primary" size="small" @click="insertNode">添加</el-button>
-                            <el-button type="primary" size="small" @click="dialogVisibleN=!dialogVisibleN">取消</el-button>
-                        </el-col>
+                    <el-row type="flex" justify="center">
+                        <el-button type="primary" size="small" @click="insertNode">添加</el-button>
+                        <el-button type="primary" size="small" @click="dialogVisibleN=!dialogVisibleN">取消</el-button>
                     </el-row>
 
                 </el-tabs>
@@ -593,7 +587,7 @@
                         </el-form-item>
                         <el-form-item label="功能点" prop="transName" label-width="40%">
                             <el-select class="selectWidth" v-model="changeForm.transId" size="small" @change="templateChange($event)">
-                                <el-option v-for="item in transList" :key="item.id" :label="item.nameMedium" :value=item.id">
+                                <el-option v-for="item in transList" :key="item.id" :label="item.nameMedium" :value="item.id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -610,14 +604,12 @@
                             </el-select>
                         </el-form-item>
                     </el-form>
-                    <el-row style="height:50px"></el-row>
+                    <el-row style="height:10px"></el-row>
 
-                    <el-row>
-                        <el-col :span="15" :offset="6">
+                    <el-row type="flex" justify="center">
                             <el-button type="primary" size="small" @click="changeIm">更改</el-button>
                             <el-button type="primary" size="small" @click="toOrigin">重置</el-button>
                             <el-button type="primary" size="small" @click="noChangeIm">取消</el-button>
-                        </el-col>
                     </el-row>
                 </el-tabs>
             </el-dialog>
@@ -755,11 +747,9 @@
                         </el-col>
                     </el-row>
                 </el-form>
-                <el-row>
-                    <el-col :span="6" :offset="18">
-                        <el-button type="primary" size="small" v-show="changeFlag" @click="changeCaseInfo">修改</el-button>
-                        <el-button type="primary" size="small" @click="dialogVisibleQ = !dialogVisibleQ">退出</el-button>
-                    </el-col>
+                <el-row type="flex" justify="center">
+                    <el-button type="primary" size="small" v-show="changeFlag" @click="changeCaseInfo">修改</el-button>
+                    <el-button type="primary" size="small" @click="dialogVisibleQ = !dialogVisibleQ">退出</el-button>
                 </el-row>
             </el-dialog>
         </el-main>

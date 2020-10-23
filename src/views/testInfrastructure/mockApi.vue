@@ -111,11 +111,16 @@ export default {
       editPath: "/testInfrastructure/mockApi/edit/",
       runPath: "/testInfrastructure/mockApi/run/",
       count: 0,
-      currentRow: null
+      currentRow: null,
+      creatorId: "",
+      companyId: ""
     };
   },
   computed: {},
   created() {
+    this.creatorId = sessionStorage.getItem('userId')
+    this.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
+    console.log('transactmock',sessionStorage.getItem('userId'), this.companyId)
     this.loadExpectation();
   },
   mounted() {},
@@ -151,7 +156,9 @@ export default {
       Request({
         url: "/mockServer/getAllExpectation",
         method: "POST",
-        params: {}
+        params: {
+            companyId: this.companyId
+        }
       })
         .then(res => {
           console.log("获取映射规则列表成功", res);
@@ -171,7 +178,9 @@ export default {
       Request({
         url: "/mockServer/getAllExpectation",
         method: "POST",
-        params: {}
+        params: {
+            companyId: this.companyId
+        }
       })
         .then(res => {
           console.log("获取映射规则列表成功", res);
@@ -194,11 +203,12 @@ export default {
           console.log("id", _this.expectation[index].id);
           let qs = require("qs");
           Request({
-            url: "//mockServer/deleteExpectation",
+            url: "/mockServer/deleteExpectation",
             method: "POST",
-            params: qs.stringify({
-              id: _this.expectation[index].id
-            })
+            params: {
+              expectationId: Number(_this.expectation[index].id),
+              userId: Number(sessionStorage.getItem('userId'))
+            }
           })
             .then(res => {
               console.log("删除成功", res);
@@ -266,7 +276,9 @@ export default {
         params: {
           creator: _this.creatorName,
           expectationName: _this.expectedName,
-          type: _this.selectedAction
+          type: _this.selectedAction,
+          creatorId: this.creatorId,
+          companyId: this.companyId
         }
       })
         .then(res => {

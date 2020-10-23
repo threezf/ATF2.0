@@ -1,55 +1,53 @@
 <template>
 <page>
-            <el-row>
-                <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRule">新增
+    <el-row class="searchRow">
+        <el-col :span="6">
+            <el-input size="small" v-model="searchInfo" placeholder="请输入角色名称 (支持模糊查询)" clearable>
+                <el-button slot="append" icon="el-icon-search" @click="searchByItem">
                 </el-button>
-                <el-button type="primary" size="small" icon="el-icon-setting" @click="doAssignPermissions">分配权限
+            </el-input>
+        </el-col>
+        <el-col :span="4">
+            <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRule">新增
+            </el-button>
+            <el-button type="primary" size="small" icon="el-icon-setting" @click="doAssignPermissions">分配权限
+            </el-button>
+        </el-col>
+    </el-row>
+    <el-table :data="tableData" class="table" border stripe highlight-current-row @select="handleSelectChange">
+        <el-table-column width="50px" label type="selection">
+        </el-table-column>
+        <el-table-column type="index" width="70px" label="序号">
+        </el-table-column>
+        <el-table-column min-width="25%" prop="roleName" label="角色名称">
+        </el-table-column>
+        <el-table-column min-width="25%" prop="remark" label="角色标识">
+        </el-table-column>
+        <el-table-column min-width="30%" prop="descShort" label="备注">
+        </el-table-column>
+        <el-table-column min-width="20%" align="center" label="操作">
+            <template slot-scope="scope">
+                <el-button v-if="scope.row.defaultRole != 1" type="primary" size="small" icon="el-icon-edit" @click="doUpdateRule(scope.row)">编辑
                 </el-button>
-            </el-row>
-            <el-row class="searchRow">
-                <el-form class="selectStyle">
-                    <el-form-item label="" label-width="10px">
-                        <el-input v-model="searchInfo" placeholder="请输入角色名称 (支持模糊查询)" clearable>
-                            <el-button slot="append" icon="el-icon-search" @click="searchByItem">
-                            </el-button>
-                        </el-input>
-                    </el-form-item>
-                </el-form>
-            </el-row>
-            <el-table :data="tableData" class="table" border stripe highlight-current-row @select="handleSelectChange">
-                <el-table-column width="50px" label type="selection">
-                </el-table-column>
-                <el-table-column type="index" width="70px" label="序号">
-                </el-table-column>
-                <el-table-column min-width="25%" prop="roleName" label="角色名称">
-                </el-table-column>
-                <el-table-column min-width="25%" prop="remark" label="角色标识">
-                </el-table-column>
-                <el-table-column min-width="30%" prop="descShort" label="备注">
-                </el-table-column>
-                <el-table-column min-width="20%" align="center" label="操作">
-                    <template slot-scope="scope">
-                        <el-button v-if="scope.row.defaultRole != 1" type="primary" size="small" icon="el-icon-edit" @click="doUpdateRule(scope.row)">编辑
-                        </el-button>
-                        <el-button type="info" size="small" icon="el-icon-view" plain @click="viewRow(scope.row)">查看
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        <el-footer>
-            <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
-            </el-pagination>
-        </el-footer>
+                <el-button type="info" size="small" icon="el-icon-view" plain @click="viewRow(scope.row)">查看
+                </el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-footer>
+        <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
+        </el-pagination>
+    </el-footer>
     <el-dialog width="24%" :title="dialogTitles[titleIndex]" :visible.sync="dialogVisible">
         <el-form ref="ruleForm" label-width="100px" :model="ruleForm" :rules="rules">
             <el-form-item label="角色姓名" prop="roleName">
-                <el-input v-model="ruleForm.roleName" class="inputStyle" placeholder="请输入角色姓名" :disabled="inputDisabled" clearable />
+                <el-input size="small" v-model="ruleForm.roleName" class="inputStyle" placeholder="请输入角色姓名" :disabled="inputDisabled" clearable />
             </el-form-item>
             <el-form-item label="角色标识" prop="remark">
-                <el-input v-model="ruleForm.remark" class="inputStyle" placeholder="请输入角色标识" :disabled="inputDisabled" clearable />
+                <el-input size="small" v-model="ruleForm.remark" class="inputStyle" placeholder="请输入角色标识" :disabled="inputDisabled" clearable />
             </el-form-item>
             <el-form-item label="角色描述" prop="descShort">
-                <el-input v-model="ruleForm.descShort" class="inputStyle" type="textarea" placeholder="请输入角色描述" :disabled="inputDisabled" clearable />
+                <el-input size="small" v-model="ruleForm.descShort" class="inputStyle" type="textarea" placeholder="请输入角色描述" :disabled="inputDisabled" clearable />
             </el-form-item>
         </el-form>
         <el-row class="dialogRowStyle">
@@ -400,10 +398,10 @@ export default {
 
 <style lang="less" scoped>
 .searchRow {
-    margin-bottom: 0px !important;
+    margin-bottom: 10px;
 
     .el-input {
-        width: 300px;
+        width: 285px;
     }
 }
 
@@ -414,8 +412,8 @@ export default {
 .dialogRowStyle {
     display: flex;
     width: 100%;
-    justify-content: flex-end;
-    padding-right: 30px;
+    justify-content: center;
+    margin-bottom: -10px;
 }
 
 .selectStyle {
@@ -424,7 +422,7 @@ export default {
 
 .roleMenusRow {
     display: flex;
-    justify-content: flex-end;
-    padding-right: 30px;
+    justify-content: center;
+    margin-bottom: -10px;
 }
 </style>

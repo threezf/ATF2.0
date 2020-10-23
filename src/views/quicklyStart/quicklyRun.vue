@@ -37,6 +37,7 @@
           :inline="true">
           <el-form-item label="执行机选择">
             <el-select
+              size="small"
               v-model="runnerselected"
               :disabled="isRunning"
               placeholder="选择执行机"
@@ -50,6 +51,7 @@
             </el-select>
           </el-form-item>
           <el-button
+            size="small"
             class="executeRunner"
             type="primary"
             icon="el-icon-video-play"
@@ -63,11 +65,13 @@
     </el-card>
     <el-row type="flex" justify="center" class="fixButton">
       <el-button
+        size="small"
         type="primary"
         @click="next"
         >执行完毕查看结果
       </el-button>
 			<el-button
+        size="small"
 				@click="back"
 			>返回上一步
 			</el-button>
@@ -166,7 +170,8 @@ export default {
         url: '/executeController/queryRunners',
         method: 'POST',
         params: {
-          serviceName: "web.ui"
+          serviceName: "web.ui",
+          userId: sessionStorage.getItem('userId')
         }
       }).then(res => {
         if(res.respCode !== "0000") {

@@ -3,7 +3,7 @@
     <div class="leftCard">
       <div class="title">元素库</div> 
       <el-card>
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+        <el-input size="small"  placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
         <el-row>
           <el-button type="primary" size="small" @click="addUI">添加UI</el-button>
           <el-button type="primary" size="small" @click="removeUI">删除UI</el-button>
@@ -31,13 +31,13 @@
             <el-form label-width="150px">
               <el-row>
                 <el-form-item label="UI名称：">
-                  <el-input v-model="uiName"></el-input>
+                  <el-input size="small"  v-model="uiName"></el-input>
                 </el-form-item>
               </el-row>
               <el-row>
                 <el-form-item label="关联对象库对象：">
                   <el-col :span="12">
-                    <el-input v-model="relateIdentifyObjectId" disabled></el-input>
+                    <el-input size="small"  v-model="relateIdentifyObjectId" disabled></el-input>
                   </el-col>
                   <el-col :span="12">
                     <el-button
@@ -68,7 +68,7 @@
             <el-form class="baseForm" label-width="140px">
               <el-row>
                 <el-form-item label="元素名称">
-                  <el-input v-model="element.elementName"></el-input>
+                  <el-input size="small"  v-model="element.elementName"></el-input>
                 </el-form-item>
                 <el-form-item label="类型">
                   <el-select placeholder="--选择控件类型--" v-model="element.classType">
@@ -83,7 +83,7 @@
               </el-row>
               <el-row>
                 <el-form-item label="对象库中的父对象">
-                  <el-input v-model="element.relateParentIdentifyObjectId" disabled></el-input>
+                  <el-input size="small"  v-model="element.relateParentIdentifyObjectId" disabled></el-input>
                 </el-form-item>
                 <div class="buttons">
                   <el-button type="primary" size="small" @click="setParentObj">设置父对象</el-button>
@@ -92,7 +92,7 @@
               </el-row>
               <el-row>
                 <el-form-item label="对象库中的关联对象">
-                  <el-input v-model="element.relateIdentifyObjectId" disabled></el-input>
+                  <el-input size="small"  v-model="element.relateIdentifyObjectId" disabled></el-input>
                 </el-form-item>
                 <div class="buttons">
                   <el-button type="primary" size="small" @click="setLinkObj">设置关联对象</el-button>
@@ -135,12 +135,12 @@
                   </el-table-column>
                   <el-table-column label="属性名" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small"  v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="属性值" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small"  v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -182,12 +182,12 @@
                   </el-table-column>
                   <el-table-column label="属性名" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small"  v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="属性值" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small"  v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -229,12 +229,12 @@
                   </el-table-column>
                   <el-table-column label="属性名" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small"  v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="属性值" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small"  v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -276,12 +276,12 @@
                   </el-table-column>
                   <el-table-column label="属性名" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input size="small"  v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="属性值" min-width="40%">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.value"></el-input>
+                      <el-input size="small"  v-model="scope.row.value"></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -301,15 +301,15 @@
       @before-close="handleBeforeClose">
       <el-form class="dialogFormStyle" label-width="100px">
         <el-form-item v-if="dialogIndex === 0" label="UI名称">
-          <el-input placeholder="请输入UI名称" v-model="dialogUIName"></el-input>
+          <el-input size="small"  placeholder="请输入UI名称" v-model="dialogUIName"></el-input>
         </el-form-item>
         <el-form-item v-else label="元素名称">
-          <el-input placeholder="请输入元素名称" v-model="dialogElementName"></el-input>
+          <el-input size="small"  placeholder="请输入元素名称" v-model="dialogElementName"></el-input>
         </el-form-item>
         <span>若要添加多个，请以英文逗号“,”隔开。</span>
-        <el-row>
-          <el-button type="warning" size="small" plain @click="dialogCancel">取消</el-button>
+        <el-row type="flex" justify="center">
           <el-button type="primary" size="small" @click="dialogSure">添加</el-button>
+          <el-button type="warning" size="small" plain @click="dialogCancel">取消</el-button>
         </el-row>
       </el-form>
     </el-dialog>
@@ -317,27 +317,27 @@
       <div class="objectDiv">
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObjUI"></el-tree>
       </div>
-      <el-row>
-        <el-button type="warning" size="small" plain @click="objectDialogVisibleUI=false">取消</el-button>
+      <el-row type="flex" justify="center">
         <el-button type="primary" size="small" @click="objectDialogVisibleUI=false">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectDialogVisibleUI=false">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog class="objDialog" width="600px" title="对象库" :visible.sync="objectDialogVisible">
       <div class="objectDiv">
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObj"></el-tree>
       </div>
-      <el-row>
-        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
+      <el-row type="flex" justify="center">
         <el-button type="primary" size="small" @click="objectSure">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
       </el-row>
     </el-dialog>
     <el-dialog class="objDialog" width="600px" title="对象库" :visible.sync="objectDialogVisibleEle">
       <div class="objectDiv">
         <el-tree :data="objects" :props="objectProps" @node-click="nodeClickObjEle"></el-tree>
       </div>
-      <el-row>
-        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
+      <el-row type="flex" justify="center">
         <el-button type="primary" size="small" @click="objectSureEle">确认</el-button>
+        <el-button type="warning" size="small" plain @click="objectCancel">取消</el-button>
       </el-row>
     </el-dialog>
   </div>
@@ -738,7 +738,8 @@ export default {
         url: '/aut/queryAutVisibleOmClasses',
         method: 'POST',
         params: {
-          id: this.autId
+          id: this.autId,
+          companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
         }
       }).then(res => {
         if(res.respCode === '0000') {
@@ -1007,7 +1008,7 @@ export default {
   }
   .el-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     border-top: 1px solid #e5e5e5;
     margin-top: 40px;
     padding-top: 10px;
@@ -1023,7 +1024,7 @@ export default {
   }
   .el-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding-right: 10px;
     margin-bottom: -15px;
     margin-top: -10px;

@@ -146,9 +146,17 @@
                         companyName: res.companyName,
                         userId: res.userId
                       })
-                      this.$router.push({
-                        path: "/index",
-                      });
+                      if(res.respMsg === '服务器时间可能被更改，无法校验license，请联系管理员' || (res.respCode === '用户所属公司可在线人数已达上限')) {
+                          this.$message.warning(res.respMsg)
+                      }else {
+                          if(res.respMsg.startsWith('license使用时间不足')) {
+                              this.$message.warning('license使用时间不足，请注意充值')
+                          }
+                          
+                          this.$router.push({
+                            path: "/index",
+                          });
+                      }
                     }else {
                       this.$message.warning('请验证登录信息');
                     }
@@ -226,8 +234,10 @@
               urlList: res.urlList
             })
             localStorage.setItem('urls', res.urlList)
-            console.log('urls emit事件总线')
-            this.$bus.emit('setUrls', res.urlList)
+            this.$bus.emit('setUrls', {
+                urlList: res.urlList,
+                currentName: this.ruleForm.uid
+            })
           }
           return
         }).catch(error => {

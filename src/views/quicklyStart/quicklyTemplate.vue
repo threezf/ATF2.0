@@ -7,13 +7,13 @@
       <steps :active="2"></steps>
     </div>
     <el-row type="flex" class="row-bg" justify="center">
-      <el-col :span="24">
+      <el-col :span="23">
         <template-manage :transId="String(transId)" :autId="String(autId)" name="用例" :isQuick="true"></template-manage>
       </el-col>
     </el-row>
     <el-row type="flex" justify="center" class="fixButton">
-        <el-button type="primary" @click="next()">配置完成并进入下一步</el-button>
-				<el-button @click="back()">返回上一步</el-button>
+        <el-button size="small" type="primary" @click="next()">配置完成并进入下一步</el-button>
+				<el-button size="small" @click="back()">返回上一步</el-button>
     </el-row>
   </div>
 </template>

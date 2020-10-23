@@ -71,7 +71,8 @@ export default {
 				meta:{
 					name: '自动化构件管理',
 					parent: 'TestInfrastructure',
-					icon: "el-icon-setting"
+                    icon: "el-icon-setting",
+                    another: 'atf/infrastructure'
 				}
 			},
         {
