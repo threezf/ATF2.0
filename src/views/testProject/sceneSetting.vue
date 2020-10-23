@@ -266,7 +266,8 @@
                 <el-table-column
                   label="上次执行日期"
                   prop="executedTime"
-                  min-width="20%">
+                  min-width="20%"
+                  hidden>
                 </el-table-column>
                 <el-table-column
                   label="任务描述"

@@ -17,7 +17,7 @@
 						v-for="item in transactList"
 						:key="item.nameMedium"
 						:label="item.nameMedium"
-						:value="item">
+						:value="item.id">
 					</el-option>
 				</el-select>
 			</el-col>
@@ -171,7 +171,7 @@ export default {
         this.formData.creatorId = aut.creatorId
         this.formData.id = aut.id
         this.formData.autId = aut.autId
-        this.selectValue = aut.nameMedium;
+        this.selectValue = aut.id;
         this.modelName = "查看功能点";
         this.disabled = "true";
     },
