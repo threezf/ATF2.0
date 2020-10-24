@@ -9,6 +9,7 @@
                 <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
             </el-input>
         </el-col>
+        <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
         <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
         <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
@@ -20,6 +21,7 @@
             <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>
         </span>
         <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
+        </el-col>
     </el-row>
 
     <el-table class="table" ref="singleTable" border stripe highlight-current-row :default-sort="{prop:'modifiedTime',order:'descending'}" :data="tableData">
@@ -44,7 +46,7 @@
         <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
         <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
     </el-table>
-    <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper"></el-pagination>
+    
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
             <el-form-item label="系统名称" prop="nameMedium">
@@ -80,7 +82,9 @@
             </el-form-item>
         </el-form>
     </el-dialog>
-    <el-footer></el-footer>
+    <el-footer class="dialog-footer">
+        <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper"></el-pagination>
+    </el-footer>
 </page>
 </template>
 
@@ -659,7 +663,7 @@ div.row {
 
 /**底部分页*/
 .pagination {
-    margin: 20px auto;
+
     text-align: center;
 }
 

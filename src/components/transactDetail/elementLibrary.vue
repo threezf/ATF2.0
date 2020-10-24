@@ -105,17 +105,17 @@
         </div>
     </div>
     <el-dialog title="添加UI" :visible.sync="addUIDialogFlag" width="30%">
-        <el-form :model="addUIform" label-width="80px">
+        <el-form :model="addUIform" label-width="60px">
             <el-form-item label="UI名称">
-                <el-input size="small" v-model="addUIform.name"></el-input>
+                <el-input style="width:100%" size="small" v-model="addUIform.name"></el-input>
             </el-form-item>
             <el-form-item label="UI描述">
                 <el-input size="small" type="textarea" rows="5" v-model="addUIform.desc"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
             <el-button size="small" type="primary" @click=" addUI">确 定</el-button>
+            <el-button size="small" @click="addUIDialogFlag = false">取 消</el-button>
         </div>
     </el-dialog>
     <el-dialog title="添加元素" :visible.sync="addEleDialogFlag" width="30%">
@@ -136,8 +136,8 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="addEleDialogFlag = false">取 消</el-button>
             <el-button size="small" type="primary" @click=" addEle">确 定</el-button>
+            <el-button size="small" @click="addEleDialogFlag = false">取 消</el-button>
         </div>
     </el-dialog>
     <el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width="30%">
@@ -146,8 +146,10 @@
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器
             </el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="downloadTemp">模板下载</el-button>
-            <div slot="tip" class="el-upload__tip">下载模板，填写完毕后进行上传</div>
         </el-upload>
+        <p class="pstyle">
+        下载模板，填写完毕后进行上传
+        </p>
         <div slot="footer" class="dialog-footer">
             <el-button size="small" @click="branchAddEleDialogFlag = false">关闭</el-button>
         </div>
@@ -670,5 +672,11 @@ export default {
 
 .el-row {
     padding: 10px 0px;
+}
+.pstyle {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: -20px;
 }
 </style>

@@ -2,7 +2,7 @@
 	<page>
 				<el-form  class="fistForm" label-width="100%">
 					<el-row>
-						<el-col :span="3" style="margin-left: 90px" >
+						<el-col :span="4" style="margin-left: 20px" >
 							<el-button
 								@click="componentFormButton"
 								icon="el-icon-setting"
@@ -15,23 +15,22 @@
 							<el-input style="width: 100% " size="small" id="componentInput" v-model="automated" :disabled="true"
 												placeholder="选择的开发架构"></el-input>
 						</el-col>
-						<el-col :span="1" style="margin-left: 10px">
+						<el-col :span="3" style="margin-left: 10px">
 							<el-button
 								@click="addArch(0)"
 								icon="el-icon-plus"
 								size="small">
 							</el-button>
-						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
 							<el-button
+								style="margin-left:10px"
 								@click="addArch(1)"
 								icon="el-icon-edit"
 								size="small">
 							</el-button>
 						</el-col>
 						<el-col :span="8" >
-							<el-form-item label="控件名称" label-width="36%" style="margin-top: 7px">
-								<el-select style="width: 110%" v-model="classValue" filterable placeholder="请选择控件" size="small"
+							<el-form-item label="控件名称" label-width="22%" style="margin-top:-5px">
+								<el-select style="width: 90%"  v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"
@@ -42,15 +41,14 @@
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="1" style="margin-left: 10px">
+						<el-col :span="3" style="margin-left: 10px">
 							<el-button
 								@click="dialogVisibleA=!dialogVisibleA"
 								icon="el-icon-plus"
 								size="small">
 							</el-button>
-						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
 							<el-button
+								style="margin-left:10px"
 								@click="deleteForm"
 								icon="el-icon-delete"
 								size="small">
@@ -158,7 +156,7 @@
 					</el-row>
 					<el-row>
 						<el-col :span="19" >
-							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="23%">
+							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="23.5%">
 									<el-table
 									stripe
 									border
@@ -190,7 +188,7 @@
 									</el-table>
 							</el-form-item>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="3">
 							<el-button
 								size="small"
 								@click="addArg"
@@ -200,8 +198,8 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
-							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="22.5%">
+						<el-col :span="19">
+							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="23.5%">
 								<el-table
 									stripe
 									border
@@ -233,7 +231,7 @@
 								</el-table>
 							</el-form-item>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="3">
 							<el-button
 								size="small"
 								@click="addArgS"
@@ -243,8 +241,8 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
-							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="22.5%">
+						<el-col :span="19">
+							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="23.5%">
 								<el-table
 									stripe
 									border
@@ -276,7 +274,7 @@
 								</el-table>
 							</el-form-item>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="3">
 							<el-button
 								size="small"
 								@click="addArgE"
@@ -286,8 +284,8 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
-							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="22.5%">
+						<el-col :span="19">
+							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="23.5%">
 								<el-table
 									stripe
 									border

@@ -22,7 +22,7 @@
           :show-header="showHeader"
           @row-click="handleRowClick"
           @current-change="handleCurrentChange">
-          <el-table-column width="185px" prop="expectationName"></el-table-column>
+          <el-table-column width="160px" prop="expectationName"></el-table-column>
           <el-table-column>
             <template slot-scope="scope">
               <el-button
@@ -47,19 +47,19 @@
         </el-card>
       </div>
       <el-dialog
-        width="24%"
+        width="36%"
         :title="addTitle"
         :visible.sync="dialogVisible"
         :before-close="handleBeforeClose">
         <el-form>
-          <el-form-item label="创建人" label-width="120px">
-            <el-input class="dialogInput" v-model="creatorName"></el-input>
+          <el-form-item label="创建人" label-width="100px">
+            <el-input  size="small" class="dialogInput" v-model="creatorName"></el-input>
           </el-form-item>
-          <el-form-item label="期望名称" label-width="120px">
-            <el-input class="dialogInput" v-model="expectedName"></el-input>
+          <el-form-item label="期望名称" label-width="100px">
+            <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
           </el-form-item>
-          <el-form-item label="动作" label-width="120px">
-            <el-select v-model="selectedAction">
+          <el-form-item label="动作" label-width="100px">
+            <el-select style="width:110%" size="small" v-model="selectedAction">
               <el-option v-for="(item,index) in actions" :value="item" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -70,7 +70,7 @@
           <hr class="hrStyleRight" width="20%" color="#f5f5f5" />
         </el-row>
         <el-row>
-          <hr width="100%" color="#F5F5F5" style="margin-top:45px" />
+          <hr width="100%" color="#F5F5F5" style="margin-top:10px" />
         </el-row>
         <el-row class="buttonRow">
           <el-button class="buttonStyle" type="primary" size="small" @click="sureButton">提交</el-button>
@@ -362,7 +362,7 @@ export default {
   margin-left: 3px;
 }
 .dialogInput {
-  max-width: 240px;
+  width: 100%;
 }
 .hrStyleLeft {
   float: left;
@@ -381,11 +381,13 @@ export default {
   margin-left: 15px;
 }
 .descriptionRow {
-  margin: 1px auto;
+  display: flex;
+  justify-content: center;
 }
 .buttonRow {
   overflow: hidden;
-  margin-top: 15px;
+  display: flex;
+  justify-content: center;
   margin-bottom: -12px;
 }
 .buttonStyle {

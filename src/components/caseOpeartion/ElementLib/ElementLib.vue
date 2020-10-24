@@ -85,7 +85,7 @@
                 <el-form-item label="对象库中的父对象">
                   <el-input size="small"  v-model="element.relateParentIdentifyObjectId" disabled></el-input>
                 </el-form-item>
-                <div class="buttons">
+                <div class="buttons1">
                   <el-button type="primary" size="small" @click="setParentObj">设置父对象</el-button>
                   <el-button type="primary" size="small" @click="removeParentLink">解除关联</el-button>
                 </div>
@@ -1046,6 +1046,13 @@ export default {
         margin-left: 30px;
         .el-button {
           margin-right: 30px;
+        }
+      }
+      .buttons1 {
+        float: left;
+        margin-left: 30px;
+        .el-button {
+          margin-right: 40px;
         }
       }
     }

@@ -7,12 +7,12 @@
                 </el-option>
             </el-select>
         </el-col>
-        <el-col :span="4" style="margin-left: 10px">
+        <el-col :span="5">
             <el-input size="small" placeholder="请输入搜索内容" v-model="searchRole" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="getEnterprise(1)"></el-button>
             </el-input>
         </el-col>
-        <el-col :span="4" style="margin-left: 20px">
+        <el-col :span="16">
             <el-button type="primary" size="small" icon="el-icon-plus" @click="show(0)">新增
             </el-button>
             <!--		<el-button-->
@@ -62,7 +62,7 @@
             </template>
         </el-table-column>
     </el-table>
-    <el-footer>
+    <el-footer class="dialog-footer">
         <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
         </el-pagination>
     </el-footer>

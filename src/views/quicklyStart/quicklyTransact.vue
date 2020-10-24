@@ -18,33 +18,35 @@
 
     </div>
     <el-row type="flex" class="row-bg">
-        <el-col :span="4">
-            <el-select v-model="selectValue" style="margin-top: 12px" placeholder="请选择要查询的功能点" clearable filterable @change="getChange">
+        <el-col :span="7">
+            <el-select size="small" v-model="selectValue" style="margin-top: 12px" placeholder="请选择要查询的功能点" clearable filterable @change="getChange">
                 <el-option v-for="item in transactList" :key="item.id" :label="item.nameMedium" :value="item">
                 </el-option>
             </el-select>
         </el-col>
-        <el-col :span="12" :offset="2">
+        <el-col :span="10" :offset="2">
             <el-card shadow="always">
                 <div slot="header" class="clearfix">
                     <span>{{modelName}}</span>
                 </div>
-                <el-form label-position="right" label-width="200px" :model="formData" :rules="rules" ref="form">
+                <el-form  label-width="100px" :model="formData" :rules="rules" ref="form">
                     <el-form-item label="功能点名称:" prop="nameMedium">
-                        <el-input v-model="formData.nameMedium" :disabled="disabled"></el-input>
+                        <el-input style="width:100%" size="small" v-model="formData.nameMedium" :disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="编码:" prop="code">
-                        <el-input v-model="formData.code" :disabled="disabled"></el-input>
+                        <el-input style="width:100%" size="small" v-model="formData.code" :disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="描述:" prop="descShort">
-                        <el-input v-model="formData.descShort" type="textarea" :disabled="disabled"></el-input>
+                        <el-input size="small" v-model="formData.descShort" type="textarea" :disabled="disabled"></el-input>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
-                        <el-button @click="resetForm('form')">重置</el-button>
-                    </el-form-item>
+                    <el-row type="flex" justify="center">
+                        <el-button size="small" type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
+                        <el-button size="small" @click="resetForm('form')">重置</el-button>
+                    </el-row>
                 </el-form>
             </el-card>
+        </el-col>
+        <el-col :span="7">
         </el-col>
     </el-row>
 </div>
@@ -175,6 +177,6 @@ export default {
 }
 
 .el-form {
-    width: 500px;
+    width: 100%;
 }
 </style>

@@ -154,8 +154,17 @@ export default {
 	.radioGroup label{
 		margin-bottom: 0;
 	}
-	.radioGroup .el-radio-button--small .el-radio-button__inner{
-		padding:6px 8px !important;
-	}
+    .radioGroup .el-radio-button--small .el-radio-button__inner{
+        padding:6px 8px !important;
+    }
+    .el-radio-button__inner{
+        background:transparent;
+        color:white;
+        font-size:18px !important;
+        border:0 !important;
+    }
+    .el-radio-button:first-child .el-radio-button__inner{
+        border:0 !important;
+    }
 </style>
 

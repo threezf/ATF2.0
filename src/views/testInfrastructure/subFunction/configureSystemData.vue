@@ -1,6 +1,6 @@
 <template>
 <page>
-    <el-row class="buttonRowTop">
+    <el-row class="buttonRowTop" style="margin-left:10px">
         <el-button type="primary" size="small" icon="el-icon-plus" @click="addButton">添加</el-button>
         <el-button type="primary" size="small" icon="el-icon-delete" @click="deleteButton">删除</el-button>
         <el-button type="primary" size="small" icon="el-icon-edit" @click="updateButton">修改</el-button>
@@ -18,7 +18,7 @@
         <el-table-column label="描述" min-width="40%" prop="dataDesc"></el-table-column>
     </el-table>
     <!--数据对话框-->
-    <el-dialog width="22%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
+    <el-dialog width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
         <el-form>
             <el-form-item label="名称" label-width="70px">
                 <el-input size="small" class="inputStyle" placeholder="请输入名称" v-model="ruleForm.dataName"></el-input>
@@ -27,7 +27,7 @@
                 <el-input size="small" class="inputStyle" placeholder="请输入值" v-model="ruleForm.dataValue"></el-input>
             </el-form-item>
             <el-form-item label="描述" label-width="70px">
-                <el-input style="padding-left:0px" size="small" type="textarea" class="textareaStyle" rows="5" v-model="ruleForm.dataDesc"></el-input>
+                <el-input  size="small" type="textarea" class="textareaStyle" rows="5" v-model="ruleForm.dataDesc"></el-input>
             </el-form-item>
             <hr width="100%" color="#F5F5F5" />
             <div class="buttonRow">
@@ -257,7 +257,7 @@ export default {
 <style scoped>
 /*表单样式*/
 .inputStyle {
-    width: 270px;
+    width: 100%;
 }
 
 /*表格相关样式*/
@@ -280,8 +280,8 @@ export default {
 }
 
 .textareaStyle {
-    width: 280px;
+    width: 100%;
     border-radius: 4px;
-    padding: 10px;
+    
 }
 </style>

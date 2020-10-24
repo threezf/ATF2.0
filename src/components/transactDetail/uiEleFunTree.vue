@@ -29,13 +29,9 @@
         <el-tree :show-checkbox='multiselection' :data="funTree" check-on-click-node :props="defaultProps" @check-change="funCheckChange">
         </el-tree>
     </div>
-    <el-row>
-        <el-col :span="5" :offset='6'>
+    <el-row type="flex" justify="center">
             <el-button @click="closeDialog">取 消</el-button>
-        </el-col>
-        <el-col :span="5">
             <el-button type="primary" @click="throwInfo">确 定</el-button>
-        </el-col>
     </el-row>
 </div>
 </template>

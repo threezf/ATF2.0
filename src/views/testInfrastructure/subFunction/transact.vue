@@ -131,19 +131,7 @@
           sortable
         ></el-table-column>
       </el-table>
-      <!--底部换页-->
-
-        <el-footer class="footSelect">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-sizes="[5, 10, 20, 50]"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="totalCount"
-            layout="total, sizes, prev ,pager ,next, jumper"
-          ></el-pagination>
-        </el-footer>
+      
 
 
       <!--新增和修改对话框-->
@@ -236,6 +224,7 @@
               >上传文件
             </el-button>
             <el-input
+              style="margin-left:10px"
               size="small"
               class="formInput"
               placeholder="请选择导入的文件"
@@ -289,6 +278,7 @@
         <el-form>
           <el-form-item label-width="50px" label="URL: ">
             <el-input
+              size="small"
               style="width: 300px"
               placeholder="请输入绑定swagger的url"
               v-model="swaggerUrl"
@@ -297,12 +287,8 @@
             </el-input>
           </el-form-item>
           <el-row
-            style="
-              display: flex;
-              justify-content: flex-end;
-              padding-right: 16px;
-              margin-bottom: -5px;
-            ">
+            type="flex"
+            justify="center">
             <el-button type="primary" size="small" @click="insertSwaggerAPI"
               >确定
             </el-button>
@@ -312,6 +298,17 @@
           </el-row>
         </el-form>
       </el-dialog>
+      <el-footer class="dialog-footer">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[5, 10, 20, 50]"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalCount"
+            layout="total, sizes, prev ,pager ,next, jumper"
+          ></el-pagination>
+        </el-footer>
 	</page>
 </template>
 
@@ -918,7 +915,6 @@ export default {
 <style scoped>
 /** 顶部按钮组 */
 .buttonsRow {
-  margin: 0px auto 0px 20px;
   width: 100%;
 }
 

@@ -25,6 +25,7 @@
 				取消筛选
 			</el-button>
 			<div class='searchRow' v-for='(condition,index) in conditionList' :key="searchTestcase">
+				<el-row >
 				<el-select size="small" v-model="condition.propertyName" @change='itemChange(condition)' placeholder="请选择筛选项目">
 					<el-option
 						v-for="item in propertyNameOptions"
@@ -33,6 +34,8 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
+				</el-row>
+				<el-row>
 				<el-select size="small" v-model="condition.compareType" placeholder="筛选操作" @change='valueChange(condition)'>
 					<el-option
 						v-for="item in compareTypeOptions[condition.propertyName]"
@@ -41,6 +44,8 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
+				</el-row>
+				<el-row>
 				<el-input size="small" v-if='valueType(condition)' v-model="condition.propertyValueList[0]" placeholder="比较值"
 									@change='valueChange(condition)'></el-input>
 				<el-select size="small" v-else-if='getConf(condition).multiple' v-model="condition.propertyValueList" placeholder="比较值"
@@ -61,11 +66,13 @@
 					</el-option>
 				</el-select>
 				<el-button
+					style="margin-left:10px"
 					size="small"
 					@click='deleteSearchCondition(searchTestcase)'
 					type="primary"
 					icon="el-icon-delete">
 				</el-button>
+				</el-row>
 			</div>
 		</div>
 	</div>
@@ -351,5 +358,9 @@
 
 	.searchRow {
 		margin-top: 10px;
+	}
+	.el-row {
+		display: flex;
+		justify-content: flex-start;
 	}
 </style>

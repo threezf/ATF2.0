@@ -46,7 +46,7 @@
 			</div>
 			<div :class="'ele-right '+(saidBarShow?'':'wide-ele-right') + (fullScreen? ' full-screen' : '')">
 				<el-row class="itemCenter" :gutter="20">
-					<el-col :span="8">
+					<el-col :span="9">
 						<el-button
 							size="small"
 							@click='save'
@@ -69,7 +69,7 @@
 							导入数据
 						</el-button>
 					</el-col>
-					<el-col :span="16" v-if='selectedTemplate !== -1'>
+					<el-col :span="15"  v-if='selectedTemplate !== -1' >
 						<el-button
 							v-if='!fullScreen'
 							size="small"
@@ -84,7 +84,7 @@
 							type="primary">
 							取消全屏
 						</el-button>
-						<el-select size="small" multiple v-model="columnHidden" placeholder="请选择隐藏列">
+						<el-select style="margin-left:20px" size="small" multiple v-model="columnHidden" placeholder="请选择隐藏列">
 							<el-option
 								v-for="item in selectOptions"
 								:key="item.value"
@@ -105,6 +105,7 @@
 					<el-table
 						height="80vh"
 						border
+						stripe
 						highlight-current-row
 						:data="tableData"
 						:cell-class-name='cellClassName'
@@ -1726,7 +1727,7 @@
 	}
 
 	.treeDiv {
-		width: 80%;
+		width: 100%;
 		display: inline-block;
 	}
 

@@ -4,7 +4,7 @@
         <el-form :model="titleForm" label-width="90px">
             <el-col :span="6">
                 <el-form-item label="被测系统">
-                    <el-select size="small" class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
+                    <el-select style="width:90%" size="small" class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
                         <el-input v-model="systemNameSearch" class="searchInput">
                         </el-input>
                         <el-option v-for="(item) in systemSearch(titleForm.autRespDTOList)" :key="item.id" :value="item.id" :label="item.nameMedium">
@@ -13,15 +13,15 @@
                 </el-form-item>
             </el-col>
             <el-col :span='6'>
-                <el-form-item label="功能点">
-                    <el-select size="small" class="systemSelectFun" v-model="selectedTransact" placeholder="Nothing Selected" @change="tranctChanged" clearable>
+                <el-form-item style="margin-left:-15px" label="功能点">
+                    <el-select style="width:85%" size="small" class="systemSelectFun" v-model="selectedTransact" placeholder="Nothing Selected" @change="tranctChanged" clearable>
                         <el-input v-model="transactSearchInput"></el-input>
                         <el-option v-for="(item,index) in transactSearch(titleForm.transactRespDTOs)" :key="index" :label="item.nameMedium" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col class="buttonCol" :offset="1" :span="11">
+            <el-col class="buttonCol"  :span="11">
                 <el-button type="primary" size="small" icon="el-icon-document-copy" @click="copyFun">
                     复制功能点
                 </el-button>

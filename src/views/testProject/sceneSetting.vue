@@ -15,7 +15,9 @@
             v-if="!isHighExpand"
             @click="isHighExpand =! isHighExpand"
           >{{showFun}}</span>
-          <span v-if="isHighExpand" class="buttons">
+        </el-row>
+        <el-row class="btnRows">
+          <span v-if="isHighExpand">
             <el-button
               type="primary"
               size="small"
@@ -339,10 +341,10 @@
                 highlight-current-row
                 border
                 stripe>
-                <el-table-column type="selection" width="50px" label="选择"></el-table-column>
-                <el-table-column width="200px" prop="name" label="触发器名称"></el-table-column>
-                <el-table-column min-width="800px" prop="desc" label="描述"></el-table-column>
-                <el-table-column width="130px" label="状态">
+                <el-table-column type="selection" min-width="10%" label="选择"></el-table-column>
+                <el-table-column min-width="20%" prop="name" label="触发器名称"></el-table-column>
+                <el-table-column min-width="50%" prop="desc" label="描述"></el-table-column>
+                <el-table-column min-width="18%" label="状态">
                   <template slot-scope="scope">
                     <el-select v-model="scope.row.state">
                       <el-option
@@ -364,7 +366,7 @@
               <h3>执行策略选择：</h3>
               <p>用例级</p>
               <el-row :gutter="20">
-                <el-col :span="5">
+                <el-col :span="8">
                   <el-form-item label="执行状态策略">
                     <el-select size="small" v-model="exeStrategy1Status">
                       <el-option
@@ -379,7 +381,7 @@
               </el-row>
               <p>流程节点级</p>
               <el-row :gutter="20">
-                <el-col :span="4">
+                <el-col :span="6">
                   <el-form-item label="起始节点策略">
                     <el-select size="small" v-model="exeStrategy2Start">
                       <el-option
@@ -391,7 +393,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="5" :offset="1">
+                <el-col :span="6" >
                   <el-form-item label-width="170px" label="执行顺序策略">
                     <el-select size="small" v-model="exeStrategy2Order">
                       <el-option
@@ -403,7 +405,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="4" :offset="1">
+                <el-col :span="6" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
                     <el-select size="small" v-model="exeStrategy2Status">
                       <el-option
@@ -418,7 +420,7 @@
               </el-row>
               <p>组合用例级</p>
               <el-row :gutter="20">
-                <el-col :span="5">
+                <el-col :span="6">
                   <el-form-item label="起始用例策略">
                     <el-select size="small" v-model="exeStrategy3Start">
                       <el-option
@@ -430,7 +432,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="6">
                   <el-form-item label-width="170px" label="执行顺序策略">
                     <el-select size="small" v-model="exeStrategy3Order">
                       <el-option
@@ -442,7 +444,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="5" :offset="1">
+                <el-col :span="6" :offset="1">
                   <el-form-item label-width="130px" label="执行状态策略">
                     <el-select size="small" v-model="exeStrategy3Status">
                       <el-option
@@ -580,7 +582,7 @@
           </el-drawer>
         </el-card>
         <el-dialog 
-          class="addDialog" width="34%" title="添加用例" :visible.sync="addDialogVisible">
+          class="addDialog" width="38%" title="添加用例" :visible.sync="addDialogVisible">
           <p class="addTitle">用例展示形式为：用例编号 | 被测系统 | 功能点 | 关联脚本名称</p>
           <el-form :model="addForm" label-width="70px">
             <el-form-item label="添加用例">
@@ -2057,9 +2059,7 @@
     .highFunction:hover {
       color: #409eff;
     }
-    .buttons {
-      margin-left: 10px;
-    }
+
   }
   .addDialog {
     .addTitle {
@@ -2137,8 +2137,8 @@
     margin-left: 239px;
   }
   .drawerHide {
-    width: calc(100% - 65px);
-    margin-left: 65px;
+    width: calc(100% - 239px);
+    margin-left: 239px;
   }
   .drawer,
   .drawerHide {

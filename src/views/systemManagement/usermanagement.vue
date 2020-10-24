@@ -1,10 +1,5 @@
 <template>
 <page>
-    <el-row>
-        <el-button size="small" @click='addUserButtom' type="primary" icon="el-icon-plus">
-            添加用户
-        </el-button>
-    </el-row>
     <el-row :gutter="15">
         <el-col :span="3">
             <el-select size="small" v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
@@ -12,11 +7,16 @@
                 </el-option>
             </el-select>
         </el-col>
-        <el-col :span="4" style="margin-left: 10px">
+        <el-col :span="5" >
             <el-input size="small" v-model="selectInfo" placeholder="请输入内容" clearable>
                 <el-button icon="el-icon-search" @click='getUsers(1)' slot="append">
                 </el-button>
             </el-input>
+        </el-col>
+        <el-col :span="16" >
+          <el-button size="small" @click='addUserButtom' type="primary" icon="el-icon-plus">
+            添加用户
+          </el-button>
         </el-col>
     </el-row>
     <el-table stripe border :data="tableData" class='table'>
@@ -152,13 +152,9 @@
         </el-form>
     </el-dialog>
 
-    <el-footer>
-        <div class="block">
-            <el-col :span="10" :offset='4'>
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-                </el-pagination>
-            </el-col>
-        </div>
+    <el-footer class="dialog-footer">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+        </el-pagination>
     </el-footer>
 </page>
 </template>
