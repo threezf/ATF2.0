@@ -578,8 +578,8 @@ export default {
               elementRepositoryId: _this.elementRepositoryId,
               objectRepositoryId: _this.objectRepositoryId,
               transId: _this.updateId,
-							userId:sessionStorage.getItem("userId"),
-							creatorId:sessionStorage.getItem("userId")
+              userId:sessionStorage.getItem("userId"),
+              creatorId:sessionStorage.getItem("userId")
             },
           })
             .then((res) => {
@@ -899,9 +899,9 @@ export default {
         url: "/transactController/batchImportTransact",
         method: "POST",
         params: {
-					creatorId:sessionStorage.getItem("userId"),
-        	...formData
-				},
+          creatorId:sessionStorage.getItem("userId"),
+          ...formData
+        },
       })
         .then((res) => {
           this.$message.success(res.respMsg);
