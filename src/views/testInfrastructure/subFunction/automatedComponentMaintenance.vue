@@ -1,7 +1,5 @@
 <template>
-	<div class="page-inner">
-		<el-container>
-			<el-main>
+	<page>
 				<el-form ref="firstForm" class="fistForm" label-width="100%">
 					<el-row>
 						<el-col :span="10" :offset="1">
@@ -124,7 +122,7 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="21">
+						<el-col :span="19">
 							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="22.5%">
 									<el-table
 										stripe
@@ -241,7 +239,7 @@
 											</template>
 										</el-table-column>
 									</el-table>
-								
+
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
@@ -285,7 +283,7 @@
 											</template>
 										</el-table-column>
 									</el-table>
-								
+
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
@@ -362,7 +360,7 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
-							
+
 						</el-row>
 						<el-row>
 							<el-col :span="20">
@@ -436,7 +434,7 @@
 							<el-col :span="20">
 								<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
 								</el-form-item>
-								<el-form-item>	
+								<el-form-item>
 									<el-input
 										style="margin-left:70px"
 										type="textarea"
@@ -446,7 +444,7 @@
 										show-word-limit>
 									</el-input>
 								</el-form-item>
-								
+
 							</el-col>
 						</el-row>
 						<el-row type="flex" justify="center">
@@ -521,9 +519,7 @@
 						</el-row>
 					</el-form>
 				</el-dialog>
-			</el-main>
-		</el-container>
-	</div>
+	</page>
 </template>
 
 <script>

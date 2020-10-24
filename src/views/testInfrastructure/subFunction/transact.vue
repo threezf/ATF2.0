@@ -1,6 +1,5 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
+  <page>
       <el-row class="buttonsRow">
         <el-button
           type="primary"
@@ -44,8 +43,6 @@
           >绑定swagger
         </el-button>
       </el-row>
-    </el-container>
-    <el-main class="el-main-base-inner">
       <el-row>
         <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
@@ -227,6 +224,7 @@
               >上传文件
             </el-button>
             <el-input
+              style="margin-left:10px"
               size="small"
               class="formInput"
               placeholder="请选择导入的文件"
@@ -280,6 +278,7 @@
         <el-form>
           <el-form-item label-width="50px" label="URL: ">
             <el-input
+              size="small"
               style="width: 300px"
               placeholder="请输入绑定swagger的url"
               v-model="swaggerUrl"
@@ -288,12 +287,8 @@
             </el-input>
           </el-form-item>
           <el-row
-            style="
-              display: flex;
-              justify-content: flex-end;
-              padding-right: 16px;
-              margin-bottom: -5px;
-            ">
+            type="flex"
+            justify="center">
             <el-button type="primary" size="small" @click="insertSwaggerAPI"
               >确定
             </el-button>
@@ -303,10 +298,7 @@
           </el-row>
         </el-form>
       </el-dialog>
-    </el-main>
-    <!--底部换页-->
-
-        <el-footer class="dialog-footer">
+      <el-footer class="dialog-footer">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -317,7 +309,7 @@
             layout="total, sizes, prev ,pager ,next, jumper"
           ></el-pagination>
         </el-footer>
-  </div>
+	</page>
 </template>
 
 <script>
@@ -807,6 +799,7 @@ export default {
                   method: "POST",
                   params: {
                     autId: _this.autId,
+										userId:sessionStorage.getItem("userId"),
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
@@ -922,7 +915,6 @@ export default {
 <style scoped>
 /** 顶部按钮组 */
 .buttonsRow {
-  margin: 0px auto 0px 20px;
   width: 100%;
 }
 

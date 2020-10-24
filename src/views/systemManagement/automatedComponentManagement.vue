@@ -1,10 +1,8 @@
 <template>
-	<div class="page-inner">
-		<el-container>
-			<el-main>
+	<page>
 				<el-form  class="fistForm" label-width="100%">
 					<el-row>
-						<el-col :span="3" style="margin-left: 90px" >
+						<el-col :span="4" style="margin-left: 20px" >
 							<el-button
 								@click="componentFormButton"
 								icon="el-icon-setting"
@@ -17,23 +15,22 @@
 							<el-input style="width: 100% " size="small" id="componentInput" v-model="automated" :disabled="true"
 												placeholder="选择的开发架构"></el-input>
 						</el-col>
-						<el-col :span="1" style="margin-left: 10px">
+						<el-col :span="3" style="margin-left: 10px">
 							<el-button
 								@click="addArch(0)"
 								icon="el-icon-plus"
 								size="small">
 							</el-button>
-						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
 							<el-button
+								style="margin-left:10px"
 								@click="addArch(1)"
 								icon="el-icon-edit"
 								size="small">
 							</el-button>
 						</el-col>
 						<el-col :span="8" >
-							<el-form-item label="控件名称" label-width="36%" style="margin-top: 7px">
-								<el-select style="width: 110%" v-model="classValue" filterable placeholder="请选择控件" size="small"
+							<el-form-item label="控件名称" label-width="22%" style="margin-top:-5px">
+								<el-select style="width: 90%"  v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"
@@ -44,15 +41,14 @@
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="1" style="margin-left: 10px">
+						<el-col :span="3" style="margin-left: 10px">
 							<el-button
 								@click="dialogVisibleA=!dialogVisibleA"
 								icon="el-icon-plus"
 								size="small">
 							</el-button>
-						</el-col>
-						<el-col :span="1" style="margin-left: 5px">
 							<el-button
+								style="margin-left:10px"
 								@click="deleteForm"
 								icon="el-icon-delete"
 								size="small">
@@ -199,7 +195,7 @@
 								style="margin-left: 20px;margin-top:0">
 								添加
 							</el-button>
-						</el-col>						
+						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="19">
@@ -396,7 +392,7 @@
 									<el-input v-model="thirdForm.labelArgument" size="small"></el-input>
 								</el-form-item>
 							</el-col>
-							
+
 						</el-row>
 						<el-row>
 							<el-col :span="20">
@@ -470,7 +466,7 @@
 							<el-col :span="20">
 								<el-form-item label="目标代码" prop="targetCodeContent" label-width="23%">
 								</el-form-item>
-								<el-form-item>	
+								<el-form-item>
 									<el-input
 										style="margin-left:70px"
 										type="textarea"
@@ -480,7 +476,7 @@
 										show-word-limit>
 									</el-input>
 								</el-form-item>
-								
+
 							</el-col>
 						</el-row>
 						<el-row type="flex" justify="center">
@@ -630,9 +626,7 @@
 						</el-row>
 					</el-form>
 				</el-dialog>
-			</el-main>
-		</el-container>
-	</div>
+	</page>
 </template>
 
 <script>
@@ -1162,7 +1156,7 @@
 					url: '/arcClass/queryArcVisibleOmMethods',
 					method: 'post',
 					params: {
-                        id: id, 
+                        id: id,
                         userId: sessionStorage.getItem('userId')
                     }
 				}).then((res) => {

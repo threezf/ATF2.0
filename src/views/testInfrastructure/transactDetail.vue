@@ -2,9 +2,7 @@
 功能点详情界面
  */
 <template>
-<div class="page-outer">
-    <el-container>
-        <el-main>
+<page>
             <el-row>
                 <el-col :span="3" class='rightLable'>
                     <span>
@@ -42,9 +40,7 @@
                     <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="creatorId" :creatorName="creatorName"></template-manage>
                 </el-tab-pane>
             </el-tabs>
-        </el-main>
-    </el-container>
-</div>
+</page>
 </template>
 
 <script>

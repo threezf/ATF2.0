@@ -11,7 +11,7 @@
     <div class="contentDiv">
       <el-form>
         <el-form-item class="basicSettingRow" label="接口路径" label-width="100px">
-          <el-select size="small" v-model="selectedParseMethod" disabled>
+          <el-select style="width:255px" size="small" v-model="selectedParseMethod" disabled>
             <el-option v-for="(item,index) in parseMethods" :key="index" :value="item"></el-option>
           </el-select>
           <el-input size="small" class="path" v-model="path" disabled></el-input>
@@ -51,23 +51,21 @@
     <div class="contentDiv" v-if="queryVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsQuery" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
               <el-form>
                 <el-form-item label="请求参数" label-width="100px">
-                  <el-input size="small" style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]" disabled></el-input>
+                  <el-input size="small" style="width: 180px" placeholder="参数名称" v-model="paramsQueryKey[index]" disabled></el-input>
                   <el-input
                     size="small"
-                    style="width: 400px;margin-left: 10px"
+                    style="width: 300px;margin-left: 10px"
                     placeholder="参数值"
                     v-model="paramsQueryValue[index]"
                     disabled
                   ></el-input>
                 </el-form-item>
               </el-form>
-            </el-col>
-            <el-col :span="2" style="margin-left:-10px;margin-top:-25px" hidden>
               <el-button
+                class="el-button-style"
                 type="primary"
                 size="mini"
                 icon="el-icon-plus"
@@ -75,13 +73,13 @@
                 @click="addParamsQueryNewRow"
               ></el-button>
               <el-button
+                class="el-button-style"
                 type="danger"
                 size="mini"
                 icon="el-icon-delete"
                 circle
                 @click="deleteParamsQueryNewRow"
               ></el-button>
-            </el-col>
           </el-row>
         </li>
       </ul>
@@ -90,30 +88,27 @@
     <div class="contentDiv" v-if="headersVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsHeaders" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-form class="paramsForm">
-              <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="paramsHeadersKey[index]"
                       disabled
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsHeadersValue[index]"
                       disabled
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px" hidden>
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -121,14 +116,13 @@
                   @click="addParamsHeadersNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteParamsHeadersNewRow"
                 ></el-button>
-              </el-col>
-            </el-form>
           </el-row>
         </li>
       </ul>
@@ -137,30 +131,27 @@
     <div class="contentDiv" v-if="cookiesVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsCookies" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-form class="paramsForm">
-              <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="cookies" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="paramsCookiesKey[index]"
                       disabled
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsCookiesValue[index]"
                       disabled
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px" hidden>
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -168,14 +159,13 @@
                   @click="addParamsCookiesNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteParamsCookiesNewRow"
                 ></el-button>
-              </el-col>
-            </el-form>
           </el-row>
         </li>
       </ul>
@@ -184,14 +174,14 @@
     <div class="contentDiv" v-if="highVisible">
       <el-row class="radioButtonRowHigh">
         <el-form>
-          <el-col :span="11">
+          <el-col :span="12">
             <el-form-item label="secure" label-width="100px">
               <el-select size="small" v-model="selectedSecure" disabled>
                 <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="12">
             <el-form-item label="keepalive" label-width="100px">
               <el-select size="small" v-model="selectedKeepalive" disabled>
                 <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
@@ -619,7 +609,7 @@
     width: 230px;
   }
   .path {
-    width: 400px;
+    width: 300px;
   }
   .basicSettingRow {
     margin-top: 15px;
@@ -678,6 +668,10 @@
   }
   .paramsForm {
     width: 99%;
+  }
+  .el-button-style{
+    margin-top: -25px;
+    margin-left: 10px;
   }
   .rowForward {
     margin: -15px auto;

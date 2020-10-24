@@ -53,22 +53,20 @@
     <div class="contentDiv" v-if="queryVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsQuery" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
               <el-form>
                 <el-form-item label="请求参数" label-width="100px">
-                  <el-input size="small" style="width: 200px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
+                  <el-input size="small" style="width: 180px" placeholder="参数名称" v-model="paramsQueryKey[index]"></el-input>
                   <el-input
                     size="small"
-                    style="width: 400px;margin-left: 10px"
+                    style="width: 300px;margin-left: 10px"
                     placeholder="参数值"
                     v-model="paramsQueryValue[index]"
                   ></el-input>
                 </el-form-item>
               </el-form>
-            </el-col>
-            <el-col :span="2" style="margin-left:-10px;margin-top:-25px">
               <el-button
+                class="el-button-style"
                 type="primary"
                 size="mini"
                 icon="el-icon-plus"
@@ -76,13 +74,13 @@
                 @click="addParamsQueryNewRow"
               ></el-button>
               <el-button
+                class="el-button-style"
                 type="danger"
                 size="mini"
                 icon="el-icon-delete"
                 circle
                 @click="deleteParamsQueryNewRow"
               ></el-button>
-            </el-col>
           </el-row>
         </li>
       </ul>
@@ -91,28 +89,25 @@
     <div class="contentDiv" v-if="headersVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsHeaders" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-form class="paramsForm">
-              <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="paramsHeadersKey[index]"
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsHeadersValue[index]"
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px">
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -120,14 +115,13 @@
                   @click="addParamsHeadersNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteParamsHeadersNewRow"
                 ></el-button>
-              </el-col>
-            </el-form>
           </el-row>
         </li>
       </ul>
@@ -136,28 +130,25 @@
     <div class="contentDiv" v-if="cookiesVisible">
       <ul class="ulRadioButton">
         <li v-for="(item,index) in paramsCookies" :key="index">
-          <el-row class="liRadioButtonRow">
-            <el-form class="paramsForm">
-              <el-col :span="15">
+          <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="cookies" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="paramsCookiesKey[index]"
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="paramsCookiesValue[index]"
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:0px;margin-top:5px">
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -165,14 +156,13 @@
                   @click="addParamsCookiesNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteParamsCookiesNewRow"
                 ></el-button>
-              </el-col>
-            </el-form>
           </el-row>
         </li>
       </ul>
@@ -181,14 +171,14 @@
     <div class="contentDiv" v-if="highVisible">
       <el-row class="radioButtonRowHigh">
         <el-form>
-          <el-col :span="11">
+          <el-col :span="12">
             <el-form-item label="secure" label-width="100px">
               <el-select size="small" v-model="selectedSecure">
                 <el-option v-for="(item,index) in secures" :key="index" :value="item"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="12">
             <el-form-item label="keepalive" label-width="100px">
               <el-select size="small" v-model="selectedKeepalive">
                 <el-option v-for="(item,index) in keepalives" :key="index" :value="item"></el-option>
@@ -205,12 +195,12 @@
       <div class="dataSetting">
         <el-form>
           <el-row class="rowForward">
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item class="basicSettingRow" label="host" label-width="100px">
                 <el-input size="small" class="expectInput" v-model="hostContent"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="12">
               <el-form-item class="basicSettingRow" label="port" label-width="100px">
                 <el-input size="small" class="expectInput" v-model="portContent"></el-input>
               </el-form-item>
@@ -249,12 +239,12 @@
               <el-input size="small" v-model="statusCode"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8" :offset="2">
+          <el-col :span="8" >
             <el-form-item label="延时时间" label-width="100px">
               <el-input size="small" v-model="delayTime"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="1" style="margin-left: 3px">
+          <el-col :span="6" >
             <el-form-item label="ms"></el-form-item>
           </el-col>
         </el-form>
@@ -287,27 +277,25 @@
       <div class="returnDataDiv" v-if="returnHeadersVisible">
         <ul class="ulRadioButton">
           <li v-for="(item,index) in returnHeaders" :key="index">
-            <el-row class="liRadioButtonRow">
-              <el-col :span="15">
+            <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="请求参数" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="returnHeadersKey[index]"
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="returnHeadersValue[index]"
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:-10px;margin-top:-25px">
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -315,13 +303,13 @@
                   @click="addReturnHeadersNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteReturnHeadersNewRow"
                 ></el-button>
-              </el-col>
             </el-row>
           </li>
         </ul>
@@ -330,27 +318,25 @@
       <div class="returnDataDiv" v-if="returnCookiesVisible">
         <ul class="ulRadioButton">
           <li v-for="(item,index) in returnCookies" :key="index">
-            <el-row class="liRadioButtonRow">
-              <el-col :span="15">
+            <el-row class="liRadioButtonRow" :gutter="10">
                 <el-form>
                   <el-form-item label="请求头部" label-width="100px">
                     <el-input
                       size="small"
-                      style="width: 200px"
+                      style="width: 180px"
                       placeholder="参数名称"
                       v-model="returnCookiesKey[index]"
                     ></el-input>
                     <el-input
                       size="small"
-                      style="width: 400px;margin-left: 10px"
+                      style="width: 300px;margin-left: 10px"
                       placeholder="参数值"
                       v-model="returnCookiesValue[index]"
                     ></el-input>
                   </el-form-item>
                 </el-form>
-              </el-col>
-              <el-col :span="2" style="margin-left:-10px;margin-top:-25px">
                 <el-button
+                  class="el-button-style"
                   type="primary"
                   size="mini"
                   icon="el-icon-plus"
@@ -358,13 +344,13 @@
                   @click="addReturnCookiesNewRow"
                 ></el-button>
                 <el-button
+                  class="el-button-style"
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
                   circle
                   @click="deleteReturnCookiesNewRow"
                 ></el-button>
-              </el-col>
             </el-row>
           </li>
         </ul>
@@ -887,14 +873,14 @@
     width: 230px;
   }
   .path {
-    width: 400px;
+    width: 300px;
   }
   .basicSettingRow {
     margin-top: 15px;
     font-size: 17px;
   }
   .settingTitleRow {
-    margin: -10px auto;
+    margin: 10px auto;
     width: fit-content;
   }
   .radioButtonRow {
@@ -909,6 +895,10 @@
   .liRadioButtonRow {
     margin: 0px auto -20px 0px;
     width: 99%;
+  }
+  .el-button-style{
+    margin-top: -25px;
+    margin-left: 10px;
   }
   .ulRadioButton {
     margin-top: 10px;

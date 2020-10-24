@@ -1,10 +1,12 @@
 <template>
 <div :class="isCollapse?'narrow-side-bar':'side-bar'">
-    <!--        <el-radio-group v-model="isCollapse" style="background-image: url(../assets/images/timg.jpg);"  size="small">-->
-    <!--            <el-radio-button :label="true"><i class="el-icon-d-arrow-left"></i></el-radio-button>-->
-    <!--            <el-radio-button :label="false"><i class="el-icon-d-arrow-right"></i></el-radio-button>-->
-    <!--        </el-radio-group>-->
-    <el-menu ref="menu" router :default-active="activedPath" class="side-bar-menu" :collapse="isCollapse">
+
+    <el-menu ref="menu" router :default-active="activedPath" class="side-bar-menu radioGroup" :collapse="isCollapse">
+			<el-radio-group v-model="isCollapse"   size="small">
+				<el-radio-button :label="true" v-show="!isCollapse" style="margin-left: 200px"><i class="el-icon-s-fold"></i></el-radio-button>
+				<el-radio-button :label="false"  v-show="isCollapse" style="margin-left: 9px"><i class="el-icon-s-unfold"></i></el-radio-button>
+<!--				<el-divider></el-divider>-->
+			</el-radio-group>
         <!-- 一级导航 -->
         <template v-for="(menu, index) in menuList">
             <el-submenu :index="fullPath + '/' + menu.path" :key="index" v-if="(menu.children && !needHideAllChildren(menu)) && !menu.meta.hide">
@@ -21,6 +23,7 @@
                 <i v-if="menu.meta.icon" :class="menu.meta.icon"></i>
                 <span slot="title">{{menu.meta.name}}</span>
             </el-menu-item>
+<!--					<el-divider></el-divider>-->
         </template>
     </el-menu>
 </div>
@@ -145,4 +148,23 @@ export default {
 .el-menu-item i {
     color: #FFF !important;
 }
+.radioGroup .el-divider--horizontal{
+	margin:0 !important;
+}
+	.radioGroup label{
+		margin-bottom: 0;
+	}
+    .radioGroup .el-radio-button--small .el-radio-button__inner{
+        padding:6px 8px !important;
+    }
+    .el-radio-button__inner{
+        background:transparent;
+        color:white;
+        font-size:18px !important;
+        border:0 !important;
+    }
+    .el-radio-button:first-child .el-radio-button__inner{
+        border:0 !important;
+    }
 </style>
+

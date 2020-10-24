@@ -46,7 +46,7 @@
 			</div>
 			<div :class="'ele-right '+(saidBarShow?'':'wide-ele-right') + (fullScreen? ' full-screen' : '')">
 				<el-row class="itemCenter" :gutter="20">
-					<el-col :span="6">
+					<el-col :span="9">
 						<el-button
 							size="small"
 							@click='save'
@@ -69,7 +69,7 @@
 							导入数据
 						</el-button>
 					</el-col>
-					<el-col :span="18"  v-if='selectedTemplate !== -1' >
+					<el-col :span="15"  v-if='selectedTemplate !== -1' >
 						<el-button
 							v-if='!fullScreen'
 							size="small"
@@ -1727,7 +1727,7 @@
 	}
 
 	.treeDiv {
-		width: 80%;
+		width: 100%;
 		display: inline-block;
 	}
 

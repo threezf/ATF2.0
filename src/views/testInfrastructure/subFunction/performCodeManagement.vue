@@ -1,7 +1,5 @@
 <template>
-<div class="page-base-inner" style="background-color: whitesmoke">
-  <el-container>
-    <el-main>
+<page>
       <el-row class="buttonRow">
         <span class="spanStyle">被测系统名称：{{testedSystemName}}</span>
         <el-button class="buttonPosition" type="primary" size="small" @click="saveButton">保存</el-button>
@@ -12,13 +10,11 @@
         <el-row class="rowCode">执行后代码：</el-row>
         <textarea class="textareaStyle" onresize v-model.trim="mainCodeEnd"></textarea>
       </div>
-    </el-main>
     <el-footer>
       <p class="footParagraph">Copyright © 1998－2019 BUPT All Rights Reserved</p>
       <p class="footParagraph">教育部信息网络工程研究中心 版权所有</p>
     </el-footer>
-  </el-container>
-</div>
+</page>
 </template>
 
 <script>

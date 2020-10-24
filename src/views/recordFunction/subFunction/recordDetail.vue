@@ -102,7 +102,7 @@ export default {
 			uis: [], // 元素库数据
 			transactRespDTOs: [],
 			elementRepositoryId: '', //元素库id
-			omClassRespDTOList: [], // 
+			omClassRespDTOList: [], //
       objects: [], // 获取的对象
       scriptTemplateList: [], // 脚本列表
       scriptId: '', // 脚本编号
@@ -125,7 +125,9 @@ export default {
       Request({
         url: "/aut/queryListAut",
         method: "POST",
-        params: {}
+        params: {
+        	companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId)
+				}
       })
         .then(res => {
           if (res.respCode === "0000") {
@@ -297,7 +299,7 @@ export default {
     handleSelectChange(val) {
 			console.log('handleSelectChange',val)
       this.queryTransactsByAutId(val);
-      
+
     },
     // 更换功能点时
     handleFuncChange(val) {

@@ -1,6 +1,6 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
+  <div style="background-color: #FFF;padding:20px 20px;height:700px">
+    <el-container >
       <el-card class="box-card">
         <div slot="header" class="list-header">
           <span>映射规则列表</span>
@@ -22,7 +22,7 @@
           :show-header="showHeader"
           @row-click="handleRowClick"
           @current-change="handleCurrentChange">
-          <el-table-column width="185px" prop="expectationName"></el-table-column>
+          <el-table-column width="160px" prop="expectationName"></el-table-column>
           <el-table-column>
             <template slot-scope="scope">
               <el-button
@@ -47,19 +47,19 @@
         </el-card>
       </div>
       <el-dialog
-        width="24%"
+        width="36%"
         :title="addTitle"
         :visible.sync="dialogVisible"
         :before-close="handleBeforeClose">
         <el-form>
-          <el-form-item label="创建人" label-width="120px">
-            <el-input size="small" class="dialogInput" v-model="creatorName"></el-input>
+          <el-form-item label="创建人" label-width="100px">
+            <el-input  size="small" class="dialogInput" v-model="creatorName"></el-input>
           </el-form-item>
-          <el-form-item label="期望名称" label-width="120px">
+          <el-form-item label="期望名称" label-width="100px">
             <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
           </el-form-item>
-          <el-form-item label="动作" label-width="120px">
-            <el-select style="width:90%" size="small" v-model="selectedAction">
+          <el-form-item label="动作" label-width="100px">
+            <el-select style="width:110%" size="small" v-model="selectedAction">
               <el-option v-for="(item,index) in actions" :value="item" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -362,7 +362,7 @@ export default {
   margin-left: 3px;
 }
 .dialogInput {
-  max-width: 240px;
+  width: 100%;
 }
 .hrStyleLeft {
   float: left;
@@ -381,7 +381,8 @@ export default {
   margin-left: 15px;
 }
 .descriptionRow {
-  margin: 1px auto;
+  display: flex;
+  justify-content: center;
 }
 .buttonRow {
   overflow: hidden;

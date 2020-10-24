@@ -244,11 +244,15 @@ export default {
         }
     },
     created() {
-        this.creatorId = this.creatorId.toString()
-        if (this.creatorId == sessionStorage.getItem("userId")) {
-            this.showFlag = false
+        if (this.creatorId) {
+            this.creatorId = this.creatorId.toString()
+            if (this.creatorId == sessionStorage.getItem("userId")) {
+                this.showFlag = false
+            } else {
+                this.showFlag = true
+            }
         } else {
-            this.showFlag = true
+            this.showFlag = false
         }
     },
     computed: {},
@@ -633,7 +637,7 @@ export default {
                 params: {
                     id: this.autId,
                     classname: classname,
-                    companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                    companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
                 }
             }).then((res) => {
                 let list = res.omMethodRespDTOList
@@ -676,6 +680,7 @@ export default {
     }
 };
 </script>
+
 <style lang="less" scoped>
 .templatInfo {
     margin: 10px 0px;

@@ -6,7 +6,7 @@
 					<el-col :span="4">
 						<el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
 					</el-col> 
-					<el-col :span="8">
+					<el-col :span="20">
 						<el-button
 							@click='getTestProject(1)'
 							icon="el-icon-setting"
