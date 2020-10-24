@@ -100,7 +100,7 @@ export default {
                 method: 'POST',
                 params: {
                     id: this.autId,
-                    companyId: parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+                    companyId: JSON.parse(sessionStorage.getItem("toTransact")).companyId,
                     autId: parseInt(this.autId),
                 }
             }).then(res => {

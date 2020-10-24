@@ -26,7 +26,7 @@
                 
                   <el-form class="testplan" label-width="80px">
                     <el-row :gutter="20">
-                      <el-col :span="5">
+                      <el-col :span="7">
                         <el-form-item label="测试计划">
                           <el-select size="small" v-model="testPlanId" placeholder="请选择">
                             <el-option
@@ -37,11 +37,12 @@
                             >
                             </el-option>
                           </el-select>
+                          <label label-width=50% class="executeStatus" v-html="exeStautShow"></label>
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">
                         <el-button
-                          style="margin-top:5px"
+                          style="margin:5px 10px"
                           type="primary"
                           size="mini"
                           @click="testPlanManager()"
@@ -50,7 +51,7 @@
                       </el-col>
                       <el-col :span="4">
                         <el-form-item label="执行范围">
-                          <el-select style="width:100%" size="small" v-model="exeScope" placeholder="请选择">
+                          <el-select style="width:80%" size="small" v-model="exeScope" placeholder="请选择">
                             <el-option label="所有" value="1"></el-option>
                             <el-option label="已选择" value="0"></el-option>
                           </el-select>
@@ -71,8 +72,8 @@
                         </el-select>
                         </el-form-item>
                      </el-col>
-                      <el-col :span="8">
-                        <el-form-item label="执行机选择" label-width="100px">
+                      <el-col :span="5">
+                        <el-form-item label="执行机选择">
                           <el-select
                           size="small"
                           v-model="runnerselected"
@@ -98,9 +99,6 @@
                           >
                         </el-form-item>
                       </el-col>
-                    </el-row>
-                    <el-row style="margin-left:15px">
-                      <label label-width=30% class="executeStatus" v-html="exeStautShow"></label>
                     </el-row>
                   </el-form>
                 
@@ -3513,7 +3511,7 @@ export default {
 }
 .testplan {
       .el-select {
-        width: 140px;
+        width: 200px;
       }
       .el-col-4,
       .el-col-5 {

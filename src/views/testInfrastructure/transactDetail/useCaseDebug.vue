@@ -15,8 +15,8 @@
 <template>
 <div class="page-inner">
     <div class="scriprConfigStyle">
-        <!-- <script-data></script-data> -->
-        <set-datable></set-datable>
+        <script-data></script-data>
+        <!-- <set-datable></set-datable> -->
     </div>
     <div class="runStyle">
         <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)">

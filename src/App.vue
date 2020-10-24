@@ -240,6 +240,7 @@ export default {
         } else {
             this.userStatus = 2
         }
+        this.currentUser = localStorage.getItem('username')
         this.initUserState()
     },
     mounted() {

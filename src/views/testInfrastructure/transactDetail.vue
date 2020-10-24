@@ -2,45 +2,45 @@
 功能点详情界面
  */
 <template>
-<page>
-            <el-row>
-                <el-col :span="3" class='rightLable'>
-                    <span>
-                        被测系统 ：
-                    </span>
-                </el-col>
-                <el-col :span="3">
-                    <el-select size="small" filterable v-model="autSelectValue" @change='autChange'>
-                        <el-option v-for="item in autSelectOptions" :key="item.id" :label="item.code" :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="3" class='rightLable'>
-                    <span>
-                        功能点 ：
-                    </span>
-                </el-col>
-                <el-col :span="3">
-                    <el-select size="small" filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
-                        <el-option v-for="(item,index) in tranSelectOptions" :key="index" :label="item.code" :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-col>
-                <el-col :span="4" :offset='1'>
-                    <el-button icon="el-icon-edit-outline" size="small" @click='copySingleUITransact()' type="primary">
-                        复制功能点
-                    </el-button>
-                </el-col>
-            </el-row>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="元素库" name="elementLibrary">
-                    <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :creatorId="creatorId" :creatorName="creatorName"></element-library>
-                </el-tab-pane>
-                <el-tab-pane label="基础脚本" name="template">
-                    <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="creatorId" :creatorName="creatorName"></template-manage>
-                </el-tab-pane>
-            </el-tabs>
-</page>
+    <page>
+        <el-row>
+            <el-col :span="3" class='rightLable'>
+                <span>
+                    被测系统 ：
+                </span>
+            </el-col>
+            <el-col :span="3">
+                <el-select size="small" filterable v-model="autSelectValue" @change='autChange'>
+                    <el-option v-for="item in autSelectOptions" :key="item.id" :label="item.code" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3" class='rightLable'>
+                <span>
+                    功能点 ：
+                </span>
+            </el-col>
+            <el-col :span="3">
+                <el-select size="small" filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
+                    <el-option v-for="(item,index) in tranSelectOptions" :key="index" :label="item.code" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4" :offset='1'>
+                <el-button icon="el-icon-edit-outline" size="small" @click='copySingleUITransact()' type="primary">
+                    复制功能点
+                </el-button>
+            </el-col>
+        </el-row>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="元素库" name="elementLibrary">
+                <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :creatorId="Number(creatorId)" :creatorName="creatorName"></element-library>
+            </el-tab-pane>
+            <el-tab-pane label="基础脚本" name="template">
+                <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="Number(creatorId)" :creatorName="creatorName"></template-manage>
+            </el-tab-pane>
+        </el-tabs>
+    </page>
 </template>
 
 <script>
@@ -58,7 +58,7 @@ export default {
         return {
             userId: "", // 用户id
             conpanyId: '', // 企业id
-            autSelectValue: "",
+            autSelectValue: 0,
             tranSelectValue: "",
             activeName: 'elementLibrary',
             autSelectOptions: [],
@@ -71,27 +71,32 @@ export default {
             handler(to, from) {
                 console.log('$route', to, from)
                 to.query.steps === 0 ?
-                    this.activeName = 'elementLibrary' :
-                    this.activeName = 'template'
+                this.activeName = 'elementLibrary' :
+                this.activeName = 'template'
             }
         }
     },
     created() {
         let data;
-        console.log('data', this.$$route.query.data)
-        if (this.$route.query.data) {
+        if (this.$route.query.data.hasOwnProperty('autId')) {
             data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
-            localStorage.setItem('transactId', this.$route.query.data.id)
-            localStorage.setItem('transactAutId', this.$route.query.data.autId)
             this.autSelectValue = data.autId
             this.tranSelectValue = data.id
+            this.creatorId = this.$route.query.creatorId
+            this.creatorName = this.$route.query.creatorName
+            localStorage.setItem('transactId', this.$route.query.data.id)
+            localStorage.setItem('transactAutId', this.$route.query.data.autId)
+            localStorage.setItem('creatorId', this.$route.query.creatorId)
+            localStorage.setItem('creatorName', this.$route.query.creatorName)
         } else {
             this.autSelectValue = Number(localStorage.getItem('transactAutId'))
             this.tranSelectValue = Number(localStorage.getItem('transactId'))
+            this.creatorId = localStorage.getItem('creatorId')
+            this.creatorName = localStorage.getItem('creatorName')
         }
-        this.creatorId = this.$route.query.creatorId,
-            this.creatorName = this.$route.query.creatorName,
-            this.userId = sessionStorage.getItem('userId')
+        console.log('zzz', this.autSelectValue, this.tranSelectValue, this.creatorId, this.creatorName)
+        this.userId = sessionStorage.getItem('userId')
+        this.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
         this.getAuts();
         this.getTran(this.autSelectValue, true);
         console.log('treeData', this.companyId)
@@ -165,14 +170,16 @@ export default {
                 url: '/transactController/copySingleUITransact',
                 method: 'post',
                 params: {
-                    "autId": this.autSelectValue,
-                    "transId": this.tranSelectValue,
-                    "elementRepositoryId": this.transSelected.elementRepositoryId,
-                    "objectRepositoryId": this.transSelected.objectRepositoryId,
-                    "creatorId": this.userId
+                    autId: this.autSelectValue,
+                    transId: this.tranSelectValue,
+                    elementRepositoryId: this.transSelected.elementRepositoryId,
+                    objectRepositoryId: this.transSelected.objectRepositoryId,
+                    creatorId: this.userId,
+                    userId: this.userId
                 }
             }).then((res) => {
                 this.$message('复制成功')
+                this.getAuts()
             }, (err) => {
 
             })

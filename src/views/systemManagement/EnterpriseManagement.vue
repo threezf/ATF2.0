@@ -471,12 +471,12 @@ export default {
                     },
                     err => {
                         console.log(err);
-                        _this.$alert("查询结果为空")
+                        // _this.$alert(err)
                     }
                 )
                 .catch(err => {
                     console.log(err);
-                    _this.$alert("查询结果为空")
+                    // _this.$alert(err)
                 });
         },
         //得到用户

@@ -20,7 +20,7 @@
     <el-row type="flex" class="row-bg">
         <el-col :span="7">
             <el-select size="small" v-model="selectValue" style="margin-top: 12px" placeholder="请选择要查询的功能点" clearable filterable @change="getChange">
-                <el-option v-for="item in transactList" :key="item.id" :label="item.nameMedium" :value="item">
+                <el-option v-for="item in transactList" :key="item.id" :label="item.nameMedium" :value="item.id">
                 </el-option>
             </el-select>
         </el-col>
@@ -76,7 +76,8 @@ export default {
             transactList: [],
             selectValue: '',
             modelName: "添加功能点",
-            disabled: false
+            disabled: false,
+            funDic: {}
         };
     },
     created() {
@@ -127,9 +128,10 @@ export default {
             });
         },
         getChange(val) {
-            this.formData = val
+            console.log(val)
+            this.formData = this.funDic[val]
             this.modelName = "查看功能点"
-            this.disabled = "true"
+            this.disabled = true
         },
         getAllFunction() {
             Request({
@@ -143,10 +145,12 @@ export default {
                         pageSize: 9999
                     }
                 })
-                .then(
-                    res => {
+                .then(res => {
                         this.transactList = res.list
                         this.selectValue = ''
+                        res.list.forEach(item => {
+                            this.funDic[item.id] = item
+                        })
                         // this.formData=res.list[0]
                     },
                     err => {
