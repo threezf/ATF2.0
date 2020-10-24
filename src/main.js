@@ -18,6 +18,7 @@ import {SessionStorage} from 'wii-fe-utils'
 import moment from 'moment'
 import store from './store/index'
 import VueBus from 'vue-bus'
+import page from './components/page/index.js'
 
 
 Vue.config.productionTip = false
@@ -25,6 +26,7 @@ Vue.use(ElementUI)
 Vue.use(VCharts)
 Vue.use(moment)
 Vue.use(VueBus)
+Vue.use(page)
 window.activeMenu;
 
 // 路由钩子

@@ -30,6 +30,9 @@
             </el-col>
         </el-row>
     </el-header>
+    <div>
+        <BreadCrumb></BreadCrumb>
+    </div>
     <keep-alive>
         <router-view />
     </keep-alive>
@@ -72,7 +75,12 @@
 
 <script>
 import Request from "@/libs/request.js";
+import BreadCrumb from '@/components/breadCrumb/breadCrumb.vue';
+import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
 export default {
+    components: {
+        BreadCrumb
+    },
     name: "App",
     data() {
         let activeMenu = window.activeMenu;
@@ -117,132 +125,131 @@ export default {
         };
     },
     watch: {
-			$route: {
-				handler(to, from) {
-					this.activeMenu = to.meta.parent || to.name;
-					if (this.activeMenu == 'TestProjectIndex') {
-						this.activeMenu = "TestProject";
-					}
-				},
-			},
-		},
-        computed: {
-            menuList() {
-                let menuList = [];
-                this.$router.options.routes.forEach((item, index) => {
-                    if (item.path != "/" && !item.meta.hide) {
-                        if (index === 2) {
-                            menuList.push(item)
-                        } else {
-                            if (this.urls.indexOf(item.meta.another) > -1) {
-                                menuList.push(item)
-                            }
-                        }
-                    }
-                });
-                return menuList;
-            }
-        },
-        methods: {
-            logout() {
-                this.$confirm('是否注销登录', '警告', {
-                    confirmButton: '确定',
-                    cancelButton: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    Request({
-                        url: '/limitLoginNumberController/minusCompanyRedisKey',
-                        method: 'post',
-                        params: {
-                            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
-                        }
-                    }).then(res => {
-                        if(res.respCode === '0000') {
-                            this.$message.success(res.respMsg)
-                            this.$router.push({
-                                path: "/login",
-                            });
-                        }
-                    }).catch(err => {
-
-                    })
-                }).catch(() => {})
-            },
-            // 修改密码
-            changePass() {
-                this.dialogVisible = true
-            },
-            submitForm(ruleForm) {
-                let params = {
-                    userId: this.loginInfo.userId,
-                    oldPassword: this.ruleForm.oldPass,
-                    newPassword: this.ruleForm.newPass
+        $route: {
+            handler(to, from) {
+                this.activeMenu = to.meta.parent || to.name;
+                if (this.activeMenu == 'TestProjectIndex') {
+                    this.activeMenu = "TestProject";
                 }
-                this.$refs[ruleForm].validate((valid) => {
-                    if (valid) {
-                        Request({
-                            url: '/userController/updatePassword',
-                            method: 'POST',
-                            params: params
-                        }).then(res => {
-                            if (res.respCode === "0000") {
-                                this.$message.success(res.respMsg)
-                                this.dialogVisible = false
-                                this.$refs['ruleForm'].resetFields()
-                            } else {
-                                this.$message.warning(res.respMsg)
-                            }
-                        }).catch(error => {
-                            this.$message.warning("原密码错误")
-                        })
+            },
+        },
+    },
+    computed: {
+        menuList() {
+            let menuList = [];
+            this.$router.options.routes.forEach((item, index) => {
+                if (item.path != "/" && !item.meta.hide) {
+                    if (index === 2) {
+                        menuList.push(item)
                     } else {
-                        return false
+                        if (this.urls.indexOf(item.meta.another) > -1) {
+                            menuList.push(item)
+                        }
                     }
-                })
-            },
-            cancel() {
-                this.dialogVisible = false
-            },
-            changeUser() {
-                this.statusVisible = true
-            },
-            handleStatusChange(val) {
-                this.$store.commit('changeFlag', val == 2)
-                localStorage.setItem("userType", val == 2)
-            },
-            // 初始化用户状态
-            initUserState() {
-                this.totalScore = sessionStorage.getItem("totalScore")
-                const userType = localStorage.getItem('userType')
-                this.$store.commit("changeFlag", userType === 'true')
-                if (this.totalScore <= 100) {
-                    // localStorage.setItem('userType', 'true')
-                } else {
-                    // localStorage.setItem('userType', 'false')
-                    // this.$store.state.commit("changeFlag", 'false')
                 }
-            },
-        },
-        created() {
-            const flag = localStorage.getItem("userType")
-            this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
-            this.urls = localStorage.getItem("urls").split(',')
-            this.currentUser = sessionStorage.getItem("username")
-            if (flag == 'false') {
-                this.userStatus = 1
-            } else {
-                this.userStatus = 2
-            }
-            this.initUserState()
-        },
-        mounted() {
-            this.$bus.on('setUrls', (urls) => {
-                this.urls = urls.urlList
-                this.currentUser = urls.currentName
-                localStorage.setItem('username', urls.currentName)
-            })
+            });
+            return menuList;
         }
+    },
+    methods: {
+        logout() {
+            this.$confirm('是否注销登录', '警告', {
+                confirmButton: '确定',
+                cancelButton: '取消',
+                type: 'warning'
+            }).then(() => {
+                Request({
+                    url: '/limitLoginNumberController/minusCompanyRedisKey',
+                    method: 'post',
+                    params: {
+                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                    }
+                }).then(res => {
+                    if (res.respCode === '0000') {
+                        this.$message.success(res.respMsg)
+                        this.$router.push({
+                            path: "/login",
+                        });
+                    }
+                }).catch(err => {
+
+                })
+            }).catch(() => {})
+        },
+        // 修改密码
+        changePass() {
+            this.dialogVisible = true
+        },
+        submitForm(ruleForm) {
+            let params = {
+                userId: this.loginInfo.userId,
+                oldPassword: this.ruleForm.oldPass,
+                newPassword: this.ruleForm.newPass
+            }
+            this.$refs[ruleForm].validate((valid) => {
+                if (valid) {
+                    Request({
+                        url: '/userController/updatePassword',
+                        method: 'POST',
+                        params: params
+                    }).then(res => {
+                        if (res.respCode === "0000") {
+                            this.$message.success(res.respMsg)
+                            this.dialogVisible = false
+                            this.$refs['ruleForm'].resetFields()
+                        } else {
+                            this.$message.warning(res.respMsg)
+                        }
+                    }).catch(error => {
+                        this.$message.warning("原密码错误")
+                    })
+                } else {
+                    return false
+                }
+            })
+        },
+        cancel() {
+            this.dialogVisible = false
+        },
+        changeUser() {
+            this.statusVisible = true
+        },
+        handleStatusChange(val) {
+            this.$store.commit('changeFlag', val == 2)
+            localStorage.setItem("userType", val == 2)
+        },
+        // 初始化用户状态
+        initUserState() {
+            this.totalScore = sessionStorage.getItem("totalScore")
+            const userType = localStorage.getItem('userType')
+            this.$store.commit("changeFlag", userType === 'true')
+            if (this.totalScore <= 100) {
+                // localStorage.setItem('userType', 'true')
+            } else {
+                // localStorage.setItem('userType', 'false')
+                // this.$store.state.commit("changeFlag", 'false')
+            }
+        },
+    },
+    created() {
+        const flag = localStorage.getItem("userType")
+        this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
+        this.urls = localStorage.getItem("urls").split(',')
+        if (flag == 'false') {
+            this.userStatus = 1
+        } else {
+            this.userStatus = 2
+        }
+        this.initUserState()
+    },
+    mounted() {
+        this.$bus.on('setUrls', (urls) => {
+            this.urls = urls.urlList
+            this.currentUser = urls.currentName
+            localStorage.setItem('username', urls.currentName)
+        })
     }
+}
 </script>
 
 <style lang="less">

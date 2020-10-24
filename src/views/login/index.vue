@@ -97,7 +97,7 @@
     created() {
       let _this = this;
       _this.getSessionId();
-      
+
     },
     mounted() {
       setCanvas();
@@ -213,7 +213,7 @@
       // 跳转并传递参数
       toMainPage(userId) {
         this.$store.dispatch('getTotalScore', userId).then(data => {
-          this.updateTotalScore(userId, Number(data.totalScore) + 1) 
+          this.updateTotalScore(userId, Number(data.totalScore) + 1)
         })
       },
       //注册
@@ -245,7 +245,7 @@
         })
       }
     },
-    
+
   };
 </script>
 

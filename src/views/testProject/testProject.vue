@@ -2,7 +2,7 @@
 <div class="page-inner">
     <el-container>
         <el-main>
-            <el-row>
+            <el-row style="margin-bottom:10px">
 					<el-col :span="4">
 						<el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
 					</el-col> 
@@ -23,7 +23,6 @@
 						</el-button>
 					</el-col>
 				</el-row>
-            <el-row style="height:5px"></el-row>
             <el-table stripe :data="testProjectList" border class='table'>
                 <el-table-column label="" width="34px" align="center">
                     <template slot-scope="scope">
@@ -59,12 +58,8 @@ type="danger"
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block">
-                <el-col :span="10" :offset='4'>
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-                    </el-pagination>
-                </el-col>
-            </div>
+        </el-main>
+    </el-container>
             <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
                 <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
                     <el-form-item label="测试项目编号" prop="codeLong">
@@ -86,11 +81,15 @@ type="danger"
                     </el-form-item>
                 </el-form>
             </el-dialog>
-        </el-main>
-        <el-footer>
 
+        <el-footer>
+            <div class="block">
+                <el-col :span="10" :offset='4'>
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+                    </el-pagination>
+                </el-col>
+            </div>
         </el-footer>
-    </el-container>
 </div>
 </template>
 

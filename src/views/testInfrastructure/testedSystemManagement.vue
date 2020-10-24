@@ -2,90 +2,86 @@
  * 被测系统管理
  */
 <template>
-<div class="page-base-inner">
-    <el-container>
-        <el-main class="el-main-base-inner">
-            <el-row class="rowMargin">
-                <el-col :span="5">
-                    <el-input size="small" class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
-                        <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
-                    </el-input>
-                </el-col>
-                <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
-            <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
-            <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
-            <span class="high" v-if="highIsActive">
-                <el-button type="primary" icon="el-icon-s-tools" size="small" @click="manageFunctionButton" plain>管理功能点</el-button>
-                <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="configureData" plain>配置系统数据</el-button>
-                <el-button type="primary" icon="el-icon-s-tools" size="small" @click="automatedComponentMaintenance" plain>自动化构件维护</el-button>
-                <el-button type="primary" icon="el-icon-s-management" size="small" @click="codeManagement" plain>执行代码管理</el-button>
-                <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>
-            </span>
-            <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
-            </el-row>
+<page>
+    <el-row class="rowMargin">
+        <el-col :span="5">
+            <el-input size="small" class="searchInput" placeholder="请输入系统编号或系统名称" v-model="selectInfo" clearable @clear="searchSystemClear" @keyup.enter.native="getAllSystem(1)">
+                <el-button size="small" slot="append" icon="el-icon-search" @click="getAllSystem(1)"></el-button>
+            </el-input>
+        </el-col>
+        <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
+        <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
+        <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
+        <span class="high" v-if="highIsActive">
+            <el-button type="primary" icon="el-icon-s-tools" size="small" @click="manageFunctionButton" plain>管理功能点</el-button>
+            <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="configureData" plain>配置系统数据</el-button>
+            <el-button type="primary" icon="el-icon-s-tools" size="small" @click="automatedComponentMaintenance" plain>自动化构件维护</el-button>
+            <el-button type="primary" icon="el-icon-s-management" size="small" @click="codeManagement" plain>执行代码管理</el-button>
+            <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>
+        </span>
+        <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
+    </el-row>
 
-            <el-table class="table" ref="singleTable" border stripe highlight-current-row :default-sort="{prop:'modifiedTime',order:'descending'}" :data="tableData">
-                <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
-                <el-table-column label="" width="34px" align="center">
-                    <template slot-scope="scope">
-                        <el-radio v-model="radio" :label="scope.$index" @change="handleRadioChange(scope.$index,scope.row)">
-                        </el-radio>
-                        <!--调用时使用的是scope.row和scope.$index-->
-                    </template>
-                </el-table-column>
-                <el-table-column sortable type="index" label="序号" width="60px" align="center"></el-table-column>
-                <el-table-column prop="code" label="被测系统编号" min-width="20%" align="center">
-                    <template slot-scope="scope">
-                        <a @click="toTransact(scope.$index,scope.row)" class="link" target="_self">{{scope.row.code}}</a>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="nameMedium" label="被测系统名称" min-width="15%"></el-table-column>
-                <el-table-column prop="inheriteArcName" label="开发架构" min-width="15%"></el-table-column>
-                <el-table-column prop="descShort" label="被测系统描述" min-width="20%"></el-table-column>
-                <el-table-column prop="creatorName" label="创建者" min-width="20%"></el-table-column>
-                <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
-                <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
-            </el-table>
-            <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper"></el-pagination>
-            <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
-                <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
-                    <el-form-item label="系统名称" prop="nameMedium">
-                        <el-input placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
-                    </el-form-item>
-                    <el-form-item label="系统编号">
-                        <el-input placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
-                    </el-form-item>
-                    <el-form-item label="开发架构">
-                        <el-select class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
-                            <el-option v-for=" (value,key) in abstractArchitectureInfo" :value="value" :key="key">{{value}}</el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="描述" prop="descShort">
-                        <el-input type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
-                    </el-form-item>
-                    <el-form-item class="buttons_row">
-                        <el-button id="clickButton" type="primary" size="small" @click="submitForm('form')">{{dialogOperateButton}}</el-button>
-                        <el-button size="small" @click="cancelButtonClicked">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-dialog>
-            <!--操作成功对话框-->
-            <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
-                <el-form>
-                    <el-form-item label-width="30px">
-                        <h4 class="successTitle">操作成功</h4>
-                    </el-form-item>
-                    <hr width="100%" color="#F5F5F5" />
-                    <el-form-item class="formFoot buttonRowManage">
-                        <el-button type="primary" size="small" @click="cancelButtonClicked">确定</el-button>
-                        <el-button type="success" size="small" @click="manageFunction">管理功能点</el-button>
-                    </el-form-item>
-                </el-form>
-            </el-dialog>
-        </el-main>
-        <el-footer></el-footer>
-    </el-container>
-</div>
+    <el-table class="table" ref="singleTable" border stripe highlight-current-row :default-sort="{prop:'modifiedTime',order:'descending'}" :data="tableData">
+        <!--highlight-current-row:当前选中行保持高亮	type='index'显示当前行号-->
+        <el-table-column label="" width="34px" align="center">
+            <template slot-scope="scope">
+                <el-radio v-model="radio" :label="scope.$index" @change="handleRadioChange(scope.$index,scope.row)">
+                </el-radio>
+                <!--调用时使用的是scope.row和scope.$index-->
+            </template>
+        </el-table-column>
+        <el-table-column sortable type="index" label="序号" width="60px" align="center"></el-table-column>
+        <el-table-column prop="code" label="被测系统编号" min-width="20%" align="center">
+            <template slot-scope="scope">
+                <a @click="toTransact(scope.$index,scope.row)" class="link" target="_self">{{scope.row.code}}</a>
+            </template>
+        </el-table-column>
+        <el-table-column prop="nameMedium" label="被测系统名称" min-width="15%"></el-table-column>
+        <el-table-column prop="inheriteArcName" label="开发架构" min-width="15%"></el-table-column>
+        <el-table-column prop="descShort" label="被测系统描述" min-width="20%"></el-table-column>
+        <el-table-column prop="creatorName" label="创建者" min-width="20%"></el-table-column>
+        <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
+        <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
+    </el-table>
+    <el-pagination class="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5,10,20,50]" :page-size="pageSize" :total="totalCount" layout="total,sizes,prev,pager,next,jumper"></el-pagination>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
+        <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
+            <el-form-item label="系统名称" prop="nameMedium">
+                <el-input style="width:100%" size="small" placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
+            </el-form-item>
+            <el-form-item label="系统编号">
+                <el-input style="width:100%" size="small" placeholder="为空时自动生成" v-model.lazy="form.code"></el-input>
+            </el-form-item>
+            <el-form-item label="开发架构">
+                <el-select style="width:110%" size="small" class="addSelect" placeholder="--选择开发架构--" v-model="selectedAbstractArchitectureName" @change="setInheriteArcId">
+                    <el-option v-for=" (value,key) in abstractArchitectureInfo" :value="value" :key="key">{{value}}</el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="描述" prop="descShort">
+                <el-input size="small" type="textarea" rows="8" v-model.trim="form.descShort"></el-input>
+            </el-form-item>
+            <el-form-item class="buttons_row">
+                <el-button id="clickButton" type="primary" size="small" @click="submitForm('form')">{{dialogOperateButton}}</el-button>
+                <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <!--操作成功对话框-->
+    <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
+        <el-form>
+            <el-form-item label-width="30px">
+                <h4 class="successTitle">操作成功</h4>
+            </el-form-item>
+            <hr width="100%" color="#F5F5F5" />
+            <el-form-item class="buttons_row">
+                <el-button type="primary" size="small" @click="cancelButtonClicked">确定</el-button>
+                <el-button type="success" size="small" @click="manageFunction">管理功能点</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+    <el-footer></el-footer>
+</page>
 </template>
 
 <script>
@@ -441,7 +437,7 @@ export default {
                     url: "/abstractArchitecture/queryArchitectureList",
                     method: "POST",
                     params: {
-                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+                        companyId: parseInt(JSON.parse(localStorage.getItem("loginInfo")).companyId)
                     }
                 })
                 .then(res => {
@@ -656,7 +652,7 @@ div.row {
 /**添加取消按钮样式 */
 .buttons_row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: -10px;
     margin-bottom: -15px;
 }
@@ -669,5 +665,5 @@ div.row {
 
 .inputStyle {
     width: 93%;
-  }
+}
 </style>

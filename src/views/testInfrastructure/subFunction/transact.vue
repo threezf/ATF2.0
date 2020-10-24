@@ -1,6 +1,5 @@
 <template>
-  <div class="page-base-inner">
-    <el-container>
+  <page>
       <el-row class="buttonsRow">
         <el-button
           type="primary"
@@ -44,8 +43,6 @@
           >绑定swagger
         </el-button>
       </el-row>
-    </el-container>
-    <el-main class="el-main-base-inner">
       <el-row>
         <el-col :span="6">
           <span class="ownedSystem">所属被测系统：</span>
@@ -135,8 +132,8 @@
         ></el-table-column>
       </el-table>
       <!--底部换页-->
-      <div>
-        <el-col class="footSelect">
+
+        <el-footer class="footSelect">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -146,8 +143,8 @@
             :total="totalCount"
             layout="total, sizes, prev ,pager ,next, jumper"
           ></el-pagination>
-        </el-col>
-      </div>
+        </el-footer>
+
 
       <!--新增和修改对话框-->
       <el-dialog
@@ -315,8 +312,7 @@
           </el-row>
         </el-form>
       </el-dialog>
-    </el-main>
-  </div>
+	</page>
 </template>
 
 <script>
@@ -806,6 +802,7 @@ export default {
                   method: "POST",
                   params: {
                     autId: _this.autId,
+										userId:sessionStorage.getItem("userId"),
                     code: _this.ruleForm.code,
                     descShort: _this.ruleForm.descShort,
                     nameMedium: _this.ruleForm.nameMedium,
@@ -974,7 +971,7 @@ export default {
 .footSelect {
   text-align: center;
   overflow: hidden;
-  margin: 30px auto 10px auto;
+  margin: 20px auto 10px auto;
 }
 
 .addSelect {
