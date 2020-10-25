@@ -504,11 +504,11 @@ export default {
     //遍历数据 生成保存脚本内容传参
     generateScriptString() {
       let sendDataArray = [];
-      console.log("111");
+      console.log("111",this.templateInfo);
       for (let i = 0; i < this.templateInfo.length; i++) {
-        console.log("___" + i);
         let template = this.templateInfo[i];
-        let UI = template.uinme.replace(/^\"+|\"+$/g, '"');
+        console.log("111___" + i, template.uiname);
+        let UI = template.uiname.replace(/^\"+|\"+$/g, '"');
         let element = template.elementName.replace(/^\"+|\"+$/g, '"');
         let classType = template.elementWidget;
         let method = template.methodName;

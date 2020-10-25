@@ -8,7 +8,7 @@
 <div>
     <hr>
     <el-card>
-        <p class="runTitle">脚本执行</p>
+        <p class="runTitle">脚本调试</p>
         <el-row class="menuRow" :gutter="20">
             <el-form label-width="100px">
                 <el-col :lg="7" :md="10" :sm="12" :xs="12">
@@ -33,11 +33,11 @@
         <el-row class="buttonRow">
             <el-button size="small" type="primary" @click="startExecution">
                 <i class="fa fa-play"></i>
-                开始执行
+                开始调试
             </el-button>
             <el-button size="small" type="primary" @click="stopExecute">
                 <i class="fa fa-stop"></i>
-                终止执行
+                终止调试
             </el-button>
             <el-button size="small" type="primary" @click="queryCaseExecuteInstance(1)">
                 <i class="fa fa-eye"></i>
@@ -45,7 +45,7 @@
             </el-button>
             <el-button size="small" type="primary">
                 <i class="fa fa-refresh"></i>
-                重新查询执行结果
+                重新查询调试结果
             </el-button>
         </el-row>
         <el-row class="tipRow">

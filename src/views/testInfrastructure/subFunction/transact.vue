@@ -416,7 +416,7 @@ export default {
     this.disableFunc = (user != this.transInfo.creatorId)
   },
   computed: {
-    changedParams() {
+    changedParams() { 
       console.log('测试数据', this.$route.query.hasOwnProperty('isInterface'))
       let obj = {
         autId: this.autId,

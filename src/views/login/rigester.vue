@@ -7,14 +7,14 @@
         <span class="titleSpan">{{title}}</span>
         <span class="subtitleSpan">{{subtitle}}</span>
     </el-row>
-    <el-steps :active="currentStep" simple>
+    <!-- <el-steps :active="currentStep" simple>
         <el-step title="填写帐户信息" icon="el-icon-edit"></el-step>
         <el-step title="注册成功" icon="el-icon-success"></el-step>
-    </el-steps>
+    </el-steps> -->
     <div v-if="currentStep === 1">
-        <el-row class="titleRow">
+        <!-- <el-row class="titleRow">
             <span class="formTitle">请填写信息</span>
-        </el-row>
+        </el-row> -->
         <el-form ref="ruleForm" status-icon :model="ruleForm" :rules="rules">
             <el-form-item label="用户名" label-width="200px" prop="username">
                 <el-input class="normalInput" placeholder="请输入4-16位英文字母或数字" autocomplete="off" v-model="ruleForm.username"></el-input>
@@ -34,7 +34,7 @@
             </el-form-item>
             <el-form-item label="身份" label-width="200px" prop="userIndetify">
                 <el-radio-group v-model="ruleForm.mark" @change="handleCurrentChange">
-                    <el-radio label="1" value="1">个人</el-radio>
+                    <!-- <el-radio label="1" value="1">个人</el-radio> -->
                     <el-radio label="0" value="0">企业</el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -189,7 +189,7 @@ export default {
                 password: "", // 管理员密码
                 reallyname: "", // 管理员真实姓名
                 surePassword: "", //确认密码
-                mark: "1", // 个人和企业的标识
+                mark: "0", // 个人和企业的标识
                 telephone: '', // 联系方式
                 companyName: "", // 企业名称
                 email: '', // 邮箱
@@ -303,36 +303,36 @@ export default {
                 .then(res => {
                     console.log("注册成功", res);
                     if (this.ruleForm.mark == 0) {
+                        this.$message.success("注册成功");
+                        this.currentStep = 2;
                         return this.insert(res.userId)
                     }
-                    this.$message.success("注册成功");
-                    this.currentStep = 2;
                 })
                 .catch(err => {
                     console.log("注册失败", err);
                 });
         },
-        // 企业插入操作
-        insertAllDefaultRole(userId) {
-            Request({
-                    url: '/roleController/insertAllDefaultRole',
-                    method: 'POST',
-                    params: {
-                        companyName: this.ruleForm.companyName,
-                        userId
-                    }
-                }).then(res => {
-                    console.log("注册成功", res);
-                    if (this.ruleForm.mark == 0) {
-                        return this.insert(res.userId, res.companyId)
-                    }
-                    this.$message.success("注册成功");
-                    this.currentStep = 2;
-                })
-                .catch(err => {
-                    console.log("注册失败", err);
-                });
-        },
+        // // 企业插入操作
+        // insertAllDefaultRole(userId) {
+        //     Request({
+        //         url: '/roleController/insertAllDefaultRole',
+        //         method: 'POST',
+        //         params: {
+        //             companyName: this.ruleForm.companyName,
+        //             userId
+        //         }
+        //     }).then(res => {
+        //         console.log("注册成功", res);
+        //         if (this.ruleForm.mark == 0) {
+        //             return this.insert(res.userId, res.companyId)
+        //         }
+        //         this.$message.success("注册成功");
+        //         this.currentStep = 2;
+        //     })
+        //     .catch(err => {
+        //         console.log("注册失败", err);
+        //     });
+        // },
 
         insert(userId) {
             Request({
@@ -345,7 +345,7 @@ export default {
                     roleList: [7]
                 }
             }).then(res => {
-                this.$message.success("注册成功");
+                this.$alert("注册成功,待审核");
                 this.currentStep = 2;
             }).catch(error => {
                 console.log('insert 失败')
