@@ -1,6 +1,6 @@
 <!--
   封装了
--->
+-->  
 <template>
 <div>
     <el-row class="debugTitleRow">
@@ -103,7 +103,6 @@
       }
     },
     props: {
-
     },
     components: {
       ScriptTree
@@ -112,6 +111,7 @@
       const query = this.$route.query
       this.autId = query.autId
       this.scriptId = query.scriptId
+      console.log('aaaa', query)
       this.queryScriptInfo()
     },
     mounted() {
@@ -212,10 +212,8 @@
           method: 'POST',
           params: {
             id: this.autId,
-
-companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
-
-autId:this.autId,
+            companyId:parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+            autId:this.autId,
           }
         }).then(res => {
           if(res.respCode === "0000") {
@@ -389,9 +387,15 @@ autId:this.autId,
       doParameterize() {
         let content = ""
         this.tableData.forEach(item => {
-          let contentItem = `UI("${item.uiname}").${item.elementWidget}("${item.elementName}").${item.methodName}(${item.arguments[0].value});`
-          content = content + contentItem
+            let contentItem
+            if(!item.flag) {
+                contentItem = `UI("${item.uiname}").${item.elementWidget}("${item.elementName}").${item.methodName}(${item.arguments[0].value});`
+            }else {
+                contentItem = `;`
+            }
+            content = content + contentItem
         })
+        console.log('aaaa', this.tableData, content)
         Request({
           url: '/scriptTemplate/scriptParameterized',
           method: 'POST',

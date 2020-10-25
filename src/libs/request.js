@@ -46,6 +46,7 @@ axios.interceptors.response.use(function (response) {
         return response
     }
     if(+response.data.respCode === 401) {
+        alert('异地账号登录')
         window.location = "/#/login"
     }
     if (! (+response.status === 200)) {

@@ -493,10 +493,7 @@ export default {
                                     }
                                 })
                                 .catch(err => {
-                                    if (err.respCode === '"10011111"') {
                                         this.$message.warning("系统名称已经存在");
-                                    }
-                                    _this.$message.error(err.respMsg)
                                 });
                         } else {
                             console.log(

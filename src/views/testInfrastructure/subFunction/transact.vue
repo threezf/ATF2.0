@@ -416,7 +416,7 @@ export default {
     this.disableFunc = (user != this.transInfo.creatorId)
   },
   computed: {
-    changedParams() {
+    changedParams() { 
       console.log('测试数据', this.$route.query.hasOwnProperty('isInterface'))
       let obj = {
         autId: this.autId,
@@ -466,7 +466,7 @@ export default {
           params: {
             url: this.swaggerUrl,
             systemId: this.autId,
-            creatorId: 3,
+            creatorId: this.creatorId,
           },
         })
           .then((res) => {
@@ -491,46 +491,46 @@ export default {
      **/
     addFunctionButton() {
     	if(this.creatorId==sessionStorage.getItem("userId")) {
-				let _this = this;
-				_this.isAdded = true;
-				_this.dialogModelFlag = 0;
-				_this.dialogVisible = true;
-				_this.ruleForm.nameMedium = "";
-				_this.ruleForm.functionType = !this.isInterface ? "UI" : "接口";
-				_this.ruleForm.code = "";
-				_this.ruleForm.descShort = "";
-			}else{
-				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限添加功能点")
-			}
+            let _this = this;
+            _this.isAdded = true;
+            _this.dialogModelFlag = 0;
+            _this.dialogVisible = true;
+            _this.ruleForm.nameMedium = "";
+            _this.ruleForm.functionType = !this.isInterface ? "UI" : "接口";
+            _this.ruleForm.code = "";
+            _this.ruleForm.descShort = "";
+        }else{
+            this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限添加功能点")
+        }
     },
     importFunctionButton() {
-			if(this.creatorId==sessionStorage.getItem("userId")) {
-      let _this = this;
-      _this.dialogModelFlag = 1;
-      _this.dialogImportVisible = true;
-			}else{
-				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限导入功能点")
-			}
+        if(this.creatorId==sessionStorage.getItem("userId")) {
+            let _this = this;
+            _this.dialogModelFlag = 1;
+            _this.dialogImportVisible = true;
+        }else{
+            this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限导入功能点")
+        }
     },
     updateFunctionButton() {
-			if(this.creatorId==sessionStorage.getItem("userId")) {
-      let _this = this;
-      if (_this.selectedRowIndex === "") {
-        _this.$message.error("请先选中一个功能点");
-      } else {
-        _this.dialogModelFlag = 2;
-        _this.dialogVisible = true;
-        _this.isAdded = false;
-        const { nameMedium, code, descShort } = _this.rowInfo;
-        this.ruleForm = {
-          nameMedium,
-          code,
-          descShort,
-        };
-      }
-			}else{
-				this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限修改功能点")
-			}
+        if(this.creatorId==sessionStorage.getItem("userId")) {
+            let _this = this;
+            if (_this.selectedRowIndex === "") {
+                _this.$message.error("请先选中一个功能点");
+            } else {
+                _this.dialogModelFlag = 2;
+                _this.dialogVisible = true;
+                _this.isAdded = false;
+                const { nameMedium, code, descShort } = _this.rowInfo;
+                this.ruleForm = {
+                nameMedium,
+                code,
+                descShort,
+            };
+            }
+        }else{
+            this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限修改功能点")
+        }
     },
     copyFunction() {
       let _this = this;
@@ -571,8 +571,8 @@ export default {
               elementRepositoryId: _this.elementRepositoryId,
               objectRepositoryId: _this.objectRepositoryId,
               transId: _this.updateId,
-							userId:sessionStorage.getItem("userId"),
-							creatorId:sessionStorage.getItem("userId")
+              userId: sessionStorage.getItem("userId"),
+              creatorId: sessionStorage.getItem("userId")
             },
           })
             .then((res) => {
@@ -706,10 +706,11 @@ export default {
       if (row.transType === "UI") {
         this.$router.push({
           name: "TransactDetail",
+
           query: {
             data: row,
-						creatorId:this.creatorId,
-						creatorName:this.creatorName,
+            creatorId: this.creatorId,
+            creatorName: this.creatorName,
             steps: 0
           },
         });
@@ -893,9 +894,9 @@ export default {
         url: "/transactController/batchImportTransact",
         method: "POST",
         params: {
-					creatorId:sessionStorage.getItem("userId"),
-        	...formData
-				},
+          creatorId:sessionStorage.getItem("userId"),
+          ...formData
+        },
       })
         .then((res) => {
           this.$message.success(res.respMsg);

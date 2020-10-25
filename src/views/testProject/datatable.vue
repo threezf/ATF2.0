@@ -841,7 +841,7 @@
 				conditionList: [{
 					"propertyName": "executor",
 					"compareType": "=",
-					"propertyValueList": ["3"]
+					"propertyValueList": [sessionStorage.getItem('executorId')]
 				}, {
 					"propertyName": "executeMethod",
 					"compareType": "=",

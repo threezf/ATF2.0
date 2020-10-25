@@ -21,17 +21,17 @@
 						<div class="littleButton" style="color: #3a6afa">去测试</div>
 					</a>
 				</el-col>
-        <el-col  :span="6" style="margin-left: 15px">
-				<a href="#" class="blueButton big green">
-					<p>老用户入口</p>
-					<p style="font-size: 16px">适用于已熟悉自动化测试流程的用户</p>
-					<div class="littleButton" style="color: #89d228">去测试</div>
-				</a>
+                <el-col  :span="6" style="margin-left: 15px"> 
+                    <a href="#" class="blueButton big green">
+                        <p>老用户入口</p>
+                        <p style="font-size: 16px">适用于已熟悉自动化测试流程的用户</p>
+                        <div class="littleButton" style="color: #89d228">去测试</div>
+                    </a>
 				</el-col>
 				<el-col :offset="1" :span="9">
 					<div style="font-size: 28px;color:#3a6afa">
 						<i class="el-icon-cloudy"></i>
-					ATF测试云工具
+					    ATF测试云工具
 					</div>
 					<el-divider></el-divider>
 					<div style="margin-top: 15px">ATF是一个适用范围涵盖了整个测试工作的生命周期的自动化测试工具，包括测试各阶段的管理、资源分配、测试执行等模块。</div>
@@ -83,21 +83,17 @@
 		from(rgba(89, 208, 244, 1)), to(rgba(89, 208, 244, 0))),
 		-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
 		font-size: 30px;
-		/*background-image:  url(../assets/images/bubble.png), url(../assets/images/bubble.png),*/
-		/*-moz-radial-gradient( center bottom, circle, rgba(89,208,244,1) 0,rgba(89,208,244,0) 100px),*/
-		/*-moz-linear-gradient(#4fbbf7, #3faeeb);*/
+		
 	}
 
 	.green {
 		color: #FFF !important;
 		border: 1px solid #96a37b !important;
 		background-color: #79be1e;
-		/*background-image:  url(../assets/images/bubble.png), url(../assets/images/bubble.png),*/
-		/*-moz-radial-gradient(center bottom, circle, rgba(162, 211, 30, 1) 0,*/
-		/*rgba(162, 211, 30, 0) 100px), -moz-linear-gradient(#82cc27, #74b317);*/
 		background-image: url(../assets/images/bubble.png), url(../assets/images/bubble.png),
 		-webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(162, 211, 30, 1)),
-		to(rgba(162, 211, 30, 0))), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
+        to(rgba(162, 211, 30, 0))),
+        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#82cc27), to(#74b317));
 	}
 
 	.blue:hover {
@@ -106,16 +102,12 @@
 		-webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100,
 		from(rgba(109, 217, 250, 1)), to(rgba(109, 217, 250, 0))),
 		-webkit-gradient(linear, 0% 0%, 0% 100%, from(#63c7fe), to(#58bef7));
-		/*background-image: url(../assets/images/bubble.png), url(../assets/images/bubble.png),*/
-		/*-moz-radial-gradient( center bottom, circle, rgba(109,217,250,1) 0,*/
-		/*rgba(109,217,250,0) 100px), -moz-linear-gradient(#63c7fe, #58bef7);*/
 	}
-  .green:hover{
+    .green:hover{
 		background-color: #89d228;
-		/*background-image: url(../assets/images/bubble.png), url(../assets/images/bubble.png),*/
-		/*-moz-radial-gradient(center bottom, circle, rgba(183,229,45,1) 0,rgba(183,229,45,0) 100px),*/
-		/*-moz-linear-gradient(#90de31, #7fc01e);*/
-		background-image: url(../assets/images/bubble.png), url(../assets/images/bubble.png), -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),-webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
+        background-image: url(../assets/images/bubble.png), url(../assets/images/bubble.png),
+        -webkit-gradient(radial, 50% 100%, 0, 50% 100%, 100, from(rgba(183,229,45,1)), to(rgba(183,229,45,0))),
+        -webkit-gradient(linear, 0% 0%, 0% 100%, from(#90de31), to(#7fc01e));
 	}
 	.blueButton {
 		width:336px;

@@ -46,7 +46,7 @@
                 <!--		:formatter="transTime"/>-->
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
-                        <el-button size="small" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium)">进入</el-button>
+                        <el-button size="small" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium, scope.row)">进入</el-button>
                         <el-button size="small" type="info" @click="updateProjectButton(scope.$index, scope.row)">修改</el-button>
                         <!-- <el-button
 
@@ -334,10 +334,12 @@ export default {
             })
         },
         //进入测试项目
-        toCase(id, caseLibId, name) {
+        toCase(id, caseLibId, name, row) {
             sessionStorage.setItem("caselibId", caseLibId) //存储测试项目id到sessionstorage
             sessionStorage.setItem("nameMediumStorage", "(" + name + ")") //把项目名称存入缓存中
             sessionStorage.setItem("selectId", id)
+            console.log('cccc', row)
+            sessionStorage.setItem('executorId', row.creatorId)
             console.log('toCase', id, caseLibId)
             this.$router.push({
                 path: 'testCase'

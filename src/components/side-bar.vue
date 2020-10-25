@@ -102,9 +102,9 @@ export default {
         }
     },
     created() {
-        console.log('sidebar创建 urls')
-         this.$bus.on('setUrls', (url) => {
+        this.$bus.on('setUrls', (url) => {
             this.urls = url.urlList
+            console.log('sidebar创建 urls', urls)
         })
     },
     mounted() {

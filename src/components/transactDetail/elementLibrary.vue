@@ -249,7 +249,6 @@ export default {
     },
     created() {
         if (this.creatorId) {
-            this.creatorId = this.creatorId.toString()
             if (this.creatorId == sessionStorage.getItem("userId")) {
                 this.showFlag = false
             } else {
@@ -328,50 +327,50 @@ export default {
             const _this = this;
             this.treeLoading = true;
             Request({
-                    url: "/elementRepository/queryAllElementsForATransact",
-                    method: "post",
-                    params: {
-                        transactId: this.transId
-                    },
-                })
-                .then(
-                    (res) => {
-                        let tree = [];
-                        for (let i = 0; i < res.uis.length; i++) {
-                            let node = {
-                                id: res.uis[i].uiId,
-                                label: res.uis[i].uiName,
-                                children: [],
-                            };
-                            if (!res.uis[i].elements) {
-                                tree.push(node);
-                                break;
-                            }
-                            for (let j = 0; j < res.uis[i].elements.length; j++) {
-                                let child = {
-                                    id: res.uis[i].elements[j].elementId,
-                                    label: res.uis[i].elements[j].elementName,
-                                    classType: res.uis[i].elements[j].classType,
-                                    mainProperties: res.uis[i].elements[j].mainProperties,
-                                };
-                                node.children.push(child);
-                            }
+                url: "/elementRepository/queryAllElementsForATransact",
+                method: "post",
+                params: {
+                    transactId: this.transId
+                },
+            })
+            .then(
+                (res) => {
+                    let tree = [];
+                    for (let i = 0; i < res.uis.length; i++) {
+                        let node = {
+                            id: res.uis[i].uiId,
+                            label: res.uis[i].uiName,
+                            children: [],
+                        };
+                        if (!res.uis[i].elements) {
                             tree.push(node);
+                            break;
                         }
-                        _this.treeData = tree;
-                        this.repositoryId = res.elementRepositoryId;
-                        console.log("_this.treeData", _this.treeData);
-                    },
-                    (err) => {
-                        console.log(err);
+                        for (let j = 0; j < res.uis[i].elements.length; j++) {
+                            let child = {
+                                id: res.uis[i].elements[j].elementId,
+                                label: res.uis[i].elements[j].elementName,
+                                classType: res.uis[i].elements[j].classType,
+                                mainProperties: res.uis[i].elements[j].mainProperties,
+                            };
+                            node.children.push(child);
+                        }
+                        tree.push(node);
                     }
-                )
-                .catch((err) => {
+                    _this.treeData = tree;
+                    this.repositoryId = res.elementRepositoryId;
+                    console.log("_this.treeData", _this.treeData);
+                },
+                (err) => {
                     console.log(err);
-                })
-                .finally((_) => {
-                    this.treeLoading = false;
-                });
+                }
+            )
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally((_) => {
+                this.treeLoading = false;
+            });
         },
         //获取该测试系统下 所有的控件类型
         getClass() {
