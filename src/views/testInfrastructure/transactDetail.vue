@@ -78,7 +78,7 @@ export default {
     },
     created() {
         let data;
-        if (this.$route.query.data.hasOwnProperty('autId')) {
+        if (this.$route.query.data && this.$route.query.data.hasOwnProperty('autId')) {
             data = this.$route.query.data // 跳转源界面传递的行数据或新增测试功能点的对象数据
             this.autSelectValue = data.autId
             this.tranSelectValue = data.id
