@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+		<el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb" v-show="showFlag">
 			<el-breadcrumb-item>ATF云测</el-breadcrumb-item>
 			<el-breadcrumb-item v-for="bread in breadList" v-bind:key="bread">
 				{{ breadsName[bread] }}
@@ -57,6 +57,7 @@
 					'quicklyResult':'查看结果'
 				},
 				breadList: [],
+				showFlag:true,
 				path:[]
 			}
 
@@ -79,6 +80,11 @@
 				if(this.path[1]=="TestedSystemManagementRouter"){
 					this.path.splice(1,1)
 				}
+				if(this.path[0]=="index"){
+					this.showFlag=false
+				}else{
+					this.showFlag=true
+				}
 				this.breadList = [];
 				for (const routeInfo of this.path) {
 					if (typeof routeInfo === 'string' ) {
@@ -94,7 +100,7 @@
 <style lang="less">
 	.breadcrumb {
 		margin-bottom: 0;
-		background-color: #fafbfb;
+		background-color: #eef0f0;
 		padding:0.5em 1em;
 	}
 	.el-breadcrumb__inner a, .el-breadcrumb__inner.is-link{

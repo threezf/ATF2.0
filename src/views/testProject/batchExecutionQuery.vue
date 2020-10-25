@@ -128,7 +128,7 @@
           :data="tableData">
           <el-table-column 
             align="center" 
-            min-width="9.7%" 
+            min-width="13%" 
             label="操作">
             <template 
               slot-scope="scope">
@@ -254,7 +254,7 @@
         </el-table>
         
         <el-dialog
-          width="40%"
+          width="46%"
           :title="cakeTitle"
           :visible.sync="cakePicVisable"
           :before-close="handleBeforeClose">
