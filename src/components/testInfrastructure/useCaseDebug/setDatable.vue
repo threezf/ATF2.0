@@ -957,7 +957,7 @@ export default {
         url: "/aut/selectFunctionSet",
         method: "post",
         params: {
-          id: this.selectedTemplate.autId,
+          autId: this.selectedTemplate.autId,
           companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
         },
       }).then((resp) => {

@@ -23,100 +23,85 @@
                 id="testround-main"
                 style="padding: 15px 0"
               >
-                <el-row>
-                  <form class="form-horizontal col-lg-12 topRow">
-                    <div class="form-group col-lg-3">
-                      <label
-                        class="option-name control-label col-lg-4"
-                        style="margin-right: -15px"
-                        >测试计划</label
-                      >
-                      <div class="col-lg-8">
-                        <el-select v-model="testPlanId" placeholder="请选择">
-                          <el-option
+                <el-form class="testplan" label-width="80px">
+                    <el-row :gutter="20">
+                      <el-col :span="5">
+                        <el-form-item label="测试计划">
+                          <el-select size="small" v-model="testPlanId" placeholder="请选择">
+                            <el-option
                             v-for="(item, index) in testPlans"
                             :key="'testplans' + index"
                             :label="item.nameMedium"
                             :value="item.id"
-                          >
-                          </el-option>
-                        </el-select>
-                        <p class="executeStatus" v-html="exeStautShow"></p>
-                      </div>
-                      <!-- <div class="col-lg-1" hid>
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="2">
                         <el-button
+                          style="margin-top:5px"
                           type="primary"
                           size="mini"
                           @click="testPlanManager()"
                           >测试计划管理</el-button
                         >
-                      </div> -->
-                    </div>
-                    <div class="form-group col-lg-2">
-                      <label
-                        class="option-name col-lg-5 control-label"
-                        style="text-align: "
-                      >
-                        执行范围
-                      </label>
-                      <div class="col-lg-6">
-                        <el-select v-model="exeScope" placeholder="请选择">
-                          <el-option label="所有" value="1"></el-option>
-                          <el-option label="已选择" value="0"></el-option>
-                        </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-3">
-                      <label class="option-name control-label col-lg-6"
-                        >执行机分配模式</label
-                      >
-                      <div class="col-lg-6">
-                        <el-select
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="执行范围">
+                          <el-select style="width:100%" size="small" v-model="exeScope" placeholder="请选择">
+                            <el-option label="所有" value="1"></el-option>
+                            <el-option label="已选择" value="0"></el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                     <el-col :span="5">
+                        <el-form-item label="分配模式">
+                          <el-select
+                          size="small"
                           v-model="runnerExecuteType"
                           placeholder="请选择"
-                        >
+                          >
                           <el-option
                             label="指定执行机"
                             value="appointed"
                           ></el-option>
                           <el-option label="自动分配" value="auto"></el-option>
                         </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-3">
-                      <label class="option-name control-label col-lg-4"
-                        >执行机选择</label
-                      >
-                      <div class="col-lg-6">
-                        <el-select
+                        </el-form-item>
+                     </el-col>
+                      <el-col :span="8">
+                        <el-form-item label="执行机选择" label-width="100px">
+                          <el-select
+                          size="small"
                           v-model="runnerselected"
                           placeholder="请选择执行机"
                           :multiple="true"
-                        >
-                          <el-option
+                          >
+                            <el-option
                             v-for="(item, index) in runners"
                             :key="'runner' + index"
                             :label="item.runnerName"
                             :value="item.identifiableName"
-                          >
-                          </el-option>
-                        </el-select>
-                      </div>
-                    </div>
-                    <div class="form-group col-lg-2" hidden>
-                      <label class="option-name col-lg-13 control-label">
-                        当前测试轮次
-                      </label>
-                      <div class="col-lg-9">
-                        <span
-                          id="currentRound"
-                          class="execute-range form-control"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="0">
+                        <el-form-item label="当前执行轮次" hidden>
+                          <span
+                            id="currentRound"
+                            class="execute-range form-control"
                           >正在等待数据加载</span
-                        >
-                      </div>
-                    </div>
-                  </form>
-                </el-row>
+                          >
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row style="margin-left:15px">
+                      <label label-width=30% class="executeStatus" v-html="exeStautShow"></label>
+                    </el-row>
+                  </el-form>
                 <div class="test-control container" style="margin: 15px 5px">
                   <div style="font-size: 12px; color: #999"></div>
                   <el-button type="primary" size="mini" @click="executeAll()"

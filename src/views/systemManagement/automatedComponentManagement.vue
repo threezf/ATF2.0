@@ -506,8 +506,6 @@
 									:expand-on-click-node="false"
 									ref="tree"
 									:props="defaultProps"
-									:lazy="true"
-									:load="loadTreeNode"
 									@check-change="handleCheckChange">
 									<span class="custom-tree-node" slot-scope="{ node}">
 										<span>{{ node.label }}</span>
@@ -934,7 +932,7 @@
 					url: '/arcMethod/deleteSingleArcOmMethod',
 					method: 'post',
 					params: {
-                        id: this.classId,
+                        methodId: this.classId,
                         userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
@@ -1003,7 +1001,8 @@
 					method: 'post',
 					params:{
                         id:this.secondForm.id,
-                        userId: sessionStorage.getItem('userId')
+						userId: sessionStorage.getItem('userId'),
+						classId:this.secondForm.id,
 					}
 				}).then((res) => {
 					this.$alert('删除控件成功', '成功', {
@@ -1126,7 +1125,7 @@
 					url: '/arcClass/queryArcVisibleOmClasses',
 					method: 'post',
 					params: {
-                        id: this.arcId,
+                        arcId: this.arcId,
                         companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
@@ -1157,7 +1156,9 @@
 					method: 'post',
 					params: {
                         id: id,
-                        userId: sessionStorage.getItem('userId')
+						userId: sessionStorage.getItem('userId'),
+						companyId:JSON.parse(localStorage.getItem('loginInfo')).companyId,
+						classId:id
                     }
 				}).then((res) => {
 					_this.methodList = res.arcMethodRespDTOList
@@ -1259,58 +1260,20 @@
                     }
 				}).then((res) => {
 					this.parentList= res.architectureRespDTOList
+					this.componentData=[]
+					var componentChildData = res.architectureRespDTOList
+					for (var i = 0; i < componentChildData.length; i++) {
+                    if (componentChildData[i].level == 0) {
+                        this.componentData.push(componentChildData[i])
+                    }
+                }
 				}, (err) => {
 					console.log(err)
 				}).catch((err) => {
 					console.log(err)
 				})
 			},
-			//加载树数据
-			loadTreeNode(node, resolve) {
-				let _this = this;
-				console.log(node);
-				if (node.level == 0) {
-					Request({
-						url: '/abstractArchitecture/queryArchitectureList',
-                        method: 'post',
-                        params: {
-                            companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
-                        }
-					}).then((res) => {
-						_this.componentChildData = res.architectureRespDTOList
-						for (var i = 0; i < _this.componentChildData.length; i++) {
-							if (_this.componentChildData[i].level == 0) {
-								_this.componentData.push(_this.componentChildData[i])
-							}
-						}
-						resolve(_this.componentData)
-					}, (err) => {
-						console.log(err)
-					}).catch((err) => {
-						console.log(err)
-					})
-				} else{
-					_this.flag = 1
-					var list=[]
-					for (var i = 0; i < _this.componentChildData.length; i++) {
-						if(_this.componentChildData[i].level==(node.level-1)){
-							list.push(_this.componentChildData[i])
-						}
-					}
-					console.log(list)
-					for (var j = 0; j < list.length; j++) {
-						if (list[j].id == node.data.id) {
-							if(list[j].childNodeList){
-								resolve(list[j].childNodeList)
-								this.flag = 2
-							}
-						}
-						if (_this.flag == 1) {
-							resolve([])
-						}
-					}
-				}
-			},
+		
 			//保存控件信息
 			storeClass() {
 				var submitForm={}

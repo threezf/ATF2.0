@@ -215,7 +215,7 @@ export default {
         url: "/aut/queryAutVisibleOmClasses",
         method: "POST",
         params: {
-          'id': _this.autId,
+          autId: _this.autId,
           companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
         }
       }).then(res => {

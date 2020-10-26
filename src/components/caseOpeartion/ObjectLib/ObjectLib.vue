@@ -453,7 +453,7 @@
 					url: '/aut/queryAutVisibleOmClasses',
 					method: 'POST',
 					params: {
-                        id,
+                        autId:id,
                         companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then(res => {

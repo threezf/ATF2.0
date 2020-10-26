@@ -51,8 +51,8 @@
         <!--		</template>          -->
         <!--		</el-table-column>-->
         <el-table-column label="企业描述" property="descShort" />
-        <el-table-column label="创建时间" property="createTime" :formatter="transTime" />
-        <el-table-column label="修改时间" property='modifiedTime' :formatter="transTime" />
+        <el-table-column label="创建时间" property="createTime"  />
+        <el-table-column label="修改时间" property='modifiedTime'  />
         <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
                 <el-button size="small" @click="show(2,scope.row)">查看
@@ -292,12 +292,12 @@ export default {
     },
     methods: {
         handleCurrentChange(val) {
-            this.pageSize = val
-            this.getProjects(0)
+            this.currentPage = val
+            this.getEnterprise(0)
         },
         handleSizeChange(val) {
-            this.currentPage = val
-            this.getProjects(0)
+            this. pageSize= val
+            this.getEnterprise(0)
         },
         //展示添加，查看，编辑页面
         show(flag, row) {

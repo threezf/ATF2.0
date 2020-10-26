@@ -827,7 +827,7 @@
 					url: '/arcMethod/deleteSingleArcOmMethod',
 					method: 'post',
 					params: {
-                        id: this.classId,
+                        methodId: this.classId,
                         userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
@@ -896,7 +896,8 @@
 					method: 'post',
 					params:{
                         id:this.secondForm.id,
-                        userId: sessionStorage.getItem('userId')
+						userId: sessionStorage.getItem('userId'),
+						classId:this.secondForm.id,
 					}
 				}).then((res) => {
 					this.$alert('删除控件成功', '成功', {
@@ -929,7 +930,7 @@
 					url: '/arcClass/queryArcVisibleOmClasses',
 					method: 'post',
 					params: {
-                        id: this.arcId,
+                        arcId: this.arcId,
                         companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
@@ -958,7 +959,10 @@
 				Request({
 					url: '/arcClass/queryArcVisibleOmMethods',
 					method: 'post',
-					params: {id: id,  userId: sessionStorage.getItem('userId')}
+					params: {id: id,  userId: sessionStorage.getItem('userId'),
+					    companyId:JSON.parse(localStorage.getItem('loginInfo')).companyId,
+						classId:id
+					}
 				}).then((res) => {
 					_this.methodList = res.arcMethodRespDTOList
 					_this.methodValue = _this.methodList[0].name
