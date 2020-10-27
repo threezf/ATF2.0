@@ -182,7 +182,7 @@ export default {
     },
     data() {
         return {
-            publishActionUrl: "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi?" + "userId=" + sessionStorage.getItem("userId"),
+            publishActionUrl: "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
             branchAddEleDialogFlag: false, // 批量添加的dialog
             userId: sessionStorage.getItem("userId"),
             fileList: [], // 上传文件列表
@@ -235,11 +235,13 @@ export default {
         actionUrl() {
             return (
                 this.publishActionUrl +
-                "?" +
+                "?" +"userId="+sessionStorage.getItem("userId")+
+								"&"+
                 "repositoryId=" +
                 this.repositoryId +
                 "&" +
-                "uploadUserId=3" +
+                "uploadUserId=" +
+							  sessionStorage.getItem("userId")+
                 "&" +
                 "autId=" +
                 this.autId
@@ -342,20 +344,18 @@ export default {
                             label: res.uis[i].uiName,
                             children: [],
                         };
-                        if (!res.uis[i].elements) {
-                            tree.push(node);
-                            break;
-                        }
-                        for (let j = 0; j < res.uis[i].elements.length; j++) {
-                            let child = {
-                                id: res.uis[i].elements[j].elementId,
-                                label: res.uis[i].elements[j].elementName,
-                                classType: res.uis[i].elements[j].classType,
-                                mainProperties: res.uis[i].elements[j].mainProperties,
-                            };
-                            node.children.push(child);
-                        }
-                        tree.push(node);
+                        if (res.uis[i].elements) {
+													for (let j = 0; j < res.uis[i].elements.length; j++) {
+														let child = {
+															id: res.uis[i].elements[j].elementId,
+															label: res.uis[i].elements[j].elementName,
+															classType: res.uis[i].elements[j].classType,
+															mainProperties: res.uis[i].elements[j].mainProperties,
+														};
+														node.children.push(child);
+													}
+												}
+											tree.push(node);
                     }
                     _this.treeData = tree;
                     this.repositoryId = res.elementRepositoryId;

@@ -76,6 +76,9 @@ export default {
     },
     watch: {
         addItemFlag() {
+        	  this.eleSelected=[],
+						this.funSelected=[],
+					  this.getEleTree()
             this.getFunTree()
         }
     },
@@ -101,7 +104,7 @@ export default {
                 "arguments": data.mainProperties,
             })
             console.log('eleCheckChangedata');
-            console.log(data);
+            console.log(this.eleSelected);
             console.log(status);
         },
         funCheckChange(data, status) {
@@ -208,7 +211,9 @@ export default {
             })
         },
     },
-    created() {},
+    created() {
+
+		},
     mounted() {
         this.getEleTree()
         this.getFunTree()
