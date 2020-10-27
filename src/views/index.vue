@@ -14,10 +14,11 @@
 		<div style="height:30px"></div>
 		<page>
 			<el-row>
+    
 				<el-col :offset="1" :span="6">
 					<a href="#" class="blueButton big blue">
 						<p>新用户入口</p>
-						<p style="font-size: 16px">快速学习，10分钟学会自动化测试流程</p>
+						<p style="font-size: 16px">快速学习，10分钟学会自动化测试       流程</p>
 						<div class="littleButton" style="color: #3a6afa">去测试</div>
 					</a>
 				</el-col>
