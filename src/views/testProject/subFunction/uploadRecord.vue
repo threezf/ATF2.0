@@ -231,7 +231,7 @@
 				}
 				var _this = this;
 				Request({
-					url: "/testcase/batchImportTestcase",
+					url: "/",
 					method: "post",
 					params: param
 				})

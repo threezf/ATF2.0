@@ -929,7 +929,7 @@
 			},
 			// 接受添加多项的
 			async addTreeInfo(tree) {
-				console.log(this.beforeOperationRows)
+				console.log("qqqqq"+this.beforeOperationRows)
 				let treeInfo = tree.elementTree
 				let functionInfo = tree.functionTree
 				console.log('treeInfo', treeInfo)
@@ -939,8 +939,9 @@
 				if (this.addItemFlag == 1) {
 					rows = this.beforeOperationRows
 					for (let i = 0; i < functionInfo.length; i++) {
-						let beforeItem = {
+						var beforeItem = {
 							arguShow: true,
+							name:"UI："+treeInfo[0].uiname+" 元素："+treeInfo[0].elementName,
 							functions: [{
 								name: functionInfo[i].name,
 								parameterlist: ""
@@ -959,14 +960,17 @@
 							selected: false,
 						}
 						this.beforeOperationRows.push(beforeItem)
+						console.log("wwwww"+beforeItem)
+						console.log("wwwww"+this.beforeOperationRows)
 					}
 
 				}
 				if (this.addItemFlag == 2) {
 					rows = this.afterOperationRows
 					for (let i = 0; i < functionInfo.length; i++) {
-						let afterItem = {
+						var afterItem = {
 							arguShow: true,
+							name:"UI："+treeInfo[0].uiname+" 元素："+treeInfo[0].elementName,
 							functions: [{
 								name: functionInfo[i].name,
 								parameterlist: ""
@@ -981,7 +985,8 @@
 								Name: item.name,
 								Value: '',
 								newValue: '',
-							})) : []
+							})) : [],
+							selected: false,
 						}
 						this.afterOperationRows.push(afterItem)
 					}
@@ -989,8 +994,9 @@
 				if (this.addItemFlag == 3) {
 					rows = this.dataOperationRows
 					for (let i = 0; i < functionInfo.length; i++) {
-						let beforeItem = {
+						var addItem = {
 							arguShow: true,
+							name:"UI："+treeInfo[0].uiname+" 元素："+treeInfo[0].elementName,
 							functions: {
 								name: functionInfo[i].name,
 								parameterlist: ""
@@ -1008,7 +1014,7 @@
 							})) : [],
 							selected: false,
 						}
-						this.dataOperationRows.push(beforeItem)
+						this.dataOperationRows.push(addItem)
 					}
 				}
 
@@ -1047,10 +1053,12 @@
 					this.beforeOperationRows = this.beforeOperationRows.filter(item => !item.selected)
 				}
 				if (flag == 2) {
-					this.afterOperationRows = this.beforeOperationRows.filter(item => !item.selected)
+					console.log(this.afterOperationRows.filter(item => !item.selected))
+					this.afterOperationRows = this.afterOperationRows.filter(item => !item.selected)
 				}
 				if (flag == 3) {
-					this.dataOperationRows = this.beforeOperationRows.filter(item => !item.selected)
+					console.log(this.dataOperationRows.filter(item => !item.selected))
+					this.dataOperationRows = this.dataOperationRows.filter(item => !item.selected)
 				}
 			},
 			eleUp(type) {
@@ -1081,7 +1089,7 @@
 				}else if(type==3){
 					let flag3 = false
 					for (let i = 0; i < this.dataOperationRows.length; i++) {
-						if (this.multipleSelection2.some(v => (v.id === this.dataOperationRows[i].id))) {
+						if (this.multipleSelection.some(v => (v.id === this.dataOperationRows[i].id))) {
 							if (flag3) {
 								let tmp = this.dataOperationRows.splice(i, 1)[0]
 								this.dataOperationRows.splice(i - 1, 0, tmp)
@@ -1124,7 +1132,7 @@
 					let flag3 = false
 					for (let i = this.dataOperationRows.length - 1; i > -1; i--) {
 
-						if (this.multipleSelection2.some(v => (v.id === this.dataOperationRows[i].id))) {
+						if (this.multipleSelection.some(v => (v.id === this.dataOperationRows[i].id))) {
 							if (flag3) {
 								let tmp = this.dataOperationRows.splice(i, 1)[0]
 								this.dataOperationRows.splice(i + 1, 0, tmp)
@@ -1178,10 +1186,14 @@
 						_this.dataOperationRows.push(_this.dataOperationRows.pop())
 					}
 				})
-				
+
 			},
 			handleSelectionChange(val) {
 				this.multipleSelection = val;
+				for(var i=0;i<this.multipleSelection.length;i++){
+					this.multipleSelection[i].selected=true
+				}
+				console.log('multipleSelection3', this.multipleSelection)
 			},
 			handleSelectionChange1(val) {
 				this.multipleSelection1 = val;
@@ -1192,6 +1204,9 @@
 			},
 			handleSelectionChange2(val) {
 				this.multipleSelection2 = val;
+				for(var i=0;i<this.multipleSelection2.length;i++){
+					this.multipleSelection2[i].selected=true
+				}
 				console.log('multipleSelection2', this.multipleSelection2)
 			},
 			// 编辑数据弹框
@@ -1398,27 +1413,18 @@
 					},
 					// _type: 'file'
 				}).then(res => {
+
 					let url = 'http://10.101.167.184:8080/' + res.filePath.split('/webapps/')[1]
+					//console.log( url)
 					window.location.href = url
 					// let url = window.URL.createObjectURL(new Blob([res]))
-					// download(url);
+					 //download(url);
 
 					// const blob = new Blob([res])
 					// console.log(blob)
 					// return blob
 				})
-				// .then(data => {
-				//     let blobUrl = window.URL.createObjectURL(data);
-				//     download(blobUrl);
-				// })
-				// function download(blobUrl) {
-				//     const a = document.createElement('a');
-				//     a.style.display = 'none';
-				//     a.download = '数据模板.xlsx';
-				//     a.href = blobUrl;
-				//     a.click();
-				//     document.body.removeChild(a);
-				// }
+
 			},
 			exportData() {
 				this.exportDialog = true

@@ -116,8 +116,8 @@
         <el-card class="mainCard">
           <div class="boxRow">
             <div class="useCaseTitle">T+0</div>
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               size="small"
               icon="el-icon-finished"
               @click="saveRunnerTime">保存次数</el-button>
@@ -141,13 +141,13 @@
                     :indeterminate="caseDtosItem.indetermintate"
                     v-model="caseDtosItem.selected"
                     @change="handleCaseDtosItemChange(
-                      caseDtosIndex, 
-                      caseDtosItem.id, 
+                      caseDtosIndex,
+                      caseDtosItem.id,
                       $event
                     )">
                   </el-checkbox>
                 </div>
-                <div 
+                <div
                   class="rightCheckbox">
                   <div v-if="caseDtosItem.flowNodeDtos">
                     <div
@@ -178,8 +178,8 @@
                       :key="caseDtosItem.id"
                       v-model="caseDtosItem.selected"
                       @change="handleCaseDtosItemChange(
-                        caseDtosIndex, 
-                        caseDtosItem.id, 
+                        caseDtosIndex,
+                        caseDtosItem.id,
                         $event
                       )">{{caseDtosItem.casecode}}
                     </el-checkbox-button>
@@ -496,31 +496,31 @@
                   >修改</el-button>
                 </el-form-item>
               </el-form>
-              <el-table 
-                class="tableTrigger" 
+              <el-table
+                class="tableTrigger"
                 :data="dataPoolList"
                 @selection-change="handleDataPoolSelectionChange"
-                highlight-current-row 
-                border 
+                highlight-current-row
+                border
                 stripe>
-                <el-table-column 
-                  min-width="15.56%" 
+                <el-table-column
+                  min-width="15.56%"
                   label="选择"
                   type="selection">
                 </el-table-column>
-                <el-table-column 
+                <el-table-column
                   prop="dataName"
-                  min-width="30.65%" 
+                  min-width="30.65%"
                   label="数据名称">
                 </el-table-column>
-                <el-table-column 
+                <el-table-column
                   prop="dataValue"
-                  min-width="26.08%" 
+                  min-width="26.08%"
                   label="数据值">
                 </el-table-column>
-                <el-table-column 
+                <el-table-column
                   prop="dataDesc"
-                  min-width="30.71%" 
+                  min-width="30.71%"
                   label="数据描述">
                 </el-table-column>
               </el-table>
@@ -581,10 +581,10 @@
             </el-form>
           </el-drawer>
         </el-card>
-        <el-dialog 
-          class="addDialog" width="38%" title="添加用例" :visible.sync="addDialogVisible">
+        <el-dialog
+          class="addDialog" width="50%" title="添加用例" :visible.sync="addDialogVisible">
           <p class="addTitle">用例展示形式为：用例编号 | 被测系统 | 功能点 | 关联脚本名称</p>
-          <el-form :model="addForm" label-width="70px">
+          <el-form :model="addForm" label-width="88px">
             <el-form-item label="添加用例">
               <el-select
                 size="small"
@@ -609,73 +609,73 @@
             </el-row>
           </el-form>
         </el-dialog>
-        <el-dialog 
-          width="32%" 
-          :title="dataPoolFlag===0? '新增数据池': '修改数据池'" 
+        <el-dialog
+          width="32%"
+          :title="dataPoolFlag===0? '新增数据池': '修改数据池'"
           :visible.sync="dataPoolVisible">
-          <el-form 
-            class="dataPoolFormStyle" 
-            :model="dataPoolForm" 
+          <el-form
+            class="dataPoolFormStyle"
+            :model="dataPoolForm"
             label-width="130px">
-            <el-form-item 
+            <el-form-item
               label="数据池名称">
-              <el-select 
+              <el-select
                 size="small"
                 style="width:100%"
                 v-model="dataPoolForm.dataPoolName">
-                <el-option 
-                  value="场景数据池" 
+                <el-option
+                  value="场景数据池"
                   label="场景数据池">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item 
+            <el-form-item
               label="数据池对象id">
-              <el-select 
+              <el-select
                 size="small"
                 style="width:100%"
                 v-model="dataPoolForm.objectId">
-                <el-option 
-                  label="2" 
+                <el-option
+                  label="2"
                   value="2">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item 
+            <el-form-item
               label="数据名称">
-              <el-input 
+              <el-input
                 size="small"
                 v-model="dataPoolForm.dataName">
               </el-input>
             </el-form-item>
-            <el-form-item 
+            <el-form-item
               label="数据值">
-              <el-input 
+              <el-input
                 size="small"
                 v-model="dataPoolForm.dataValue">
               </el-input>
             </el-form-item>
-            <el-form-item 
+            <el-form-item
               label="数据描述">
-              <el-input 
+              <el-input
                 style="width:90%"
-                class="textarea" 
-                type="textarea" 
-                rows="5" 
+                class="textarea"
+                type="textarea"
+                rows="5"
                 v-model="dataPoolForm.dataDesc">
               </el-input>
             </el-form-item>
             <el-row type="flex" justify="center">
-              <el-button 
-                type="primary" 
-                size="small" 
+              <el-button
+                type="primary"
+                size="small"
                 @click="addDataPoolSure"
                 >{{dataPoolFlag===0? '添加': '修改'}}
               </el-button>
-              <el-button 
-                type="danger" 
-                size="small" 
-                plain 
+              <el-button
+                type="danger"
+                size="small"
+                plain
                 @click="addDataPoolCancel"
                 >取消
               </el-button>
@@ -683,40 +683,40 @@
           </el-form>
         </el-dialog>
 
-        <el-dialog 
+        <el-dialog
           class="triggerDialog"
-          width="40%" 
-          :title="triggerFlag === 1 ? '新增触发器': '修改触发器'" 
+          width="40%"
+          :title="triggerFlag === 1 ? '新增触发器': '修改触发器'"
           :visible.sync="triggerVisible">
-          <el-form 
-            :model="triggerForm" 
-            ref="triggerForm" 
-            class="triggerStyle" 
+          <el-form
+            :model="triggerForm"
+            ref="triggerForm"
+            class="triggerStyle"
             label-width="100px">
-            <el-form-item 
+            <el-form-item
               label="触发器名称：">
-              <el-input 
+              <el-input
                 size="small"
                 style="width:100%"
                 placeholder="请输入触发器名称"
-                v-model="triggerForm.name" 
+                v-model="triggerForm.name"
                 clearable>
               </el-input>
             </el-form-item>
-            <el-form-item 
+            <el-form-item
               label="触发器描述：">
-              <el-input 
+              <el-input
                 size="small"
-                type="textarea" 
-                rows="4" 
+                type="textarea"
+                rows="4"
                 placeholder="请输入描述"
                 v-model="triggerForm.desc">
               </el-input>
             </el-form-item>
-            <el-form-item 
-              class="checkGroup" 
+            <el-form-item
+              class="checkGroup"
               label="执行时机：">
-              <el-checkbox-group 
+              <el-checkbox-group
                 v-model="triggerForm.occasions">
                 <el-checkbox
                   v-for="(item,index) in opportunityList"
@@ -727,11 +727,11 @@
                 </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item 
-              class="executionCondition" 
+            <el-form-item
+              class="executionCondition"
               label="执行条件：">
-              <el-radio-group 
-                @change="changeCheckBoxGroup" 
+              <el-radio-group
+                @change="changeCheckBoxGroup"
                 v-model="triggerForm.conditionRelate">
                 <el-radio
                   v-for="(item,index) in conditions"
@@ -747,12 +747,12 @@
               border
               stripe
               highlight-currentrow>
-              <el-table-column 
-                label="条件名称" 
+              <el-table-column
+                label="条件名称"
                 min-width="25.4%">
-                <template 
+                <template
                   slot-scope="scope">
-                  <el-select 
+                  <el-select
                     size="small"
                     v-model="scope.row.objectName">
                     <el-option
@@ -764,45 +764,45 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column 
-                label="匹配方式" 
+              <el-table-column
+                label="匹配方式"
                 min-width="15.7%">
-                <template 
+                <template
                   slot-scope="scope">
-                  <el-select 
+                  <el-select
                     size="small"
                     v-model="triggerForm.conditions[scope.$index].matchType">
-                    <el-option 
-                      value="1" 
+                    <el-option
+                      value="1"
                       label="等于">
                     </el-option>
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column 
-                label="匹配值" 
+              <el-table-column
+                label="匹配值"
                 min-width="47.1%">
-                <template 
+                <template
                   slot-scope="scope">
-                  <el-input 
+                  <el-input
                     size="small"
                     v-model="scope.row.value"
                     placeholder="请输入匹配值">
                   </el-input>
                 </template>
               </el-table-column>
-              <el-table-column 
+              <el-table-column
                 min-width="11.8%">
-                <template 
+                <template
                   slot="header">
-                  <el-button 
-                    type="primary" 
-                    size="mini" 
+                  <el-button
+                    type="primary"
+                    size="mini"
                     @click="triggerAddRow"
                     >增加
                   </el-button>
                 </template>
-                <template 
+                <template
                   slot-scope="scope">
                   <el-button
                     type="warning"
@@ -813,35 +813,35 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-form-item 
+            <el-form-item
               style="margin-bottom:0"
               label="执行动作：">
-              <el-button 
-                type="primary" 
-                size="mini" 
-                icon="el-icon-plus" 
-                plain 
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-plus"
+                plain
                 @click="addAction">
               </el-button>
             </el-form-item>
             <ul>
-              <li 
-                v-for="(item,index) in triggerForm.actions" 
-                :key="index" 
+              <li
+                v-for="(item,index) in triggerForm.actions"
+                :key="index"
                 :value="item">
                 <el-form
                   label-width="80px">
-                  <el-form-item 
+                  <el-form-item
                     label="选择操作">
-                    <el-select 
+                    <el-select
                       size="small"
                       v-model="triggerForm.actions[index].actionName">
-                      <el-option 
-                        value="1" 
+                      <el-option
+                        value="1"
                         label="执行脚本">
                       </el-option>
-                      <el-option 
-                        value="2" 
+                      <el-option
+                        value="2"
                         label="groovy类型">
                       </el-option>
                     </el-select>
@@ -853,22 +853,22 @@
                       @click="deleteRowFromExecutionAction(index)">
                     </el-button>
                   </el-form-item>
-                  <el-form-item 
+                  <el-form-item
                     label="脚本类型">
-                    <el-select 
+                    <el-select
                       size="small"
                       v-model="triggerForm.actions[index].actionType">
-                      <el-option 
-                        label="groovy" 
+                      <el-option
+                        label="groovy"
                         value="2">
                       </el-option>
-                      <el-option 
-                        label="2" 
+                      <el-option
+                        label="2"
                         value="1">
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item 
+                  <el-form-item
                     label="脚本内容">
                     <el-input
                       class="textarea"
@@ -881,15 +881,15 @@
               </li>
             </ul>
             <el-row type="flex" justify="center" style="margin-top:10px">
-              <el-button 
-                type="primary" 
-                size="small" 
+              <el-button
+                type="primary"
+                size="small"
                 @click="triggerSure"
                 >确定
               </el-button>
-              <el-button 
-                type="danger" 
-                size="small" 
+              <el-button
+                type="danger"
+                size="small"
                 plain
                 @click="triggerCancel"
                 >取消
@@ -920,7 +920,7 @@
         isHighExpand: false, //控制着高级功能
         foldHigh: "<< 收起高级功能", //收起高级功能
         sceneId: "",
-        caseLibId: '1278', 
+        caseLibId: '1278',
         sceneEntity: {}, // scene实体
         addDialogVisible: false, //添加对话框是否可视
         addForm: {
@@ -1035,16 +1035,16 @@
           {id: 2, label: "跳过执行成功的用例"}
         ], // 执行策略数据
         startStrategy: [
-          {id: 1, label: "从第一个执行节点开始"}, 
+          {id: 1, label: "从第一个执行节点开始"},
           {id: 2, label: "从第一个失败的执行节点开始"}
         ], // 起始策略
         orderStrategy: [
-          {id: 1, label: "顺序无关执行"}, 
+          {id: 1, label: "顺序无关执行"},
           {id: 2, label: "强制顺序执行"}
         ], //执行顺序策略
         errorOperations: [
-          {id: 1, label: "出错后终止"}, 
-          {id: 2, label: "出错后继续执行"}, 
+          {id: 1, label: "出错后终止"},
+          {id: 2, label: "出错后继续执行"},
           {id: 3, label: "出错后由用户选择"}
         ],
         debugVisible: false, //调试是否可见
@@ -1128,7 +1128,7 @@
             this.removeForm.caseIds = [];
             this.sceneEntity = res.selectSceneDto.sceneEntity
             this.exeStrategy1Status = this.sceneEntity.exeStrategy1Status? this.sceneEntity.exeStrategy1Status: 1
-            this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order? this.sceneEntity.exeStrategy2Order: 1  
+            this.exeStrategy2Order = this.sceneEntity.exeStrategy2Order? this.sceneEntity.exeStrategy2Order: 1
             this.exeStrategy2Start = this.sceneEntity.exeStrategy2Start? this.sceneEntity.exeStrategy2Start: 1
             this.exeStrategy2Status = this.sceneEntity.exeStrategy2Status? this.sceneEntity.exeStrategy2Status: 1
             this.exeStrategy3Order = this.sceneEntity.exeStrategy3Order? this.sceneEntity.exeStrategy3Order: 1
@@ -1573,7 +1573,7 @@
             conditionRelate: this.triggerForm.conditionRelate,
             conditions: JSON.stringify(this.triggerForm.conditions),
             desc: this.triggerForm.desc,
-            id: this.triggerId, 
+            id: this.triggerId,
             modifyType: 2,
             name: this.triggerForm.name,
             occasions: JSON.stringify(this.triggerForm.occasions)
@@ -1644,7 +1644,7 @@
           }
             this.$message.success('保存成功')
         }).catch(err => {
-          this.$message.error('保存失败')     
+          this.$message.error('保存失败')
         })
       },
       // 查询场景下的触发器
@@ -1767,7 +1767,7 @@
         if(row.length > 0) {
           this.dataPoolRowId = row[row.length -1].id
         }else {
-          this.dataPoolRowId = '' 
+          this.dataPoolRowId = ''
         }
         console.log('handleDataPoolSelectionChange', row, this.dataPoolRowId)
       },
@@ -1909,7 +1909,7 @@
       // 设置三级事件切换
       handleFlowItemchange(index, currentId, parentId, val) {
         let arrayFlow = this.sceneTestCases[index].flowNodeDtos
-        let startCount = 0, endCount = 0, 
+        let startCount = 0, endCount = 0,
               arrayLength = arrayFlow? arrayFlow.length: 0;
         for(let i = 0, len = arrayLength; i < len; i++) {
           if(currentId === arrayFlow[i].id) {
@@ -1952,7 +1952,7 @@
           if(this.sceneTestCases[i].selected) {
             startCount ++
           }else {
-            endCount ++ 
+            endCount ++
           }
         }
         if(startCount == arrayLength) {

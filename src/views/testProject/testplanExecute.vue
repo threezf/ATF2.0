@@ -25,29 +25,29 @@
               >
                 <el-form class="testplan" label-width="80px">
                     <el-row :gutter="20">
-                      <el-col :span="5">
-                        <el-form-item label="测试计划">
-                          <el-select size="small" v-model="testPlanId" placeholder="请选择">
-                            <el-option
-                            v-for="(item, index) in testPlans"
-                            :key="'testplans' + index"
-                            :label="item.nameMedium"
-                            :value="item.id"
-                            >
-                            </el-option>
-                          </el-select>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="2">
-                        <el-button
-                          style="margin-top:5px"
-                          type="primary"
-                          size="mini"
-                          @click="testPlanManager()"
-                          >测试计划管理</el-button
-                        >
-                      </el-col>
-                      <el-col :span="4">
+<!--                      <el-col :span="5">-->
+<!--                        <el-form-item label="测试计划">-->
+<!--                          <el-select size="small" v-model="testPlanId" placeholder="请选择">-->
+<!--                            <el-option-->
+<!--                            v-for="(item, index) in testPlans"-->
+<!--                            :key="'testplans' + index"-->
+<!--                            :label="item.nameMedium"-->
+<!--                            :value="item.id"-->
+<!--                            >-->
+<!--                            </el-option>-->
+<!--                          </el-select>-->
+<!--                        </el-form-item>-->
+<!--                      </el-col>-->
+<!--                      <el-col :span="2">-->
+<!--                        <el-button-->
+<!--                          style="margin-top:5px"-->
+<!--                          type="primary"-->
+<!--                          size="mini"-->
+<!--                          @click="testPlanManager()"-->
+<!--                          >测试计划管理</el-button-->
+<!--                        >-->
+<!--                      </el-col>-->
+                      <el-col :span="6">
                         <el-form-item label="执行范围">
                           <el-select style="width:100%" size="small" v-model="exeScope" placeholder="请选择">
                             <el-option label="所有" value="1"></el-option>
@@ -55,7 +55,7 @@
                           </el-select>
                         </el-form-item>
                       </el-col>
-                     <el-col :span="5">
+                     <el-col :span="6" >
                         <el-form-item label="分配模式">
                           <el-select
                           size="small"
@@ -70,7 +70,7 @@
                         </el-select>
                         </el-form-item>
                      </el-col>
-                      <el-col :span="8">
+                      <el-col :span="10" >
                         <el-form-item label="执行机选择" label-width="100px">
                           <el-select
                           size="small"

@@ -57,7 +57,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="关联脚本名称" property="scriptTemplateName" />
-                                    <el-table-column label="作者" property="authorName" />
+                                    <el-table-column label="作者" property="authorReallyName" />
                                     <el-table-column label="用例性质">
                                         <template slot-scope="scope">
                                             {{convertCasePro(scope.row.caseProperty) }}
@@ -88,7 +88,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="关联脚本名称" property="scriptTemplateName" />
-                    <el-table-column label="作者" property="authorName" />
+                    <el-table-column label="作者" property="authorReallyName" />
                     <el-table-column label="用例性质">
                         <template slot-scope="scope">
                             {{ convertCasePro(scope.row.caseProperty) }}
@@ -103,7 +103,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-           
+
             <el-dialog title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
                 <el-tabs v-model="activeName" type="card">
                     <el-tab-pane label="单用例" name="first" class="addTab">
@@ -165,7 +165,7 @@
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="作者" prop="author" label-width="40%">
                                                 <el-select class="selectWidth" v-model="addForm.author" size="small">
-                                                    <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id">
+                                                    <el-option v-for="item in userList" :key="item.id" :label="item.reallyname" :value="item.id">
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
@@ -280,7 +280,7 @@
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="作者" prop="author" label-width="40%">
                                                 <el-select class="selectWidth" v-model="addForm.author" size="small">
-                                                    <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id">
+                                                    <el-option v-for="item in userList" :key="item.id" :label="item.reallyname" :value="item.id">
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
@@ -689,7 +689,7 @@
                         <el-col :span="11" :offset="1">
                             <el-form-item label="作者" prop="author" label-width="40%">
                                 <el-select class="selectWidth" v-model="addForm.author" size="small">
-                                    <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id">
+                                    <el-option v-for="item in userList" :key="item.id" :label="item.reallyname" :value="item.id">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -1056,8 +1056,8 @@ export default {
                 this.row = row
             }
             this.addForm = {
-                autId: row.autId,
-                author: row.authorName,
+                autId: row.autName,
+                author: row.authorReallyName,
                 casecode: row.casecode,
                 caseproperty: row.caseProperty.toString(),
                 casetype: row.caseType.toString(),
@@ -1074,7 +1074,7 @@ export default {
                 priority: row.priority.toString(),
                 reviewer: row.reviewerName,
                 scriptMode: row.scriptMode.toString(),
-                scriptModeFlag: row.scriptModeFlag,
+                scriptModeFlag: row.scriptMode.toString(),
                 submissionId: row.missionId,
                 tags: row.tags,
                 testdesign: row.testDesign,
@@ -1103,8 +1103,8 @@ export default {
                         transId: _this.row.transName == _this.addForm.transId ? _this.row.transId.toString() : _this.addForm.transId.toString(),
                         id: _this.row.id.toString(),
                         author: _this.row.authorId.toString(),
-                        reviewer: _this.row.reviewerId.toString(),
-                        executor: _this.row.executorId.toString(),
+                        reviewer: _this.row.authorId.toString(),
+                        executor: _this.row.authorId.toString(),
                     }
                 })
                 .then(
@@ -1636,7 +1636,7 @@ export default {
             var caseLibId = sessionStorage.getItem("caselibId");
             param.append("file", file.raw);
             param.append("caseLibId", caseLibId);
-            param.append("uploadUserId", 3);
+            param.append("uploadUserId", sessionStorage.getItem("userId"));
             if (file.name.charAt(1) == "t") {
                 param.append("templateType", 1);
             } else {

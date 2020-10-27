@@ -21,7 +21,7 @@
 						<div class="littleButton" style="color: #3a6afa">去测试</div>
 					</a>
 				</el-col>
-                <el-col  :span="6" style="margin-left: 15px"> 
+                <el-col  :span="6" style="margin-left: 15px">
                     <a href="#" class="blueButton big green">
                         <p>老用户入口</p>
                         <p style="font-size: 16px">适用于已熟悉自动化测试流程的用户</p>
@@ -83,7 +83,7 @@
 		from(rgba(89, 208, 244, 1)), to(rgba(89, 208, 244, 0))),
 		-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4fbbf7), to(#3faeeb));
 		font-size: 30px;
-		
+
 	}
 
 	.green {
