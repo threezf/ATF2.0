@@ -107,9 +107,9 @@ export default {
       actions: ["response", "forward"], //动作
       selectedAction: "response", //选择的动作
       id: "37",
-      previewPath: "/testInfrastructure/mockApi/preview/",
-      editPath: "/testInfrastructure/mockApi/edit/",
-      runPath: "/testInfrastructure/mockApi/run/",
+      previewPath: "/mockApi/preview/",
+      editPath: "/mockApi/edit/",
+      runPath: "/mockApi/run/",
       count: 0,
       currentRow: null,
       creatorId: "",

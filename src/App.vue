@@ -24,6 +24,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
+                        <el-dropdown-item icon='el-icon-s-custom' @click.native="handleReceiver">待审核</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-circle-close' @click.native="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -179,6 +180,11 @@ export default {
         // 修改密码
         changePass() {
             this.dialogVisible = true
+        },
+        handleReceiver() {
+            this.$router.push({
+                name: 'NoReceived'
+            })
         },
         submitForm(ruleForm) {
             let params = {

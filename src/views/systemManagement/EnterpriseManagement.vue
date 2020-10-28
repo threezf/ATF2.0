@@ -1,14 +1,8 @@
 <template>
 <page>
-    <el-row class="searchRow">
+    <el-row class="searchRow" :gutter="50">
         <el-col :span="3">
-            <el-select size="small" v-model="selectValue" placeholder="请选择">
-                <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
-        </el-col>
-        <el-col :span="5">
-            <el-input size="small" placeholder="请输入搜索内容" v-model="searchRole" clearable>
+            <el-input size="small" placeholder="请输入企业名称" v-model="searchRole" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="getEnterprise(1)"></el-button>
             </el-input>
         </el-col>
@@ -35,6 +29,7 @@
         <el-table-column label="" width="35px">
             <template slot-scope="scope">
                 <el-radio class="radio" v-model="radio" :label="scope.row.id" @change="handleRadioChange(scope.$index,scope.row)">
+                    &nbsp;
                 </el-radio>
                 <!--调用时使用的是scope.row和scope.$index-->
             </template>
@@ -50,9 +45,9 @@
         <!--		<el-tag v-else type="warning"> 锁定  </el-tag>            -->
         <!--		</template>          -->
         <!--		</el-table-column>-->
-        <el-table-column label="企业描述" property="descShort" />
-        <el-table-column label="创建时间" property="createTime"  />
-        <el-table-column label="修改时间" property='modifiedTime'  />
+        <el-table-column label="企业描述" property="descShort"/>
+        <el-table-column label="创建时间" property="createTime" :formatter="transTime"/>
+        <el-table-column label="修改时间" property='modifiedTime' :formatter="transTime" />
         <el-table-column label="操作" width="200px">
             <template slot-scope="scope">
                 <el-button size="small" @click="show(2,scope.row)">查看

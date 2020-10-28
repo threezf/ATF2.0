@@ -1315,6 +1315,31 @@
         this.selectedDrawIndex = 0
       },
 
+      // 发起定时执行 t2
+      setTimerRun() {
+          Request({
+              url: '',
+              method: 'post',
+              params: {
+                  sceneId: this.sceneId,
+                  t1ReqDto: {
+                      recordFlag: '',
+                      testPlanId: '',
+                      exeScope: '',
+                      userId: this.userId,
+                      identifiableRunnerName: '',
+                      selectState: '',
+                      selectedExeInstances: '',
+                      appointedRunners: ''
+                  }
+              }.then(res => {
+                  console.log('res', res)
+              }).catch(err => {
+                  console.log(err)
+              })
+          })
+      },
+
       // 查询一个场景下的所有定时器
       queryAllSceneTimersByScene() {
         Request({

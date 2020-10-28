@@ -152,10 +152,6 @@
         </el-form>
     </el-dialog>
 
-    <el-footer class="dialog-footer">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-        </el-pagination>
-    </el-footer>
 </page>
 </template>
 

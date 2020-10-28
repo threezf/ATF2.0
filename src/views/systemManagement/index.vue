@@ -19,13 +19,31 @@
         },
         data() {
             return {
-
+                urls: []
             }
         },
+        created() {
+            this.urls = localStorage.getItem('urls').split(',')
+        },
         mounted() {
+            this.$bus.on('setUrls', urls => {
+                this.urls = urls.urls
+                console.log('all事件监听', this.urls)
+            })
+            const children = this.$router.options.routes.find(item => item.name == 'SystemManagement').children
+            console.log('all', this.urls)
+            for(let i = 0 ; i < children.length; i++) {
+                console.log('all', children[i], this.urls.indexOf(children[i].meta.another) > -1)
+                if(this.urls.indexOf(children[i].meta.another) > -1) {
+                    this.$router.push({
+                        name: children[i].name
+                    })
+                    break
+                } 
+            }
         },
         methods: {
-
+            
         }
     }
 </script>

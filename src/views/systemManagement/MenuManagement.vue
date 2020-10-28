@@ -1,8 +1,6 @@
 <template>
 <page>
     <el-table :data="treeData" style="width: 100%;margin-bottom: 20px;" row-key="id" border highlight-current-row stripe :tree-props="{children: 'childNodeList'}">
-        <el-table-column label="" type="selection" width="35px">
-        </el-table-column>
         <el-table-column prop="name" align="center" label="姓名">
         </el-table-column>
         <el-table-column label="类型" align="center">
