@@ -97,6 +97,7 @@
     created() {
       let _this = this;
       _this.getSessionId();
+
     },
     mounted() {
       setCanvas();

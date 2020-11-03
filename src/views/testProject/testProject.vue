@@ -5,7 +5,7 @@
             <el-row style="margin-bottom:10px">
 					<el-col :span="4">
 						<el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
-					</el-col> 
+					</el-col>
 					<el-col :span="20">
 						<el-button
 							@click='getTestProject(1)'
@@ -20,6 +20,13 @@
 							size="small"
 							icon="el-icon-plus">
 							添加
+						</el-button>
+						<el-button
+							@click='manageProject'
+							type="primary"
+							size="small"
+							icon="el-icon-setting">
+							管理功能点
 						</el-button>
 					</el-col>
 				</el-row>
@@ -36,25 +43,18 @@
                 <el-table-column label="测试项目名称" property="nameMedium" />
                 <el-table-column label="测试项目描述" property='descMedium' />
                 <el-table-column label="创建者" property='creatorName' />
-                <!--		<el-table-column-->
-                <!--		label="开始时间"-->
-                <!--		property="planedStartDate"-->
-                <!--		:formatter="transTime"/>-->
-                <!--		<el-table-column-->
-                <!--		label="结束时间"-->
-                <!--		property='planedEndDate'-->
-                <!--		:formatter="transTime"/>-->
+                		<el-table-column
+                		label="开始时间"
+                		property="planedStartDate"
+                		:formatter="transTime"/>
+                		<el-table-column
+                		label="结束时间"
+                		property='planedEndDate'
+                		:formatter="transTime"/>
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button size="small" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium, scope.row)">进入</el-button>
                         <el-button size="small" type="info" @click="updateProjectButton(scope.$index, scope.row)">修改</el-button>
-                        <!-- <el-button
-
-size="mini"
-
-type="danger"
-
-@click="">删除</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -85,8 +85,6 @@ type="danger"
                     </el-row>
                 </el-form>
             </el-dialog>
-
-        
 </div>
 </template>
 
@@ -348,12 +346,12 @@ export default {
         // 页码大小变化
         handleSizeChange(val) {
             this.pageSize = val
-            this.getTestProject()
+            this.getTestProject(0)
         },
         //当前页码数变化
         handleCurrentChange(val) {
             this.currentPage = val
-            this.getTestProject()
+            this.getTestProject(0)
         },
         //展示所有测试项目
         getTestProject(type) {

@@ -8,7 +8,7 @@
                 <span style="color:var(--blue);font-size:32px ">ATF</span>
             </el-col>
             <el-col :span="18" :offset="1">
-                <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#fff" active-text-color="#44b549">
+                <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#011425" active-text-color="#007bff">
                     <el-menu-item v-for="route in menuList" :index="route.name" :key="route.name">
                         <router-link :to="{name: route.name}">{{route.meta.name}}</router-link>
                     </el-menu-item>
@@ -246,7 +246,6 @@ export default {
         } else {
             this.userStatus = 2
         }
-        this.currentUser = localStorage.getItem('username')
         this.initUserState()
     },
     mounted() {
@@ -313,6 +312,7 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 17px;
 }
 
 .currentUser {
@@ -328,11 +328,15 @@ export default {
     padding: 0 !important;
 }
 
-.el-menu--horizontal>.el-menu-item a,
-.el-menu--horizontal>.el-menu-item a:hover {
-    color: #011425;
-    font-size: 17px;
+.header {
+    padding: 0 !important;
 }
+
+// .el-menu--horizontal>.el-menu-item a,
+// .el-menu--horizontal>.el-menu-item a:hover {
+//     color: #011425;
+//     font-size: 17px;
+// }
 
 .el-menu--horizontal>.el-menu-item {
     width: 125px
@@ -344,6 +348,6 @@ export default {
 }
 
 .el-header {
-    padding: 0 5px
+    padding: 0
 }
 </style>

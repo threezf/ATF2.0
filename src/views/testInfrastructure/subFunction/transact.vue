@@ -30,7 +30,7 @@
         </el-table-column>
         <el-table-column prop="" label="编码" min-width="15%" align="center">
             <template slot-scope="scope">
-                <a class="codeTo" @click.prevent="toTransact(scope.row)">{{
+                <a class="codeTo" @click.prevent="toTransact(scope.row)" :disabled="disableFunc">{{
               scope.row.code
             }}</a>
             </template>
@@ -489,8 +489,9 @@ export default {
             _this.dialogFailVisible = false;
         },
         handleOnChange(file) {
-            this.fileList.push(file)
+            this.$message.success(`选择文件成功`);
             this.fileName = file.name;
+            this.fileList.push(file)
         },
         handleBeforeClose(done) {
             // console.log('debug:调用handleBeforeClose' +done);
@@ -505,7 +506,7 @@ export default {
         handleRemove(file, fileList) {
             // console.log('file:',file,fileList)
             this.fileName = "删除" + file.name;
-            this.fileList.splice(0,1)
+            this.fileList.splice(0, 1)
         },
         handlePreview(file) {
             // console.log('file:' + file);
@@ -558,6 +559,7 @@ export default {
             if (row.transType === "UI") {
                 this.$router.push({
                     name: "TransactDetail",
+
                     query: {
                         data: row,
                         creatorId: this.creatorId,
@@ -740,10 +742,9 @@ export default {
         importTemplate() {
             console.log("importTemplate", this.autId);
             let formData = new FormData();
-            formData.append("file", this.fileList[0].raw)
-            console.log(formData)
             formData.append("autId", this.autId);
             formData.append("creatorId", this.creatorId);
+            formData.append("file", this.fileList[0].raw);
             Request({
                     url: "/transactController/batchImportTransact",
                     method: "POST",

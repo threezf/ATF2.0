@@ -54,13 +54,13 @@
               plain
               @click="dataResourcePoolConfiguration"
             >数据资源池配置</el-button>
-            <el-button
-              type="primary"
-              size="small"
-              icon="el-icon-mobile-phone"
-              plain
-              @click="mobileTerminalConfiguration"
-            >移动端配置</el-button>
+<!--            <el-button-->
+<!--              type="primary"-->
+<!--              size="small"-->
+<!--              icon="el-icon-mobile-phone"-->
+<!--              plain-->
+<!--              @click="mobileTerminalConfiguration"-->
+<!--            >移动端配置</el-button>-->
             <el-button
               type="primary"
               size="small"
@@ -945,7 +945,7 @@
           "触发器设置",
           "执行过程控制",
           "数据资源池配置",
-          "配置移动端设备信息",
+          // "配置移动端设备信息",
           "定时任务管理"
         ],
         selectedDrawIndex: 0,
@@ -1081,7 +1081,7 @@
       this.sceneId = this.$route.query.id;
       this.caseLibId = this.$route.query.caseLibId
       this.selectScene();
-      this.getMobileInfo();
+      // this.getMobileInfo();
       this.pagedBatchQueryTestCase();
       this.pagedBatchQueryDataPool()
       console.log('定时', parser.parseExpression("*/5 * * * * ?"))

@@ -152,6 +152,7 @@
 				searchInput:"",
 				totalCount:0,
 				modelFlag:0,
+				relatedUserList:[]
 			}
 		},
 		created(){

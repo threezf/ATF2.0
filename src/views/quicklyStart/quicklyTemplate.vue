@@ -8,7 +8,7 @@
     </div>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="23">
-        <template-manage :transId="String(transId)" :autId="String(autId)" name="用例" :isQuick="true"></template-manage>
+        <template-manage :transId="String(transId)" :showFlag="false" :autId="String(autId)" name="用例" :isQuick="true"></template-manage>
       </el-col>
     </el-row>
     <el-row type="flex" justify="center" class="fixButton">
