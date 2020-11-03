@@ -8,7 +8,7 @@
     </div>
     <el-row type="flex" class="row-bg" justify="center">
         <el-col :span="24">
-            <element-library :transId="String(transId)" :autId="String(autId)" :creatorId="creatorId" :creatorName="creatorName"></element-library>
+            <element-library :transId="String(transId)" :autId="String(autId)" :showFlag="false" :creatorName="creatorName"></element-library>
         </el-col>
     </el-row>
     <el-row type="flex" class="fixButton" justify="center">

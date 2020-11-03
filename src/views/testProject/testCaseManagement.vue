@@ -43,7 +43,7 @@
                                     <el-table-column width="48"><i class="el-icon-rank" style="color:#F56C6C;font-size:16px;cursor: pointer"></i>
                                     </el-table-column>
                                     <el-table-column type="selection" />
-                                    <el-table-column label="流程节点名称" property="actioncode" />
+                                    <el-table-column label="流程节点名称" property="actioncasecode" />
                                     <el-table-column label="被测系统" property="autName" />
                                     <el-table-column label="功能点" property="transName" />
                                     <el-table-column label="用例组成类型">
@@ -57,7 +57,7 @@
                                         </template>
                                     </el-table-column>
                                     <el-table-column label="关联脚本名称" property="scriptTemplateName" />
-                                    <el-table-column label="作者" property="authorReallyName" />
+                                    <el-table-column label="作者" property="authorName" />
                                     <el-table-column label="用例性质">
                                         <template slot-scope="scope">
                                             {{convertCasePro(scope.row.caseProperty) }}
@@ -337,9 +337,9 @@
                                             </el-row>
                                             <el-row>
                                                 <el-col :span="18" :offset="2">
-                                                    <el-form-item label="流程节点名称" prop="actioncode" label-width="35%" >
+                                                    <el-form-item label="流程节点名称" prop="actioncasecode" label-width="35%" >
                                                         <el-col :span="6">
-                                                            <el-input v-model="item.addNodeForm.actioncode" size="small"></el-input>
+                                                            <el-input v-model="item.addNodeForm.actioncasecode" size="small"></el-input>
                                                         </el-col>
                                                         <el-col :span="6" :offset="1">
                                                             <el-button @click="item.show = !item.show" v-if="item.show" type="primary" size="small" icon="el-icon-arrow-down">
@@ -462,9 +462,9 @@
                         <el-form ref="addNodeForm" :model="item.addNodeForm">
                             <el-row>
                                 <el-col :span="18" :offset="2">
-                                    <el-form-item label="流程节点名称" prop="actioncode" label-width="35%" >
+                                    <el-form-item label="流程节点名称" prop="actioncasecode" label-width="35%" >
                                         <el-col :span="6">
-                                            <el-input v-model="item.addNodeForm.actioncode" size="small"></el-input>
+                                            <el-input v-model="item.addNodeForm.actioncasecode" size="small"></el-input>
                                         </el-col>
                                         <el-col :span="5" :offset="1">
                                             <el-button @click="item.show = !item.show" v-if="item.show" type="primary" size="small" icon="el-icon-arrow-down">

@@ -152,7 +152,7 @@
                           if(res.respMsg.startsWith('license使用时间不足')) {
                               this.$message.warning('license使用时间不足，请注意充值')
                           }
-                          
+
                           this.$router.push({
                             path: "/index",
                           });
@@ -233,11 +233,11 @@
             this.$store.commit('setUrlList', {
               urlList: res.urlList
             })
-            localStorage.setItem('urls', res.urlList)
-            this.$bus.emit('setUrls', {
-                urlList: res.urlList,
-                currentName: this.ruleForm.uid
-            })
+            // localStorage.setItem('urls', res.urlList)
+            // this.$bus.emit('setUrls', {
+            //     urlList: res.urlList,
+            //     currentName: this.ruleForm.uid
+            // })
           }
           return
         }).catch(error => {
