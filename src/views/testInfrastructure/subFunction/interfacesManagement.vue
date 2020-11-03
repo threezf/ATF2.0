@@ -46,47 +46,11 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="5" :offset="1">
-                    <el-form-item label="版本号">
-                        <el-input size="small" v-model="manageInfo.version">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="创建时间">
-                        <el-input size="small" v-model="manageInfo.createTime" disabled>
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row class="manageRow">
-                <el-col :span="5">
-                    <el-form-item label="创建者">
-                        <el-select size="small" class="mainSelect" v-model="manageInfo.creatorId">
-                            <el-option v-for="(item) in manageInfo.creatorList" :key="item.id" :label="item.username" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="维护者">
-                        <el-select size="small" class="mainSelect" v-model="manageInfo.maintainerId">
-                            <el-option v-for="(item) in manageInfo.maintainerList" :key="item.id" :label="item.username" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
                     <el-form-item label="认证方法">
                         <el-select size="small" class="mainSelect" v-model="manageInfo.authenticationMethod">
                             <el-option v-for="(item,index) in authenticationMethodList" :key="index" :value="item" :label="item">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5" :offset="1">
-                    <el-form-item label="修改时间">
-                        <el-input size="small" v-model="manageInfo.modifyTime" disabled>
-                        </el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -127,10 +91,6 @@
                     <el-input size="small" class="description" v-model="manageInfo.description" type="textarea" rows="4">
                     </el-input>
                 </el-form-item>
-            </el-row>
-            <el-row type="flex" justify="center" style="margin-bottom:10px">
-                <el-button type="primary" size="small" @click="saveContent">保存
-                </el-button>
             </el-row>
             <el-tabs class="bottomCard" type="border-card">
                 <el-tab-pane label="Authorization">

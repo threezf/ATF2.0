@@ -167,7 +167,6 @@ export default {
                     }
                 }).then(res => {
                     if (res.respCode === '0000') {
-                        this.$message.success(res.respMsg)
                         this.$router.push({
                             path: "/login",
                         });
