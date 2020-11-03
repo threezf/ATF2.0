@@ -14,8 +14,13 @@
             </el-button>
         </el-col>
     </el-row>
-    <el-table :data="tableData" class="table" border stripe highlight-current-row @select="handleSelectChange">
-        <el-table-column width="50px" label type="selection">
+    <el-table :data="tableData" class="table" border stripe highlight-current-row >
+        <el-table-column width="35px" label>
+            <template slot-scope="scoped">
+                <el-radio v-model="radio" :label="scoped.row.id" @change="handleSelectChange($event, scoped.row)">
+                    &nbsp;
+                </el-radio>
+            </template>
         </el-table-column>
         <el-table-column type="index" width="70px" label="序号">
         </el-table-column>
@@ -136,7 +141,8 @@ export default {
                 label: 'name',
                 children: 'childNodeList'
             },
-            selectedRoles: []
+            selectedRoles: [],
+            radio: false
         }
     },
     watch: {
@@ -292,9 +298,10 @@ export default {
             })
         },
         // 修改select
-        handleSelectChange(val) {
-            this.selectParams = val
-            this.selectRows = val
+        handleSelectChange(id, val) {
+            // this.selectParams = val
+            this.selectRows = [val]
+            console.log(this.selectRows)
             this.searchInfo = ""
         },
         searchByItem() {

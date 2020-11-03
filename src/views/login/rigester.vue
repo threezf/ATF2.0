@@ -56,14 +56,14 @@
             <el-form-item label="用户期限" label-width="200px" v-show="ruleForm.mark==0">
                 <el-input class="normalInput" placeholder="填写数字(如2代表两年)(必填)" v-model="ruleForm.purchaseYear"></el-input>
             </el-form-item>
-            <el-form-item label-width="200px" v-if="ruleForm.mark==0" label="最大注册人数">
+            <!-- <el-form-item label-width="200px" v-if="ruleForm.mark==0" label="最大注册人数">
                 <el-input class="normalInput" v-model="ruleForm.maximumNumber" placeholder="请设置最大注册人数">
                 </el-input>
             </el-form-item>
             <el-form-item label-width="200px" v-if="ruleForm.mark==0" label="使用期限">
                 <el-input class="normalInput" v-model="ruleForm.purchaseYear" placeholder="示例：2即表示两年">
                 </el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="验证码" label-width="200px">
                 <el-input class="codeInput" placeholder="请填写验证码" prop="authCode" v-model="authCode"></el-input>
                 <abbr title="图片看不清？点击重新得到验证码" @click="getSessionId">
@@ -303,53 +303,29 @@ export default {
                 .then(res => {
                     console.log("注册成功", res);
                     if (this.ruleForm.mark == 0) {
-                        this.$message.success("注册成功");
-                        this.currentStep = 2;
-                        return this.insert(res.userId)
+                        Request({
+                            url: '/userRoleController/insert',
+                            method: 'POST',
+                            params: {
+                                companyId: res.companyId,
+                                userId: res.userId,
+                                // 待验证
+                                roleList: [7]
+                            }
+                        }).then(res => {
+                            this.$alert("注册成功,待审核");
+                        }).catch(error => {
+                            console.log('insert 失败')
+                        })
                     }
                 })
                 .catch(err => {
+                    this.$message.warning(err)
                     console.log("注册失败", err);
                 });
         },
-        // // 企业插入操作
-        // insertAllDefaultRole(userId) {
-        //     Request({
-        //         url: '/roleController/insertAllDefaultRole',
-        //         method: 'POST',
-        //         params: {
-        //             companyName: this.ruleForm.companyName,
-        //             userId
-        //         }
-        //     }).then(res => {
-        //         console.log("注册成功", res);
-        //         if (this.ruleForm.mark == 0) {
-        //             return this.insert(res.userId, res.companyId)
-        //         }
-        //         this.$message.success("注册成功");
-        //         this.currentStep = 2;
-        //     })
-        //     .catch(err => {
-        //         console.log("注册失败", err);
-        //     });
-        // },
-
         insert(userId) {
-            Request({
-                url: '/userRoleController/insert',
-                method: 'POST',
-                params: {
-                    companyId,
-                    userId,
-                    // 待验证
-                    roleList: [7]
-                }
-            }).then(res => {
-                this.$alert("注册成功,待审核");
-                this.currentStep = 2;
-            }).catch(error => {
-                console.log('insert 失败')
-            })
+            
         },
         // 检查验证码
         checkAuthCode() {

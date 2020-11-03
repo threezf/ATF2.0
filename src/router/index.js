@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Login from '@/views/login/index'
 import Rigester from '@/views/login/rigester';
+import NoReceived from '@/views/login/noReviewed'
 import Index from '@/views/index'
 import TestInfrastructure from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
@@ -12,6 +13,11 @@ import QuicklyStart from './quicklyStart'
 import UI from '@/views/UIorCGI/ui'
 import CGI from '@/views/UIorCGI/CGI'
 import Addition from './addition'
+import MockApi from '@/views/testInfrastructure/mockApi';
+import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
+import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
+import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
+
 
 Vue.use(Router)
 
@@ -51,6 +57,16 @@ export default new Router({
             },
         },
         {
+            path: '/noReceived',
+            name: 'NoReceived',
+            component: NoReceived,
+            meta: {
+                name: '待审核',
+                another: 'atf/interface',
+                hide: true
+            }
+        },
+        {
             path: '/',
             redirect: '/login',
             name: 'default',
@@ -80,6 +96,45 @@ export default new Router({
         },
         TestProject,
         QuicklyStart,
-        Addition
+        Addition,
+        {
+			path: '/mockApi',
+			name: "MockApi",
+			component: MockApi,
+			meta: {
+				name: "Mock API",
+				parent: "TestInfrastructure",
+                another: 'atf/interface'
+			},
+			children: [
+				{
+					path: 'preview/:id',
+					name: 'Preview',
+					component: Preview,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'edit/:id',
+					name: 'Edit',
+					component: Edit,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				},
+				{
+					path: 'run/:id',
+					name: 'Run',
+					component: Run,
+					meta: {
+						parent: 'TestInfrastructure',
+						hide: true
+					},
+				}
+			]
+		},
     ]
 })

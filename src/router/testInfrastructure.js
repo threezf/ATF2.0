@@ -5,14 +5,11 @@
 import TestInfrastructureIndex from '@/views/testInfrastructure/index';
 import TestedSystemManagementRouter from '@/views/testInfrastructure/testedSystemManagementRouter';
 import TestedSystemManagement from '@/views/testInfrastructure/testedSystemManagement';
-import MockApi from '@/views/testInfrastructure/mockApi';
 import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
 import AutomatedComponentMaintenance from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
 import PerformCodeManagement from '@/views/testInfrastructure/subFunction/performCodeManagement';
-import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
-import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
-import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
+
 import TransactDetail from '@/views/testInfrastructure/transactDetail'
 import InterfacesManagement from '@/views/testInfrastructure/subFunction/interfacesManagement'
 import ProductLine from '@/views/testInfrastructure/subFunction/productLine'
@@ -129,45 +126,7 @@ export default {
 				hide: true
 			}
 		},
-		{
-			path: 'mockApi',
-			name: "MockApi",
-			component: MockApi,
-			meta: {
-				name: "Mock API",
-				parent: "TestInfrastructure",
-				icon: "el-icon-document"
-			},
-			children: [
-				{
-					path: 'preview/:id',
-					name: 'Preview',
-					component: Preview,
-					meta: {
-						parent: 'TestInfrastructure',
-						hide: true
-					},
-				},
-				{
-					path: 'edit/:id',
-					name: 'Edit',
-					component: Edit,
-					meta: {
-						parent: 'TestInfrastructure',
-						hide: true
-					},
-				},
-				{
-					path: 'run/:id',
-					name: 'Run',
-					component: Run,
-					meta: {
-						parent: 'TestInfrastructure',
-						hide: true
-					},
-				}
-			]
-		},
+		
 		// 接口管理
 		{
 			path: 'interfacesManagement',
