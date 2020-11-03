@@ -74,7 +74,7 @@ export default new Router({
                 name: '首页'
             }
         },
-        SystemManagement,
+
 		TestInfrastructure,
         {
             path: '/testInfrastructure/ui',
@@ -95,7 +95,7 @@ export default new Router({
             }
         },
         TestProject,
-        QuicklyStart,
+			SystemManagement,
         Addition,
         {
 			path: '/mockApi',

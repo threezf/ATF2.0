@@ -607,7 +607,7 @@
             </el-dialog>
             <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
-                <el-upload class="upload-demo in-file" action="" :on-success="changeFile" :on-remove="handleRemove" :file-list="fileList">
+                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">选择文件</el-button>
                     <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择xlsx文件</i>
                 </el-upload>
@@ -1024,6 +1024,9 @@ export default {
             }
             return obj[this.titleFlag]
         },
+			importURL() {
+				return "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
+			},
     },
     created() {
         this.getCase();
@@ -1610,8 +1613,9 @@ export default {
         uploadCase() {
             this.dialogVisibleI = true;
         },
-        changeFile(response, file) {
+        changeFile(file) {
             this.fileListM.push(file);
+            console.log("怎么办")
         },
         handleRemove(file, fileList) {
             var index = 0
@@ -1637,11 +1641,7 @@ export default {
             param.append("file", file.raw);
             param.append("caseLibId", caseLibId);
             param.append("uploadUserId", sessionStorage.getItem("userId"));
-            if (file.name.charAt(1) == "t") {
-                param.append("templateType", 1);
-            } else {
-                param.append("templateType", 0);
-            }
+					  param.append("templateType", 1);
             var _this = this;
             Request({
                     url: "/testcase/batchImportTestcase",

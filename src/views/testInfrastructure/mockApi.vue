@@ -1,6 +1,6 @@
 <template>
   <div style="background-color: #FFF;padding:20px 20px;height:700px">
-    <el-container >
+    <el-container style="background-color: #FFF" >
       <el-card class="box-card">
         <div slot="header" class="list-header">
           <span>映射规则列表</span>

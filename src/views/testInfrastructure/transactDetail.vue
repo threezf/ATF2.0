@@ -34,10 +34,10 @@
         </el-row>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="元素库" name="elementLibrary">
-                <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :creatorId="Number(creatorId)" :creatorName="creatorName"></element-library>
+                <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :showFlag="showFlag" :creatorName="creatorName"></element-library>
             </el-tab-pane>
             <el-tab-pane label="基础脚本" name="template">
-                <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="Number(creatorId)" :creatorName="creatorName"></template-manage>
+                <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :showFlag="showFlag" :creatorName="creatorName"></template-manage>
             </el-tab-pane>
         </el-tabs>
     </page>
@@ -63,7 +63,8 @@ export default {
             activeName: 'elementLibrary',
             autSelectOptions: [],
             tranSelectOptions: [],
-            transSelected: {} //当前被选中的功能点的数据
+            transSelected: {}, //当前被选中的功能点的数据
+					  showFlag:false,
         }
     },
     watch: {
@@ -100,8 +101,31 @@ export default {
         this.getAuts();
         this.getTran(this.autSelectValue, true);
         console.log('treeData', this.companyId)
+			  this.queryAccess(localStorage.getItem("transactAutId"))
     },
     methods: {
+			queryAccess(id){
+				Request({
+					url: '/aut/checkAccessPermission',
+					method: 'POST',
+					params: {
+						//当前系统登录用户
+						userId:parseInt(sessionStorage.getItem("userId")),
+						//被测系统id
+						autId:id,
+						//企业id
+						companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
+					}
+				}).then(res => {
+					if(res.respCode=="0000"){
+						this.showFlag=false
+					}else{
+						this.showFlag=true
+					}
+				}).catch(err => {
+					this.showFlag=true
+				})
+			},
         handleClick(tab, event) {
             console.log('tab-click	', tab.index);
             if (tab.index == 0) {

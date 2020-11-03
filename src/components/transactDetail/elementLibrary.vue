@@ -173,8 +173,9 @@ export default {
             type: String,
             default: "",
         },
-        creatorId: {
-            type: Number,
+        showFlag: {
+            type: Boolean,
+					  default:false
         },
         creatorName: {
             type: String,
@@ -250,15 +251,6 @@ export default {
 
     },
     created() {
-        if (this.creatorId) {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
-                this.showFlag = false
-            } else {
-                this.showFlag = true
-            }
-        } else {
-            this.showFlag = false
-        }
 
     },
     methods: {
@@ -399,14 +391,14 @@ export default {
         // 以下为点击按钮时，清空弹框 并再次展示弹窗
         addUIShow() {
             console.log('add', sessionStorage.getItem('userId'))
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 this.addUIDialogFlag = true;
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限添加UI")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限添加UI")
+            // }
         },
         deleteUIShow() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 if (this.selectedUI === "") {
                     this.$message("请选择UI，再进行删除");
                     return;
@@ -432,23 +424,23 @@ export default {
                         console.log(err);
                     }
                 );
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限删除UI")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限删除UI")
+            // }
         },
         addEleShow() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 if (this.selectedUI === "") {
                     this.$message("请选择UI，再进行添加");
                     return;
                 }
                 this.addEleDialogFlag = true;
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限添加元素")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限添加元素")
+            // }
         },
         deleteEleShow() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 if (this.selectedEle.length === 0) {
                     this.$message("请选择元素，再进行删除");
                     return;
@@ -475,27 +467,27 @@ export default {
                         console.log(err);
                     }
                 );
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限删除元素")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限删除元素")
+            // }
         },
         editButton() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 this.editFlag = false
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限进行编辑")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限进行编辑")
+            // }
         },
         branchAddEleShow() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 if (this.selectedUI === "") {
                     this.$message("请选择UI，再进行添加");
                     return;
                 }
                 this.branchAddEleDialogFlag = true;
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限批量添加元素")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限批量添加元素")
+            // }
         },
         addUI() {
             this.addUIDialogFlag = false;
