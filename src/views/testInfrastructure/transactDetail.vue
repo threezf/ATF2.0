@@ -2,45 +2,45 @@
 功能点详情界面
  */
 <template>
-    <page>
-        <el-row>
-            <el-col :span="3" class='rightLable'>
-                <span>
-                    被测系统 ：
-                </span>
-            </el-col>
-            <el-col :span="3">
-                <el-select size="small" filterable v-model="autSelectValue" @change='autChange'>
-                    <el-option v-for="item in autSelectOptions" :key="item.id" :label="item.code" :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="3" class='rightLable'>
-                <span>
-                    功能点 ：
-                </span>
-            </el-col>
-            <el-col :span="3">
-                <el-select size="small" filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
-                    <el-option v-for="(item,index) in tranSelectOptions" :key="index" :label="item.code" :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="4" :offset='1'>
-                <el-button icon="el-icon-edit-outline" size="small" @click='copySingleUITransact()' type="primary">
-                    复制功能点
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="元素库" name="elementLibrary">
-                <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :creatorId="Number(creatorId)" :creatorName="creatorName"></element-library>
-            </el-tab-pane>
-            <el-tab-pane label="基础脚本" name="template">
-                <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :creatorId="Number(creatorId)" :creatorName="creatorName"></template-manage>
-            </el-tab-pane>
-        </el-tabs>
-    </page>
+<page>
+    <el-row>
+        <el-col :span="3" class='rightLable'>
+            <span>
+                被测系统 ：
+            </span>
+        </el-col>
+        <el-col :span="3">
+            <el-select size="small" filterable v-model="autSelectValue" @change='autChange'>
+                <el-option v-for="item in autSelectOptions" :key="item.id" :label="item.code" :value="item.id">
+                </el-option>
+            </el-select>
+        </el-col>
+        <el-col :span="3" class='rightLable'>
+            <span>
+                功能点 ：
+            </span>
+        </el-col>
+        <el-col :span="3">
+            <el-select size="small" filterable v-model="tranSelectValue" placeholder="请选择" @change='transChange'>
+                <el-option v-for="(item,index) in tranSelectOptions" :key="index" :label="item.code" :value="item.id">
+                </el-option>
+            </el-select>
+        </el-col>
+        <el-col :span="4" :offset='1'>
+            <el-button icon="el-icon-edit-outline" size="small" @click='copySingleUITransact()' type="primary">
+                复制功能点
+            </el-button>
+        </el-col>
+    </el-row>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="元素库" name="elementLibrary">
+            <element-library :trans-id='tranSelectValue + ""' :aut-id='autSelectValue+""' :showFlag="showFlag" :creatorName="creatorName"></element-library>
+        </el-tab-pane>
+        <el-tab-pane label="基础脚本" name="template">
+            <template-manage :trans-id='tranSelectValue' :aut-id='autSelectValue' path-name="TestInfrastructure" :showFlag="showFlag" :creatorName="creatorName"></template-manage>
+        </el-tab-pane>
+    </el-tabs>
+</page>
 </template>
 
 <script>
@@ -63,7 +63,8 @@ export default {
             activeName: 'elementLibrary',
             autSelectOptions: [],
             tranSelectOptions: [],
-            transSelected: {} //当前被选中的功能点的数据
+            transSelected: {}, //当前被选中的功能点的数据
+            showFlag: false,
         }
     },
     watch: {
@@ -71,8 +72,8 @@ export default {
             handler(to, from) {
                 console.log('$route', to, from)
                 to.query.steps === 0 ?
-                this.activeName = 'elementLibrary' :
-                this.activeName = 'template'
+                    this.activeName = 'elementLibrary' :
+                    this.activeName = 'template'
             }
         }
     },
@@ -100,8 +101,31 @@ export default {
         this.getAuts();
         this.getTran(this.autSelectValue, true);
         console.log('treeData', this.companyId)
+        this.queryAccess(localStorage.getItem("transactAutId"))
     },
     methods: {
+        queryAccess(id) {
+            Request({
+                url: '/aut/checkAccessPermission',
+                method: 'POST',
+                params: {
+                    //当前系统登录用户
+                    userId: parseInt(sessionStorage.getItem("userId")),
+                    //被测系统id
+                    autId: id,
+                    //企业id
+                    companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
+                }
+            }).then(res => {
+                if (res.respCode == "0000") {
+                    this.showFlag = false
+                } else {
+                    this.showFlag = true
+                }
+            }).catch(err => {
+                this.showFlag = true
+            })
+        },
         handleClick(tab, event) {
             console.log('tab-click	', tab.index);
             if (tab.index == 0) {

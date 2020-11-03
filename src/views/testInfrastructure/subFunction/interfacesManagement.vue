@@ -1,7 +1,7 @@
 <template>
 <page>
     <el-row :gutter="20" class="titleClass">
-        <el-form :model="titleForm" label-width="90px">
+        <el-form :model="titleForm" :disabled="showFlag" label-width="90px">
             <el-col :span="6">
                 <el-form-item label="被测系统">
                     <el-select style="width:90%" size="small" class="systemSelectSystem" placeholder="请选择被测系统" v-model="selectSystem" @change="selectedSystemChange" clearable>
@@ -31,7 +31,7 @@
     <el-card class="mainCard">
         <p>接口管理</p>
         <hr color="#eff2f7" />
-        <el-form :model="manageInfo" ref="interfaceRule" label-width="70px">
+        <el-form :model="manageInfo" ref="interfaceRule" :disabled="showFlag" label-width="70px">
             <el-row class="manageRow">
                 <el-col :span="5">
                     <el-form-item prop="interfaceCode" label="接口编码">
@@ -318,6 +318,7 @@ export default {
             this.autId = Number(localStorage.getItem('transactAutId'))
             this.transactsForm.id = localStorage.getItem('transactId')
         }
+			  this.showFlag=this.$route.query.showFlag
         console.log('transactsForm', this.autId, this.transactsForm.id, this.$route.query.data.hasOwnProperty('id'))
         this.selectSystem = this.autId
         this.selectedTransact = Number(this.transactsForm.id)
@@ -325,6 +326,7 @@ export default {
         this.queryListAut()
         this.queryTransactsByAutId(this.autId)
         this.querySingleInterface(this.transactsForm.id)
+
     },
 
     methods: {

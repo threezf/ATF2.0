@@ -324,6 +324,7 @@
         :multiselection="true"
         :transId="transId.toString()"
         :autId="autId.toString()"
+
       >
       </uiEleFunTree>
     </el-dialog>
@@ -361,8 +362,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    creatorId: {
-      type: Number,
+    showFlag: {
+      type: Boolean,
+			default:false
     },
     creatorName: {
       type: String,
@@ -388,7 +390,6 @@ export default {
       templateLoading: false,
       caseId: '', //创建测试用例的id
       caseNotNeedAdd: true, //脚本需要添加
-      showFlag: false
     };
   },
   watch: {
@@ -399,15 +400,6 @@ export default {
     },
   },
   created() {
-    if (this.creatorId) {
-      if (this.creatorId == sessionStorage.getItem("userId")) {
-        this.showFlag = false;
-      } else {
-        this.showFlag = true;
-      }
-    } else {
-      this.showFlag = false;
-    }
   },
   computed: {},
   methods: {
@@ -903,7 +895,7 @@ export default {
         this.$message.warning('请添加脚本执行用例')
         this.caseNotNeedAdd = false
       })
-    },   
+    },
   },
   created() {},
   mounted() {

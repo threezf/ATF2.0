@@ -11,14 +11,14 @@
         </el-col>
         <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="small" @click="addButton">添加</el-button>
-        <el-button type="primary" icon="el-icon-edit" size="small" @click="updateButton">修改</el-button>
+        <el-button type="primary" icon="el-icon-edit" size="small" :disabled="showFlag" @click="updateButton">修改</el-button>
         <span id="advancedFunctions" type="primary" class="highFunction" v-if="!highIsActive" @click="showHighFunction">{{showFun}}</span>
         <span class="high" v-if="highIsActive">
-            <el-button type="primary" icon="el-icon-s-tools" size="small" @click="manageFunctionButton" plain>管理功能点</el-button>
-            <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="configureData" plain>配置系统数据</el-button>
-            <el-button type="primary" icon="el-icon-s-tools" size="small" @click="automatedComponentMaintenance" plain>自动化构件维护</el-button>
-            <el-button type="primary" icon="el-icon-s-management" size="small" @click="codeManagement" plain>执行代码管理</el-button>
-            <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>
+            <el-button type="primary" icon="el-icon-s-tools" size="small"  @click="manageFunctionButton" plain>管理功能点</el-button>
+            <el-button type="primary" icon="el-icon-edit-outline" size="small" :disabled="showFlag" @click="configureData" plain>配置系统数据</el-button>
+            <el-button type="primary" icon="el-icon-s-tools" size="small" :disabled="showFlag" @click="automatedComponentMaintenance" plain>自动化构件维护</el-button>
+            <el-button type="primary" icon="el-icon-s-management" size="small"  :disabled="showFlag" @click="codeManagement" plain>执行代码管理</el-button>
+<!--            <el-button type="primary" icon="el-icon-setting" size="small" plain @click="configMobile">移动端设备配置</el-button>-->
         </span>
         <span id="el-panelHidden" class="highFunction" type="primary" v-if="highIsActive" icon="el-icon-d-arrow-left" @click="showHighFunction">{{hideFun}}</span>
         </el-col>
@@ -46,7 +46,7 @@
         <el-table-column sortable prop="createTime" label="创建时间" :formatter="transTime" min-width="15%"></el-table-column>
         <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
     </el-table>
-    
+
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
             <el-form-item label="系统名称" prop="nameMedium">
@@ -114,6 +114,7 @@ export default {
             //对话框及相关内容
             dialogModelFlag: 0,
             dialogVisible: false,
+					  showFlag:false,
             //新建用户时添加的数据,表单相关数据
             form: {
                 code: "",
@@ -179,6 +180,29 @@ export default {
         this.getAbstractArchitectureList();
     },
     methods: {
+    	  //查看是否有权限
+			  queryAccess(id){
+					Request({
+						url: '/aut/checkAccessPermission',
+						method: 'POST',
+						params: {
+							//当前系统登录用户
+							userId:parseInt(sessionStorage.getItem("userId")),
+							//被测系统id
+							autId:id,
+							//企业id
+							companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
+						}
+					}).then(res => {
+             if(res.respCode=="0000"){
+             	this.showFlag=false
+						 }else{
+             	this.showFlag=true
+						 }
+					}).catch(err => {
+						this.showFlag=true
+					})
+				},
         //点击展示和隐藏高级功能
         showHighFunction: function () {
             this.highIsActive = !this.highIsActive;
@@ -194,7 +218,7 @@ export default {
         },
         //修改按钮
         updateButton() {
-            if (this.creatorId == sessionStorage.getItem("userId")) {
+            // if (this.creatorId == sessionStorage.getItem("userId")) {
                 let _this = this;
                 if (_this.radio === false) {
                     this.$message.warning("请选择一条数据！！");
@@ -220,9 +244,9 @@ export default {
                     console.log(inheriteArcId);
                     _this.dialogVisible = true;
                 }
-            } else {
-                this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限修改本被测项目")
-            }
+            // } else {
+            //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限修改本被测项目")
+            // }
         },
         //管理功能点
         manageFunctionButton() {
@@ -336,6 +360,7 @@ export default {
             this.creatorName = row.creatorName
             this.creatorId = row.creatorId
             sessionStorage.setItem("testSysNameStorage", "(" + this.row.nameMedium + ")")
+					  this.queryAccess(this.id)
         },
         toTransact(index, row) {
             // sessionStorage.setItem('case')
