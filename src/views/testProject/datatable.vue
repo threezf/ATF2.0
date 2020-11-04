@@ -915,11 +915,15 @@
 				this.$refs.upload.submit();
 			},
 			tempError(response, file, fileList) {
-				this.$message.error(response.respMsg)
+				this.$message.error({
+					message:response.respMsg
+				})
 			},
 			tempSuccess(response, file, fileList) {
 				if (response.respCode !== '0000') {
-					this.$message.error(response.respMsg)
+					this.$message.error({
+						message:response.respMsg
+					})
 					return
 				}
 				this.exportDialog = false

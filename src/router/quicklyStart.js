@@ -15,7 +15,8 @@ export default {
     redirect: '/quicklyStart/quicklyTransact',
     meta: {
         name: '快速开始',
-        another: 'atf/quickStart'
+        another: 'atf/quickStart',
+			  hide:true
     },
     children: [
         {

@@ -32,7 +32,7 @@ export default {
     <!--                </el-button>-->
     <!--            </el-tooltip>-->
 
-    <div style="height:30px"></div>
+    <div style="height:30px"> </div>
     <page style="height:420px">
         <el-row>
 

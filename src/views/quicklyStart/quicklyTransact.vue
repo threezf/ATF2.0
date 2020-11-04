@@ -99,7 +99,7 @@ export default {
                                 descShort: _this.formData.descShort,
                                 code: _this.formData.code,
                                 // creatorId: sessionStorage.getItem('userId')
-                                creatorId: '3'
+                                creatorId: sessionStorage.getItem('userId')
                             },
                         })
                         .then((res) => {
@@ -138,7 +138,7 @@ export default {
                     url: "/transactController/fastStartPagedBatchQueryTransact",
                     method: "post",
                     params: {
-                        creatorId: sessionStorage.getItem("userId"),
+                        creatorId: parseInt(sessionStorage.getItem("userId")),
                         currentPage: 1,
                         orderColumns: "modified_time",
                         orderType: "desc",

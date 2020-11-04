@@ -85,7 +85,7 @@ export default {
          * 获取侧边栏应该展示的数据
          */
         getSideBarList() {
-            
+
         },
         needHideAllChildren(menu) {
             let needHide = true
@@ -148,6 +148,7 @@ export default {
 .el-menu-item i {
     color: #FFF !important;
 }
+
 .radioGroup .el-divider--horizontal{
 	margin:0 !important;
 }
@@ -157,6 +158,6 @@ export default {
     .radioGroup .el-radio-button--small .el-radio-button__inner{
         padding:6px 8px !important;
     }
-    
+
 </style>
 

@@ -251,7 +251,8 @@ export default {
 
     },
     created() {
-
+			this.getClass()
+			this.getEleTree();
     },
     methods: {
         // 录制工具下载
@@ -480,10 +481,10 @@ export default {
         },
         branchAddEleShow() {
             // if (this.creatorId == sessionStorage.getItem("userId")) {
-                if (this.selectedUI === "") {
-                    this.$message("请选择UI，再进行添加");
-                    return;
-                }
+            //     if (this.selectedUI === "") {
+            //         this.$message("请选择UI，再进行添加");
+            //         return;
+            //     }
                 this.branchAddEleDialogFlag = true;
             // } else {
             //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限批量添加元素")
