@@ -59,8 +59,9 @@ export default {
                 params: {
                 }
             }).then(res => {
-                console.log('待审核', res)
+                console.log('待审核', res, this.$parent)
                 this.auditDtoList = res.auditDtoList
+                this.$parent.queryLeftCount()
             }).catch(err => {
                 console.log(err)
             }).finally(_ => {

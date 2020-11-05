@@ -91,6 +91,8 @@
         imageURL: "",
         storedSessionId: 0,
         userId: 0,
+        userPriority: 0,
+        reallyName: ''
       };
     },
     computed: {},
@@ -140,6 +142,10 @@
                     if(res.respCode === '0000') {
                       sessionStorage.setItem("userId", res.userId);
                       sessionStorage.setItem("username", this.ruleForm.uid);
+                      sessionStorage.setItem("reallyName", res.reallyName)
+                      this.userPriority = res.userPriority
+                      this.reallyName = res.reallyName
+                      console.log('urls', res.userPriority)
                       this.queryAllRelated(res.userId)
                       this.$store.commit('setLoginInfo', {
                         companyId: res.companyId,
@@ -234,9 +240,12 @@
               urlList: res.urlList
             })
             localStorage.setItem('urls', res.urlList)
+            console.log('urls', this.userPriority)
             this.$bus.emit('setUrls', {
                 urlList: res.urlList,
-                currentName: this.ruleForm.uid
+                currentName: this.ruleForm.uid,
+                userPriority: this.userPriority,
+                reallyName: this.reallyName
             })
           }
           return

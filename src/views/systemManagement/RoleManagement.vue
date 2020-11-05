@@ -5,7 +5,7 @@
             <el-input size="small" v-model="searchInfo" placeholder="请输入角色名称 (支持模糊查询)" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="searchByItem">
                 </el-button>
-            </el-input>
+            </el-input> 
         </el-col>
         <el-col :span="17">
             <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRule">新增
@@ -17,9 +17,7 @@
     <el-table :data="tableData" class="table" border stripe highlight-current-row >
         <el-table-column width="35px" label>
             <template slot-scope="scoped">
-                <el-radio v-model="radio" :label="scoped.row.id" @change="handleSelectChange($event, scoped.row)">
-                    &nbsp;
-                </el-radio>
+                <el-radio v-model="radio" :label="scoped.$index" @change="handleSelectChange($event, scoped.row)">&nbsp;</el-radio>
             </template>
         </el-table-column>
         <el-table-column type="index" width="70px" label="序号">

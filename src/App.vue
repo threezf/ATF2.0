@@ -19,12 +19,13 @@
                     <span class="el-dropdown-link">
                         <i class="el-icon-user-solid"></i>
                         <span style="font-weight: bold">{{currentUser}}</span>
+                        <el-badge :is-dot="leftCount > 0"></el-badge>
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
-                        <el-dropdown-item icon='el-icon-s-custom' @click.native="handleReceiver">待审核</el-dropdown-item>
+                        <el-dropdown-item icon='el-icon-s-custom' @click.native="handleReceiver" v-if="userPriority == 0">待审核<el-badge :value="leftCount"></el-badge></el-dropdown-item>
                         <el-dropdown-item icon='el-icon-circle-close' @click.native="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -122,7 +123,9 @@ export default {
             loginInfo: {},
             currentUser: '', // 当前用户
             totalScore: '',
-            urls: []
+            urls: [],
+            userPriority: 0,
+            leftCount: 0
         };
     },
     watch: {
@@ -159,21 +162,23 @@ export default {
                 cancelButton: '取消',
                 type: 'warning'
             }).then(() => {
-                Request({
-                    url: '/limitLoginNumberController/minusCompanyRedisKey',
-                    method: 'post',
-                    params: {
-                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
-                    }
-                }).then(res => {
-                    if (res.respCode === '0000') {
                         this.$router.push({
                             path: "/login",
                         });
-                    }
-                }).catch(err => {
+                
+                // localStorage.clear()
+                // sessionStorage.clear()
+                // Request({
+                //     url: '/logout',
+                //     method: 'post',
+                //     params: {
+                //     }
+                // }).then(res => {
+                //     if (res.respCode === '0000') {
+                //     }
+                // }).catch(err => {
 
-                })
+                // })
             }).catch(() => {})
         },
         // 修改密码
@@ -235,23 +240,46 @@ export default {
                 // this.$store.state.commit("changeFlag", 'false')
             }
         },
+        queryLeftCount() {
+             Request({
+                url: '/userController/queryAllAuditUser',
+                method: 'post',
+                params: {
+                }
+            }).then(res => {
+                console.log(res)
+                this.leftCount = parseInt(res.totalCount)
+            })
+        }
     },
     created() {
         const flag = localStorage.getItem("userType")
         this.loginInfo = JSON.parse(localStorage.getItem('loginInfo')) ? JSON.parse(localStorage.getItem('loginInfo')) : {}
         this.urls = localStorage.getItem("urls").split(',')
+        this.currentUser = sessionStorage.getItem('reallyName')
+        console.log('ss', this.currentUser)
+        this.userPriority = localStorage.getItem("userPriority")
         if (flag == 'false') {
             this.userStatus = 1
         } else {
             this.userStatus = 2
         }
         this.initUserState()
+        if(this.userPriority == 0) {
+            this.queryLeftCount()
+        }
     },
     mounted() {
         this.$bus.on('setUrls', (urls) => {
             this.urls = urls.urlList
-            this.currentUser = urls.currentName
+            this.currentUser = urls.reallyName
+            this.userPriority = urls.userPriority
+            console.log('urls', urls)
+            if(this.userPriority == 0) {
+                this.queryLeftCount()
+            }
             localStorage.setItem('username', urls.currentName)
+            localStorage.setItem('userPriority', this.userPriority)
         })
     }
 }
