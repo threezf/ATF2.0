@@ -386,13 +386,13 @@
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
-                                                <el-row>
-                                                    <el-col :span="7" >
-                                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >
-                                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </el-row>
+<!--                                                <el-row>-->
+<!--                                                    <el-col :span="7" >-->
+<!--                                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >-->
+<!--                                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>-->
+<!--                                                        </el-form-item>-->
+<!--                                                    </el-col>-->
+<!--                                                </el-row>-->
                                                 <el-row>
                                                     <el-col :span="11">
                                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" >
@@ -506,13 +506,13 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <el-row>
-                                    <el-col :span="7" >
-                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >
-                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
+<!--                                <el-row>-->
+<!--                                    <el-col :span="7" >-->
+<!--                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >-->
+<!--                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>-->
+<!--                                        </el-form-item>-->
+<!--                                    </el-col>-->
+<!--                                </el-row>-->
                                 <el-row>
                                     <el-col :span="11">
                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" >
@@ -1152,7 +1152,6 @@ export default {
                     );
                 }
             }
-            this.$alert(typeof _this.addForm.author)
             typeof _this.addForm.author=="number"?1:parseInt(_this.addForm.author=sessionStorage.getItem("userId"))
 					  _this.addForm.executor=_this.addForm.author
 				  	_this.addForm.reviewer=_this.addForm.author
@@ -1661,7 +1660,6 @@ export default {
                 .then(res => {
                     if (res.respCode == "0000") {
                         this.dialogVisibleI = false;
-                        _this.getCase();
                         this.$alert("导入成功", "导入情况", {
                             confirmButtonText: "确定",
                             callback: action => {
@@ -1671,6 +1669,7 @@ export default {
                                 });
                             }
                         });
+											  _this.getCase();
                     } else {
 
                         this.dialogVisibleI = false;

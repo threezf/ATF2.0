@@ -29,19 +29,26 @@
                 <div slot="header" class="clearfix">
                     <span>{{modelName}}</span>
                 </div>
-                <el-form  label-width="100px" :model="formData" :rules="rules" ref="form">
+                <el-form label-width="100px" :model="formData" :rules="rules" ref="form">
                     <el-form-item label="功能点名称:" prop="nameMedium">
-                        <el-input style="width:100%" size="small" v-model="formData.nameMedium" :disabled="disabled"></el-input>
+                        <el-input style="width:100%" size="small" v-model="formData.nameMedium"></el-input>
                     </el-form-item>
                     <el-form-item label="编码:" prop="code">
-                        <el-input style="width:100%" size="small" v-model="formData.code" :disabled="disabled"></el-input>
+                        <el-input style="width:100%" size="small" v-model="formData.code"></el-input>
                     </el-form-item>
                     <el-form-item label="描述:" prop="descShort">
-                        <el-input size="small" v-model="formData.descShort" type="textarea" :disabled="disabled"></el-input>
+                        <el-input size="small" v-model="formData.descShort" type="textarea"></el-input>
                     </el-form-item>
                     <el-row type="flex" justify="center">
-                        <el-button size="small" type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
-                        <el-button size="small" @click="resetForm('form')">重置</el-button>
+                        <el-col :span="14" v-show="!disabled">
+                            <el-button type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
+                            <el-button @click="resetForm('form')" v-show="!disabled">重置</el-button>
+                        </el-col>
+                        <el-col :span="14" v-show="disabled">
+                            <el-button type="primary" @click="editTransact('form')" v-show="disabled">修改功能点</el-button>
+                            <el-button @click="resetForm('form')" v-show="disabled">返回添加</el-button>
+<!--                            <el-button @click="toElement" v-show="disabled">下一步</el-button>-->
+                        </el-col>
                     </el-row>
                 </el-form>
             </el-card>
@@ -126,6 +133,43 @@ export default {
                     return false;
                 }
             });
+        },
+        //跳转到下一步
+        toElement() {
+            this.$router.push({
+                name: "QuicklyElement",
+                query: {
+                    autId: this.formData.autId,
+                    transactId: this.formData.id,
+                    // sceneId: this.formData.sceneId,
+                    creatorId: sessionStorage.getItem("userId")
+                    // testPlanId: this.formData.testPlanId,
+                },
+            });
+        },
+        //修改功能点
+        editTransact(formName) {
+            var _this = this;
+            this.$refs[formName].validate((valid) => {
+                Request({
+                        url: "/transactController/modifySingleTransact",
+                        method: "POST",
+                        params: {
+                            nameMedium: _this.formData.nameMedium,
+                            descShort: _this.formData.descShort,
+                            code: _this.formData.code,
+                            creatorId: _this.formData.creatorId,
+                            id: _this.formData.id,
+                            userId: sessionStorage.getItem('userId'),
+                            autId: this.formData.autId,
+                        },
+                    }).then(res => {
+                        this.$alert("修改成功")
+                    })
+                    .catch(err => {
+                        this.$alert("修改失败")
+                    });
+            })
         },
         getChange(val) {
             console.log(val)

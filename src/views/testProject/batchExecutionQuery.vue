@@ -35,32 +35,32 @@
               <el-form-item
                 label-width="88px"
                 label="时间段">
-                <el-select 
+                <el-select
                   size="small"
                   class="elSelect"
                   clearable
-                  v-model="timeSlot" 
+                  v-model="timeSlot"
                   @change="timeSlotSelect">
-                  <el-option 
+                  <el-option
                     value="左侧日历表选择">
                   </el-option>
-                  <el-option 
+                  <el-option
                     value="近一天">
                   </el-option>
-                  <el-option 
+                  <el-option
                     value="近一周">
                   </el-option>
-                  <el-option 
+                  <el-option
                     value="近一月">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="9" :offset="0" class="buttons">
-              <el-button 
-                type="primary" 
-                size="small" 
-                icon="el-icon-search" 
+              <el-button
+                type="primary"
+                size="small"
+                icon="el-icon-search"
                 @click="executeQuery"
                 >查询
               </el-button>
@@ -68,29 +68,29 @@
           </el-row>
           <el-row class="formRowTop" :gutter="20">
             <el-col :span="5" :offset="0">
-              <el-form-item 
+              <el-form-item
                 label="用例来源">
-                <el-select 
+                <el-select
                   size="small"
                   class="elSelect"
                   clearable
                   v-model="selectedCaseSource">
-                  <el-option 
-                    v-for="(item,index) in caseSources" 
-                    :key="index" 
+                  <el-option
+                    v-for="(item,index) in caseSources"
+                    :key="index"
                     :value="item">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="5" :offset="0">
-              <el-form-item 
+              <el-form-item
                 label="测试计划">
-                <el-select 
+                <el-select
                   size="small"
                   class="elSelect"
                   clearable
-                  v-model="params.testPlanId" 
+                  v-model="params.testPlanId"
                   @change="handleTestPlanChange">
                   <el-option
                     v-for="(item,index) in testPlans"
@@ -103,17 +103,17 @@
             </el-col>
             <el-col :span="5" :offset="0">
               <el-form-item
-                label-width="88px" 
+                label-width="88px"
                 label="执行状态">
-                <el-select 
+                <el-select
                   size="small"
                   class="elSelect"
                   clearable
-                  v-model="selectedExecutionStatus" 
+                  v-model="selectedExecutionStatus"
                   @change="handleRunStatusChange">
-                  <el-option 
-                    v-for="(item,index) in executionStatuses" 
-                    :key="index" 
+                  <el-option
+                    v-for="(item,index) in executionStatuses"
+                    :key="index"
                     :value="item">
                   </el-option>
                 </el-select>
@@ -121,115 +121,116 @@
             </el-col>
           </el-row>
         </el-form>
-        <el-table 
+        <el-table
           stripe
-          border 
-          class="table tableStyle" 
+          border
+          class="table tableStyle"
           :data="tableData">
-          <el-table-column 
-            align="center" 
-            min-width="13%" 
+          <el-table-column
+            align="center"
+            min-width="13%"
             label="操作">
-            <template 
+            <template
               slot-scope="scope">
-              <el-button 
-                type="primary" 
-                size="mini" 
+              <el-button
+                type="primary"
+                size="mini"
                 @click="queryRecord(scope.row)"
                 >查看记录单
               </el-button>
-              <el-button 
-                type="primary" 
-                size="mini" 
+              <el-button
+                type="primary"
+                size="mini"
+								style="margin-top:5px"
                 @click="archive(scope.row)"
                 >归档
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column 
-            align="center" 
-            min-width="5.8%" 
-            label="发起用户" 
+          <el-table-column
+            align="center"
+            min-width="5.8%"
+            label="发起用户"
             prop="startUser">
           </el-table-column>
-          <el-table-column 
-            min-width="5.8%" 
-            label="用例来源" 
-            align="center" 
+          <el-table-column
+            min-width="5.8%"
+            label="用例来源"
+            align="center"
             prop="instanceSource">
           </el-table-column>
-          <el-table-column 
-            min-width="12%" 
-            align="center" 
+          <el-table-column
+            min-width="12%"
+            align="center"
             label="测试计划">
-            <template 
+            <template
               slot-scope="scope">
               <el-tag>
                   {{scope.row.testPlanName}}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column 
-            min-width="5.8%" 
-            label="执行轮次" 
-            align="center" 
+          <el-table-column
+            min-width="5.8%"
+            label="执行轮次"
+            align="center"
             prop="executionRound">
             </el-table-column>
-          <el-table-column 
-            min-width="5.8%" 
-            label="用例总数" 
-            align="center" 
+          <el-table-column
+            min-width="5.8%"
+            label="用例总数"
+            align="center"
             prop="totalInsCount">
             </el-table-column>
-          <el-table-column 
-            min-width="6.8%" 
-            label="成功用例数" 
-            align="center" 
+          <el-table-column
+            min-width="6.8%"
+            label="成功用例数"
+            align="center"
             prop="successInsCount">
             </el-table-column>
-          <el-table-column 
-            min-width="6.8%" 
-            label="失败用例数" 
+          <el-table-column
+            min-width="6.8%"
+            label="失败用例数"
             align="center">
-            <template 
+            <template
               slot-scope="scope">
-              <span 
+              <span
                 class="failedStyle"
                 >{{scope.row.failedInsCount}}
               </span>
             </template>
           </el-table-column>
-          <el-table-column 
-            min-width="6.8%" 
-            label="跳过用例数" 
-            align="center" 
+          <el-table-column
+            min-width="6.8%"
+            label="跳过用例数"
+            align="center"
             prop="notRunInsCount">
             </el-table-column>
-          <el-table-column 
-            min-width="6%" 
-            align="center" 
+          <el-table-column
+            min-width="6%"
+            align="center"
             label="结果饼状图">
-            <template 
+            <template
               slot-scope="scope">
-              <el-button 
-                type="primary" 
-                size="mini" 
+              <el-button
+                type="primary"
+                size="mini"
                 @click="openCakePic(scope.row)"
                 >查看
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column 
-            min-width="5.8%" 
-            label="执行状态" 
-            align="center" 
+          <el-table-column
+            min-width="5.8%"
+            label="执行状态"
+            align="center"
             prop="executingStatus">
           </el-table-column>
-          <el-table-column 
-            min-width="5.8%" 
-            label="执行结果" 
+          <el-table-column
+            min-width="5.8%"
+            label="执行结果"
             align="center">
-            <template 
+            <template
               slot-scope="scope">
               <span
                 :class="scope.row.executedResult==='全部失败'?'failedStyle':''"
@@ -252,9 +253,9 @@
             :formatter="transTime">
           </el-table-column>
         </el-table>
-        
+
         <el-dialog
-          width="46%"
+          width="28%"
           :title="cakeTitle"
           :visible.sync="cakePicVisable"
           :before-close="handleBeforeClose">
@@ -262,22 +263,22 @@
             <div id="leftCake" class="leftCakeDiv">
               <ve-pie :data="chartData" :colors="useColor"></ve-pie>
             </div>
-            <div class="rightCakeDiv">
-              <table>
-                <tr>
-                  <td><div class="colorSuccess"></div></td>
-                  <td class="statusDes">成功用例数</td>
-                </tr>
-                <tr>
-                  <td><div class="colorFail"></div></td>
-                  <td class="statusDes">失败用例数</td>
-                </tr>
-                <tr>
-                  <td><div class="colorJump"></div></td>
-                  <td class="statusDes">跳过用例数</td>
-                </tr>
-              </table>
-            </div>
+<!--            <div class="rightCakeDiv">-->
+<!--              <table>-->
+<!--                <tr>-->
+<!--                  <td><div class="colorSuccess"></div></td>-->
+<!--                  <td class="statusDes">成功用例数</td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                  <td><div class="colorFail"></div></td>-->
+<!--                  <td class="statusDes">失败用例数</td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                  <td><div class="colorJump"></div></td>-->
+<!--                  <td class="statusDes">跳过用例数</td>-->
+<!--                </tr>-->
+<!--              </table>-->
+<!--            </div>-->
           </div>
           <hr class="hrDiv" />
           <el-row class="cancelRowStyle">
@@ -406,7 +407,7 @@
             console.log('id获取失败')
         })
       },
-      
+
       // 执行查询
       executeQuery(testplanId) {
         this.params.testPlanId = testplanId

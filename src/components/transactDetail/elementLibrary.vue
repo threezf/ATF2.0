@@ -219,6 +219,7 @@ export default {
             },
             treeLoading: false,
             uiUID: '', // 负责处理UIID部分
+					  timer:null,
         };
     },
     watch: {
@@ -268,8 +269,13 @@ export default {
         },
         // 以下是三个函数是上传组件用到的
         submitUpload() {
+					  clearTimeout(this.timer);
             this.$refs.upload.submit();
-            this.getEleTree()
+            // this.$alert("导入较慢，请稍等一会儿")
+					  this.timer= setTimeout(function ()
+					  {
+					  	this.getEleTree()
+					  },1000)
         },
         tempError(response, file, fileList) {
             this.$message.error(response.respMsg);
@@ -373,8 +379,8 @@ export default {
                 method: "post",
                 params: {
                     id: this.autId,
-                    companyId: JSON.parse(sessionStorage.getItem("toTransact")).companyId,
-                    autId: JSON.parse(sessionStorage.getItem("toTransact")).id
+                    companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
+                    autId: this.autId
                 },
             }).then(
                 (res) => {
