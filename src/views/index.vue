@@ -159,18 +159,14 @@ export default {
             <el-tab-pane label="项目管理" name="third">
                 <el-col :span="13">
                     <video width="600px" height="400px" controls>
-                        <source src="../assets/videos/architecture2.mp4" type="video/mp4">
+                        <source src="../assets/videos/testProject.mp4" type="video/mp4">
                     </video>
                 </el-col>
                 <el-col :span="10" style="margin-top: 50px;">
-                    <p>自动化构件又称为原子构件，用于识别被测系统中的某类型元素，并对其进</p>
-                    <p>行操作，是对被测系统进行的操作步骤的最小单位。例如Web网页中的下拉</p>
-                    <p>框，可以封装成一个WebList下拉框构件，构件方法支持对Web中的下拉框进</p>
-                    <p>行选择、点击等操作。调用自动化构件并配以合适的数据，就得到自动化脚</p>
-                    <p>本。自动化构件是编写脚本的基础。</p>
-                    <p>由于开发使用的语言、架构不同，开发出来的程序也千差万别。我们每种开</p>
-                    <p>发语言和框架称为一个开发架构，各开发架构分开处理、编写自动化构件。</p>
-                    <p>开发架构又区分为抽象架构和具体被测系统架构。</p>
+                    <p>
+											按照测试步骤的顺序，项目测试可分为测试项目管理，测试用例管理，测试资源管理，
+											测试场景管理，测试计划及执行，批次执行查询六个部分。
+										</p>
                 </el-col>
             </el-tab-pane>
         </el-tabs>

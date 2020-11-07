@@ -127,7 +127,7 @@
                                     </el-form-item>
                                 </el-row>
                                 <div v-if="dialogVisibleS" class="addForm">
-                                    <el-divider content-position="center" style="padding:0;margin:0">后缀有*为必填项目</el-divider>
+                                    <el-divider content-position="center" style="padding:0;margin:0"></el-divider>
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="被测系统" prop="autName" label-width="40%">
@@ -174,12 +174,12 @@
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
-                                            <el-form-item label="测试意图" prop="testdesign" label-width="25%"  required>
+                                            <el-form-item label="测试意图" prop="testdesign" label-width="25%"  >
                                                 <el-input size="small" v-model="addForm.testdesign"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
-                                            <el-form-item label="前置条件" prop="prerequisites" label-width="25%" required>
+                                            <el-form-item label="前置条件" prop="prerequisites" label-width="25%" >
                                                 <el-input size="small" v-model="addForm.prerequisites"></el-input>
                                             </el-form-item>
                                         </el-col>
@@ -242,7 +242,7 @@
                                     </el-form-item>
                                 </el-row>
                                 <div v-if="dialogVisibleM" class="addForm">
-                                    <el-divider content-position="center" style="padding:0;margin:0">后缀有*为必填项目</el-divider>
+                                    <el-divider content-position="center" style="padding:0;margin:0"></el-divider>
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="被测系统" prop="autName" label-width="40%">
@@ -358,7 +358,7 @@
                                                     </el-form-item>
                                                 </el-col>
                                             </el-row>
-                                            <el-divider content-position="center">后缀有*为必填项目</el-divider>
+                                            <el-divider content-position="center"></el-divider>
                                             <div v-show="item.show">
                                                 <el-row>
                                                     <el-col :span="7">
@@ -478,7 +478,7 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-                            <el-divider content-position="center">后缀有*为必填项目</el-divider>
+                            <el-divider content-position="center"></el-divider>
                             <div v-show="item.show">
                                 <el-row>
                                     <el-col :span="7">
@@ -1056,13 +1056,14 @@ export default {
         //展示查看和修改页面表单
         showInfo(row, flag) {
             this.dialogVisibleQ = !this.dialogVisibleQ
+					  this.row = row
             if (flag == "1") {
                 this.titleFlag = 1
                 this.changeFlag = false
             } else {
                 this.titleFlag = 2
                 this.changeFlag = true
-                this.row = row
+
             }
             this.addForm = {
                 autId: row.autName,
@@ -1109,7 +1110,10 @@ export default {
                     method: "post",
                     params: {
                         ...this.addForm,
-                        transId: _this.row.transName == _this.addForm.transId ? _this.row.transId.toString() : _this.addForm.transId.toString(),
+                        transId: _this.row.transName == _this.addForm.transId ? _this.row.transId: _this.addForm.transId,
+											  autId:_this.row.autName == _this.addForm.autId?_this.row.autId : _this.addForm.autId,
+											  scriptMode:1,
+											  scriptModeFlag:_this.row.scriptTemplateName == _this.addForm.scriptModeFlag?_this.row.scriptModeFlag : _this.addForm.scriptModeFlag,
                         id: _this.row.id.toString(),
                         author: _this.row.authorId.toString(),
                         reviewer: _this.row.authorId.toString(),
