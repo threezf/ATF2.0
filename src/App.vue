@@ -162,10 +162,10 @@ export default {
                 cancelButton: '取消',
                 type: 'warning'
             }).then(() => {
-                        this.$router.push({
-                            path: "/login",
-                        });
-                
+            this.$router.push({
+                path: "/login",
+            });
+    
                 // localStorage.clear()
                 // sessionStorage.clear()
                 // Request({
