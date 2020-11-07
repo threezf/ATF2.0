@@ -36,13 +36,20 @@ export default {
     console.log(this.$route.query);
     this.transId = this.$route.query.transactId;
     this.autId = this.$route.query.autId;
+		this.testPlanId = this.$route.query.testPlanId;
   },
   methods: {
     next() {
       this.$router.push({ name: "QuicklyRun", query: this.$route.query });
     },
 		back() {
-			this.$router.push({ name: "QuicklyElement", query: this.$route.query });
+			this.$router.push({ name: "QuicklyElement", query: {
+					autId: this.autId,
+					transactId: this.transId,
+					// sceneId: this.formData.sceneId,
+					creatorId: sessionStorage.getItem("userId"),
+					testPlanId: this.testPlanId,
+				},});
 		},
   },
 };

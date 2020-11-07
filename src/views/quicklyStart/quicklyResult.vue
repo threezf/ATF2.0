@@ -76,7 +76,7 @@ export default {
       })
     },
 		back() {
-			this.$router.push({ name: "QuicklyRun", query: this.$route.query });
+			this.$router.push({ name: "QuicklyRun", query: this.$route.query.data });
 		},
     handleSizeChange(val) {
       this.pageSize = val

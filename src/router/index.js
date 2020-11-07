@@ -96,6 +96,7 @@ export default new Router({
         },
         TestProject,
 			SystemManagement,
+			QuicklyStart,
         Addition,
         {
 			path: '/mockApi',

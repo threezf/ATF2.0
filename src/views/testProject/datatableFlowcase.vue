@@ -240,7 +240,7 @@ export default {
                 method: 'POST',
                 params: {
                     caseLibId: this.queryFlowTestCaseParams.caseLibId,
-                    executorId: "3"
+                    executorId: sessionStorage.getItem("executorId")
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
@@ -441,7 +441,7 @@ export default {
             overflow: hidden;
             margin-bottom: -20px;
             margin-left: 45px;
-            
+
 
             // .el-form-item {
             //     margin-top: 10px;
@@ -504,7 +504,7 @@ export default {
                     width: 160px;
                 }
                 .el-select{
-                    width: 180px;   
+                    width: 180px;
                 }
                 .textarea{
                     width: 160px;
@@ -530,7 +530,7 @@ export default {
                 }
 
                 .el-form {
-                    
+
 
                     .el-form-item {
                         margin-bottom: 0px;

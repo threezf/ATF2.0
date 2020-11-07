@@ -219,6 +219,7 @@ export default {
             },
             treeLoading: false,
             uiUID: '', // 负责处理UIID部分
+					  timer:null,
         };
     },
     watch: {
@@ -251,7 +252,8 @@ export default {
 
     },
     created() {
-
+			this.getClass()
+			this.getEleTree();
     },
     methods: {
         // 录制工具下载
@@ -267,8 +269,13 @@ export default {
         },
         // 以下是三个函数是上传组件用到的
         submitUpload() {
+					  clearTimeout(this.timer);
             this.$refs.upload.submit();
-            this.getEleTree()
+            // this.$alert("导入较慢，请稍等一会儿")
+					  this.timer= setTimeout(function ()
+					  {
+					  	this.getEleTree()
+					  },1000)
         },
         tempError(response, file, fileList) {
             this.$message.error(response.respMsg);
@@ -372,8 +379,8 @@ export default {
                 method: "post",
                 params: {
                     id: this.autId,
-                    companyId: JSON.parse(sessionStorage.getItem("toTransact")).companyId,
-                    autId: JSON.parse(sessionStorage.getItem("toTransact")).id
+                    companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
+                    autId: this.autId
                 },
             }).then(
                 (res) => {
@@ -480,10 +487,10 @@ export default {
         },
         branchAddEleShow() {
             // if (this.creatorId == sessionStorage.getItem("userId")) {
-                if (this.selectedUI === "") {
-                    this.$message("请选择UI，再进行添加");
-                    return;
-                }
+            //     if (this.selectedUI === "") {
+            //         this.$message("请选择UI，再进行添加");
+            //         return;
+            //     }
                 this.branchAddEleDialogFlag = true;
             // } else {
             //     this.$alert("该被测项目由" + this.creatorName + "创建，你没有权限批量添加元素")

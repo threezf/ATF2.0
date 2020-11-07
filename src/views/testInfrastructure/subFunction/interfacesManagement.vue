@@ -304,6 +304,7 @@ export default {
                     value: 'XML'
                 },
             ], // 报文格式
+
         }
     },
     created() {
@@ -318,7 +319,7 @@ export default {
             this.autId = Number(localStorage.getItem('transactAutId'))
             this.transactsForm.id = localStorage.getItem('transactId')
         }
-			  this.showFlag=this.$route.query.showFlag
+			this.showFlag=!Boolean(localStorage.getItem("interfaceFlag"))
         console.log('transactsForm', this.autId, this.transactsForm.id, this.$route.query.data.hasOwnProperty('id'))
         this.selectSystem = this.autId
         this.selectedTransact = Number(this.transactsForm.id)
@@ -328,7 +329,11 @@ export default {
         this.querySingleInterface(this.transactsForm.id)
 
     },
-
+    watch:{
+    	// showFlag(val){
+    	// 	this.$alert("奇奇怪怪")
+			// }
+		},
     methods: {
         // 获取全部用户
         selectAllUsername() {
@@ -414,7 +419,7 @@ export default {
                     _this.manageInfo.status = res.status //开发状态
                     _this.manageInfo.method = res.method // 请求方法
                     _this.manageInfo.protocol = res.protocol // 通信类型
-                    _this.manageInfo.bodyFormat = res.bodyFormat ? res.bodyFormat : '1' // 报文格式
+                    _this.manageInfo.bodyFormat = res.bodyFormat ? (res.bodyFormat==1?res.bodyFormat="JSON":res.bodyFormat="XML") : '1' // 报文格式
                     _this.manageInfo.selectedHeader = []
                     _this.manageInfo.creatorId = res.creatorId || sessionStorage.getItem('userId')
                     if (res.header === '[]' || res.header === null) {

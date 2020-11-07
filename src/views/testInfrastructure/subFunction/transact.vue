@@ -575,9 +575,9 @@ export default {
                         creatorId: this.creatorId,
                         creatorName: this.creatorName,
                         steps: 0,
-                        showFlag: this.disableFunc
                     },
                 });
+                localStorage.setItem("interfaceFlag", this.disableFunc)
             }
         },
         /*
@@ -713,7 +713,8 @@ export default {
                                         id: _this.updateId,
                                         nameMedium: _this.ruleForm.nameMedium,
                                         userId: sessionStorage.getItem("userId"),
-                                        creatorId: sessionStorage.getItem("userId")
+                                        creatorId: sessionStorage.getItem("userId"),
+                                        autId: _this.autId
                                     },
                                 })
                                 .then((res) => {

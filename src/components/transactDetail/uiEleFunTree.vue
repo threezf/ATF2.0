@@ -187,7 +187,7 @@ export default {
                 method: 'post',
                 params: {
                     id: this.autId,
-                    companyId: parseInt(JSON.parse(sessionStorage.getItem("toTransact")).companyId),
+                    companyId: parseInt(JSON.parse(localStorage.getItem("loginInfo")).companyId),
                     autId: this.autId,
                 }
             }).then((res) => {

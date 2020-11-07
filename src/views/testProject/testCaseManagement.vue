@@ -35,8 +35,9 @@
             <el-row style="padding-top:10px;padding-bottom:10px">
                 <search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
             </el-row>
-                <el-table stripe :data="testCaseList" border :row-class-name="tableRowClassName" class="table" @expand-change="subShow" @selection-change="handleSelectionChange">
-                    <el-table-column type="expand">
+                <el-table stripe :data="testCaseList" border ref="table" :row-class-name="tableRowClassName" class="table" @expand-change="subShow" :row-key="getRowKeys"
+					:expand-row-keys="expands" @selection-change="handleSelectionChange">
+									<el-table-column type="expand" >
                         <template slot-scope="scope">
                             <div class="scrollbar" v-if="scope.row.caseCompositeType == '2'">
                                 <el-table :data="subCaseList" @selection-change="subHandleSelectionChange" row-key="id" class="tabPosition">
@@ -385,13 +386,13 @@
                                                         </el-form-item>
                                                     </el-col>
                                                 </el-row>
-                                                <el-row>
-                                                    <el-col :span="7" >
-                                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >
-                                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>
-                                                        </el-form-item>
-                                                    </el-col>
-                                                </el-row>
+<!--                                                <el-row>-->
+<!--                                                    <el-col :span="7" >-->
+<!--                                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >-->
+<!--                                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>-->
+<!--                                                        </el-form-item>-->
+<!--                                                    </el-col>-->
+<!--                                                </el-row>-->
                                                 <el-row>
                                                     <el-col :span="11">
                                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" >
@@ -505,13 +506,13 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
-                                <el-row>
-                                    <el-col :span="7" >
-                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >
-                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
+<!--                                <el-row>-->
+<!--                                    <el-col :span="7" >-->
+<!--                                        <el-form-item label="节点顺序号" prop="steporder" label-width="40%" >-->
+<!--                                            <el-input v-model="item.addNodeForm.steporder" size="small"></el-input>-->
+<!--                                        </el-form-item>-->
+<!--                                    </el-col>-->
+<!--                                </el-row>-->
                                 <el-row>
                                     <el-col :span="11">
                                         <el-form-item label="测试意图" prop="testdesign" label-width="25%" >
@@ -948,8 +949,13 @@ export default {
             transList: [],
             templateList: [],
             userList: [],
+					  expands:[],
             multipleSelection: [],
             subMultipleSelection: [],
+				  	getRowKeys: (row) => {//获取当前行id
+						// console.log(row)
+						 return row.id   //这里看这一行中需要根据哪个属性值是id
+					},
             addVisible: false,
             addVisibleM: false,
             changeFlag: false,
@@ -1076,8 +1082,8 @@ export default {
                 prerequisites: row.preRequisites,
                 priority: row.priority.toString(),
                 reviewer: row.reviewerName,
-                scriptMode: row.scriptMode.toString(),
-                scriptModeFlag: row.scriptMode.toString(),
+                scriptMode: row.scriptTemplateName,
+                scriptModeFlag: row.scriptTemplateName,
                 submissionId: row.missionId,
                 tags: row.tags,
                 testdesign: row.testDesign,
@@ -1146,6 +1152,9 @@ export default {
                     );
                 }
             }
+            typeof _this.addForm.author=="number"?1:parseInt(_this.addForm.author=sessionStorage.getItem("userId"))
+					  _this.addForm.executor=_this.addForm.author
+				  	_this.addForm.reviewer=_this.addForm.author
             Request({
                     url: "/testcase/addTestcase",
                     method: "post",
@@ -1651,7 +1660,6 @@ export default {
                 .then(res => {
                     if (res.respCode == "0000") {
                         this.dialogVisibleI = false;
-                        _this.getCase();
                         this.$alert("导入成功", "导入情况", {
                             confirmButtonText: "确定",
                             callback: action => {
@@ -1661,6 +1669,7 @@ export default {
                                 });
                             }
                         });
+											  _this.getCase();
                     } else {
 
                         this.dialogVisibleI = false;
@@ -1795,6 +1804,16 @@ export default {
         },
         //展示流程节点
         subShow(row, rowList) {
+					this.subCaseList=[]
+					if (rowList.length) { // 只展开一行//说明展开了
+						this.expands = []
+						if (row) {
+							this.expands.push(row.id)// 只展开当前行id
+						}
+						//  this.tablaData(row.eqId)  这里可以调用接口数据渲染
+					} else { // 说明收起了
+						this.expands = []
+					}
             if (row.caseCompositeType != 1) {
                 var _this = this;
                 Request({
@@ -1805,11 +1824,17 @@ export default {
                         }
                     })
                     .then(res => {
-                        _this.subCaseList = res.testcaseActionViewList;
-
-                    })
+                    	if(res.testcaseActionViewList){
+												_this.subCaseList = res.testcaseActionViewList;
+											}else{
+												_this.subCaseList=[]
+											}
+                    },
+							err => {
+								_this.subCaseList=[]
+							})
                     .catch(err => {
-                        console.log(err);
+											_this.subCaseList=[]
                     });
                 clearTimeout(this.timer); //清除延迟执行
                 this.timer = setTimeout(() => { //设置延迟执行
