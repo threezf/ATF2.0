@@ -503,33 +503,38 @@ export default {
         },
         // 保存内容
         saveContent() {
+            if(!this.manageInfo.bodyFormat && !this.manageInfo.bodyContent) {
+                this.$message.warning('请设置报文')
+                return
+            }
             let valid = this.manageInfo.bodyFormat !== null && this.manageInfo.bodyContent !== ""
+            console.log()
             if (valid) {
                 let uploadForm = {
-                    authContent: null,
-                    authType: null,
+                    authContent: "",
+                    authType: "",
                     bodyContent: this.manageInfo.bodyContent,
-                    bodyFormat: this.manageInfo.bodyFormat,
-                    bodyParseContent: null,
+                    bodyFormat: isNaN(Number(this.manageInfo.bodyFormat)) ?this.manageInfo.bodyFormat == "JSON"? 1: 2 : this.manageInfo.bodyFormat,
+                    bodyParseContent: "",
                     createTime: this.manageInfo.createTime,
                     creatorId: this.manageInfo.creatorId,
-                    dataDictList: null,
+                    dataDictList: "",
                     description: this.manageInfo.description,
-                    groupName: null,
+                    groupName: "",
                     header: JSON.stringify(this.manageInfo.selectedHeader),
                     id: this.transactsForm.id,
                     interfaceCode: this.manageInfo.interfaceCode,
-                    maintainerId: this.manageInfo.maintainerId,
+                    maintainerId: "",
                     method: this.manageInfo.method,
                     name: this.manageInfo.name,
-                    preRequestScript: null,
+                    preRequestScript: "",
                     protocol: this.manageInfo.protocol,
                     query: "[]",
                     rawFormat: 1,
                     status: this.manageInfo.status,
                     systemId: this.autId,
                     urlPath: this.manageInfo.urlPath,
-                    version: this.manageInfo.version,
+                    version: "",
                     userId: sessionStorage.getItem('userId'),
                     creatorId: this.manageInfo.creatorId
                 }

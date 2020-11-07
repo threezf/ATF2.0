@@ -1,13 +1,13 @@
 <template>
 <page>
-    <el-row class="searchRow">
-        <el-col :span="7">
-            <el-input size="small" v-model="searchInfo" placeholder="请输入角色名称 (支持模糊查询)" clearable>
+    <el-row class="searchRow" :gutter="50">
+        <el-col :span="4">
+            <el-input size="small" style="width: 90%" v-model="searchInfo" placeholder="请输入角色名称 (支持模糊查询)" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="searchByItem">
                 </el-button>
             </el-input> 
         </el-col>
-        <el-col :span="17">
+        <el-col :span="20">
             <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRule">新增
             </el-button>
             <el-button type="primary" size="small" icon="el-icon-setting" @click="doAssignPermissions">分配权限

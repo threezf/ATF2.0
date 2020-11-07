@@ -2,7 +2,7 @@
 <page>
     <el-row class="searchRow" :gutter="50">
         <el-col :span="4">
-            <el-input size="small" placeholder="请输入企业名称" v-model="searchRole" clearable>
+            <el-input size="small" style="width: 90%" placeholder="请输入企业名称" v-model="searchRole" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="getEnterprise(1)"></el-button>
             </el-input>
         </el-col>

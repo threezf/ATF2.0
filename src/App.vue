@@ -162,10 +162,6 @@ export default {
                 cancelButton: '取消',
                 type: 'warning'
             }).then(() => {
-            this.$router.push({
-                path: "/login",
-            });
-    
                 // localStorage.clear()
                 // sessionStorage.clear()
                 // Request({
@@ -179,6 +175,10 @@ export default {
                 // }).catch(err => {
 
                 // })
+                this.$router.push({
+                    path: "/login",
+                });
+        
             }).catch(() => {})
         },
         // 修改密码

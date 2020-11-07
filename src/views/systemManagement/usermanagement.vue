@@ -1,19 +1,17 @@
 <template>
 <page>
-    <el-row :gutter="15">
-        <el-col :span="3">
-            <el-select size="small" v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
+    <el-row :gutter="50">
+        <el-col :span="5" style="display: flex">
+            <el-select style="width: 36%" size="small" v-model="selectValue" placeholder="请选择" @change="handleSelectChange">
                 <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
-        </el-col>
-        <el-col :span="5" >
-            <el-input size="small" v-model="selectInfo" placeholder="请输入内容" clearable>
+            <el-input style="width: 64%" size="small" v-model="selectInfo" placeholder="请输入内容" clearable>
                 <el-button icon="el-icon-search" @click='getUsers(1)' slot="append">
                 </el-button>
             </el-input>
         </el-col>
-        <el-col :span="16" >
+        <el-col :span="19" >
           <el-button size="small" @click='addUserButtom' type="primary" icon="el-icon-plus">
             添加用户
           </el-button>
