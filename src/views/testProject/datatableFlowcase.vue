@@ -33,37 +33,37 @@
                         </span>
                     </el-row>
                     <el-row>
-                            <el-form-item label="测试点">
-                                <el-input size="small" v-model="mainForm.testPoint" :disabled="flag">
-                                </el-input>
-                            </el-form-item>
+                        <el-form-item label="测试点">
+                            <el-input size="small" v-model="mainForm.testPoint" :disabled="flag">
+                            </el-input>
+                        </el-form-item>
 
-                            <el-form-item label="测试任务">
-                                <el-select size="small" v-model="mainForm.missionId" :disabled="flag">
-                                    <el-option v-for="item in missionList" :key="item.id" :value="item.id" :label="item.nameMedium">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
+                        <el-form-item label="测试任务">
+                            <el-select size="small" v-model="mainForm.missionId" :disabled="flag">
+                                <el-option v-for="item in missionList" :key="item.id" :value="item.id" :label="item.nameMedium">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
                     </el-row>
                     <el-row>
-                            <el-form-item label="测试意图">
-                                <el-input size="small" v-model="mainForm.testDesign" :disabled="flag">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item label="检查点">
-                                <el-input size="small" v-model="mainForm.checkPoint" :disabled="flag">
-                                </el-input>
-                            </el-form-item>
+                        <el-form-item label="测试意图">
+                            <el-input size="small" v-model="mainForm.testDesign" :disabled="flag">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="检查点">
+                            <el-input size="small" v-model="mainForm.checkPoint" :disabled="flag">
+                            </el-input>
+                        </el-form-item>
                     </el-row>
                     <el-row>
-                            <el-form-item label="预计结果">
-                                <el-input size="small" v-model="mainForm.expectResult" :disabled="flag">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item label="测试步骤">
-                                <el-input class="textarea" type="textarea" v-model="mainForm.testStep" :disabled="flag">
-                                </el-input>
-                            </el-form-item>
+                        <el-form-item label="预计结果">
+                            <el-input size="small" v-model="mainForm.expectResult" :disabled="flag">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="测试步骤">
+                            <el-input class="textarea" type="textarea" v-model="mainForm.testStep" :disabled="flag">
+                            </el-input>
+                        </el-form-item>
                     </el-row>
                 </el-form>
                 </div>
@@ -167,13 +167,13 @@ export default {
                 nodeInfoList: [], // 节点详情
                 missionId: '', //任务id
                 casecode: '', //用例编号
-                executorId: '', // 执行者编号
+                executorId: sessionStorage.getItem('executorId'), // 执行者编号
             },
             id: '', //节点id
             flag: true, // 是否禁用
             autRespDTOList: [], // 功能点列表
             queryFlowTestCaseParams: {
-                executorId: "3",
+                executorId: sessionStorage.getItem('executorId'),
                 caseLibId: ""
             }, // 查询测试用例的表单数据
             flowTestcaseInfos: [], // 流程测试数据
@@ -192,7 +192,7 @@ export default {
             dialogTitle: '查看脚本',
             dialogVisible: false,
             dialogTableData: [],
-            currentRow: null,
+            currentRow: null
         }
     },
     created() {
@@ -246,7 +246,12 @@ export default {
                 if (res.respCode === '0000') {
                     console.log('获取成功', res);
                     this.flowTestcaseInfos = res.flowTestcaseInfos
-                    this.testCaseInfoId = this.flowTestcaseInfos[0].id
+                    console.log('aaaaaaaaaaaaaaa', this.flowTestcaseInfos)
+                    if(this.flowTestcaseInfos.length > 0) {
+                        this.testCaseInfoId = this.flowTestcaseInfos[0].id
+                    }else {
+                        this.testCaseInfoId = ""
+                    }
                     this.queryFlowTestcaseInfo()
                 } else {
                     this.$message.warning(res.respMsg)
@@ -302,7 +307,6 @@ export default {
             }).then(res => {
                 console.log('queryFlowTestcaseInfo', res)
                 _this.mainForm.checkPoint = res.checkPoint
-                _this.mainForm.missionId = res.missionName
                 _this.mainForm.testDesign = res.testDesign
                 _this.mainForm.testPoint = res.testPoint
                 _this.mainForm.expectResult = res.expectResult
@@ -327,6 +331,7 @@ export default {
         },
         // 提交修改
         saveFlowTestcaseInfo() {
+            this.mainForm.id = this.testCaseInfoId
             console.log(this.mainForm);
             Request({
                 url: '/dataCenter/saveFlowTestcaseInfo',
@@ -335,6 +340,8 @@ export default {
             }).then(res => {
                 if (res.respCode === '0000') {
                     this.$message.success('提交成功')
+                    this.queryFlowTestcase()
+
                 } else {
                     this.$message.warning(res.respMsg)
                 }

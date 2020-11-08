@@ -73,7 +73,7 @@
                         <el-input size="small" v-model="addForm.nameMedium"></el-input>
                     </el-form-item>
                     <el-form-item label="项目时间" required>
-                        <el-date-picker size="small" v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right">
+                        <el-date-picker size="small" v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right" @change="dateChangeVal" value-format="timestamp">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="描述" prop="projectDesc">
@@ -263,17 +263,21 @@ export default {
         updateProjectButton(index, row) {
             this.modelFlag = 2
             this.selectedId = row.id
+            console.log('row', row)
             const {
                 codeLong,
                 nameMedium,
-                descMedium
+                descMedium,
+                planedEndDate,
+                planedStartDate
             } = row
 
             this.addForm = {
                 codeLong,
                 nameMedium,
-                descMedium
+                descMedium,
             }
+            this.timeValue.push(planedStartDate, planedEndDate)
             this.dialogVisible = true
         },
         // 添加测试项目
@@ -296,6 +300,9 @@ export default {
             }).catch((err) => {
                 console.log(err)
             })
+        },
+        dateChangeVal(val) {
+            console.log('row', this.timeValue)
         },
         insertTestPlan(caseLibId) {
             Request({
