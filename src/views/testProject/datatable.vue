@@ -719,7 +719,7 @@ export default {
                 for (let i = 0; i < functionInfo.length; i++) {
                     var afterItem = {
                         arguShow: true,
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        // name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
                         functions: [{
                             name: functionInfo[i].name,
                             parameterlist: ""

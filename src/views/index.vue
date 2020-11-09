@@ -173,7 +173,7 @@ export default {
     </page>
 </div>
 </template>
-
+F
 <style lang="less" scoped>
 .home-page {
     width: 1200px;
