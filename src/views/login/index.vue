@@ -92,7 +92,8 @@
         storedSessionId: 0,
         userId: 0,
         userPriority: 0,
-        reallyName: ''
+        reallyName: '',
+        urlList : []
       };
     },
     computed: {},
@@ -158,7 +159,6 @@
                           if(res.respMsg.startsWith('license使用时间不足')) {
                               this.$message.warning('license使用时间不足，请注意充值')
                           }
-
                           this.$router.push({
                             path: "/index",
                           });
@@ -189,6 +189,27 @@
           // this.$router.push({
           //   path: "/index",
           // });
+        })
+      },
+      setLeftCount(urlList) {
+        Request({
+            url: '/userController/queryAllAuditUser',
+            method: 'post',
+            params: {
+            }
+        }).then(res => {
+            sessionStorage.setItem('leftCount', res.totalCount)
+            this.$bus.emit('setUrls', {
+                urlList: urlList,
+                currentName: this.ruleForm.uid,
+                userPriority: this.userPriority,
+                reallyName: this.reallyName,
+                leftCount: res.totalCount
+            })
+        }).catch(err => {
+            console.log(err)
+        }).finally(_ => {
+            this.pageLoading = false
         })
       },
       //获取验证码
@@ -241,12 +262,8 @@
             })
             localStorage.setItem('urls', res.urlList)
             console.log('urls', this.userPriority)
-            this.$bus.emit('setUrls', {
-                urlList: res.urlList,
-                currentName: this.ruleForm.uid,
-                userPriority: this.userPriority,
-                reallyName: this.reallyName
-            })
+            this.setLeftCount(res.urlList)
+            this.urlList = res.urlList
           }
           return
         }).catch(error => {

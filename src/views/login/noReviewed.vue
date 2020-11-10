@@ -61,7 +61,7 @@ export default {
             }).then(res => {
                 console.log('待审核', res, this.$parent)
                 this.auditDtoList = res.auditDtoList
-                this.$parent.queryLeftCount()
+                sessionStorage.setItem('leftCount', res.totalCount)
             }).catch(err => {
                 console.log(err)
             }).finally(_ => {
