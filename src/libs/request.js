@@ -56,6 +56,9 @@ axios.interceptors.response.use(function (response) {
     if (response.data.respCode === '0000') {
         return response
     }
+    if (response.data.respCode === '10000010') {
+        ElementUI.Message.warning('异地登录')
+    }
     if(response.data.success) {
         return response
     }
