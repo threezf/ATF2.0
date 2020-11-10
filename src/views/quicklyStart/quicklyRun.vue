@@ -45,7 +45,7 @@
               <el-option
                 v-for="(item,index) in runners"
                 :key="index"
-                :label="item.identifiableName"
+                :label="item.runnerName"
                 :value="item.runnerName">
               </el-option>
             </el-select>

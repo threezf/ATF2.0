@@ -44,10 +44,10 @@
                             <el-button type="primary" @click="submitForm('form')" v-show="!disabled">添加并进入下一步</el-button>
                             <el-button @click="resetForm('form')" v-show="!disabled">重置</el-button>
                         </el-col>
-                        <el-col :span="14" v-show="disabled">
+                        <el-col :span="18" v-show="disabled">
                             <el-button type="primary" @click="editTransact('form')" v-show="disabled">修改功能点</el-button>
                             <el-button @click="resetForm('form')" v-show="disabled">返回添加</el-button>
-<!--                            <el-button @click="toElement" v-show="disabled">下一步</el-button>-->
+                            <el-button @click="toElement" v-show="disabled">下一步</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -141,9 +141,9 @@ export default {
                 query: {
                     autId: this.formData.autId,
                     transactId: this.formData.id,
-                    // sceneId: this.formData.sceneId,
-                    creatorId: sessionStorage.getItem("userId")
-                    // testPlanId: this.formData.testPlanId,
+                    sceneId: this.formData.sceneId,
+                    creatorId: sessionStorage.getItem("userId"),
+                    testPlanId: this.formData.testPlanId,
                 },
             });
         },
