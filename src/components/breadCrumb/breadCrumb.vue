@@ -80,6 +80,9 @@
 				if(this.path[1]=="TestedSystemManagementRouter"){
 					this.path.splice(1,1)
 				}
+				if(this.path[0]=="mockApi"){
+					this.path.splice(1,2)
+				}
 				if(this.path[0]=="index"){
 					this.showFlag=false
 				}else{
