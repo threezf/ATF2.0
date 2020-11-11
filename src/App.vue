@@ -143,10 +143,11 @@ export default {
             let menuList = [];
             this.$router.options.routes.forEach((item, index) => {
                 if (item.path != "/" && !item.meta.hide) {
+                    console.log('urls', item, this.urls)
                     if (index === 2) {
                         menuList.push(item)
                     } else {
-                        if (this.urls.indexOf(item.meta.another) > -1) {
+                        if (this.urls != undefined && this.urls.indexOf(item.meta.another) > -1) {
                             menuList.push(item)
                         }
                     }
@@ -162,19 +163,19 @@ export default {
                 cancelButton: '取消',
                 type: 'warning'
             }).then(() => {
-                // localStorage.clear()
-                // sessionStorage.clear()
-                // Request({
-                //     url: '/logout',
-                //     method: 'post',
-                //     params: {
-                //     }
-                // }).then(res => {
-                //     if (res.respCode === '0000') {
-                //     }
-                // }).catch(err => {
+                localStorage.clear()
+                sessionStorage.clear()
+                Request({
+                    url: '/logout',
+                    method: 'post',
+                    params: {
+                    }
+                }).then(res => {
+                    if (res.respCode === '0000') {
+                    }
+                }).catch(err => {
 
-                // })
+                })
                 this.$router.push({
                     path: "/login",
                 });
@@ -239,17 +240,6 @@ export default {
                 // localStorage.setItem('userType', 'false')
                 // this.$store.state.commit("changeFlag", 'false')
             }
-        },
-        queryLeftCount() {
-             Request({
-                url: '/userController/queryAllAuditUser',
-                method: 'post',
-                params: {
-                }
-            }).then(res => {
-                console.log(res)
-                this.leftCount = parseInt(res.totalCount)
-            })
         }
     },
     created() {
@@ -266,7 +256,7 @@ export default {
         }
         this.initUserState()
         if(this.userPriority == 0) {
-            this.queryLeftCount()
+            this.leftCount = parseInt(sessionStorage.getItem('leftCount'))
         }
     },
     mounted() {
@@ -274,9 +264,10 @@ export default {
             this.urls = urls.urlList
             this.currentUser = urls.reallyName
             this.userPriority = urls.userPriority
-            console.log('urls', urls)
+            this.leftCount = Number(urls.totalCount)
+            console.log('seturls', urls)
             if(this.userPriority == 0) {
-                this.queryLeftCount()
+                this.leftCount = parseInt(sessionStorage.getItem('leftCount'))
             }
             localStorage.setItem('username', urls.currentName)
             localStorage.setItem('userPriority', this.userPriority)
