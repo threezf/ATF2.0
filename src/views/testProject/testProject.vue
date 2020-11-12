@@ -3,33 +3,21 @@
     <el-container>
         <el-main>
             <el-row style="margin-bottom:10px">
-					<el-col :span="4">
-						<el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
-					</el-col>
-					<el-col :span="20">
-						<el-button
-							@click='getTestProject(1)'
-							icon="el-icon-setting"
-							size="small"
-							type="primary">
-							搜索
-						</el-button>
-						<el-button
-							@click='addProjectButton'
-							type="primary"
-							size="small"
-							icon="el-icon-plus">
-							添加
-						</el-button>
-						<el-button
-							@click='manageProject'
-							type="primary"
-							size="small"
-							icon="el-icon-setting">
-							管理功能点
-						</el-button>
-					</el-col>
-				</el-row>
+                <el-col :span="4">
+                    <el-input size="small" v-model="searchInput" placeholder="请输入项目编号或名称"></el-input>
+                </el-col>
+                <el-col :span="20">
+                    <el-button @click='getTestProject(1)' icon="el-icon-setting" size="small" type="primary">
+                        搜索
+                    </el-button>
+                    <el-button @click='addProjectButton' type="primary" size="small" icon="el-icon-plus">
+                        添加
+                    </el-button>
+                    <el-button @click='manageProject' type="primary" size="small" icon="el-icon-setting">
+                        管理功能点
+                    </el-button>
+                </el-col>
+            </el-row>
             <el-table stripe :data="testProjectList" border class='table'>
                 <el-table-column label="" width="34px" align="center">
                     <template slot-scope="scope">
@@ -43,14 +31,8 @@
                 <el-table-column label="测试项目名称" property="nameMedium" />
                 <el-table-column label="测试项目描述" property='descMedium' />
                 <el-table-column label="创建者" property='creatorName' />
-                		<el-table-column
-                		label="开始时间"
-                		property="planedStartDate"
-                		:formatter="transTime"/>
-                		<el-table-column
-                		label="结束时间"
-                		property='planedEndDate'
-                		:formatter="transTime"/>
+                <el-table-column label="开始时间" property="planedStartDate" :formatter="transTime" />
+                <el-table-column label="结束时间" property='planedEndDate' :formatter="transTime" />
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button size="small" @click="toCase(scope.row.id,scope.row.caseLibId,scope.row.nameMedium, scope.row)">进入</el-button>
@@ -59,32 +41,32 @@
                 </el-table-column>
             </el-table>
         </el-main>
-        <el-footer  class="dialog-footer">
+        <el-footer class="dialog-footer">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
             </el-pagination>
         </el-footer>
     </el-container>
-            <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
-                <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
-                    <el-form-item label="测试项目编号" prop="codeLong">
-                        <el-input size="small" v-model="addForm.codeLong" placeholder="选填"></el-input>
-                    </el-form-item>
-                    <el-form-item label="测试项目名称" prop="nameMedium" required>
-                        <el-input size="small" v-model="addForm.nameMedium"></el-input>
-                    </el-form-item>
-                    <el-form-item label="项目时间" required>
-                        <el-date-picker size="small" v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right" @change="dateChangeVal" value-format="timestamp">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="描述" prop="projectDesc">
-                        <el-input size="small" v-model="addForm.descMedium" placeholder="选填"></el-input>
-                    </el-form-item>
-                    <el-row type="flex" justify="center" style="margin-bottom:-10px">
-                        <el-button size="small" type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
-                        <el-button size="small" @click="resetForm()">重置</el-button>
-                    </el-row>
-                </el-form>
-            </el-dialog>
+    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
+        <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
+            <el-form-item label="测试项目编号" prop="codeLong">
+                <el-input size="small" v-model="addForm.codeLong" placeholder="选填"></el-input>
+            </el-form-item>
+            <el-form-item label="测试项目名称" prop="nameMedium" required>
+                <el-input size="small" v-model="addForm.nameMedium"></el-input>
+            </el-form-item>
+            <el-form-item label="项目时间" required>
+                <el-date-picker size="small" v-model="timeValue" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" style="width:90%" align="right" @change="dateChangeVal" value-format="timestamp">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="描述" prop="projectDesc">
+                <el-input size="small" v-model="addForm.descMedium" placeholder="选填"></el-input>
+            </el-form-item>
+            <el-row type="flex" justify="center" style="margin-bottom:-10px">
+                <el-button size="small" type="primary" @click="submitForm('addForm')">{{buttonName}}</el-button>
+                <el-button size="small" @click="resetForm()">重置</el-button>
+            </el-row>
+        </el-form>
+    </el-dialog>
 </div>
 </template>
 
@@ -291,13 +273,17 @@ export default {
                 method: 'post',
                 params: this.addForm
             }).then((res) => {
+                this.$alert(res.respCode)
                 this.dialogVisible = false
                 this.insertTestPlan(res.caseLibId)
                 this.getTestProject()
+
             }, (err) => {
+                this.$alert("该测试项目名称已存在")
                 this.dialogVisible = false
                 console.log(err)
             }).catch((err) => {
+                this.$alert(err.respMsg)
                 console.log(err)
             })
         },

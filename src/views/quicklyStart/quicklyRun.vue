@@ -125,7 +125,7 @@ export default {
         name: "QuicklyResult",
         query: {
           data: this.$route.query,
-          runId: this.runId
+          runId: this.batchId
         },
       });
     },

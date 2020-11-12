@@ -65,7 +65,7 @@ export default {
           orderColumns: "casecode",
           orderType: "asc",
           pageSize: pageSize,
-          runId: _this.$route.query.runId,
+          runId: 8055,
           testPlanId: _this.$route.query.data.testPlanId
         }
       }).then(res => {
