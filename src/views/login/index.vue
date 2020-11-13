@@ -117,8 +117,8 @@
           });
           return;
         }
-        // this.$refs[FormName].validate((valid) => {
-        //   if (valid) {
+        this.$refs[FormName].validate((valid) => {
+          if (valid) {
             let qs = require("qs");
             Request({
                 url: "/userController/checkauthcode",
@@ -175,10 +175,10 @@
                 console.log("校验错误", e);
                 this.$message.error("验证码错误");
               });
-        //   } else {
-        //     this.$message.error("请输入信息");
-        //   }
-        // });
+          } else {
+            this.$message.error("请输入信息");
+          }
+        });
       },
       // 更新用户积分
       updateTotalScore(userId, totalScore) {
