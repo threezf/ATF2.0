@@ -46,7 +46,7 @@
                 v-for="(item,index) in runners"
                 :key="index"
                 :label="item.runnerName"
-                :value="item.runnerName">
+                :value="item.identifiableName">
               </el-option>
             </el-select>
           </el-form-item>
@@ -125,7 +125,7 @@ export default {
         name: "QuicklyResult",
         query: {
           data: this.$route.query,
-          runId: this.runId
+          runId: this.batchId
         },
       });
     },
@@ -252,7 +252,7 @@ export default {
           if(data.respCode == "0000"){
             if(data.respSyncNo == -1){
               _this.runId = data.batchId
-              _this.$message.success(data.respMsg)
+              _this.$alert(data.respMsg)
               // _this.isFinished = true
               _this.isRunning = false
             }

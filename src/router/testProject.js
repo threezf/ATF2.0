@@ -93,7 +93,7 @@ export default {
             meta: {
                 name: '场景管理',
                 parent: 'TestProjectIndex',
-                icon: 'el-icon-edit',
+                icon: 'el-icon-notebook-1',
                 children: [
                 ]
             }

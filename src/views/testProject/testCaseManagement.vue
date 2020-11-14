@@ -31,6 +31,9 @@
                 <el-button @click="changeInf" type="primary" size="small" icon="el-icon-delete">
                     更改多种用例信息
                 </el-button>
+							<el-button @click="updateImport" type="primary" size="small" icon="el-icon-refresh">
+								刷新
+							</el-button>
             </el-row>
             <el-row style="padding-top:10px;padding-bottom:10px">
                 <search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
@@ -1226,6 +1229,7 @@ export default {
             _this.flowForm.caseCompositeType = caseCompositeType;
             if (caseCompositeType == 2) {
                 for (var i = 0; i < _this.caseNodeNum - 1; i++) {
+									_this.caseNodeNums[i].addNodeForm.steporder=(i+1).toString()
                     _this.addForm.actionList.push(
                         _this.caseNodeNums[i].addNodeForm
                     );
@@ -1297,7 +1301,7 @@ export default {
                     scriptMode: "1",
                     scriptModeFlag: _this.templateList.length == 0 ?
                         "" : _this.templateList[0].id,
-                    steporder: "1",
+                    steporder: "",
                     testdesign: "",
                     testpoint: "1",
                     teststep: "",
@@ -1318,6 +1322,7 @@ export default {
         //添加一个流程节点
         insertNode() {
             var _this = this
+					_this.caseNodeNums[0].addNodeForm.steporder="1"
             Request({
                     url: "/testcase/addFlowNode",
                     method: "post",
@@ -1922,6 +1927,10 @@ export default {
         // beforeRemove(file, fileList) {
         // 	// return this.$confirm(`确定移除 ${file.name}？`);
         // },
+			//刷新
+			updateImport(){
+				this.getCase();
+			},
         //实际导入函数
         uploadTemp() {
             let file = this.fileListM[0];
@@ -1940,7 +1949,7 @@ export default {
                 .then(res => {
                     if (res.respCode == "0000") {
                         this.dialogVisibleI = false;
-                        this.$alert("导入成功", "导入情况", {
+                        this.$alert("导入成功，请点击刷新按钮", "导入情况", {
                             confirmButtonText: "确定",
                             callback: action => {
                                 this.$message({
@@ -1949,7 +1958,7 @@ export default {
                                 });
                             }
                         });
-											  _this.getCase();
+
                     } else {
 
                         this.dialogVisibleI = false;

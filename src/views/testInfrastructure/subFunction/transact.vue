@@ -119,7 +119,7 @@
             </el-form-item>
         </el-form>
     </el-dialog>
-    <el-dialog title="绑定swagger" width="21%" :visible.sync="swaggerVisible">
+    <el-dialog title="绑定swagger" width="31%" :visible.sync="swaggerVisible">
         <el-form>
             <el-form-item label-width="50px" label="URL: ">
                 <el-input size="small" style="width: 300px" placeholder="请输入绑定swagger的url" v-model="swaggerUrl" clearable>

@@ -20,6 +20,7 @@
                         <el-row style="margin-top: 0; padding-top: 0;margin-left: 10px">
                             <el-button size="mini" type="primary" @click="branchAddEleShow" :disabled="showFlag">批量添加</el-button>
                             <el-button size="mini" type="primary" @click="downloadTools">录制工具下载</el-button>
+													  <el-button size="mini" type="primary" @click="updateImport">刷新</el-button>
                         </el-row>
                         <el-tree v-loading="treeLoading" class="filter-tree" :data="treeData" :props="defaultProps" :filter-node-method="filterNode" @node-click="handleNodeClick" ref="tree2"></el-tree>
                     </div>
@@ -267,11 +268,13 @@ export default {
             console.log(url);
             window.location.href = url;
         },
+			updateImport(){
+				this.getEleTree()
+			},
         // 以下是三个函数是上传组件用到的
         submitUpload() {
 					  clearTimeout(this.timer);
             this.$refs.upload.submit();
-            // this.$alert("导入较慢，请稍等一会儿")
 					  this.timer= setTimeout(function ()
 					  {
 					  	this.getEleTree()
@@ -373,7 +376,6 @@ export default {
         },
         //获取该测试系统下 所有的控件类型
         getClass() {
-            console.log("唉呀妈呀", sessionStorage.getItem("toTransact"))
             Request({
                 url: "/aut/queryAutVisibleOmClasses",
                 method: "post",

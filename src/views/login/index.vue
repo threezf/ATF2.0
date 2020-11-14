@@ -16,10 +16,10 @@
           <el-form-item prop="password" label="密码">
             <el-input v-model="ruleForm.password" placeholder="请输入密码" type="password" suffix-icon="el-icon-lock" clearable></el-input>
           </el-form-item>
-<!--          <el-form-item prop="sessionIdIn" label="验证码">-->
-<!--            <el-input v-model="ruleForm.sessionIdIn" placeholder="请输入验证码" type="text" suffix-icon="el-icon-lock" class="verCodeInput" clearable @keyup.enter.native="submitForm('ruleForm')"></el-input>-->
-<!--            <img id="sessionIdImage" class="codeStyle" type="image" alt="这里将换验证码" @click="getSessionId" :src="imageURL" />-->
-<!--          </el-form-item>-->
+          <el-form-item prop="sessionIdIn" label="验证码">
+            <el-input v-model="ruleForm.sessionIdIn" placeholder="请输入验证码" type="text" suffix-icon="el-icon-lock" class="verCodeInput" clearable @keyup.enter.native="submitForm('ruleForm')"></el-input>
+            <img id="sessionIdImage" class="codeStyle" type="image" alt="这里将换验证码" @click="getSessionId" :src="imageURL" />
+          </el-form-item>
           <el-row>
             <el-button :disabled="ruleForm.password===''||ruleForm.uid===''" @click="submitForm('ruleForm')" type="primary">登录</el-button>
             <span class="spanAccount">
@@ -117,25 +117,25 @@
           });
           return;
         }
-        // this.$refs[FormName].validate((valid) => {
-        //   if (valid) {
+        this.$refs[FormName].validate((valid) => {
+          if (valid) {
             let qs = require("qs");
-            // Request({
-            //     url: "/userController/checkauthcode",
-            //     method: "POST",
-            //     params: qs.stringify({
-            //       authCode: this.ruleForm.sessionIdIn,
-            //       sessionId: this.storedSessionId,
-            //     }),
-            //   })
-            //   .then((res) => {
+            Request({
+                url: "/userController/checkauthcode",
+                method: "POST",
+                params: qs.stringify({
+                  authCode: this.ruleForm.sessionIdIn,
+                  sessionId: this.storedSessionId,
+                }),
+              })
+              .then((res) => {
                 Request({
                     url: "/userController/login",
                     method: "post",
                     params: qs.stringify({
                       username: this.ruleForm.uid,
                       password: this.ruleForm.password,
-                      // authCode: this.ruleForm.sessionIdIn,
+                      authCode: this.ruleForm.sessionIdIn,
                       sessionId: this.storedSessionId,
                     }),
                   })
@@ -170,15 +170,15 @@
                   .catch((e) => {
                     console.log("登录出错", e);
                   });
-              // })
-              // .catch((e) => {
-              //   console.log("校验错误", e);
-              //   this.$message.error("验证码错误");
-              // });
-        //   } else {
-        //     this.$message.error("请输入信息");
-        //   }
-        // });
+              })
+              .catch((e) => {
+                console.log("校验错误", e);
+                this.$message.error("验证码错误");
+              });
+          } else {
+            this.$message.error("请输入信息");
+          }
+        });
       },
       // 更新用户积分
       updateTotalScore(userId, totalScore) {
