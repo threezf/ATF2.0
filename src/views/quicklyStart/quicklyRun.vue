@@ -229,7 +229,7 @@ export default {
                 }
               })
           } else {
-            Vac.alert(data.respMsg);
+            // Vac.alert(data.respMsg);
           }},
           error: function(){
             Vac.alert('网络错误，执行失败！');

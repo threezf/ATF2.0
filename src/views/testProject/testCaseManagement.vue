@@ -113,8 +113,7 @@
                                 <el-row style="padding:0;margin:0" type="flex" justify="center">
                                     <el-form-item label="用例名称" prop="casecode" label-width="35%" >
                                         <el-col :span="14">
-                                            <el-input v-model="
-                         addForm.casecode" size="small"></el-input>
+                                            <el-input v-model="addForm.casecode" size="small"></el-input>
                                         </el-col>
                                         <el-col :span="8" :offset="1">
                                             <el-button @click="showVisibleS" v-if="buttonS" type="primary" size="small" icon="el-icon-arrow-down">
@@ -225,11 +224,11 @@
                     </el-tab-pane>
                     <el-tab-pane label="流程用例" name="second" class="addTab">
                         <div>
-                            <el-form ref="addForm" :model="addForm">
+                            <el-form ref="flowForm" :model="flowForm">
                                 <el-row style="padding:0;margin:0" type="flex" justify="center">
                                     <el-form-item label="用例名称" prop="casecode" label-width="35%" >
                                         <el-col :span="14">
-                                            <el-input v-model="addForm.casecode" size="small"></el-input>
+                                            <el-input v-model="flowForm.casecode" size="small"></el-input>
                                         </el-col>
                                         <el-col :span="8" :offset="1">
                                             <el-button @click="showVisibleM" v-if="buttonM" type="primary" size="small" icon="el-icon-arrow-down">
@@ -241,12 +240,12 @@
                                         </el-col>
                                     </el-form-item>
                                 </el-row>
-                                <div v-if="dialogVisibleM" class="addForm">
+                                <div v-if="dialogVisibleM" class="flowForm">
                                     <el-divider content-position="center" style="padding:0;margin:0"></el-divider>
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="被测系统" prop="autName" label-width="40%">
-                                                <el-select class="selectWidth" v-model="addForm.autId" size="small" filterable @change="transChange($event)">
+                                                <el-select class="selectWidth" v-model="flowForm.autId" size="small" filterable @change="transChange($event)">
                                                     <el-option v-for="item in autList" :key="item.id" :label="item.nameMedium" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -254,7 +253,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="功能点" prop="transName" label-width="40%">
-                                                <el-select class="selectWidth" v-model="addForm.transId" size="small" @change="templateChange($event)">
+                                                <el-select class="selectWidth" v-model="flowForm.transId" size="small" @change="templateChange($event)">
                                                     <el-option v-for="item in transList" :key="item.id" :label="item.nameMedium" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -262,7 +261,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="基础脚本" prop="scriptModeFlag" label-width="40%">
-                                                <el-select class="selectWidth" v-model="addForm.scriptModeFlag" size="small">
+                                                <el-select class="selectWidth" v-model="flowForm.scriptModeFlag" size="small">
                                                     <el-option v-for="item in templateList" :key="item.id" :label="item.name" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -272,7 +271,7 @@
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="用例性质" prop="caseproperty" label-width="40%">
-                                                <el-select class="selectWidth" v-model="addForm.caseproperty" size="small">
+                                                <el-select class="selectWidth" v-model="flowForm.caseproperty" size="small">
                                                     <el-option v-for="item in casePropertyList" :key="item.id" :label="item.label" :value="item.value">
                                                     </el-option>
                                                 </el-select>
@@ -280,7 +279,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="作者" prop="author" label-width="40%">
-                                                <el-select class="selectWidth" v-model="addForm.author" size="small">
+                                                <el-select class="selectWidth" v-model="flowForm.author" size="small">
                                                     <el-option v-for="item in userList" :key="item.id" :label="item.reallyname" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -290,31 +289,31 @@
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="测试意图" prop="testdesign" label-width="25%" size="small" >
-                                                <el-input v-model="addForm.testdesign"></el-input>
+                                                <el-input v-model="flowForm.testdesign"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
                                             <el-form-item label="前置条件" prop="prerequisites" label-width="25%" size="small" >
-                                                <el-input v-model="addForm.prerequisites"></el-input>
+                                                <el-input v-model="flowForm.prerequisites"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="测试步骤" prop="teststep" label-width="25%" size="small" >
-                                                <el-input v-model="addForm.teststep"></el-input>
+                                                <el-input v-model="flowForm.teststep"></el-input>
                                             </el-form-item>
                                         </el-col>
-																			<el-col :span="11" style="margin-left: 6.5%">
-																				<el-form-item label="检查点" prop="checkpoint" size="small" label-width="25%" >
-																					<el-input v-model="addForm.checkpoint"></el-input>
-																				</el-form-item>
-																			</el-col>
+                                        <el-col :span="11" style="margin-left: 6.5%">
+                                            <el-form-item label="检查点" prop="checkpoint" size="small" label-width="25%" >
+                                                <el-input v-model="flowForm.checkpoint"></el-input>
+                                            </el-form-item>
+                                        </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="预期结果" prop="expectresult" size="small" label-width="25%" >
-                                                <el-input v-model="addForm.expectresult"></el-input>
+                                                <el-input v-model="flowForm.expectresult"></el-input>
                                             </el-form-item>
                                         </el-col>
 
@@ -323,7 +322,7 @@
                                         <el-col :span="24">
                                             <el-form-item label="备注" prop="note" label-width="11.5%">
                                                 <el-col style="width:94%">
-                                                    <el-input type="textarea" placeholder="请输入内容" v-model="addForm.note">
+                                                    <el-input type="textarea" placeholder="请输入内容" v-model="flowForm.note">
                                                     </el-input>
                                                 </el-col>
                                             </el-form-item>
@@ -806,43 +805,76 @@ export default {
                 useStatus: "1",
                 version: "1",
             },
-					changeInfoForm: {
-						actionList: [],
-						autId: "",
-						author: sessionStorage.getItem("userId"),
-						automaton: "",
-						caseCompositeType: "",
-						casecode: "",
-						caseproperty: "1",
-						casetype: "1",
-						categoryTeam: "",
-						checkpoint: "",
-						datarequest: "",
-						executeMethod: "2",
-						executor: sessionStorage.getItem("userId"),
-						expectresult: "",
-						functionModule: "",
-						modifyChannel: "",
-						modifyChannelNo: "",
-						note: "",
-						prerequisites: "",
-						priority: "1",
-						reviewer: sessionStorage.getItem("userId"),
-						scriptMode: "1",
-						scriptModeFlag: "",
-						submissionId: "49",
-						tags: "",
-						testdesign: "",
-						testpoint: "1",
-						teststep: "",
-						transId: "",
-						useStatus: "1",
-						version: "1",
-						transList:[],
-						templateList:[]
-					},
-					transList: [],
-					templateList: [],
+            flowForm: {
+                actionList: [],
+                autId: "",
+                author: sessionStorage.getItem("userId"),
+                automaton: "",
+                caseCompositeType: "",
+                casecode: "",
+                caseproperty: "1",
+                casetype: "1",
+                categoryTeam: "",
+                checkpoint: "",
+                datarequest: "",
+                executeMethod: "2",
+                executor: sessionStorage.getItem("userId"),
+                expectresult: "",
+                functionModule: "",
+                modifyChannel: "",
+                modifyChannelNo: "",
+                note: "",
+                prerequisites: "",
+                priority: "1",
+                reviewer: sessionStorage.getItem("userId"),
+                scriptMode: "1",
+                scriptModeFlag: "",
+                submissionId: "49",
+                tags: "",
+                testdesign: "",
+                testpoint: "1",
+                teststep: "",
+                transId: "",
+                useStatus: "1",
+                version: "1",
+            },
+            changeInfoForm: {
+                actionList: [],
+                autId: "",
+                author: sessionStorage.getItem("userId"),
+                automaton: "",
+                caseCompositeType: "",
+                casecode: "",
+                caseproperty: "1",
+                casetype: "1",
+                categoryTeam: "",
+                checkpoint: "",
+                datarequest: "",
+                executeMethod: "2",
+                executor: sessionStorage.getItem("userId"),
+                expectresult: "",
+                functionModule: "",
+                modifyChannel: "",
+                modifyChannelNo: "",
+                note: "",
+                prerequisites: "",
+                priority: "1",
+                reviewer: sessionStorage.getItem("userId"),
+                scriptMode: "1",
+                scriptModeFlag: "",
+                submissionId: "49",
+                tags: "",
+                testdesign: "",
+                testpoint: "1",
+                teststep: "",
+                transId: "",
+                useStatus: "1",
+                version: "1",
+                transList:[],
+                templateList:[]
+            },
+            transList: [],
+            templateList: [],
             caseNodeNums: [{
                 num: 1,
                 status: true,
@@ -866,8 +898,8 @@ export default {
                     testpoint: "1",
                     teststep: "",
                     transId: "",
-								  	transList:[],
-									  templateList:[]
+                    transList:[],
+                    templateList:[]
                 }
             }],
             changeForm: {
@@ -1190,21 +1222,35 @@ export default {
             var _this = this;
             _this.addForm.actionList = []
             _this.addForm.caseCompositeType = caseCompositeType;
+            _this.flowForm.actionList = []
+            _this.flowForm.caseCompositeType = caseCompositeType;
             if (caseCompositeType == 2) {
                 for (var i = 0; i < _this.caseNodeNum - 1; i++) {
                     _this.addForm.actionList.push(
                         _this.caseNodeNums[i].addNodeForm
                     );
+                    _this.flowForm.actionList.push(
+                        _this.caseNodeNums[i].addNodeForm
+                    );
                 }
             }
             typeof _this.addForm.author=="number"?1:parseInt(_this.addForm.author=sessionStorage.getItem("userId"))
-					  _this.addForm.executor=_this.addForm.author
-				  	_this.addForm.reviewer=_this.addForm.author
+            typeof _this.flowForm.author=="number"?1:parseInt(_this.flowForm.author=sessionStorage.getItem("userId"))
+            _this.addForm.executor=_this.addForm.author
+            _this.addForm.reviewer=_this.addForm.author
+            _this.flowForm.executor=_this.flowForm.author
+            _this.flowForm.reviewer=_this.flowForm.author
+            let params = {}
+            if(this.activeName === 'first') {
+                params = this.addForm
+            }else {
+                params = this.flowForm
+            }
             Request({
                     url: "/testcase/addTestcase",
                     method: "post",
                     params: {
-                        ..._this.addForm,
+                        ...params,
                         caseLibId: sessionStorage.getItem("caselibId")
                     }
                 })
@@ -1467,6 +1513,9 @@ export default {
                         _this.addForm.author = res.userEntityList[0].id;
                         _this.addForm.executor = res.userEntityList[0].id;
                         _this.addForm.reviewer = res.userEntityList[0].id;
+                        _this.flowForm.author = res.userEntityList[0].id;
+                        _this.flowForm.executor = res.userEntityList[0].id;
+                        _this.flowForm.reviewer = res.userEntityList[0].id;
                     },
                     err => {
                         console.log(err);
@@ -1490,6 +1539,7 @@ export default {
                     res => {
                         _this.autList = res.autRespDTOList;
                         _this.addForm.autId = _this.autList[0].id;
+                        _this.flowForm.autId = _this.autList[0].id;
                         _this.caseNodeNums[0].addNodeForm.autId =
                             _this.autList[0].id;
                         _this.getTrans(_this.autList[0].id);
@@ -1550,6 +1600,7 @@ export default {
                     res => {
                         _this.transList = res.list;
                         _this.addForm.transId = _this.transList[0].id;
+                        _this.flowForm.transId = _this.transList[0].id;
                         _this.caseNodeNums[0].addNodeForm.transId =
                             _this.transList[0].id;
 										  	_this.caseNodeNums[0].addNodeForm.transList =
@@ -1608,17 +1659,15 @@ export default {
                         _this.templateList = res.scriptTemplateList;
                         if (_this.templateList.length == 0) {
                             _this.addForm.scriptModeFlag = "";
-                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
-                                "";
-													  _this.caseNodeNums[0].addNodeForm.templateList =
-														[];
+                            _this.flowForm.scriptModeFlag = "";
+                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag = "";
+                            _this.caseNodeNums[0].addNodeForm.templateList = [];
                         } else {
                             _this.addForm.scriptModeFlag =
-                                _this.templateList[0].id;
+                            _this.templateList[0].id;
                             _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
-                                _this.templateList[0].id;
-													_this.caseNodeNums[0].addNodeForm.templateList =
-														_this.templateList;
+                            _this.templateList[0].id;
+                            _this.caseNodeNums[0].addNodeForm.templateList = _this.templateList;
                         }
                     },
                     err => {

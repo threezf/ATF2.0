@@ -147,7 +147,7 @@
                       this.userPriority = res.userPriority
                       this.reallyName = res.reallyName
                       console.log('urls', res.userPriority)
-                      this.queryAllRelated(res.userId)
+                      this.queryAllRelated(res.userId, res.userPriority)
                       this.$store.commit('setLoginInfo', {
                         companyId: res.companyId,
                         companyName: res.companyName,
@@ -248,7 +248,7 @@
         this.$router.push("/rigester");
       },
       // 查询具有的权限
-      queryAllRelated(userId) {
+      queryAllRelated(userId, userPriority) {
         Request({
           url: '/menuController/queryAllRelated',
           method: 'post',
@@ -262,8 +262,18 @@
             })
             localStorage.setItem('urls', res.urlList)
             console.log('urls', this.userPriority)
-            this.setLeftCount(res.urlList)
-            this.urlList = res.urlList
+                this.urlList = res.urlList
+            if(userPriority === 0) {
+                this.setLeftCount(res.urlList)
+            } else {
+                this.$bus.emit('setUrls', {
+                    urlList: res.urlList,
+                    currentName: this.ruleForm.uid,
+                    userPriority: this.userPriority,
+                    reallyName: this.reallyName,
+                    leftCount: 0
+                })
+            }
           }
           return
         }).catch(error => {

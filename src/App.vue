@@ -10,7 +10,7 @@
             <el-col :span="18" :offset="1">
                 <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#011425" active-text-color="#007bff">
                     <el-menu-item v-for="route in menuList" :index="route.name" :key="route.name">
-                        <router-link :to="{name: route.name}">{{route.meta.name}}</router-link>
+                        <router-link :to="{name: route.name, query: {isInterface: route.isInterface? true: false}}">{{route.meta.name}}</router-link>
                     </el-menu-item>
                 </el-menu>
             </el-col>
