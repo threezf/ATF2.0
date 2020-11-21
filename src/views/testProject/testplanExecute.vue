@@ -697,7 +697,7 @@
       </div>
     </div>
     <!--content end -->
-    <el-dialog title="新增场景" :visible.sync="senceDialog" width="50%">
+    <el-dialog title="新增场景" :visible.sync="senceDialog" width="50%" :close-on-click-modal="false">
       <div class="modal-body">
         <table class="table table-bordered">
           <thead>
@@ -863,7 +863,7 @@
     </el-dialog>
     <!-- /.modal -->
 
-    <el-dialog title="测试计划管理" :visible.sync="testPlanDialog" width="50%">
+    <el-dialog title="测试计划管理" :visible.sync="testPlanDialog" width="50%" :close-on-click-modal="false">
       <el-row>
         <el-col>
           <el-button @click="showAddModal()"> 新增 </el-button>
@@ -1006,6 +1006,7 @@
       title="新增测试计划"
       :visible.sync="addTestPlanDialog"
       width="50%"
+      :close-on-click-modal="false"
     >
       <div class="modal-body">
         <form class="form-horizontal">

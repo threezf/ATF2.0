@@ -48,7 +48,7 @@
             </div>
 
             <!--新增和修改对话框-->
-            <el-dialog width="27%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
+            <el-dialog :close-on-click-modal="false"  width="27%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
                 <el-form :model="ruleForm" ref="ruleForm" :rules="rules" status-icon>
                     <el-form-item class="formItem" label="名称" label-width="110px" prop="nameMedium">
                         <el-input size="small" class="formInput" placeholder="必输项" v-model.lazy="ruleForm.nameMedium"></el-input>
@@ -77,7 +77,7 @@
                 </el-form>
             </el-dialog>
             <!--导入对话框-->
-            <el-dialog width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
+            <el-dialog :close-on-click-modal="false"  width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
                 <el-form>
                     <el-upload ref="upload" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
                         <el-button class="btnSelectFile" type="success" size="small" slot="trigger" plain>选择文件</el-button>
@@ -94,7 +94,7 @@
                 </el-form>
             </el-dialog>
             <!--操作失败-->
-            <el-dialog width="27%" :title="dialogTitle" :visible.sync="dialogFailVisible" :before-close="handleBeforeClose">
+            <el-dialog :close-on-click-modal="false"  width="27%" :title="dialogTitle" :visible.sync="dialogFailVisible" :before-close="handleBeforeClose">
                 <el-form>
                     <el-form>
                         <el-form-item label-width="10px">
@@ -110,7 +110,7 @@
                 </el-form>
             </el-dialog>
             <!--添加成功对话框-->
-            <el-dialog width="25%" title="添加成功" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
+            <el-dialog :close-on-click-modal="false"  width="25%" title="添加成功" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
                 <el-form>
                     <el-form-item label-width="50px">
                         <h3>操作成功</h3>

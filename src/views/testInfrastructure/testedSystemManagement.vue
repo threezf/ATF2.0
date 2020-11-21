@@ -47,7 +47,7 @@
         <el-table-column sortable prop="modifiedTime" label="修改时间" min-width="15%" :formatter="transTime"></el-table-column>
     </el-table>
 
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
+    <el-dialog :close-on-click-modal="false"  :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
             <el-form-item label="系统名称" prop="nameMedium">
                 <el-input style="width:100%" size="small" placeholder="请输入被测系统名称" v-model.lazy="form.nameMedium"></el-input>
@@ -70,7 +70,7 @@
         </el-form>
     </el-dialog>
     <!--操作成功对话框-->
-    <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
+    <el-dialog :close-on-click-modal="false"  width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
         <el-form>
             <el-form-item label-width="30px">
                 <h4 class="successTitle">操作成功</h4>

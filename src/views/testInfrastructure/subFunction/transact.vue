@@ -46,7 +46,7 @@
     </el-table>
 
     <!--新增和修改对话框-->
-    <el-dialog width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
+    <el-dialog :close-on-click-modal="false"  width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
         <el-form ref="ruleForm" label-width="40px" :model="ruleForm" :rules="rules" status-icon>
             <el-form-item label="名称" prop="nameMedium">
                 <el-input size="small" placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
@@ -84,7 +84,7 @@
         </el-form>
     </el-dialog>
     <!--导入对话框-->
-    <el-dialog width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
+    <el-dialog :close-on-click-modal="false"  width="27%" :title="dialogTitle" :before-close="handleBeforeClose" :visible.sync="dialogImportVisible">
         <el-form :action="importURL" enctype="multipart/form-data" method="post" id="uploadForm">
             <el-upload ref="upload" :action="importURL" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
                 <el-button size="small" class="btnSelectFile" type="success" slot="trigger" plain>上传文件
@@ -105,7 +105,7 @@
         </el-form>
     </el-dialog>
     <!--添加成功对话框-->
-    <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
+    <el-dialog :close-on-click-modal="false"  width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
         <el-form>
             <el-form-item label-width="20px">
                 <h4 class="transactSuccessTitle">操作成功</h4>
@@ -119,7 +119,7 @@
             </el-form-item>
         </el-form>
     </el-dialog>
-    <el-dialog title="绑定swagger" width="31%" :visible.sync="swaggerVisible">
+    <el-dialog :close-on-click-modal="false"  title="绑定swagger" width="31%" :visible.sync="swaggerVisible">
         <el-form>
             <el-form-item label-width="50px" label="URL: ">
                 <el-input size="small" style="width: 300px" placeholder="请输入绑定swagger的url" v-model="swaggerUrl" clearable>

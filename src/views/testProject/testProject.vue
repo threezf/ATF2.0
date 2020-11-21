@@ -46,7 +46,7 @@
             </el-pagination>
         </el-footer>
     </el-container>
-    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
+    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%" :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
             <el-form-item label="测试项目编号" prop="codeLong">
                 <el-input size="small" v-model="addForm.codeLong" placeholder="选填"></el-input>

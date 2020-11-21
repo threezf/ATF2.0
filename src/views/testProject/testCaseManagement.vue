@@ -108,7 +108,7 @@
                     </el-table-column>
                 </el-table>
 
-            <el-dialog title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
+            <el-dialog :close-on-click-modal="false" title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
                 <el-tabs v-model="activeName" type="card">
                     <el-tab-pane label="单用例" name="first" class="addTab">
                         <div>
@@ -459,7 +459,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-dialog>
-            <el-dialog title="添加一个流程节点" :visible.sync="dialogVisibleN" width="65%">
+            <el-dialog :close-on-click-modal="false" title="添加一个流程节点" :visible.sync="dialogVisibleN" width="65%">
                 <el-tabs v-model="activeName" type="card" class="addTab">
                     <div v-for="(item,index) in caseNodeNums" :key="item.id">
                         <el-form ref="addNodeForm" :model="item.addNodeForm">
@@ -571,7 +571,7 @@
 
                 </el-tabs>
             </el-dialog>
-            <el-dialog title="更改多种用例信息" :visible.sync="dialogVisibleC" width="30%">
+            <el-dialog :close-on-click-modal="false" title="更改多种用例信息" :visible.sync="dialogVisibleC" width="30%">
                 <el-tabs v-model="activeName" type="card">
                     <el-form ref="changeForm" :model="changeForm">
                         <el-form-item label="被测系统" prop="autName" label-width="40%">
@@ -608,7 +608,7 @@
                     </el-row>
                 </el-tabs>
             </el-dialog>
-            <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
+            <el-dialog :close-on-click-modal="false" title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
                 <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">选择文件</el-button>
@@ -630,7 +630,7 @@
                     <el-button size="small" type="primary" @click="dialogVisibleI = !dialogVisibleI">取消</el-button>
                 </div>
             </el-dialog>
-            <el-dialog title="导出" :visible.sync="dialogVisibleO" width="30%">
+            <el-dialog :close-on-click-modal="false" title="导出" :visible.sync="dialogVisibleO" width="30%">
                 <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="exportUrl">
                     <div hidden>
                         <el-input type="text" name="testCaseIdList" v-for="(id,index) in selectList" :value="id" :key="index">
@@ -645,7 +645,7 @@
                     </div>
                 </el-form>
             </el-dialog>
-            <el-dialog :title="title" :visible.sync="dialogVisibleQ" width="50%">
+            <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="dialogVisibleQ" width="50%">
                 <el-form :disabled="!changeFlag" ref="changeInfoForm" :model="changeInfoForm">
                     <el-row>
                         <el-col :span="11">

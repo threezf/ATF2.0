@@ -51,7 +51,7 @@
             </el-pagination>
         </el-col>
     </div>
-    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="30%" style="margin-top: -60px">
+    <el-dialog :close-on-click-modal="false"  :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="30%" style="margin-top: -60px">
         <el-form class="demo-ruleForm" ref="form" prop="form" :rules="rules" :model="form" label-width="80px">
             <el-form-item label="用户名" prop="username">
                 <el-input size="small" :disabled='disabled' v-model="form.username">
@@ -99,7 +99,7 @@
             </el-row>
         </el-form>
     </el-dialog>
-    <el-dialog title="展示详情" :visible.sync="detailVisible" width="16%">
+    <el-dialog :close-on-click-modal="false"  title="展示详情" :visible.sync="detailVisible" width="16%">
         <el-form :model="showForm" class="showDialogForm" label-width="85px">
             <el-form-item label="用户名：">
                 <span>{{showForm.username}}</span>
@@ -127,7 +127,7 @@
             </el-button>
         </el-row>
     </el-dialog>
-    <el-dialog title="修改用户" width="30%" :visible.sync="updateDialogShow">
+    <el-dialog :close-on-click-modal="false"  title="修改用户" width="30%" :visible.sync="updateDialogShow">
         <el-form label-width="80px">
             <el-form-item label="用户名">
                 <el-input v-model="updateForm.username" disabled></el-input>

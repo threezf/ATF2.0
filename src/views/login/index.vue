@@ -123,7 +123,7 @@
             Request({
                 url: "/userController/checkauthcode",
                 method: "POST",
-                params: qs.stringify({
+                params: qs.stringify({ 
                   authCode: this.ruleForm.sessionIdIn,
                   sessionId: this.storedSessionId,
                 }),

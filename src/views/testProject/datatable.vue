@@ -107,7 +107,7 @@
             </div>
         </div>
     </div>
-    <el-dialog title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
+    <el-dialog :close-on-click-modal="false"  title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
         <el-table border :data="templateInfoData" style="width: 100%">
             <el-table-column type="index" width="50">
             </el-table-column>
@@ -121,7 +121,7 @@
             </el-table-column>
         </el-table>
     </el-dialog>
-    <el-dialog title="编辑数据" :visible.sync="editDataFlag" width="50%">
+    <el-dialog :close-on-click-modal="false"  title="编辑数据" :visible.sync="editDataFlag" width="50%">
         <el-row class="itemCenter">
             <el-radio v-model="dataType" label="1">文本</el-radio>
             <el-radio v-model="dataType" label="2">空文本</el-radio>
@@ -499,14 +499,14 @@
             <el-button size="small" type='primary' @click="editDataFlag = false">取消</el-button>
         </el-row>
     </el-dialog>
-    <el-dialog title="添加多项" :visible.sync="addItemShow" width="30%">
+    <el-dialog :close-on-click-modal="false"  title="添加多项" :visible.sync="addItemShow" width="30%">
         <uiEleFunTree @closeDialog="addItemShow = false" @throwTreeInfo="addTreeInfo" :transId='selectedTemplate.transId + ""' :autId='selectedTemplate.autId + ""' :addItemFlag='addItemFlag' :multiselection='true'>
         </uiEleFunTree>
     </el-dialog>
-    <el-dialog title="用例筛选" :visible.sync="searchTemplateDailog" width="30%">
+    <el-dialog :close-on-click-modal="false"  title="用例筛选" :visible.sync="searchTemplateDailog" width="30%">
         <searchtestcase @condition-list='changeCondition'></searchtestcase>
     </el-dialog>
-    <el-dialog title="批量添加元素" :visible.sync="exportDialog" width='30%'>
+    <el-dialog :close-on-click-modal="false"  title="批量添加元素" :visible.sync="exportDialog" width='30%'>
         <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>

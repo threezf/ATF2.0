@@ -459,7 +459,7 @@
 					</el-form>
 
 				</el-drawer>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="添加控件"
 					:visible.sync="dialogVisibleA"
 					width="30%">
@@ -476,7 +476,7 @@
 						</el-row>
 					</el-form>
 				</el-dialog>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="添加方法"
 					:visible.sync="dialogVisibleB"
 					width="30%">

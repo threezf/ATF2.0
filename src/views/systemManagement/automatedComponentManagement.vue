@@ -491,7 +491,7 @@
 					</el-form>
 
 				</el-drawer>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="选择自动化架构"
 					:visible.sync="dialogVisible"
 					width="30%">
@@ -520,7 +520,7 @@
 						</el-button>
 					</el-row>
 				</el-dialog>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					:title="modelName"
 					:visible.sync="dialogVisibleD"
 					width="30%">
@@ -564,7 +564,7 @@
 						</el-row>
 					</el-form>
 				</el-dialog>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="添加控件"
 					:visible.sync="dialogVisibleA"
 					width="30%">
@@ -581,7 +581,7 @@
 						</el-row>
 					</el-form>
 				</el-dialog>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="添加方法"
 					:visible.sync="dialogVisibleB"
 					width="30%">

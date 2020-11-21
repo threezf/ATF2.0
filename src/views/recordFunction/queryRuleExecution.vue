@@ -129,7 +129,7 @@
             layout="total,sizes,prev,pager,next,jumper"
           ></el-pagination>
         </div>
-        <el-dialog
+        <el-dialog :close-on-click-modal="false" 
           width="40%"
           :title="cakeTitle"
           :visible.sync="cakePicVisable"

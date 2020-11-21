@@ -61,7 +61,7 @@
         <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
         </el-pagination>
     </el-footer>
-    <el-dialog :title="modelName" :visible.sync="dialogVisible" :class="flag==0?'dialog1':'dialog2'">
+    <el-dialog :close-on-click-modal="false"  :title="modelName" :visible.sync="dialogVisible" :class="flag==0?'dialog1':'dialog2'">
         <el-form ref="form" prop="form" class="enterpriseForm" :model="form" :rules="rules" label-width="140px">
             <el-row v-if="flag==0">
                 <el-col :span="11">

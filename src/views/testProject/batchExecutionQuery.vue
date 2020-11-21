@@ -254,7 +254,7 @@
           </el-table-column>
         </el-table>
 
-        <el-dialog
+        <el-dialog :close-on-click-modal="false" 
           width="28%"
           :title="cakeTitle"
           :visible.sync="cakePicVisable"

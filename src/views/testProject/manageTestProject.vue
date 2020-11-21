@@ -94,7 +94,7 @@
 						</el-pagination>
 					</el-col>
 				</div>
-				<el-dialog
+				<el-dialog :close-on-click-modal="false" 
 					title="添加项目关联用户"
 					:visible.sync="dialogVisible"
 					width="35%">

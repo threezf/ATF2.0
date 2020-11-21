@@ -38,7 +38,7 @@
     <keep-alive>
         <router-view />
     </keep-alive>
-    <el-dialog :visible.sync="dialogVisible" width="25%" title="修改密码">
+    <el-dialog :visible.sync="dialogVisible" width="25%" title="修改密码" :close-on-click-modal="false">
         <el-form :rules="rules" label-width="100px" :model="ruleForm" ref="ruleForm">
             <el-form-item prop="oldPass" label="原密码">
                 <el-input v-model="ruleForm.oldPass" type="password" placeholder="请输入原密码" show-password clearable>
@@ -60,7 +60,7 @@
             </el-button>
         </el-row>
     </el-dialog>
-    <el-dialog title="用户状态设定" width="18%" :visible.sync="statusVisible">
+    <el-dialog title="用户状态设定" width="18%" :visible.sync="statusVisible" :close-on-click-modal	="false">
         <el-form label-width="100px">
             <el-form-item label="当前用户状态">
                 <el-select @change="handleStatusChange" v-model="userStatus">
