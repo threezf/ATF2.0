@@ -29,8 +29,8 @@
 							</el-button>
 						</el-col>
 						<el-col :span="8" >
-							<el-form-item label="控件名称" label-width="22%" style="margin-top:-5px">
-								<el-select style="width: 90%"  v-model="classValue" filterable placeholder="请选择控件" size="small"
+							<el-form-item label="构件名称" label-width="22%" style="margin-top:-5px">
+								<el-select style="width: 90%"  v-model="classValue" filterable placeholder="请选择构件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"
@@ -56,8 +56,8 @@
 						</el-col>
 					</el-row>
 				</el-form>
-				<!--				<el-row class="classType">控件类型</el-row>-->
-				<el-divider content-position="center">控件类型</el-divider>
+				<!--				<el-row class="classType">构件类型</el-row>-->
+				<el-divider content-position="center">构件类型</el-divider>
 
 				<el-form  :model="secondForm" label-width="100%">
 					<el-row>
@@ -565,7 +565,7 @@
 					</el-form>
 				</el-dialog>
 				<el-dialog :close-on-click-modal="false" 
-					title="添加控件"
+					title="添加构件"
 					:visible.sync="dialogVisibleA"
 					width="30%">
 					<el-form ref="addClassForm" :model="addClassForm" label-width="30%">
@@ -693,7 +693,7 @@
 				},
 				overrideFlagList: [{
 					value: '1',
-					label: '自身控件'
+					label: '自身构件'
 				}, {
 					value: '4',
 					label: '禁用'
@@ -936,21 +936,21 @@
                         userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
-					this.$alert('删除控件成功', '成功', {
+					this.$alert('删除构件成功', '成功', {
 						confirmButtonText: '确定',
 					});
 					this.getMethod(this.classId0)
 				}, (err) => {
-					this.$alert('删除控件失败', '失败', {
+					this.$alert('删除构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 					}).catch((err) => {
-					this.$alert('删除控件失败', '失败', {
+					this.$alert('删除构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})
 			},
-			//实际添加控件函数
+			//实际添加构件函数
 			addClass(){
 				Request({
 					url: '/arcClass/addSingleArcOmClass',
@@ -971,30 +971,30 @@
 					}
 				}).then((res) => {
 					this.dialogVisibleA=!this.dialogVisibleA
-					this.$alert('添加控件成功', '成功', {
+					this.$alert('添加构件成功', '成功', {
 						confirmButtonText: '确定',
 					});
 					this.getClass()
 				}, (err) => {
-					this.$alert('添加控件失败', '失败', {
+					this.$alert('添加构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				}).catch((err) => {
-					this.$alert('添加控件失败', '失败', {
+					this.$alert('添加构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})
 			},
-			//删除控件form
+			//删除构件form
 			deleteForm(){
-				this.$alert('请问确定删除该控件吗？', '提示', {
+				this.$alert('请问确定删除该构件吗？', '提示', {
 					confirmButtonText: '确定',
 					callback: action => {
 						this.deleteClass()
 					}
 				});
 			},
-			//删除控件函数
+			//删除构件函数
 			deleteClass(){
 				Request({
 					url: '/arcClass/deleteSingleArcOmClass',
@@ -1005,16 +1005,16 @@
 						classId:this.secondForm.id,
 					}
 				}).then((res) => {
-					this.$alert('删除控件成功', '成功', {
+					this.$alert('删除构件成功', '成功', {
 						confirmButtonText: '确定',
 					});
 					this.getClass()
 				}, (err) => {
-					this.$alert('删除控件失败', '失败', {
+					this.$alert('删除构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				}).catch((err) => {
-					this.$alert('删除控件失败', '失败', {
+					this.$alert('删除构件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})
@@ -1118,7 +1118,7 @@
 					this.getClass()
 				}
 			},
-			//得到控件
+			//得到构件
 			getClass(){
 				var _this = this
 				Request({
@@ -1179,7 +1179,7 @@
 					console.log(err)
 				})
 			},
-			//选择控件
+			//选择构件
 			classSelect(e) {
 				this.classValue = e.name
 				this.classId0=e.id
@@ -1216,17 +1216,17 @@
 				this.setOverrideFlagM(e.overrideFlag)
 				this.setVisibilityM(e.visibilityFlag)
 			},
-			//获得控件继承标志
+			//获得构件继承标志
 			setOverrideFlag(overrideFlag) {
 				if (overrideFlag == '1') {
-					this.overideValue = '自身控件'
+					this.overideValue = '自身构件'
 				} else if (overrideFlag == '4') {
 					this.overideValue = '禁用'
 				} else if (overrideFlag == '5') {
 					this.overideValue = '重定义'
 				}
 			},
-			//获得控件继承可见性
+			//获得构件继承可见性
 			setVisibility(visibilityFlag) {
 				if (visibilityFlag == '1') {
 					this.visibilityValue = '公共'
@@ -1237,7 +1237,7 @@
 			//获得方法继承标志
 			setOverrideFlagM(overrideFlag) {
 				if (overrideFlag == 1) {
-					this.overideValueM = '自身控件'
+					this.overideValueM = '自身构件'
 				} else if (overrideFlag == 4) {
 					this.overideValueM = '禁用'
 				}
@@ -1274,7 +1274,7 @@
 				})
 			},
 		
-			//保存控件信息
+			//保存构件信息
 			storeClass() {
 				var submitForm={}
 				for(let item in this.secondForm){
@@ -1296,15 +1296,15 @@
 					method: 'post',
 					params: submitForm
 				}).then((res) => {
-					this.$alert('保存控件信息成功', '成功', {
+					this.$alert('保存构件信息成功', '成功', {
 						confirmButtonText: '确定',
 					});
 				}, (err) => {
-					this.$alert('保存控件信息失败', '失败', {
+					this.$alert('保存构件信息失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				}).catch((err) => {
-					this.$alert('保存控件信息失败', '失败', {
+					this.$alert('保存构件信息失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})

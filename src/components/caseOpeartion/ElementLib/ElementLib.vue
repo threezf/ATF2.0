@@ -71,7 +71,7 @@
                   <el-input size="small"  v-model="element.elementName"></el-input>
                 </el-form-item>
                 <el-form-item label="类型">
-                  <el-select placeholder="--选择控件类型--" v-model="element.classType">
+                  <el-select placeholder="--选择构件类型--" v-model="element.classType">
                     <el-option
                       v-for="(item,index) in omClassRespDTOList"
                       :key="index"
@@ -380,7 +380,7 @@ export default {
       // 元素配置组件传递的数据
       configObj: {},
 			element: null,
-			selectedType: "", // 选择的控件类型
+			selectedType: "", // 选择的构件类型
 			mainFlag: false, // 选择的主属性的内容
       additionalFlag: false, // 选择的附加属性
       assistantFlag: false, // 选择的辅助属性
@@ -391,7 +391,7 @@ export default {
 			selectedIndex: 1, // 对象库设置，1为父对象，2为关联对象
 			selectedLinkId: "", // 关联对象Id
       selectedParentId: "", // 父对象Id
-      omClassRespDTOList: '', // 控件类型
+      omClassRespDTOList: '', // 构件类型
     };
   },
   computed: {
@@ -732,7 +732,7 @@ export default {
 			this.element.objectName = val.objectId;
 			console.log('设置对象库', val, this.selectObjectId, this.element.objectName);
     },
-    // 获取控件类型
+    // 获取构件类型
     queryAutVisibleOmClasses() {
       Request({
         url: '/aut/queryAutVisibleOmClasses',

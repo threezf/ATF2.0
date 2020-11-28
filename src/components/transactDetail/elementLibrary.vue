@@ -124,7 +124,7 @@
             <el-form-item label="元素名称">
                 <el-input size="small" v-model="addEleform.elementName"></el-input>
             </el-form-item>
-            <el-form-item label="控件类型">
+            <el-form-item label="构件类型">
                 <el-select size="small" v-model="addEleform.classType" placeholder="请选择类型">
                     <el-option v-for="item in classselectOptions" :key="item.id" :label="item.name" :value="item.name"></el-option>
                 </el-select>
@@ -193,7 +193,7 @@ export default {
             infoCardType: undefined, //信息详情的卡片种类： undifinde是未选择初始状态  true?"ele":"UI"
             classselectOptions: [],
             selectOptions: [],
-            classType: "", //当前选中的元素的控件类型
+            classType: "", //当前选中的元素的构件类型
             selectedUI: "", //当前选中的UI
             selectedEle: [], //当前选中的元素
             repositoryId: undefined, //元素库Id
@@ -374,7 +374,7 @@ export default {
                 this.treeLoading = false;
             });
         },
-        //获取该测试系统下 所有的控件类型
+        //获取该测试系统下 所有的构件类型
         getClass() {
             Request({
                 url: "/aut/queryAutVisibleOmClasses",

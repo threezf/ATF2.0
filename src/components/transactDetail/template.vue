@@ -226,7 +226,7 @@ export default {
     data() {
         return {
             sortidNum: 0, //每个脚本数据中 脚本的唯一标志
-            methods: {}, //用于存放查询出的控件方法 { 控件名1：{信息}[，控件名2：{信息}]}
+            methods: {}, //用于存放查询出的构件方法 { 构件名1：{信息}[，构件名2：{信息}]}
             addTemplateForm: {
                 name: "",
                 description: "",
@@ -721,7 +721,7 @@ export default {
                     this.templateLoading = false;
                 });
         },
-        // 获取控件方法
+        // 获取构件方法
         getMethods(classname) {
             if (this.methods[classname]) {
                 //如果存在 则返回

@@ -282,8 +282,8 @@
         <el-form-item label="元素名称">
           <el-input size="small" placeholder="请输入元素名称" v-model="elementName"></el-input>
         </el-form-item>
-        <el-form-item label="控件类型">
-          <el-select placeholder="请选择控件类型" v-model="classType">
+        <el-form-item label="构件类型">
+          <el-select placeholder="请选择构件类型" v-model="classType">
             <el-option
               v-for="item in omClassRespDTOList"
               :key="item.id"
@@ -377,7 +377,7 @@ export default {
       expandUiId: "", // 展开的uiId
       elementId: "", // 元素编号
       elementName: "", // 元素类型
-      classType: "", // 控件类型
+      classType: "", // 构件类型
       relateIdentifyObjectId: "",
       relateParentIdentifyObjectId: "",
       mainPropertyName: "", //主属性名

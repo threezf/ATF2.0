@@ -106,9 +106,9 @@ export default {
           ScriptExecuteTools.Reporter.setExeStatus(Passed);
           return resultMap;
         }catch(MissingPropertyException e){
-        throw new GroovyRuntimeException("没找到对应属性，检查执行代码或控件是否错漏:"+e.getMessage());
+        throw new GroovyRuntimeException("没找到对应属性，检查执行代码或构件是否错漏:"+e.getMessage());
         }catch(MissingMethodException e1){
-        throw new GroovyRuntimeException("没找到对应方法，检查控件或执行代码是否错漏:"+e1.getMessage());
+        throw new GroovyRuntimeException("没找到对应方法，检查构件或执行代码是否错漏:"+e1.getMessage());
         }
       }`
       let _this = this;
