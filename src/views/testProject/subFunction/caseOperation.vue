@@ -141,7 +141,7 @@
           </el-col>
           <el-col :span="14">
             <el-button type="primary" size="mini" icon="el-icon-search">搜索</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-refresh">刷新</el-button>
+            <!-- <el-button type="primary" size="mini" icon="el-icon-refresh" hidden>刷新</el-button> -->
             <el-button type="primary" size="mini" icon="el-icon-folder">保存</el-button>
           </el-col>
         </el-row>

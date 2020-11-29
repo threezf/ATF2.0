@@ -227,18 +227,29 @@ export default {
         },
         handleStatusChange(val) {
             this.$store.commit('changeFlag', val == 2)
+            if(val === 1) {
+                this.$store.dispatch('updateTotalScore', {
+                    userId: this.loginInfo.userId,
+                    totalScore: 1000
+                })
+            }else {
+                this.$store.dispatch('updateTotalScore', {
+                    userId: this.loginInfo.userId,
+                    totalScore: 10
+                })
+            }
             localStorage.setItem("userType", val == 2)
         },
         // 初始化用户状态
-        initUserState() {
-            this.totalScore = sessionStorage.getItem("totalScore")
-            const userType = localStorage.getItem('userType')
-            this.$store.commit("changeFlag", userType === 'true')
-            if (this.totalScore <= 100) {
-                // localStorage.setItem('userType', 'true')
+        initUserState(score) {
+            console.log('获取积分更新', parseInt(score.score) > 100)
+            if (parseInt(score.score) > 100) {
+                localStorage.setItem('userType', 'true')
+                this.userStatus = 1
             } else {
-                // localStorage.setItem('userType', 'false')
-                // this.$store.state.commit("changeFlag", 'false')
+                localStorage.setItem('userType', 'false')
+                this.$store.state.commit("changeFlag", 'false')
+                this.userStatus = 2
             }
         }
     },
@@ -254,7 +265,6 @@ export default {
         } else {
             this.userStatus = 2
         }
-        this.initUserState()
         if(this.userPriority == 0) {
             this.leftCount = parseInt(sessionStorage.getItem('leftCount'))
         }
@@ -271,6 +281,10 @@ export default {
             }
             localStorage.setItem('username', urls.currentName)
             localStorage.setItem('userPriority', this.userPriority)
+        })
+        this.$bus.on('setTotalScore', (score) => {
+            console.log('获取积分', score)
+            this.initUserState(score)
         })
     }
 }

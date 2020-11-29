@@ -273,7 +273,7 @@ export default {
                 method: 'post',
                 params: this.addForm
             }).then((res) => {
-                this.$alert(res.respCode)
+                this.$alert("添加成功")
                 this.dialogVisible = false
                 this.insertTestPlan(res.caseLibId)
                 this.getTestProject()
@@ -316,6 +316,7 @@ export default {
             }).then((res) => {
                 this.dialogVisible = false
                 this.getTestProject()
+                this.$alert('修改成功')
             }, (err) => {
                 this.$message(res.respMsg)
                 this.dialogVisible = false

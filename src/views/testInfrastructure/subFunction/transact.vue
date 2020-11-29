@@ -214,8 +214,13 @@ export default {
         }
     },
     created() {
+        console.log('修复', this.$route.query.id)
         this.autId = this.$route.query.id;
         this.ownedSystem = this.$route.query.nameMedium;
+        // if(this.$route.query) {
+        // }else {
+        //     this.autId = sessionStorage.getItem('autId')
+        // }
         this.creatorId = JSON.parse(sessionStorage.getItem("toTransact")).creatorId
         this.creatorName = JSON.parse(sessionStorage.getItem("toTransact")).creatorName
         this.getAllFunction();
@@ -451,10 +456,11 @@ export default {
          * 更换选择id
          */
         changeAutId(index) {
-            // console.log('选择内容',this.ownedSystem,index);
+            console.log('选择内容',this.ownedSystem,index);
             for (let i = 0; i < this.autRespDTOList.length; i++) {
                 if (this.autRespDTOList[i].nameMedium === index) {
                     this.autId = this.autRespDTOList[i].id;
+                    sessionStorage.setItem('autId', this.autId)
                     break;
                 }
             }

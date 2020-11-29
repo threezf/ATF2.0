@@ -61,7 +61,7 @@
             </el-row>
 
             <div @contextmenu.prevent>
-                <el-table height="80vh" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
+                <el-table height="600" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
                     <el-table-column type="index" width="50">
                     </el-table-column>
                     <el-table-column label="查看脚本" width="100">
@@ -1531,5 +1531,11 @@ li:hover {
 
 .wide-ele-right {
     width: 96% !important;
+}
+.el-table__header-wrapper {
+    height: 60px !important;
+}
+.el-table__body-wrapper {
+    height: 540px !important;
 }
 </style>

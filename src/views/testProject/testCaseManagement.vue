@@ -31,14 +31,14 @@
                 <el-button @click="changeInf" type="primary" size="small" icon="el-icon-delete">
                     更改多种用例信息
                 </el-button>
-							<el-button @click="updateImport" type="primary" size="small" icon="el-icon-refresh">
+							<el-button @click="updateImport" type="primary" size="small" :icon="tableLoading? 'el-icon-loading':'el-icon-refresh'">
 								刷新
 							</el-button>
             </el-row>
             <el-row style="padding-top:10px;padding-bottom:10px">
                 <search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
             </el-row>
-                <el-table stripe :data="testCaseList" border ref="table" :row-class-name="tableRowClassName" class="table" @expand-change="subShow" :row-key="getRowKeys"
+                <el-table stripe :data="testCaseList" v-loading="tableLoading" border ref="table" :row-class-name="tableRowClassName" class="table" @expand-change="subShow" :row-key="getRowKeys" 
 					:expand-row-keys="expands" @selection-change="handleSelectionChange">
 									<el-table-column type="expand" >
                         <template slot-scope="scope">
@@ -1081,7 +1081,8 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://10.101.167.184:8080/atfcloud2.0a/testcase/exportTestCase'
+            exportUrl: 'http://10.101.167.184:8080/atfcloud2.0a/testcase/exportTestCase',
+            tableLoading: true
         };
     },
     computed: {
@@ -1475,6 +1476,7 @@ export default {
         },
         //得到用例信息
         getCase(type) {
+            this.tableLoading = true
             if (type === 1) {
                 this.currentPage = 1;
             }
@@ -1498,7 +1500,9 @@ export default {
                 )
                 .catch(err => {
                     console.log(err);
-                });
+                }).finally(_ => {
+                    this.tableLoading = false
+                })
         },
 
         //得到用户
