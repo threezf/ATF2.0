@@ -129,11 +129,11 @@
                 </el-tab-pane>
                 <el-tab-pane label="Body">
                     <el-form-item prop="bodyFormat" class="bottomForm" label-width="100px" label="报文格式">
-                        <el-select size="small" v-model="manageInfo.bodyFormat">
+                        <el-select v-model="manageInfo.bodyFormat">
                             <el-option v-for="(item,index) in bodyFormats" :key="index" :value="item.id" :label="item.value">
                             </el-option>
                         </el-select>
-                        <el-button class="decode" type="primary" size="small" style="display: none" @click="decode">解码
+                        <el-button class="decode" type="primary" size="small" @click="decode">参数化
                         </el-button>
                     </el-form-item>
                     <el-form-item prop="bodyContent" class="descForm" label-width="100px" label="报文内容">
@@ -508,7 +508,8 @@ export default {
                 return
             }
             let valid = this.manageInfo.bodyFormat !== null && this.manageInfo.bodyContent !== ""
-            console.log()
+            this.manageInfo.bodyContent = this.manageInfo.bodyContent.replace(/[\r\n]/g,"").replace(/\ +/g,"")
+            console.log('bodyContent', this.manageInfo.bodyContent)
             if (valid) {
                 let uploadForm = {
                     authContent: "",
@@ -567,28 +568,39 @@ export default {
         },
         // 解码
         decode() {
-            Request({
-                url: '/interface/parseXmlBody',
-                method: 'POST',
-                params: {
-                    interfaceId: this.transactsForm.id,
-                    xmlBody: this.transactsForm.bodyContent
+            try{
+                let obj = JSON.parse(this.manageInfo.bodyContent)
+                console.log('参数化', obj)
+                for(let key in obj) {
+                    obj[key] = '${' + `${key}` + "}"
                 }
-            }).then(res => {
-                if (res.respCode == "0000") {
+                let str = JSON.stringify(obj);
+                this.manageInfo.bodyContent = str
+            }catch(e) {
+                this.$message.warning('JSON格式错误')
+            }
+            // Request({
+            //     url: '/interface/parseXmlBody',
+            //     method: 'POST',
+            //     params: {
+            //         interfaceId: this.transactsForm.id,
+            //         xmlBody: this.transactsForm.bodyContent
+            //     }
+            // }).then(res => {
+            //     if (res.respCode == "0000") {
 
-                } else {
-                    this.$alert('解码失败', '警告', {
-                        confirmButtonText: '确定',
-                        type: 'error'
-                    })
-                }
-            }).catch(error => {
-                this.$alert('网络连接失败', '警告', {
-                    confirmButtonText: '确定',
-                    type: 'error'
-                })
-            })
+            //     } else {
+            //         this.$alert('解码失败', '警告', {
+            //             confirmButtonText: '确定',
+            //             type: 'error'
+            //         })
+            //     }
+            // }).catch(error => {
+            //     this.$alert('网络连接失败', '警告', {
+            //         confirmButtonText: '确定',
+            //         type: 'error'
+            //     })
+            // })
         },
         // 数据编辑时添加一行
         addRow(index) {
@@ -683,7 +695,7 @@ export default {
         }
 
         .decode {
-            margin-left: 20px;
+            margin-left: -10px;
         }
 
         .descForm {
