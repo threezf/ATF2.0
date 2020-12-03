@@ -83,7 +83,7 @@
                     </el-table-column>
                     <el-table-column v-if="!columnHidden.includes('检查点')" width="150" prop="checkPoint" label="检查点">
                     </el-table-column>
-                    <el-table-column v-for="(item,index) in tableHead" :key="index" :label="item[0] +''+ item[1]" width="180">
+                    <el-table-column v-for="(item,index) in tableHead" :key="index" :label="item[0] +'-'+ item[1]" width="180">
                         <template slot-scope="scope">
                             <div v-if='scope.row.index === rowIndex && scope.column.index === columnIndex && dbeditFlag'>
                                 <el-input class='editArea' type="textarea" :ref='"_"+scope.row.index+"_"+scope.column.index' @blur='loseblur(scope.row,scope.column)' @click.stop.prevent="return false" @change="handlechange(scope.row,scope.column)" :autosize="{ minRows: 2, maxRows: 5}" v-model="scope.row['data_'+item[1]]">
