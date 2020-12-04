@@ -16,7 +16,7 @@
                     添加脚本用例
                 </el-button>
             </el-row>
-            <el-table v-loading="templateLoading" border ref="singleTable" :data="templateList" highlight-current-row row-key="id" @row-click="chooseTemplate" style="width: 100%">
+            <el-table v-loading="templateLoading" border ref="singleTable" :data="templateList" highlight-current-row row-key="id" @row-click="chooseTemplate" style="width: 100%" height="200">
                 <el-table-column lable="选择" width="35">
                     <template slot-scope="scope">
                         <div class="radioMask" />
@@ -55,7 +55,7 @@
                             参数化
                         </el-button>
                     </el-row>
-                    <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" row-key="name" class="sortable">
+                    <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
                         <el-table-column label="排序" width="55">
                             <template slot-scope="scope">
                                 <i :id="scope.row.date" class="el-icon-sort"></i>
