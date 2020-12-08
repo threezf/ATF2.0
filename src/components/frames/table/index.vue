@@ -2,15 +2,12 @@
 <script>
     import Request from '@/libs/request.js'
     import VueMixins from '@/libs/vueMixins.js'
-    import MiniProgrameCode from '@/components/common/miniProgrameCode'
-    import DownloadData from './downData'
+    // import DownloadData from './downData'
     import SingleTableColumn from './singleTableColumn'
 
     export default {
         components: {
-            MiniProgrameCode ,
-            SingleTableColumn,
-            DownloadData
+            SingleTableColumn
         },
         name: 'TableComp', 
         render:function(createElement ){
@@ -99,25 +96,17 @@
                             class: 'button-row',
                             style: {display: this.tableData.data.length > 0 && !this.loading? 'flex': 'none'}
                         },
-                        [
-                            this.needMiniCode&&createElement(
-                                'mini-programe-code' , {
-                                    class: 'table-comp',
-                                    props:{
-                                        'table-data': this.autoPagination ? this.autoTableData.data : this.tableData.data
-                                    }
-                                }
-                            ),
-                            this.needDownloadData && createElement(
-                                'download-data', {
-                                    class: 'table-comp',
-                                    props: {
-                                        'content': this.downloadStr,
-                                        'fileName': this.fileName
-                                    }
-                                }
-                            ),
-                        ]
+                        // [
+                        //     this.needDownloadData && createElement(
+                        //         'download-data', {
+                        //             class: 'table-comp',
+                        //             props: {
+                        //                 'content': this.downloadStr,
+                        //                 'fileName': this.fileName
+                        //             }
+                        //         }
+                        //     ),
+                        // ]
                     ),
                     createElement(
                         'el-table' , {
@@ -127,6 +116,7 @@
                                 'highlight-current-row': this.singleChoose,
                                 spanMethod: this.spanMethod,
                                 border: true,
+                                height: this.height,
                                 data: this.autoPagination ? this.autoTableData.data : this.tableData.data,
                                 'row-key': row=> {
                                     if(row.action_time) return row.id + row.action_time
@@ -235,6 +225,9 @@
             fileName: {
                 type: String,
                 default: ''
+            },
+            height: {
+                type: [String, Number]
             }
         },
         filters: {},

@@ -125,6 +125,7 @@
                   <el-button type="primary" size="mini" @click="reQuery()"
                     ><i class="icon-refresh"></i> 重新查询执行结果</el-button
                   >
+                  <el-button type="primary" size="mini" icon="el-icon-download" @click="downloadRunner">下载执行机</el-button>
                 </div>
                 <div id="">
                   <div class="logcontainer">
@@ -2566,6 +2567,9 @@ export default {
       }
       app.orderColumns = target.getAttribute("data-order");
       app.getTestPlans();
+    },
+     downloadRunner() {
+        window.location.href = this.address4 + "atf-data/atf-runner.zip";
     },
   },
 };
