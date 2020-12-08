@@ -574,6 +574,7 @@ export default {
                 for(let key in obj) {
                     obj[key] = '${' + `${key}` + "}"
                 }
+                obj.statusCheck = "${statusCheck}"
                 let str = JSON.stringify(obj);
                 this.manageInfo.bodyContent = str
             }catch(e) {
