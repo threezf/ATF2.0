@@ -14,7 +14,7 @@
     <el-row>
         <el-col :span="6">
             <span class="ownedSystem">所属被测系统：</span>
-            <el-select size="small" class="selectName" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId" :disabled="disableFunc">
+            <el-select size="small" class="selectName" v-model="ownedSystem" placeholder="所属被测系统" @change="changeAutId" disabled>
                 <el-option v-for="(item, key) in autRespDTOList" :key="key" :value="item.nameMedium" :label="item.nameMedium"></el-option>
             </el-select>
         </el-col>

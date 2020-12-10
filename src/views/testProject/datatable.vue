@@ -1,7 +1,7 @@
 <template>
 <div class="page-inner">
     <el-row class="border">
-        <el-col :span="4">
+        <!-- <el-col :span="4">
             <el-button size="small" v-popover:showSearch>筛选用例</el-button>
             <el-popover ref="showSearch" placement="right" width="800" trigger="click">
                 <searchtestcase @condition-list='changeCondition'></searchtestcase>
@@ -9,7 +9,7 @@
             <el-button size="small" @click='search' type="primary">
                 查询
             </el-button>
-        </el-col>
+        </el-col> -->
         <el-col :span="4">
             <el-button size="small" @click='checkout' type="primary">
                 切换流程用例展示
@@ -61,7 +61,7 @@
             </el-row>
 
             <div @contextmenu.prevent>
-                <el-table height="600" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
+                <el-table border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
                     <el-table-column type="index" width="50">
                     </el-table-column>
                     <el-table-column label="查看脚本" width="100">
@@ -108,7 +108,7 @@
         </div>
     </div>
     <el-dialog :close-on-click-modal="false"  title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
-        <el-table border :data="templateInfoData" style="width: 100%">
+        <el-table border :data="templateInfoData" style="width: 100%" height="600">
             <el-table-column type="index" width="50">
             </el-table-column>
             <el-table-column prop="operationItem" label="操作项" width="180">
@@ -122,7 +122,7 @@
         </el-table>
     </el-dialog>
     <el-dialog title="接口参数" :visible.sync="interFaceVisible">
-        <table-comp :table-header="scriptHeader" :table-data="tableObj" :height="200">
+        <table-comp :table-header="scriptHeader" :table-data="tableObj" :height="300">
             <template v-slot:scriptSlot="scoped">
                 <span>
                     {{scoped.row.bodyTemplate | jsonParser}}
@@ -1265,7 +1265,7 @@ export default {
                     }
                 }
             }, (err) => {
-                console.log(err)
+                this.$message.warning(err)
             })
         },
         search() {
@@ -1572,10 +1572,5 @@ li:hover {
 .wide-ele-right {
     width: 96% !important;
 }
-.el-table__header-wrapper {
-    height: 60px !important;
-}
-.el-table__body-wrapper {
-    height: 540px !important;
-}
+
 </style>

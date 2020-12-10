@@ -261,6 +261,7 @@ export default {
 			// 执行结果
       recordEntity: [],
       recordTableData: [], // 查询结果表格
+      flowNodeId: '',
       resourcePath: '', //结果路径
       // 元素库
       transactId: "135",
@@ -382,6 +383,7 @@ export default {
     this.testPlanId = this.$route.query.testPlanId
     this.testcaseId = this.$route.query.testcaseId
     this.sceneId = this.$route.query.sceneId
+    this.flowNodeId = this.$route.query.flowNodeId
     console.log(this.batchId, this.testPlanId, this.testcaseId, this.sceneId)
     this.getFlowDataByTestPlanId()
     this.queryInputData();
@@ -527,7 +529,8 @@ export default {
         params: {
           batchId: this.batchId,
           caseId: this.testcaseId,
-          sceneId: this.sceneId
+          sceneId: this.sceneId,
+          flowNodeId: this.flowNodeId
         }
       })
         .then(res => {

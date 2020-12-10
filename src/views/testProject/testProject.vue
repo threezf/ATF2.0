@@ -370,3 +370,8 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+    .el-table__body-wrapper {
+        height: 100% !important;
+    }
+</style>
