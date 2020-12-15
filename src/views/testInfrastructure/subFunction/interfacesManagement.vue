@@ -567,28 +567,40 @@ export default {
         },
         // 解码
         decode() {
-            Request({
-                url: '/interface/parseXmlBody',
-                method: 'POST',
-                params: {
-                    interfaceId: this.transactsForm.id,
-                    xmlBody: this.transactsForm.bodyContent
-                }
-            }).then(res => {
-                if (res.respCode == "0000") {
+            // Request({
+            //     url: '/interface/parseXmlBody',
+            //     method: 'POST',
+            //     params: {
+            //         interfaceId: this.transactsForm.id,
+            //         xmlBody: this.transactsForm.bodyContent
+            //     }
+            // }).then(res => {
+            //     if (res.respCode == "0000") {
 
-                } else {
-                    this.$alert('解码失败', '警告', {
-                        confirmButtonText: '确定',
-                        type: 'error'
-                    })
-                }
-            }).catch(error => {
-                this.$alert('网络连接失败', '警告', {
-                    confirmButtonText: '确定',
-                    type: 'error'
-                })
-            })
+            //     } else {
+            //         this.$alert('解码失败', '警告', {
+            //             confirmButtonText: '确定',
+            //             type: 'error'
+            //         })
+            //     }
+            // }).catch(error => {
+            //     this.$alert('网络连接失败', '警告', {
+            //         confirmButtonText: '确定',
+            //         type: 'error'
+            //     })
+            // })
+            try{
+                let obj = JSON.parse(this.manageInfo.bodyContent)
+                console.log('参数化', obj)
+                for(let key in obj) {
+                    obj[key] = '${' + `${key}` + "}"
+                }
+                obj.statusCheck = "${statusCheck}"
+                let str = JSON.stringify(obj);
+                this.manageInfo.bodyContent = str
+            }catch(e) {
+                this.$message.warning('JSON格式错误')
+            }
         },
         // 数据编辑时添加一行
         addRow(index) {

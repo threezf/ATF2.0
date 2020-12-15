@@ -61,7 +61,7 @@
             </el-row>
 
             <div @contextmenu.prevent>
-                <el-table height="80vh" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
+                <el-table border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
                     <el-table-column type="index" width="50">
                     </el-table-column>
                     <el-table-column label="查看脚本" width="100">
@@ -107,8 +107,8 @@
             </div>
         </div>
     </div>
-    <el-dialog title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
-        <el-table border :data="templateInfoData" style="width: 100%">
+    <el-dialog :close-on-click-modal="false"  title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
+        <el-table border :data="templateInfoData" style="width: 100%" height="600">
             <el-table-column type="index" width="50">
             </el-table-column>
             <el-table-column prop="operationItem" label="操作项" width="180">
@@ -121,7 +121,16 @@
             </el-table-column>
         </el-table>
     </el-dialog>
-    <el-dialog title="编辑数据" :visible.sync="editDataFlag" width="50%">
+    <el-dialog title="接口参数" :visible.sync="interFaceVisible">
+        <table-comp :table-header="scriptHeader" :table-data="tableObj" :height="300">
+            <template v-slot:scriptSlot="scoped">
+                <span>
+                    {{scoped.row.bodyTemplate | jsonParser}}
+                </span>
+            </template>
+        </table-comp>
+    </el-dialog>
+    <el-dialog :close-on-click-modal="false"  title="编辑数据" :visible.sync="editDataFlag" width="50%">
         <el-row class="itemCenter">
             <el-radio v-model="dataType" label="1">文本</el-radio>
             <el-radio v-model="dataType" label="2">空文本</el-radio>
@@ -523,15 +532,17 @@ import Request from '@/libs/request.js'
 import VueMixins from '@/libs/vueMixins.js'
 import uiEleFunTree from '@/components/transactDetail/uiEleFunTree'
 import searchtestcase from '@/components/searchTestcase/index'
+import TableComp from '@/components/frames/table/index'
 import draggable from 'vuedraggable'
 import Sortable from 'sortablejs';
-
+import {TableHeader} from '@/config/testProject/datableConfig'
 export default {
     mixins: [VueMixins],
     components: {
         uiEleFunTree,
         searchtestcase,
         draggable,
+        TableComp
     },
     computed: {
         searchInfo() {
@@ -539,11 +550,18 @@ export default {
         },
         actionUrl() {
             return this.publishActionUrl + '?' + 'caseLibId=' + this.caseLibId + '&' + 'uploadUserId=3'
+        },
+        tableObj() {
+            return {
+                data: this.scriptTableData,
+                pageTotal: 1
+            }
         }
     },
     data() {
         let caseLibId = sessionStorage.getItem('caselibId')
         return {
+            scriptHeader: TableHeader,
             publishActionUrl: 'http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile',
             columnHidden: [], // 隐藏的列
             selectedTemplate: -1, // 选中的行
@@ -622,6 +640,9 @@ export default {
             multipleSelection2: [],
             dataCheckFunList: [],
             fullScreen: false,
+            // 接口参数化
+            interFaceVisible: false,
+            scriptTableData: []
         }
     },
     mounted() {
@@ -639,6 +660,12 @@ export default {
             return
         }
         this.getFilterTree()
+    },
+    filters: {
+        jsonParser(val) {
+            console.log('格式化', val)
+            return JSON.stringify(JSON.parse(val), null, "\n")
+        }
     },
     methods: {
         getFunction() {
@@ -1202,7 +1229,6 @@ export default {
             this.searchTemplateDailog = true
         },
         showScript(id, caseCompositeType) {
-            this.templateInfoFlag = true
             Request({
                 url: '/dataCenter/getTestcaseScript',
                 method: 'post',
@@ -1211,21 +1237,35 @@ export default {
                     testcaseId: id
                 }
             }).then((res) => {
-                this.templateInfoData = []
-                for (let i = 0; i < res.scriptList.length; i++) {
-                    let info = res.scriptList[i]
-                    let templateInfo = {}
-                    templateInfo.operationItem = "UI: " + info.ui + "  元素: " + info.element
-                    templateInfo.classType = info.classType
-                    templateInfo.method = info.method
-                    templateInfo.parameters = ''
-                    for (let j = 0; j < info.parameters.length; j++) {
-                        templateInfo.parameters += "参数" + j + ": " + info.parameters[j] + ";"
+                console.log('查看娇嫩',res)
+                this.scriptTableData = []
+                if(res.hasOwnProperty('urlPath')) {
+                    this.interFaceVisible = true
+                    let obj = {}
+                    obj.path = res.urlPath,
+                    obj.method = res.method
+                    obj.protocol = res.protocol
+                    obj.bodyTemplate = res.bodyTemplate
+                    this.scriptTableData.push(obj)
+                    console.log('查看娇嫩', "接口")
+                }else {
+                    this.templateInfoFlag = true
+                    this.templateInfoData = []
+                    for (let i = 0; i < res.scriptList.length; i++) {
+                        let info = res.scriptList[i]
+                        let templateInfo = {}
+                        templateInfo.operationItem = "UI: " + info.ui + "  元素: " + info.element
+                        templateInfo.classType = info.classType
+                        templateInfo.method = info.method
+                        templateInfo.parameters = ''
+                        for (let j = 0; j < info.parameters.length; j++) {
+                            templateInfo.parameters += "参数" + j + ": " + info.parameters[j] + ";"
+                        }
+                        this.templateInfoData.push(templateInfo)
                     }
-                    this.templateInfoData.push(templateInfo)
                 }
             }, (err) => {
-                console.log(err)
+                this.$message.warning(err)
             })
         },
         search() {

@@ -16,19 +16,21 @@
                     添加脚本用例
                 </el-button>
             </el-row>
-            <el-table v-loading="templateLoading" border ref="singleTable" :data="templateList" highlight-current-row row-key="id" @row-click="chooseTemplate" style="width: 100%">
-                <el-table-column lable="选择" width="35">
-                    <template slot-scope="scope">
-                        <div class="radioMask" />
-                        <el-radio-group v-model="templateRadio">
-                            <el-radio :label="scope.row.id">.</el-radio>
-                        </el-radio-group>
-                    </template>
-                </el-table-column>
-                <el-table-column property="name" :label="name + '名称'">
-                </el-table-column>
-                <el-table-column property="desc" label="描述"> </el-table-column>
-            </el-table>
+            <div style="height: 300px; overflow: scroll;">
+                <el-table v-loading="templateLoading" border ref="singleTable" :data="templateList" highlight-current-row row-key="id" @row-click="chooseTemplate" style="width: 100%">
+                    <el-table-column lable="选择" width="35">
+                        <template slot-scope="scope">
+                            <div class="radioMask" />
+                            <el-radio-group v-model="templateRadio">
+                                <el-radio :label="scope.row.id">.</el-radio>
+                            </el-radio-group>
+                        </template>
+                    </el-table-column>
+                    <el-table-column property="name" :label="name + '名称'">
+                    </el-table-column>
+                    <el-table-column property="desc" label="描述"> </el-table-column>
+                </el-table>
+            </div>
             <div class="templatInfo">
                 <el-row>
                     <span> {{ name }}数据 </span>
@@ -55,7 +57,7 @@
                             参数化
                         </el-button>
                     </el-row>
-                    <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" row-key="name" class="sortable">
+                    <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
                         <el-table-column label="排序" width="55">
                             <template slot-scope="scope">
                                 <i :id="scope.row.date" class="el-icon-sort"></i>
@@ -855,5 +857,8 @@ export default {
 
 .fixedHeight {
     height: 28px;
+}
+.ele-container {
+    
 }
 </style>

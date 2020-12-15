@@ -166,23 +166,26 @@
                     }else {
                       this.$message.warning('请验证登录信息');
                     }
-                  })
-                  .catch((e) => {
-                    console.log("登录出错", e);
-                  });
-              })
-              .catch((e) => {
-                console.log("校验错误", e);
-                this.$message.error("验证码错误");
-              });
-          } else {
-            this.$message.error("请输入信息");
-          }
-        });
-      },
-      // 更新用户积分
-      updateTotalScore(userId, totalScore) {
-        this.$store.dispatch('updateTotalScore', {
+                 
+                })
+                .catch((e) => {
+                    this.$message.warning(e.split('；')[1].split('：')[1])
+                  console.log("登录出错", e);
+                });
+            })
+            .catch((e) => {
+              console.log("校验错误", e);
+              this.$message.error("验证码错误");
+            });
+        } else {
+          this.$message.error("请输入信息");
+        }
+      });
+    },
+    // 更新用户积分
+    updateTotalScore(userId, totalScore) {
+      this.$store
+        .dispatch("updateTotalScore", {
           userId,
           totalScore
         }).then(res => {
