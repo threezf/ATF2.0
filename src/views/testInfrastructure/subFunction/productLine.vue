@@ -35,7 +35,7 @@
         </div>
       </el-card>
     </el-main>
-    <el-dialog :close-on-click-modal="false"  width="30%" :visible.sync="dialogVisible" :title="titles[titleIndex]">
+    <el-dialog width="30%" :visible.sync="dialogVisible" :title="titles[titleIndex]">
       <el-form :model='productLineForm' label-width="140px">
         <el-form-item label="测试系统产品线id">
           <el-input v-model="productLineForm.id">

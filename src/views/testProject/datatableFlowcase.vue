@@ -118,7 +118,7 @@
             </el-card>
         </el-main>
     </el-container>
-    <el-dialog :close-on-click-modal="false" :title="dialogTitle" :visible.sync="dialogVisible" class="dialog" width="47%">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" class="dialog" width="47%">
         <el-table :data="dialogTableData" stripe border highlight-current-row>
             <el-table-column label="#" width="50px">
                 <template slot-scope="scope">

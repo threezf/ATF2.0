@@ -46,7 +46,7 @@
           <router-view></router-view>
         </el-card>
       </div>
-      <el-dialog :close-on-click-modal="false" 
+      <el-dialog
         width="36%"
         :title="addTitle"
         :visible.sync="dialogVisible"

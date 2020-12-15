@@ -2,15 +2,15 @@
 <div class="page-inner">
     <el-row class="border">
         <el-col :span="4">
-            <el-button size="small" v-popover:showSearch>筛选用例</el-button>
-            <el-popover ref="showSearch" placement="right" width="800" trigger="click">
-                <searchtestcase @condition-list='changeCondition'></searchtestcase>
-            </el-popover>
-            <el-button size="small" @click='search' type="primary">
-                查询
-            </el-button>
-        </el-col>
-        <el-col :span="4">
+<!--            <el-button size="small" v-popover:showSearch>筛选用例</el-button>-->
+<!--            <el-popover ref="showSearch" placement="right" width="800" trigger="click">-->
+<!--                <searchtestcase @condition-list='changeCondition'></searchtestcase>-->
+<!--            </el-popover>-->
+<!--            <el-button size="small" @click='search' type="primary">-->
+<!--                查询-->
+<!--            </el-button>-->
+<!--        </el-col>-->
+<!--        <el-col :span="4">-->
             <el-button size="small" @click='checkout' type="primary">
                 切换流程用例展示
             </el-button>
@@ -61,7 +61,7 @@
             </el-row>
 
             <div @contextmenu.prevent>
-                <el-table height="600" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
+                <el-table height="80vh" border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
                     <el-table-column type="index" width="50">
                     </el-table-column>
                     <el-table-column label="查看脚本" width="100">
@@ -107,13 +107,13 @@
             </div>
         </div>
     </div>
-    <el-dialog :close-on-click-modal="false"  title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
+    <el-dialog title="查看脚本" :visible.sync="templateInfoFlag" width="50%">
         <el-table border :data="templateInfoData" style="width: 100%">
             <el-table-column type="index" width="50">
             </el-table-column>
             <el-table-column prop="operationItem" label="操作项" width="180">
             </el-table-column>
-            <el-table-column prop="classType" label="构件名" width="180">
+            <el-table-column prop="classType" label="控件名" width="180">
             </el-table-column>
             <el-table-column prop="method" label="方法名">
             </el-table-column>
@@ -121,7 +121,7 @@
             </el-table-column>
         </el-table>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false"  title="编辑数据" :visible.sync="editDataFlag" width="50%">
+    <el-dialog title="编辑数据" :visible.sync="editDataFlag" width="50%">
         <el-row class="itemCenter">
             <el-radio v-model="dataType" label="1">文本</el-radio>
             <el-radio v-model="dataType" label="2">空文本</el-radio>
@@ -499,14 +499,14 @@
             <el-button size="small" type='primary' @click="editDataFlag = false">取消</el-button>
         </el-row>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false"  title="添加多项" :visible.sync="addItemShow" width="30%">
+    <el-dialog title="添加多项" :visible.sync="addItemShow" width="30%">
         <uiEleFunTree @closeDialog="addItemShow = false" @throwTreeInfo="addTreeInfo" :transId='selectedTemplate.transId + ""' :autId='selectedTemplate.autId + ""' :addItemFlag='addItemFlag' :multiselection='true'>
         </uiEleFunTree>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false"  title="用例筛选" :visible.sync="searchTemplateDailog" width="30%">
+    <el-dialog title="用例筛选" :visible.sync="searchTemplateDailog" width="30%">
         <searchtestcase @condition-list='changeCondition'></searchtestcase>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false"  title="批量添加元素" :visible.sync="exportDialog" width='30%'>
+    <el-dialog title="批量添加元素" :visible.sync="exportDialog" width='30%'>
         <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -1246,7 +1246,7 @@ export default {
                 this.getCheckFunTree()
             }
         },
-        //获取该测试系统下 所有的构件类型
+        //获取该测试系统下 所有的控件类型
         getFilterTree() {
             Request({
                 url: '/dataCenter/queryFilterTree',
@@ -1531,11 +1531,5 @@ li:hover {
 
 .wide-ele-right {
     width: 96% !important;
-}
-.el-table__header-wrapper {
-    height: 60px !important;
-}
-.el-table__body-wrapper {
-    height: 540px !important;
 }
 </style>

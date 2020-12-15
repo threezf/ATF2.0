@@ -1843,7 +1843,7 @@
           this.dataPoolList = res.list
           console.log('pagedBatchQueryDataPool', this.dataPoolList)
         }).catch(err => {
-        //   this.$message.error('无数据资源池配置')
+          this.$message.error('无数据资源池配置')
         });
       },
       // 保存执行过程

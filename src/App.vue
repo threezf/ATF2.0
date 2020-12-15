@@ -10,7 +10,7 @@
             <el-col :span="18" :offset="1">
                 <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#011425" active-text-color="#007bff">
                     <el-menu-item v-for="route in menuList" :index="route.name" :key="route.name">
-                        <router-link :to="{name: route.name, query: {isInterface: route.isInterface? true: false}}">{{route.meta.name}}</router-link>
+                        <router-link :to="{name: route.name}">{{route.meta.name}}</router-link>
                     </el-menu-item>
                 </el-menu>
             </el-col>
@@ -38,7 +38,7 @@
     <keep-alive>
         <router-view />
     </keep-alive>
-    <el-dialog :visible.sync="dialogVisible" width="25%" title="修改密码" :close-on-click-modal="false">
+    <el-dialog :visible.sync="dialogVisible" width="25%" title="修改密码">
         <el-form :rules="rules" label-width="100px" :model="ruleForm" ref="ruleForm">
             <el-form-item prop="oldPass" label="原密码">
                 <el-input v-model="ruleForm.oldPass" type="password" placeholder="请输入原密码" show-password clearable>
@@ -60,7 +60,7 @@
             </el-button>
         </el-row>
     </el-dialog>
-    <el-dialog title="用户状态设定" width="18%" :visible.sync="statusVisible" :close-on-click-modal	="false">
+    <el-dialog title="用户状态设定" width="18%" :visible.sync="statusVisible">
         <el-form label-width="100px">
             <el-form-item label="当前用户状态">
                 <el-select @change="handleStatusChange" v-model="userStatus">
@@ -227,29 +227,18 @@ export default {
         },
         handleStatusChange(val) {
             this.$store.commit('changeFlag', val == 2)
-            if(val === 1) {
-                this.$store.dispatch('updateTotalScore', {
-                    userId: this.loginInfo.userId,
-                    totalScore: 1000
-                })
-            }else {
-                this.$store.dispatch('updateTotalScore', {
-                    userId: this.loginInfo.userId,
-                    totalScore: 10
-                })
-            }
             localStorage.setItem("userType", val == 2)
         },
         // 初始化用户状态
-        initUserState(score) {
-            console.log('获取积分更新', parseInt(score.score) > 100)
-            if (parseInt(score.score) > 100) {
-                localStorage.setItem('userType', 'true')
-                this.userStatus = 1
+        initUserState() {
+            this.totalScore = sessionStorage.getItem("totalScore")
+            const userType = localStorage.getItem('userType')
+            this.$store.commit("changeFlag", userType === 'true')
+            if (this.totalScore <= 100) {
+                // localStorage.setItem('userType', 'true')
             } else {
-                localStorage.setItem('userType', 'false')
-                this.$store.state.commit("changeFlag", 'false')
-                this.userStatus = 2
+                // localStorage.setItem('userType', 'false')
+                // this.$store.state.commit("changeFlag", 'false')
             }
         }
     },
@@ -265,6 +254,7 @@ export default {
         } else {
             this.userStatus = 2
         }
+        this.initUserState()
         if(this.userPriority == 0) {
             this.leftCount = parseInt(sessionStorage.getItem('leftCount'))
         }
@@ -281,10 +271,6 @@ export default {
             }
             localStorage.setItem('username', urls.currentName)
             localStorage.setItem('userPriority', this.userPriority)
-        })
-        this.$bus.on('setTotalScore', (score) => {
-            console.log('获取积分', score)
-            this.initUserState(score)
         })
     }
 }

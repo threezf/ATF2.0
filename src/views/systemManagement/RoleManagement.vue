@@ -41,7 +41,7 @@
         <el-pagination @current-change="handleCurrentChange" @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :page-sizes="pageSizes" :total="total" layout="total, sizes, prev, pager, next, jumper">
         </el-pagination>
     </el-footer>
-    <el-dialog :close-on-click-modal="false"  width="24%" :title="dialogTitles[titleIndex]" :visible.sync="dialogVisible">
+    <el-dialog width="24%" :title="dialogTitles[titleIndex]" :visible.sync="dialogVisible">
         <el-form ref="ruleForm" label-width="100px" :model="ruleForm" :rules="rules">
             <el-form-item label="角色姓名" prop="roleName">
                 <el-input size="small" v-model="ruleForm.roleName" class="inputStyle" placeholder="请输入角色姓名" :disabled="inputDisabled" clearable />
@@ -62,7 +62,7 @@
             </el-button>
         </el-row>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false"  title="分配权限" width="30%" :visible.sync="roleDialogVisible">
+    <el-dialog title="分配权限" width="30%" :visible.sync="roleDialogVisible">
         <el-tree ref="menuTree" node-key="id" :props="defaultProps" :data="menuDtoList" :default-checked-keys="selectedRoles" show-checkbox @check-change="handleCheckChange">
         </el-tree>
         <el-row class="roleMenusRow">

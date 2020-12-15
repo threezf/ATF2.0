@@ -50,8 +50,9 @@ export default {
     watch: {
         '$route': {
             handler(to, from) {
-                console.log('isInterface111',to.query.isInterface )
-                this.isInterface = to.query.isInterface
+                if (to.query.isInterface) {
+                    this.isInterface = to.query.isInterface
+                }
                 if (to.name === 'TestedSystemManagement') {
                     this.pathShow = false
                 } else {

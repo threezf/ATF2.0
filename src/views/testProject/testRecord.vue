@@ -123,7 +123,7 @@
           </el-table-column>
         </el-table>
         
-        <el-dialog title="提示" width="30%" visible.sync="false" :close-on-click-modal="false">
+        <el-dialog title="提示" width="30%" visible.sync="false">
           <h2 class="dialogText">空记录！请尝试查询！</h2>
           <el-divider></el-divider>
           <div class="buttonBottom">

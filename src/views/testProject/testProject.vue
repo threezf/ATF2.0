@@ -46,7 +46,7 @@
             </el-pagination>
         </el-footer>
     </el-container>
-    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%" :close-on-click-modal="false">
+    <el-dialog :title="modelName" :visible.sync="dialogVisible" :before-close="handleClose" width="55%">
         <el-form ref="addForm" :model="addForm" :rules="rules" label-width="25%">
             <el-form-item label="测试项目编号" prop="codeLong">
                 <el-input size="small" v-model="addForm.codeLong" placeholder="选填"></el-input>
@@ -273,7 +273,7 @@ export default {
                 method: 'post',
                 params: this.addForm
             }).then((res) => {
-                this.$alert("添加成功")
+
                 this.dialogVisible = false
                 this.insertTestPlan(res.caseLibId)
                 this.getTestProject()
@@ -316,7 +316,6 @@ export default {
             }).then((res) => {
                 this.dialogVisible = false
                 this.getTestProject()
-                this.$alert('修改成功')
             }, (err) => {
                 this.$message(res.respMsg)
                 this.dialogVisible = false

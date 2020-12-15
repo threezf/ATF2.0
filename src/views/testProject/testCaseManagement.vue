@@ -31,14 +31,14 @@
                 <el-button @click="changeInf" type="primary" size="small" icon="el-icon-delete">
                     更改多种用例信息
                 </el-button>
-							<el-button @click="updateImport" type="primary" size="small" :icon="tableLoading? 'el-icon-loading':'el-icon-refresh'">
+							<el-button @click="updateImport" type="primary" size="small" icon="el-icon-refresh">
 								刷新
 							</el-button>
             </el-row>
             <el-row style="padding-top:10px;padding-bottom:10px">
                 <search @getComponentData="searchCase" @getTotalCount="searchCase2"></search>
             </el-row>
-                <el-table stripe :data="testCaseList" v-loading="tableLoading" border ref="table" :row-class-name="tableRowClassName" class="table" @expand-change="subShow" :row-key="getRowKeys" 
+                <el-table stripe :data="testCaseList" border ref="table" :row-class-name="tableRowClassName" class="table" @expand-change="subShow" :row-key="getRowKeys"
 					:expand-row-keys="expands" @selection-change="handleSelectionChange">
 									<el-table-column type="expand" >
                         <template slot-scope="scope">
@@ -108,7 +108,7 @@
                     </el-table-column>
                 </el-table>
 
-            <el-dialog :close-on-click-modal="false" title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
+            <el-dialog title="添加用例" :visible.sync="dialogVisible" width="65%" class="addDialog">
                 <el-tabs v-model="activeName" type="card">
                     <el-tab-pane label="单用例" name="first" class="addTab">
                         <div>
@@ -116,7 +116,8 @@
                                 <el-row style="padding:0;margin:0" type="flex" justify="center">
                                     <el-form-item label="用例名称" prop="casecode" label-width="35%" >
                                         <el-col :span="14">
-                                            <el-input v-model="addForm.casecode" size="small"></el-input>
+                                            <el-input v-model="
+                         addForm.casecode" size="small"></el-input>
                                         </el-col>
                                         <el-col :span="8" :offset="1">
                                             <el-button @click="showVisibleS" v-if="buttonS" type="primary" size="small" icon="el-icon-arrow-down">
@@ -227,11 +228,11 @@
                     </el-tab-pane>
                     <el-tab-pane label="流程用例" name="second" class="addTab">
                         <div>
-                            <el-form ref="flowForm" :model="flowForm">
+                            <el-form ref="addForm" :model="addForm">
                                 <el-row style="padding:0;margin:0" type="flex" justify="center">
                                     <el-form-item label="用例名称" prop="casecode" label-width="35%" >
                                         <el-col :span="14">
-                                            <el-input v-model="flowForm.casecode" size="small"></el-input>
+                                            <el-input v-model="addForm.casecode" size="small"></el-input>
                                         </el-col>
                                         <el-col :span="8" :offset="1">
                                             <el-button @click="showVisibleM" v-if="buttonM" type="primary" size="small" icon="el-icon-arrow-down">
@@ -243,12 +244,12 @@
                                         </el-col>
                                     </el-form-item>
                                 </el-row>
-                                <div v-if="dialogVisibleM" class="flowForm">
+                                <div v-if="dialogVisibleM" class="addForm">
                                     <el-divider content-position="center" style="padding:0;margin:0"></el-divider>
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="被测系统" prop="autName" label-width="40%">
-                                                <el-select class="selectWidth" v-model="flowForm.autId" size="small" filterable @change="transChange($event)">
+                                                <el-select class="selectWidth" v-model="addForm.autId" size="small" filterable @change="transChange($event)">
                                                     <el-option v-for="item in autList" :key="item.id" :label="item.nameMedium" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -256,7 +257,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="功能点" prop="transName" label-width="40%">
-                                                <el-select class="selectWidth" v-model="flowForm.transId" size="small" @change="templateChange($event)">
+                                                <el-select class="selectWidth" v-model="addForm.transId" size="small" @change="templateChange($event)">
                                                     <el-option v-for="item in transList" :key="item.id" :label="item.nameMedium" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -264,7 +265,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="基础脚本" prop="scriptModeFlag" label-width="40%">
-                                                <el-select class="selectWidth" v-model="flowForm.scriptModeFlag" size="small">
+                                                <el-select class="selectWidth" v-model="addForm.scriptModeFlag" size="small">
                                                     <el-option v-for="item in templateList" :key="item.id" :label="item.name" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -274,7 +275,7 @@
                                     <el-row>
                                         <el-col :span="7">
                                             <el-form-item label="用例性质" prop="caseproperty" label-width="40%">
-                                                <el-select class="selectWidth" v-model="flowForm.caseproperty" size="small">
+                                                <el-select class="selectWidth" v-model="addForm.caseproperty" size="small">
                                                     <el-option v-for="item in casePropertyList" :key="item.id" :label="item.label" :value="item.value">
                                                     </el-option>
                                                 </el-select>
@@ -282,7 +283,7 @@
                                         </el-col>
                                         <el-col :span="7" :offset="1">
                                             <el-form-item label="作者" prop="author" label-width="40%">
-                                                <el-select class="selectWidth" v-model="flowForm.author" size="small">
+                                                <el-select class="selectWidth" v-model="addForm.author" size="small">
                                                     <el-option v-for="item in userList" :key="item.id" :label="item.reallyname" :value="item.id">
                                                     </el-option>
                                                 </el-select>
@@ -292,31 +293,31 @@
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="测试意图" prop="testdesign" label-width="25%" size="small" >
-                                                <el-input v-model="flowForm.testdesign"></el-input>
+                                                <el-input v-model="addForm.testdesign"></el-input>
                                             </el-form-item>
                                         </el-col>
                                         <el-col :span="11" style="margin-left: 6.5%">
                                             <el-form-item label="前置条件" prop="prerequisites" label-width="25%" size="small" >
-                                                <el-input v-model="flowForm.prerequisites"></el-input>
+                                                <el-input v-model="addForm.prerequisites"></el-input>
                                             </el-form-item>
                                         </el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="测试步骤" prop="teststep" label-width="25%" size="small" >
-                                                <el-input v-model="flowForm.teststep"></el-input>
+                                                <el-input v-model="addForm.teststep"></el-input>
                                             </el-form-item>
                                         </el-col>
-                                        <el-col :span="11" style="margin-left: 6.5%">
-                                            <el-form-item label="检查点" prop="checkpoint" size="small" label-width="25%" >
-                                                <el-input v-model="flowForm.checkpoint"></el-input>
-                                            </el-form-item>
-                                        </el-col>
+																			<el-col :span="11" style="margin-left: 6.5%">
+																				<el-form-item label="检查点" prop="checkpoint" size="small" label-width="25%" >
+																					<el-input v-model="addForm.checkpoint"></el-input>
+																				</el-form-item>
+																			</el-col>
                                     </el-row>
                                     <el-row>
                                         <el-col :span="11">
                                             <el-form-item label="预期结果" prop="expectresult" size="small" label-width="25%" >
-                                                <el-input v-model="flowForm.expectresult"></el-input>
+                                                <el-input v-model="addForm.expectresult"></el-input>
                                             </el-form-item>
                                         </el-col>
 
@@ -325,7 +326,7 @@
                                         <el-col :span="24">
                                             <el-form-item label="备注" prop="note" label-width="11.5%">
                                                 <el-col style="width:94%">
-                                                    <el-input type="textarea" placeholder="请输入内容" v-model="flowForm.note">
+                                                    <el-input type="textarea" placeholder="请输入内容" v-model="addForm.note">
                                                     </el-input>
                                                 </el-col>
                                             </el-form-item>
@@ -459,7 +460,7 @@
                     </el-tab-pane>
                 </el-tabs>
             </el-dialog>
-            <el-dialog :close-on-click-modal="false" title="添加一个流程节点" :visible.sync="dialogVisibleN" width="65%">
+            <el-dialog title="添加一个流程节点" :visible.sync="dialogVisibleN" width="65%">
                 <el-tabs v-model="activeName" type="card" class="addTab">
                     <div v-for="(item,index) in caseNodeNums" :key="item.id">
                         <el-form ref="addNodeForm" :model="item.addNodeForm">
@@ -571,7 +572,7 @@
 
                 </el-tabs>
             </el-dialog>
-            <el-dialog :close-on-click-modal="false" title="更改多种用例信息" :visible.sync="dialogVisibleC" width="30%">
+            <el-dialog title="更改多种用例信息" :visible.sync="dialogVisibleC" width="30%">
                 <el-tabs v-model="activeName" type="card">
                     <el-form ref="changeForm" :model="changeForm">
                         <el-form-item label="被测系统" prop="autName" label-width="40%">
@@ -608,7 +609,7 @@
                     </el-row>
                 </el-tabs>
             </el-dialog>
-            <el-dialog :close-on-click-modal="false" title="导入" :visible.sync="dialogVisibleI" width="30%">
+            <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
                 <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">选择文件</el-button>
@@ -630,7 +631,7 @@
                     <el-button size="small" type="primary" @click="dialogVisibleI = !dialogVisibleI">取消</el-button>
                 </div>
             </el-dialog>
-            <el-dialog :close-on-click-modal="false" title="导出" :visible.sync="dialogVisibleO" width="30%">
+            <el-dialog title="导出" :visible.sync="dialogVisibleO" width="30%">
                 <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="exportUrl">
                     <div hidden>
                         <el-input type="text" name="testCaseIdList" v-for="(id,index) in selectList" :value="id" :key="index">
@@ -645,7 +646,7 @@
                     </div>
                 </el-form>
             </el-dialog>
-            <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="dialogVisibleQ" width="50%">
+            <el-dialog :title="title" :visible.sync="dialogVisibleQ" width="50%">
                 <el-form :disabled="!changeFlag" ref="changeInfoForm" :model="changeInfoForm">
                     <el-row>
                         <el-col :span="11">
@@ -808,76 +809,43 @@ export default {
                 useStatus: "1",
                 version: "1",
             },
-            flowForm: {
-                actionList: [],
-                autId: "",
-                author: sessionStorage.getItem("userId"),
-                automaton: "",
-                caseCompositeType: "",
-                casecode: "",
-                caseproperty: "1",
-                casetype: "1",
-                categoryTeam: "",
-                checkpoint: "",
-                datarequest: "",
-                executeMethod: "2",
-                executor: sessionStorage.getItem("userId"),
-                expectresult: "",
-                functionModule: "",
-                modifyChannel: "",
-                modifyChannelNo: "",
-                note: "",
-                prerequisites: "",
-                priority: "1",
-                reviewer: sessionStorage.getItem("userId"),
-                scriptMode: "1",
-                scriptModeFlag: "",
-                submissionId: "49",
-                tags: "",
-                testdesign: "",
-                testpoint: "1",
-                teststep: "",
-                transId: "",
-                useStatus: "1",
-                version: "1",
-            },
-            changeInfoForm: {
-                actionList: [],
-                autId: "",
-                author: sessionStorage.getItem("userId"),
-                automaton: "",
-                caseCompositeType: "",
-                casecode: "",
-                caseproperty: "1",
-                casetype: "1",
-                categoryTeam: "",
-                checkpoint: "",
-                datarequest: "",
-                executeMethod: "2",
-                executor: sessionStorage.getItem("userId"),
-                expectresult: "",
-                functionModule: "",
-                modifyChannel: "",
-                modifyChannelNo: "",
-                note: "",
-                prerequisites: "",
-                priority: "1",
-                reviewer: sessionStorage.getItem("userId"),
-                scriptMode: "1",
-                scriptModeFlag: "",
-                submissionId: "49",
-                tags: "",
-                testdesign: "",
-                testpoint: "1",
-                teststep: "",
-                transId: "",
-                useStatus: "1",
-                version: "1",
-                transList:[],
-                templateList:[]
-            },
-            transList: [],
-            templateList: [],
+					changeInfoForm: {
+						actionList: [],
+						autId: "",
+						author: sessionStorage.getItem("userId"),
+						automaton: "",
+						caseCompositeType: "",
+						casecode: "",
+						caseproperty: "1",
+						casetype: "1",
+						categoryTeam: "",
+						checkpoint: "",
+						datarequest: "",
+						executeMethod: "2",
+						executor: sessionStorage.getItem("userId"),
+						expectresult: "",
+						functionModule: "",
+						modifyChannel: "",
+						modifyChannelNo: "",
+						note: "",
+						prerequisites: "",
+						priority: "1",
+						reviewer: sessionStorage.getItem("userId"),
+						scriptMode: "1",
+						scriptModeFlag: "",
+						submissionId: "49",
+						tags: "",
+						testdesign: "",
+						testpoint: "1",
+						teststep: "",
+						transId: "",
+						useStatus: "1",
+						version: "1",
+						transList:[],
+						templateList:[]
+					},
+					transList: [],
+					templateList: [],
             caseNodeNums: [{
                 num: 1,
                 status: true,
@@ -901,8 +869,8 @@ export default {
                     testpoint: "1",
                     teststep: "",
                     transId: "",
-                    transList:[],
-                    templateList:[]
+								  	transList:[],
+									  templateList:[]
                 }
             }],
             changeForm: {
@@ -1081,8 +1049,7 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://10.101.167.184:8080/atfcloud2.0a/testcase/exportTestCase',
-            tableLoading: true
+            exportUrl: 'http://10.101.167.184:8080/atfcloud2.0a/testcase/exportTestCase'
         };
     },
     computed: {
@@ -1226,36 +1193,22 @@ export default {
             var _this = this;
             _this.addForm.actionList = []
             _this.addForm.caseCompositeType = caseCompositeType;
-            _this.flowForm.actionList = []
-            _this.flowForm.caseCompositeType = caseCompositeType;
             if (caseCompositeType == 2) {
                 for (var i = 0; i < _this.caseNodeNum - 1; i++) {
 									_this.caseNodeNums[i].addNodeForm.steporder=(i+1).toString()
                     _this.addForm.actionList.push(
                         _this.caseNodeNums[i].addNodeForm
                     );
-                    _this.flowForm.actionList.push(
-                        _this.caseNodeNums[i].addNodeForm
-                    );
                 }
             }
             typeof _this.addForm.author=="number"?1:parseInt(_this.addForm.author=sessionStorage.getItem("userId"))
-            typeof _this.flowForm.author=="number"?1:parseInt(_this.flowForm.author=sessionStorage.getItem("userId"))
-            _this.addForm.executor=_this.addForm.author
-            _this.addForm.reviewer=_this.addForm.author
-            _this.flowForm.executor=_this.flowForm.author
-            _this.flowForm.reviewer=_this.flowForm.author
-            let params = {}
-            if(this.activeName === 'first') {
-                params = this.addForm
-            }else {
-                params = this.flowForm
-            }
+					  _this.addForm.executor=_this.addForm.author
+				  	_this.addForm.reviewer=_this.addForm.author
             Request({
                     url: "/testcase/addTestcase",
                     method: "post",
                     params: {
-                        ...params,
+                        ..._this.addForm,
                         caseLibId: sessionStorage.getItem("caselibId")
                     }
                 })
@@ -1476,7 +1429,6 @@ export default {
         },
         //得到用例信息
         getCase(type) {
-            this.tableLoading = true
             if (type === 1) {
                 this.currentPage = 1;
             }
@@ -1500,9 +1452,7 @@ export default {
                 )
                 .catch(err => {
                     console.log(err);
-                }).finally(_ => {
-                    this.tableLoading = false
-                })
+                });
         },
 
         //得到用户
@@ -1522,9 +1472,6 @@ export default {
                         _this.addForm.author = res.userEntityList[0].id;
                         _this.addForm.executor = res.userEntityList[0].id;
                         _this.addForm.reviewer = res.userEntityList[0].id;
-                        _this.flowForm.author = res.userEntityList[0].id;
-                        _this.flowForm.executor = res.userEntityList[0].id;
-                        _this.flowForm.reviewer = res.userEntityList[0].id;
                     },
                     err => {
                         console.log(err);
@@ -1548,7 +1495,6 @@ export default {
                     res => {
                         _this.autList = res.autRespDTOList;
                         _this.addForm.autId = _this.autList[0].id;
-                        _this.flowForm.autId = _this.autList[0].id;
                         _this.caseNodeNums[0].addNodeForm.autId =
                             _this.autList[0].id;
                         _this.getTrans(_this.autList[0].id);
@@ -1609,7 +1555,6 @@ export default {
                     res => {
                         _this.transList = res.list;
                         _this.addForm.transId = _this.transList[0].id;
-                        _this.flowForm.transId = _this.transList[0].id;
                         _this.caseNodeNums[0].addNodeForm.transId =
                             _this.transList[0].id;
 										  	_this.caseNodeNums[0].addNodeForm.transList =
@@ -1668,15 +1613,17 @@ export default {
                         _this.templateList = res.scriptTemplateList;
                         if (_this.templateList.length == 0) {
                             _this.addForm.scriptModeFlag = "";
-                            _this.flowForm.scriptModeFlag = "";
-                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag = "";
-                            _this.caseNodeNums[0].addNodeForm.templateList = [];
+                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
+                                "";
+													  _this.caseNodeNums[0].addNodeForm.templateList =
+														[];
                         } else {
                             _this.addForm.scriptModeFlag =
-                            _this.templateList[0].id;
+                                _this.templateList[0].id;
                             _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
-                            _this.templateList[0].id;
-                            _this.caseNodeNums[0].addNodeForm.templateList = _this.templateList;
+                                _this.templateList[0].id;
+													_this.caseNodeNums[0].addNodeForm.templateList =
+														_this.templateList;
                         }
                     },
                     err => {
@@ -1736,6 +1683,7 @@ export default {
 				},
         //点击被测系统
         transChange(e,row,i) {
+
         	if(row&&row!=''){
 						Request({
 							url: "/transactController/pagedBatchQueryTransact",
@@ -1778,7 +1726,9 @@ export default {
 								console.log(err);
 							});
 
-					}else if(!i){
+					}else if(i==0){
+						this.getTrans1(e,i)
+					} else if(!i){
 						this.getTrans(e);
 					}else{
         		this.getTrans1(e,i)
@@ -1808,7 +1758,9 @@ export default {
 			},
         //点击功能点
         templateChange(e,row,i) {
-        	if(!i){
+        	if(i==0){
+						this.getTemplate1(e,i)
+					}else if(!i){
 						this.getTemplate(e);
 					}else{
         		this.getTemplate1(e,i)

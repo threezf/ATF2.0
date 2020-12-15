@@ -25,7 +25,7 @@ export default {
 		name: '测试基础设施',
 		another: 'atf/aut'
 	},
-	children:[ 
+	children:[
 		{
 			path: 'TestedSystemManagementRouter',
 			name: 'TestedSystemManagementRouter',
@@ -131,12 +131,12 @@ export default {
 		{
 			path: 'interfacesManagement',
 			name: 'InterfacesManagement',
-            component: InterfacesManagement,
+			component: InterfacesManagement,
 			meta: {
 				name: '接口管理',
 				parent: 'TestInfrastructure',
 				icon: 'el-icon-view',
-                hide: true,
+				hide: true
 			}
 		},
 		{

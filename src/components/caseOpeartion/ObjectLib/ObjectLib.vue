@@ -56,7 +56,7 @@
 							label="类型">
 							<el-select 
 								size="small"
-								placeholder="--选择构件类型--"
+								placeholder="--选择控件类型--"
 								v-model="selectObject.classType">
 								<el-option 
 									v-for="(item) in omClassRespDTOList"
@@ -370,7 +370,7 @@
 				repositoryId: '',
 				selectObject: {}, // 点击行获取到的对象
 				repositoryId: '',
-				omClassRespDTOList: [], // 构件类型
+				omClassRespDTOList: [], // 控件类型
 				mainFlag: false, // 选择的主属性的内容
 				additionalFlag: false, // 选择的附加属性
 				assistantFlag: false, // 选择的辅助属性
@@ -447,7 +447,7 @@
 					this.$message.error(err.message)
 				})
 			},
-			// 获取构件类型
+			// 获取控件类型
 			queryAutVisibleOmClasses(id) {
 				Request({
 					url: '/aut/queryAutVisibleOmClasses',

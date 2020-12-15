@@ -18,7 +18,7 @@
         <el-table-column label="描述" min-width="40%" prop="dataDesc"></el-table-column>
     </el-table>
     <!--数据对话框-->
-    <el-dialog :close-on-click-modal="false"  width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
+    <el-dialog width="24%" :title="dialogTitle" :visible.sync="dialogVisible" :before-close="handleBeforeClose">
         <el-form>
             <el-form-item label="名称" label-width="70px">
                 <el-input size="small" class="inputStyle" placeholder="请输入名称" v-model="ruleForm.dataName"></el-input>

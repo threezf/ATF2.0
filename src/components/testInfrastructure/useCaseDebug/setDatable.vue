@@ -205,7 +205,7 @@
         <el-table-column type="index" width="50"> </el-table-column>
         <el-table-column prop="operationItem" label="操作项" width="180">
         </el-table-column>
-        <el-table-column prop="classType" label="构件名" width="180">
+        <el-table-column prop="classType" label="控件名" width="180">
         </el-table-column>
         <el-table-column prop="method" label="方法名"> </el-table-column>
         <el-table-column prop="parameters" label="参数"> </el-table-column>
@@ -1563,7 +1563,7 @@ export default {
         this.getCheckFunTree();
       }
     },
-    //获取该测试系统下 所有的构件类型
+    //获取该测试系统下 所有的控件类型
     getFilterTree() {
       Request({
         url: "/dataCenter/queryFilterTree",

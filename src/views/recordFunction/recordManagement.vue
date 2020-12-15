@@ -137,7 +137,7 @@
 					</el-col>
 				</div>
       </el-main>
-			<el-dialog :close-on-click-modal="false" 
+			<el-dialog
 				width="30%"
 				:title="title[titleIndex]"
 				:visible.sync="dialogVisible">

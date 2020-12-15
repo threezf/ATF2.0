@@ -91,8 +91,7 @@ export default new Router({
             name: 'CGI',
             meta: {
                 name: '接口测试',
-                another: 'atf/interface',
-                isInterface: true
+                another: 'atf/interface'
             }
         },
         TestProject,

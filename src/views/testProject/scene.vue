@@ -65,7 +65,7 @@
                     </el-table-column>
                 </el-table>
                 
-                <el-dialog :close-on-click-modal="false" 
+                <el-dialog
                     :title="modelName"
                     :visible.sync="dialogVisible"
                     :before-close="handleClose"

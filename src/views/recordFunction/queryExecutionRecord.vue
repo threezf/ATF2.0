@@ -226,7 +226,7 @@
           :total="totalCount"
           layout="total,sizes,prev,pager,next,jumper">
         </el-pagination>
-        <el-dialog :close-on-click-modal="false" 
+        <el-dialog
           title="提示"
           width="30%"
           :visible.sync="dialogVisible">

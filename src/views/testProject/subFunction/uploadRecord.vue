@@ -85,7 +85,7 @@
 						</el-pagination>
 					</el-col>
 				</div>
-				<el-dialog :close-on-click-modal="false" 
+				<el-dialog
 					title="导入"
 					:visible.sync="dialogVisibleI"
 					width="30%">

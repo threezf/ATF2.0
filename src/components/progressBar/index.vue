@@ -17,7 +17,7 @@ export default {
     data: function () {
         return {
             paths: Path,
-            smallPaths: Path[0].item, 
+            smallPaths: Path[0].item,
             bigActive: 0,
             smallActive: 1,
             flag: false,
@@ -60,7 +60,7 @@ export default {
             },
             immediate: true
         }
-    }, 
+    },
     computed: {
     },
     methods: {
@@ -84,8 +84,12 @@ export default {
                         steps: 1
                     }
                 })
-            }
-            this.$router.push({
+            }else if(name === 'testplanExecute'){
+							return this.$router.push({
+								path: '/testProjectIndext/testplanExecute',
+							})
+						}
+							this.$router.push({
                 name: name
             })
         },

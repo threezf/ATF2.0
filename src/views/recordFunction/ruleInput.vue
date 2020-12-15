@@ -35,7 +35,7 @@
         </el-row>
     </el-form>
     <el-divider></el-divider>
-     <el-dialog :close-on-click-modal="false" 
+     <el-dialog
      width='50%'
 	 title='设置检查点类型'
 	 :visible.sync='dialogVisible'
