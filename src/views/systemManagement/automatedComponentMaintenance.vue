@@ -1,36 +1,16 @@
 <template>
 	<page>
-				<el-form  class="fistForm" label-width="100%">
+				<el-form ref="firstForm" class="fistForm" label-width="100%">
 					<el-row>
-						<el-col :span="4" style="margin-left: 20px" >
-							<el-button
-								@click="componentFormButton"
-								icon="el-icon-setting"
-								size="small"
-								type="primary">
-								选择开发架构
-							</el-button>
+						<el-col :span="10" :offset="1">
+							<el-form-item label="被测系统的开发架构" label-width="34%">
+								<el-input style="width:78%" size="small" v-model="automated" :disabled="true"
+													:placeholder="inheriteArcName"></el-input>
+							</el-form-item>
 						</el-col>
-						<el-col :span="5">
-							<el-input style="width: 100% " size="small" id="componentInput" v-model="automated" :disabled="true"
-												placeholder="选择的开发架构"></el-input>
-						</el-col>
-						<el-col :span="3" style="margin-left: 10px">
-							<el-button
-								@click="addArch(0)"
-								icon="el-icon-plus"
-								size="small">
-							</el-button>
-							<el-button
-								style="margin-left:10px"
-								@click="addArch(1)"
-								icon="el-icon-edit"
-								size="small">
-							</el-button>
-						</el-col>
-						<el-col :span="8" >
-							<el-form-item label="控件名称" label-width="22%" style="margin-top:-5px">
-								<el-select style="width: 90%"  v-model="classValue" filterable placeholder="请选择控件" size="small"
+						<el-col :span="8" :offset="1">
+							<el-form-item label="控件名称" label-width="30%">
+								<el-select style="width:100%" v-model="classValue" filterable placeholder="请选择控件" size="small"
 													 @change="classSelect($event)">
 									<el-option
 										v-for="(item) in classList"
@@ -40,19 +20,6 @@
 									</el-option>
 								</el-select>
 							</el-form-item>
-						</el-col>
-						<el-col :span="3" style="margin-left: 10px">
-							<el-button
-								@click="dialogVisibleA=!dialogVisibleA"
-								icon="el-icon-plus"
-								size="small">
-							</el-button>
-							<el-button
-								style="margin-left:10px"
-								@click="deleteForm"
-								icon="el-icon-delete"
-								size="small">
-							</el-button>
 						</el-col>
 					</el-row>
 				</el-form>
@@ -155,40 +122,40 @@
 						</el-col>
 					</el-row>
 					<el-row>
-						<el-col :span="19" >
-							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="23.5%">
+						<el-col :span="19">
+							<el-form-item label="运行时参数" prop="runtimeArgs" label-width="22.5%">
 									<el-table
-									stripe
-									border
-									:data="secondForm.runtimeArgs"
-									class='table tableEdit'>
-									<el-table-column
-										label="属性名">
-										<template slot-scope="scope" @change="handleEditR1(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										label="属性值">
-									<template slot-scope="scope" @change="handleEditR2(scope.$index, scope.row)">
-										<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
-									</template>
-									</el-table-column>
-									<el-table-column
-										width="100">
-										<template slot-scope="scope">
-											<el-button
-												size="small"
-												@click="deleteArg(scope.$index)"
-												type="danger">
-												删除
-											</el-button>
-										</template>
-									</el-table-column>
+										stripe
+										border
+										:data="secondForm.runtimeArgs"
+										class='table tableEdit'>
+										<el-table-column
+											label="属性名">
+											<template slot-scope="scope" @change="handleEditR1(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											label="属性值">
+											<template slot-scope="scope" @change="handleEditR2(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											width="100">
+											<template slot-scope="scope">
+												<el-button
+													size="small"
+													@click="deleteArg(scope.$index)"
+													type="danger">
+													删除
+												</el-button>
+											</template>
+										</el-table-column>
 									</el-table>
 							</el-form-item>
 						</el-col>
-						<el-col :span="3">
+						<el-col :span="5">
 							<el-button
 								size="small"
 								@click="addArg"
@@ -199,39 +166,39 @@
 					</el-row>
 					<el-row>
 						<el-col :span="19">
-							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="23.5%">
-								<el-table
-									stripe
-									border
-									:data="secondForm.supportedRecognitionPros"
-									class='table tableEdit'>
-									<el-table-column
-										label="属性名">
-										<template slot-scope="scope" @change="handleEditS1(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										label="属性值">
-										<template slot-scope="scope" @change="handleEditS2(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										width="100">
-										<template slot-scope="scope">
-											<el-button
-												size="small"
-												@click="deleteArgS(scope.$index)"
-												type="danger">
-												删除
-											</el-button>
-										</template>
-									</el-table-column>
-								</el-table>
+							<el-form-item label="支持的识别属性" prop="supportedRecognitionPros" label-width="22.5%">
+									<el-table
+										stripe
+										border
+										:data="secondForm.supportedRecognitionPros"
+										class='table tableEdit'>
+										<el-table-column
+											label="属性名">
+											<template slot-scope="scope" @change="handleEditS1(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											label="属性值">
+											<template slot-scope="scope" @change="handleEditS2(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											width="100">
+											<template slot-scope="scope">
+												<el-button
+													size="small"
+													@click="deleteArgS(scope.$index)"
+													type="danger">
+													删除
+												</el-button>
+											</template>
+										</el-table-column>
+									</el-table>
 							</el-form-item>
 						</el-col>
-						<el-col :span="3">
+						<el-col :span="5">
 							<el-button
 								size="small"
 								@click="addArgS"
@@ -242,39 +209,40 @@
 					</el-row>
 					<el-row>
 						<el-col :span="19">
-							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="23.5%">
-								<el-table
-									stripe
-									border
-									:data="secondForm.selfRecognitionPros"
-									class='table tableEdit'>
-									<el-table-column
-										label="属性名">
-										<template slot-scope="scope" @change="handleEditE1(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										label="属性值">
-										<template slot-scope="scope" @change="handleEditE2(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										width="100">
-										<template slot-scope="scope">
-											<el-button
-												size="small"
-												@click="deleteArgE(scope.$index)"
-												type="danger">
-												删除
-											</el-button>
-										</template>
-									</el-table-column>
-								</el-table>
+							<el-form-item label="自识别属性" prop="selfRecognitionPros" label-width="22.5%">
+									<el-table
+										stripe
+										border
+										:data="secondForm.selfRecognitionPros"
+										class='table tableEdit'>
+										<el-table-column
+											label="属性名">
+											<template slot-scope="scope" @change="handleEditE1(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											label="属性值">
+											<template slot-scope="scope" @change="handleEditE2(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											width="100">
+											<template slot-scope="scope">
+												<el-button
+													size="small"
+													@click="deleteArgE(scope.$index)"
+													type="danger">
+													删除
+												</el-button>
+											</template>
+										</el-table-column>
+									</el-table>
+
 							</el-form-item>
 						</el-col>
-						<el-col :span="3">
+						<el-col :span="5">
 							<el-button
 								size="small"
 								@click="addArgE"
@@ -285,36 +253,37 @@
 					</el-row>
 					<el-row>
 						<el-col :span="19">
-							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="23.5%">
-								<el-table
-									stripe
-									border
-									:data="secondForm.assistRecognitionPros"
-									class='table tableEdit'>
-									<el-table-column
-										label="属性名">
-										<template slot-scope="scope" @change="handleEditA1(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										label="属性值">
-										<template slot-scope="scope" @change="handleEditA2(scope.$index, scope.row)">
-											<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
-										</template>
-									</el-table-column>
-									<el-table-column
-										width="100">
-										<template slot-scope="scope">
-										<el-button
-											size="small"
-											@click="deleteArgA(scope.$index)"
-											type="danger">
-											删除
-										</el-button>
-										</template>
-									</el-table-column>
-								</el-table>
+							<el-form-item label="辅助识别属性" prop="assistRecognitionPros" label-width="22.5%">
+									<el-table
+										stripe
+										border
+										:data="secondForm.assistRecognitionPros"
+										class='table tableEdit'>
+										<el-table-column
+											label="属性名">
+											<template slot-scope="scope" @change="handleEditA1(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.name" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											label="属性值">
+											<template slot-scope="scope" @change="handleEditA2(scope.$index, scope.row)">
+												<el-input size="small" v-model="scope.row.value" placeholder="请输入内容" ></el-input>
+											</template>
+										</el-table-column>
+										<el-table-column
+											width="100">
+											<template slot-scope="scope">
+												<el-button
+													size="small"
+													@click="deleteArgA(scope.$index)"
+													type="danger">
+													删除
+												</el-button>
+											</template>
+										</el-table-column>
+									</el-table>
+
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
@@ -326,7 +295,6 @@
 							</el-button>
 						</el-col>
 					</el-row>
-
 					<el-row type="flex" justify="center">
 							<el-button
 								@click="storeClass"
@@ -470,7 +438,7 @@
 									<el-input
 										style="margin-left:70px"
 										type="textarea"
-										v-model="thirdForm.targetCodeContent"
+										v-model="textarea"
 										maxlength="1000"
 										rows="10"
 										show-word-limit>
@@ -491,78 +459,6 @@
 					</el-form>
 
 				</el-drawer>
-				<el-dialog
-					title="选择自动化架构"
-					:visible.sync="dialogVisible"
-					width="30%">
-					<el-form ref="ComponentForm" label-width="25%">
-						<div class="custom-tree-container">
-							<div class="block">
-								<el-tree
-									:data="componentData"
-									node-key="id"
-									accordion
-									ref="tree"
-									:props="defaultProps"
-									:highlight-current="true"
-									@node-click="handleNodeClick">
-									<span class="custom-tree-node" slot-scope="{ node}">
-										<span>{{ node.label }}</span>
-									</span>
-								</el-tree>
-							</div>
-						</div>
-					</el-form>
-					<el-row class="el-button-margin" type="flex" justify="center">
-						<el-button type="primary" size="small"
-									 @click="submitComponentForm('componentForm')">确定
-						</el-button>
-					</el-row>
-				</el-dialog>
-				<el-dialog
-					:title="modelName"
-					:visible.sync="dialogVisibleD"
-					width="30%">
-					<el-form ref="addForm" :model="addForm" label-width="30%">
-						<el-form-item label="编码" prop="code">
-							<el-input size="small" v-model="addForm.code"></el-input>
-						</el-form-item>
-						<el-form-item label="中文名称" prop="name">
-							<el-input size="small" v-model="addForm.name"></el-input>
-						</el-form-item>
-						<el-form-item label="父架构" prop="parentArcId">
-							<el-select
-								class="selectWidth"
-								v-model="
-												addForm.parentArcId
-											"
-								size="small"
-							>
-								<el-option
-									v-for="item in parentList"
-									:key="
-												item.id
-													"
-									:label="
-														item.name
-														"
-									:value="
-														item.id
-													"
-								>
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="描述" prop="descShort">
-							<el-input size="small" v-model="addForm.descShort"></el-input>
-						</el-form-item>
-						<el-row class="el-button-margin" type="flex" justify="center">
-							<el-button size="small" type="primary" v-if="addFlag" @click="add()">{{buttonName}}</el-button>
-							<el-button size="small" type="primary" v-else @click="edit()">{{buttonName}}</el-button>
-							<el-button size="small" @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
-						</el-row>
-					</el-form>
-				</el-dialog>
 				<el-dialog
 					title="添加控件"
 					:visible.sync="dialogVisibleA"
@@ -619,7 +515,7 @@
 						<el-row></el-row>
 						<el-row class="el-button-margin" type="flex" justify="center">
 							<el-button size="small" type="primary"  @click="addMethod">添加</el-button>
-							<el-button size="small" @click="dialogVisibleB = false">取消</el-button>
+							<el-button size="small" @click="dialogVisibleB=false">取消</el-button>
 						</el-row>
 					</el-form>
 				</el-dialog>
@@ -633,6 +529,7 @@
 
 	export default {
 		mixins: [VueMixins], // 混入
+		name: "automatedComponentMaintenance",
 		data() {
 			return {
 				addMethodForm: {
@@ -727,9 +624,10 @@
 				},{
 					value:1,
 					label:"有"
-			}],
+				}],
 				automated: '',
 				arcId:'',
+				inheriteArcName:'',
 				defaultMethod: '',
 				methodValue: '',
 				overideValue: '',
@@ -745,7 +643,6 @@
 				addFlag:true,
 				direction: 'rtl',
 				componentData: [],
-				componentChildData:[],
 				classList: [],
 				methodList: [],
 				parentList:[],
@@ -758,14 +655,13 @@
 					children: "childNodeList",
 					label: "name"
 				},
-                flag: 1,
-                companyId: ''
+				flag: 1,
 			}
 		},
-		created() {
-            this.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
-            console.log('company', this.companyId)
-            this.getArch()
+		created(){
+			this.inheriteArcName=this.$route.query.inheriteArcName
+			this.arcId=this.$route.query.arcId
+			this.getClass()
 		},
 		computed:{
 			modelName(){
@@ -787,8 +683,8 @@
 		methods: {
 			//修改或填写新增运行时参数
 			handleEditR1(index, row){
-			 this.secondForm.runtimeArgs[index-1].name=row.name
-	    },
+				this.secondForm.runtimeArgs[index-1].name=row.name
+			},
 			handleEditR2(index, row){
 				this.secondForm.runtimeArgs[index-1].value=row.value
 			},
@@ -910,11 +806,11 @@
                         companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
 					}
 				}).then((res) => {
-						this.dialogVisibleB=!this.dialogVisibleB
-						this.$alert('添加方法成功', '成功', {
-							confirmButtonText: '确定',
-						});
-						this.getMethod(this.classId0)
+					this.dialogVisibleB=!this.dialogVisibleB
+					this.$alert('添加方法成功', '成功', {
+						confirmButtonText: '确定',
+					});
+					this.getMethod(this.classId0)
 				}, (err) => {
 					this.$alert('添加方法失败', '失败', {
 						confirmButtonText: '确定',
@@ -935,16 +831,16 @@
                         userId: sessionStorage.getItem('userId')
 					}
 				}).then((res) => {
-					this.$alert('删除方法成功', '成功', {
+					this.$alert('删除控件成功', '成功', {
 						confirmButtonText: '确定',
 					});
 					this.getMethod(this.classId0)
 				}, (err) => {
-					this.$alert('删除方法失败', '失败', {
+					this.$alert('删除控件失败', '失败', {
 						confirmButtonText: '确定',
 					});
-					}).catch((err) => {
-					this.$alert('删除方法失败', '失败', {
+				}).catch((err) => {
+					this.$alert('删除控件失败', '失败', {
 						confirmButtonText: '确定',
 					});
 				})
@@ -1018,81 +914,7 @@
 					});
 				})
 			},
-			//展示添加和修改架构form
-			addArch(type){
-				if(type==0){
-					this.modelFlag=1
-					this.addFlag=true
-					// for(let key in this.addForm){
-					// 	this.addForm[key]  = ''
-					// }
-				}else{
-					this.modelFlag=2
-					this.addFlag=false
-					this.addForm=this.checkedData
-				}
-				this.dialogVisibleD=!this.dialogVisibleD
-			},
-			//实际添加架构函数
-			add(){
-				Request({
-					url: '/abstractArchitecture/addAbstractArchitecture',
-					method: 'post',
-					params:{
-                        ...this.addForm,
-                        creatorId: sessionStorage.getItem('userId'),
-                        companyId: this.companyId
-					}
-				}).then((res) => {
-					this.dialogVisibleD=!this.dialogVisibleD
-					this.getArch()
-					this.$alert('添加自动化架构成功', '成功', {
-						confirmButtonText: '确定',
-					});
-				}, (err) => {
-					if(err.includes("10011000")){
-						this.$alert('本自动化架构编码已存在', '失败', {
-							confirmButtonText: '确定',
-						});
-					}else{
-						this.$alert('添加自动化架构失败', '失败', {
-							confirmButtonText: '确定',
-						});
-					}
-				}).catch((err) => {
-					this.$alert('添加自动化架构失败', '失败', {
-						confirmButtonText: '确定',
-					});
-				})
-			},
-			//实际修改架构函数
-			edit(){
-				Request({
-					url: '/abstractArchitecture/modifyAbstractArchitecture',
-					method: 'post',
-					params:{
-						modifierId:sessionStorage.getItem("userId"),
-                        ...this.addForm,
-                        userId: sessionStorage.getItem("userId"),
-                        creatorId: sessionStorage.getItem("userId"),
-                        companyId: this.companyId
-					}
-				}).then((res) => {
-					this.dialogVisibleD=!this.dialogVisibleD
-					this.getArch()
-					this.$alert('修改自动化架构成功', '成功', {
-						confirmButtonText: '确定',
-					});
-				}, (err) => {
-					this.$alert('修改自动化架构失败', '失败', {
-						confirmButtonText: '确定',
-					});
-				}).catch((err) => {
-					this.$alert('修改自动化架构失败', '失败', {
-						confirmButtonText: '确定',
-					});
-				})
-			},
+
 			handleClose1(done) {
 				this.$confirm('确认关闭？')
 					.then(_ => {
@@ -1100,26 +922,6 @@
 					})
 					.catch(_ => {
 					});
-			},
-
-			//展示自动化架构form
-			componentFormButton() {
-				this.dialogVisible = true
-			},
-			//提交自动化架构form
-			submitComponentForm(formName) {
-				this.dialogVisible = false
-			},
-			//选择自动化架构
-			handleNodeClick(data) {
-				/* 主要通过checked进行判断 */
-					let arr = [data.id];
-					this.checkedData = data
-					this.arcId = data.id
-					this.$refs.tree.setCheckedKeys(arr)
-					this.automated = data.name
-					document.getElementById("componentInput").style.color = "black"
-					this.getClass()
 			},
 			//得到控件
 			getClass(){
@@ -1157,49 +959,23 @@
 				Request({
 					url: '/arcClass/queryArcVisibleOmMethods',
 					method: 'post',
-					params: {
-                        id: id,
-						userId: sessionStorage.getItem('userId'),
-						companyId:JSON.parse(localStorage.getItem('loginInfo')).companyId,
+					params: {id: id,  userId: sessionStorage.getItem('userId'),
+					    companyId:JSON.parse(localStorage.getItem('loginInfo')).companyId,
 						classId:id
-                    }
+					}
 				}).then((res) => {
 					_this.methodList = res.arcMethodRespDTOList
-					if(!_this.methodList[0]){
-						_this.methodValue="无"
-						_this.thirdForm={
-							arcId: '',
-							argsCount: '',
-							arguments: [{name:"YorN",type:"",parameterizeColumn:"{{element}}",desc:""}],
-							classId: '',
-							descShort: '',
-							id: '',
-							inputArgsDesc: '',
-							isparameter: '',
-							labelArgument: '',
-							mtype: '',
-							name: '',
-							outputArgsDesc: '',
-							overrideFlag: '',
-							targetCodeContent: '',
-							timeout: '',
-							visibilityFlag: '',
-							waittime: '',
-						}
+					_this.methodValue = _this.methodList[0].name
+					_this.classId= _this.methodList[0].id
+					_this.thirdForm = _this.methodList[0]
+					_this.textarea = _this.methodList[0].targetCodeContent
+					if(_this.methodList[0].arguments[1]!='o'){
+						_this.thirdForm.arguments = JSON.parse(_this.methodList[0].arguments)
 					}else{
-						_this.methodValue = _this.methodList[0].name
-						_this.classId= _this.methodList[0].id
-						_this.thirdForm = _this.methodList[0]
-						_this.textarea = _this.methodList[0].targetCodeContent
-						if(_this.methodList[0].arguments){
-							_this.thirdForm.arguments = JSON.parse(_this.methodList[0].arguments)
-						}else{
-							_this.thirdForm.arguments =[]
-						}
-						_this.setOverrideFlagM(_this.methodList[0].overrideFlag)
-						_this.setVisibilityM(_this.methodList[0].visibilityFlag)
+						_this.thirdForm.arguments =[]
 					}
-
+					_this.setOverrideFlagM(_this.methodList[0].overrideFlag)
+					_this.setVisibilityM(_this.methodList[0].visibilityFlag)
 				}, (err) => {
 					console.log(err)
 				}).catch((err) => {
@@ -1277,30 +1053,6 @@
 					this.visibilityValueM = '私有'
 				}
 			},
-			//得到自动化架构
-			getArch(){
-				Request({
-					url: '/abstractArchitecture/queryArchitectureList',
-                    method: 'post',
-                    params: {
-                        companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
-                    }
-				}).then((res) => {
-					this.parentList= res.architectureRespDTOList
-					this.componentData=[]
-					var componentChildData = res.architectureRespDTOList
-					for (var i = 0; i < componentChildData.length; i++) {
-                    if (componentChildData[i].level == 0) {
-                        this.componentData.push(componentChildData[i])
-                    }
-                }
-				}, (err) => {
-					console.log(err)
-				}).catch((err) => {
-					console.log(err)
-				})
-			},
-
 			//保存控件信息
 			storeClass() {
 				var submitForm={}
@@ -1420,6 +1172,8 @@
 	.drawer .el-row {
 		margin: 10px 0;
 	}
+
+
 
 </style>
 <style>

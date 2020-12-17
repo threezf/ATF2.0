@@ -133,7 +133,7 @@
                             <el-option v-for="(item,index) in bodyFormats" :key="index" :value="item.id" :label="item.value">
                             </el-option>
                         </el-select>
-                        <el-button class="decode" type="primary" size="small" style="display: none" @click="decode">解码
+                        <el-button class="decode" type="primary" size="small" @click="decode">解码
                         </el-button>
                     </el-form-item>
                     <el-form-item prop="bodyContent" class="descForm" label-width="100px" label="报文内容">
