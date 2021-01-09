@@ -330,7 +330,8 @@
         cakeTitle: "饼状图详情",
         chartData: {},
         useColor: ["#22ee55", "#e72210", "#53becc"],
-        caseLibId: ''
+        caseLibId: '',
+        testPlanId: ''
       };
     },
     created() {
@@ -402,6 +403,7 @@
                 nameMedium: ""
             }
         }).then(res => {
+            this.testPlanId = res.testPlanEntityList[0].id
             this.executeQuery(res.testPlanEntityList[0].id)
         }).catch(error => {
             console.log('id获取失败')
@@ -410,7 +412,7 @@
 
       // 执行查询
       executeQuery(testplanId) {
-        this.params.testPlanId = testplanId
+        this.params.testPlanId = this.testPlanId
         Request({
           url: "/batchRunCtrlController/pagedBatchQueryBatchRunCtrl",
           method: "POST",
