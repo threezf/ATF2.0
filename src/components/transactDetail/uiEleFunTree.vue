@@ -15,7 +15,7 @@
                 </span>
             </el-col>
         </el-row>
-        <el-tree default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
+        <el-tree  style="max-height: 400px; overflow:scroll;" default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
         </el-tree>
     </div>
     <div hidden>
