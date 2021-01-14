@@ -12,7 +12,7 @@
         <el-tree :data="uis" :props="defaultProps" ref="ueTree" show-checkbox default-expand-all check-on-click-node highlight-current @check-change="handleUECheckChange">
         </el-tree>
     </div>
-    <div class="functionArea">
+    <div class="functionArea" hidden>
         <p>公共函数集</p>
         <el-tree :data="omMethodRespDTOList" :props="defaultProps" show-checkbox default-expand-all check-on-click-node highlight-current @check-change="handleMethodsCheckChange">
         </el-tree>

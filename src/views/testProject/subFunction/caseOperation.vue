@@ -545,7 +545,8 @@ export default {
             data.executeStatus = res.recordEntity.executeStatus == 1? '失败': '成功'
             data.sourceChannel = res.recordEntity.sourceChannel
             data.resourcePath = res.recordEntity.resourcePath === null? '无执行报告': res.recordEntity.resourcePath
-            this.resourcePath = res.recordEntity.resourcePath === null? "": "http://10.101.167.184:8080/" + res.recordEntity.resourcePath
+            this.resourcePath = res.recordEntity.resourcePath === null? "": "http://140.143.16.21:9090/" + res.recordEntity.resourcePath
+            // this.resourcePath = res.recordEntity.resourcePath === null? "": "http://10.101.167.184:8080/" + res.recordEntity.resourcePath
             this.recordTableData.push(data)
           } else {
             this.$message.warning(res.respMsg);
