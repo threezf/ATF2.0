@@ -19,9 +19,9 @@
       <el-tab-pane label="周" name="week">
         <week v-model="weekVal" lable="周"></week>
       </el-tab-pane>
-      <!-- <el-tab-pane label="年" name="year">
+      <el-tab-pane label="年" name="year">
         <year v-model="yearVal" lable="年"></year>
-      </el-tab-pane> -->
+      </el-tab-pane>
     </el-tabs>
     <!-- table -->
     <el-table

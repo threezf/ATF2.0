@@ -53,6 +53,7 @@
       this.autId = query.autId
       this.caseId = query.caseId
       this.scriptId = query.scriptId
+      sessionStorage.setItem('scriptId', this.scriptId)
       this.queryScriptDebugTestPlan(this.caseId)
     },
     methods: {
