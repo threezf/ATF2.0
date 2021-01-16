@@ -104,9 +104,12 @@
                   </el-form>
                 <div class="test-control container" style="margin: 15px 5px">
                   <div style="font-size: 12px; color: #999"></div>
-                  <el-button type="primary" size="mini" @click="executeAll()"
-                    ><i class="icon-play"></i> 批量执行</el-button
-                  >
+                  <el-button type="primary" size="mini" @click="executeAll()" v-if="notTimerFlag"
+                    ><i class="icon-play" ></i> 批量执行
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="executeAllT2()" v-if="!notTimerFlag">
+                      <i class="icon-play"></i> 定时执行
+                  </el-button>
                   <el-button type="primary" size="mini" @click="stopExe()"
                     ><i class="icon-stop"></i> 终止执行</el-button
                   >
@@ -1314,9 +1317,15 @@ export default {
       senceDialog: false,
       testPlanDialog: false,
       addTestPlanDialog: false,
+      notTimerFlag: true,
     };
   },
   mounted() {
+    if(this.$route.query.sceneId) {
+      this.notTimerFlag = this.$route.query.notTimer
+      this.sceneId = this.$route.query.sceneId
+      console.log('定时执行发起的', this.notTimerFlag, this.sceneId)
+    }
     console.log("sessionId", sessionStorage.getItem("userId"));
     var _this = this;
     var tempTestPlanId = sessionStorage.getItem("testPlanId") || undefined;
@@ -1545,6 +1554,104 @@ export default {
             });
           } else {
             Vac.alert(data.respMsg);
+            _this.setResultIcon();
+          }
+        },
+        error: function () {
+          Vac.alert("网络错误，执行失败！");
+          _this.setResultIcon();
+        },
+      });
+    },
+    // 发起定时执行
+    executeAllT2() {
+      var _this = this;
+      if (!_this.userId) {
+        Vac.alert("请填写用户id");
+        return;
+      }
+      if (!_this.recordflag) {
+        Vac.alert("请填写recordflag");
+        return;
+      }
+      if (!_this.exeScope) {
+        Vac.alert("请填写执行范围");
+        return;
+      }
+      if (!_this.testPlanId) {
+        Vac.alert("请选择测试计划");
+        return;
+      }
+      if (
+        _this.runnerExecuteType == "appointed" &&
+        _this.runnerselected.length === 0
+      ) {
+        Vac.alert("请选择执行机");
+        return;
+      }
+      if (!_this.exeStauts) {
+        Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行");
+        return;
+      }
+      
+      var selectedExeInstances = [];
+      if (_this.exeScope == 1) {
+      } else {
+        for (var i = 0; i < _this.selectedSceneCases.length; i++) {
+          let temp = {};
+          let selectedSceneCase = _this.selectedSceneCases[i].split("-");
+          temp.caseId = selectedSceneCase[selectedSceneCase.length - 1];
+          temp.sceneId = selectedSceneCase[1];
+          selectedExeInstances.push(temp);
+        }
+      }
+      // _this.logShow = true;
+      _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>执行中';
+      _this.tagType = "primary";
+      Vac.ajax({
+        url: "executeController/t2",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify({
+            sceneId: this.sceneId,
+            t1ReqDto: {
+                userId: _this.userId,
+                recordflag: _this.recordFlag,
+                exeScope: _this.exeScope,
+                selectState: _this.selectState,
+                selectedExeInstances: selectedExeInstances,
+                testPlanId: _this.testPlanId,
+                identifiableRunnerName: _this.runnerExecuteType,
+                appointedRunners: _this.runnerselected,
+            }
+        }),
+        success: function (data) {
+          if (data.respCode === "0000") {
+            console.log("查询日志", this.$store);
+            // _this.startQueryLog(); //查询日志
+            // Vac.ajax({
+            //   //因为查询执行信息需要最近执行的批量号因此需要查询批次
+            //   url: "batchRunCtrlController/queryLatestBatchIdForTestPlan",
+            //   type: "post",
+            //   contentType: "application/json",
+            //   data: JSON.stringify({
+            //     testPlanId: _this.testPlanId,
+            //   }),
+            //   success: function (data) {
+            //     _this.batchId = data.batchId;
+            //     _this.$message.success(data.respMsg)
+            //     _this.startQueryResult();
+            //   },
+            //   error: function () {
+            //     Vac.alert("网络错误，执行失败！");
+            //     _this.setResultIcon();
+            //   },
+            // });
+            _this.timerView()
+            _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>任务等待执行';
+          } else {
+            Vac.alert(data.respMsg);
+            _this.exeStautShow = '执行状态：<i class="el-icon-loading"></i>任务等待执行';
             _this.setResultIcon();
           }
         },

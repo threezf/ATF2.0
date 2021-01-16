@@ -69,7 +69,6 @@
             this.caselibId = res.testPlanEntity.caseLibId
             this.testPlanId = res.testPlanEntity.id
             sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
-            this.$message.success('caselibId:' + res.testPlanEntity.caseLibId)
           }
         }).catch(error => {
           console.log('run查询测试计划失败', error)
