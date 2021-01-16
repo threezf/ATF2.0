@@ -1661,6 +1661,34 @@ export default {
         },
       });
     },
+    timerView() {
+        Request({
+            url: '/sceneTimer/queryAllSceneTimersByScene',
+            method: 'post',
+            params: {
+                sceneId: Number(this.sceneId),
+                userId: Number(sessionStorage.getItem('userId'))
+            }
+        }).then(res => {
+            console.log('查看', res)
+            switch(Number(res.timers[0].status)) {
+                case 0:
+                    this.$alert('当前状态：已完成')
+                    break;
+                case 1:
+                    this.$alert('当前状态：等待发起执行')
+                    break;
+                case 2:
+                    this.$alert('当前状态：发起执行，等待定时器下一次启动')
+                    break;
+                default:
+                    this.$alert('当前状态：定时器正在执行')
+                    break
+            }
+        }).catch(err => {
+            console.log('查询失败')
+        })
+    },
     fullScreen: function () {
       // this.$refs.logShow.style.width = "100%" ;
       // this.$refs.logShow.style.height = "100%" ;
