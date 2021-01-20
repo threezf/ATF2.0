@@ -20,7 +20,7 @@
     <div class='ele-container'>
         <div :class="'ele-left '+(saidBarShow?'':'narrow-ele-left')">
             <div class='treeDiv' v-show='saidBarShow'>
-                <el-tree accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick">
+                <el-tree :default-expanded-keys="defaultExpandedKeys" node-key="id" accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick">
                 </el-tree>
             </div>
             <div class='treeHideIcon' v-if="saidBarShow">
@@ -154,10 +154,10 @@
                 </el-input>
             </el-col>
             <el-col :span="8" :offset="1">
-                <el-button size="small" @click='插入数据' type="primary">
+                <el-button size="small" @click='insertData' type="primary">
                     插入数据
                 </el-button>
-                <el-button size="small" @click='插入函数' type="primary">
+                <el-button size="small" @click='insertFunc' type="primary">
                     插入函数
                 </el-button>
             </el-col>
@@ -556,6 +556,31 @@ export default {
                 data: this.scriptTableData,
                 pageTotal: 1
             }
+        },
+        defaultExpandedKeys() {
+            let defalut = []
+            if(this.filterTree.length > 0){
+                let obj = this.filterTree[0]
+                if(obj.children) {
+                    let children = obj.children
+                    while('children' in children[0]) {
+                        if('children' in children[0]) {
+                            children = children[0].children
+                        }else {}
+                    }
+                    console.log('存在', children.id)
+                    defalut.push(children[0].id)
+                    this.selectedTemplate = children[0]
+                }else {
+                    defalut.push(obj.id)
+                    this.selectedTemplate = obj
+                }
+            }
+            console.log('存在', typeof this.selectedTemplate)
+            if(typeof this.selectedTemplate === 'object') {
+                this.getTestcaseInfo()
+            }
+            return defalut
         }
     },
     data() {
@@ -643,7 +668,8 @@ export default {
             fullScreen: false,
             // 接口参数化
             interFaceVisible: false,
-            scriptTableData: []
+            scriptTableData: [],
+            // 默认展开
         }
     },
     mounted() {
@@ -669,6 +695,14 @@ export default {
         }
     },
     methods: {
+        // 插入数据
+        insertData() {
+
+        },
+        // 插入函数
+        insertFunc() {
+
+        },
         getFunction() {
             this.funtionDic = []
             // selectedTemplate.transId
@@ -1333,7 +1367,7 @@ export default {
             })
         },
         getTestcaseInfo() {
-            console.log(this.selectedTemplate)
+            console.log('存在', this.selectedTemplate)
             Request({
                 url: '/dataCenter/queryTestcaseInfo',
                 method: 'post',

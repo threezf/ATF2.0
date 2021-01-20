@@ -7,29 +7,31 @@
  */
 <template>
 <div>
-    <div v-if="currentPath !== 'useCaseDebug'">
+    <div>
         <el-row>
             <el-col :span="5">
-                <span>
+                <h6>
                     Ui与元素
-                </span>
+                </h6>
             </el-col>
         </el-row>
-        <el-tree  style="max-height: 400px; overflow:scroll;" default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
+        <el-tree v-loading="uiLoading" style="max-height: 400px; overflow:scroll;" default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
         </el-tree>
     </div>
-    <div v-if="currentPath === 'useCaseDebug' || currentPath === 'datatable'">
+    <div>
         <el-row>
             <el-col :span="5">
                 <span>
-                    公共函数集
+                    <el-tooltip placement="right" content="所有控件都可以用的公共方法" effect="dark">
+                        <h6 style="line-height: 40px">公共函数集</h6>
+                    </el-tooltip>
                 </span>
             </el-col>
         </el-row>
-        <el-tree :show-checkbox='multiselection' :data="funTree" check-on-click-node :props="defaultProps" @check-change="funCheckChange">
+        <el-tree style="max-height: 450px; overflow: auto" v-loading="treeLoading" :show-checkbox='multiselection' :data="funTree" check-on-click-node :props="defaultProps" @check-change="funCheckChange">
         </el-tree>
     </div>
-    <el-row type="flex" justify="center">
+    <el-row type="flex" justify="center" style="margin-bottom: -10px">
             <el-button @click="closeDialog">取 消</el-button>
             <el-button type="primary" @click="throwInfo">确 定</el-button>
     </el-row>
@@ -71,7 +73,9 @@ export default {
                 children: 'children',
                 label: 'label'
             },
-            sonShowFlag: this.showFlag
+            sonShowFlag: this.showFlag,
+            treeLoading: false,
+            uiLoading: false
         }
     },
     watch: {
@@ -146,6 +150,7 @@ export default {
         },
         getEleTree() {
             const _this = this
+            _this.uiLoading = true
             Request({
                 url: '/elementRepository/queryAllElementsForATransact',
                 method: 'post',
@@ -182,9 +187,12 @@ export default {
                 console.log(err)
             }).catch((err) => {
                 console.log(err)
+            }).finally(_ => {
+                this.uiLoading = false
             })
         },
         getFunTree() {
+            this.treeLoading = true
             const _this = this
             Request({
                 url: this.addItemFlag == 3 ? '/aut/selectCheckFunctionSet' : '/aut/selectFunctionSet',
@@ -212,6 +220,8 @@ export default {
                 console.log(err)
             }).catch((err) => {
                 console.log(err)
+            }).finally(_ => {
+                this.treeLoading = false
             })
         },
     },

@@ -41,7 +41,7 @@ const Path =[
                 name:"添加测试项目",
                 pathName:"testProject",
                 status:"",
-                pre:0
+                pre:0 
             },
             {
                 name:"添加用例",
@@ -65,31 +65,31 @@ const Path =[
     },
     {
         name:"测试执行",
-        pathName:"testplanExecute",
+        pathName:"TestplanExecute",
         status:false,
         pre:3,
         item:[
             {
                 name:"添加测试计划",
-                pathName:"testplanExecute",
+                pathName:"TestplanExecute",
                 status:"",
                 pre:3
             },
             {
                 name:"添加待执行场景",
-                pathName:"testplanExecute",
+                pathName:"TestplanExecute",
                 status:"",
                 pre:3
             },
             {
                 name:"选择执行机",
-                pathName:"testplanExecute",
+                pathName:"TestplanExecute",
                 status:"",
                 pre:3
             },
             {
                 name:"执行",
-                pathName:"testplanExecute",
+                pathName:"TestplanExecute",
                 status:"",
                 pre:3
             }
