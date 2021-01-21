@@ -715,6 +715,7 @@
           </thead>
           <tbody>
             <tr v-for="(scene, index) in allscenes" :key="'scene' + index">
+              <td>{{scene}}</td>
               <td v-if="senceAddedStatus(scene.id)">已选择</td>
               <td v-else>
                 <input
@@ -2270,84 +2271,79 @@ export default {
           } else {
             console.log();
             _this.testCaseList = data.executeInstanceResult.testCaseList;
-            if(data.executeInstanceResult.testSceneList.length > 0) {
-              _this.testSceneList = data.executeInstanceResult.testSceneList;
-              _this.$nextTick(() => {
-                _this.setDraggable();
-              });
-              /*if(!(data.testCaseList && data.testCaseList.length)) {
-                              // Vac.alert('未查询到相关的用例信息！')
-                              return;
-                          }*/
-              if (!(_this.testSceneList && _this.testSceneList.length)) {
-                // Vac.alert('未查询到相关的场景信息！')
-                return;
-              }
-              _this.caseIds.length = 0;
-              _this.flowNodeIds.clear();
-              if (_this.testCaseList != null) {
-                _this.testCaseList.forEach((value) => {
-                  Vac.pushNoRepeat(_this.caseIds, value.caseId);
-                  if (value.caseCompositeType == 2) {
-                    let arr = [];
-                    for (let flowNode of value.flowNodes) {
-                      arr.push(+flowNode.flowNodeId);
-                    }
-                    _this.flowNodeIds.set(+value.caseId, arr);
+            _this.testSceneList = data.executeInstanceResult.testSceneList;
+            _this.$nextTick(() => {
+              _this.setDraggable();
+            });
+            /*if(!(data.testCaseList && data.testCaseList.length)) {
+                            // Vac.alert('未查询到相关的用例信息！')
+                            return;
+                        }*/
+            if (!(_this.testSceneList && _this.testSceneList.length)) {
+              // Vac.alert('未查询到相关的场景信息！')
+              return;
+            }
+            _this.caseIds.length = 0;
+            _this.flowNodeIds.clear();
+            if (_this.testCaseList != null) {
+              _this.testCaseList.forEach((value) => {
+                Vac.pushNoRepeat(_this.caseIds, value.caseId);
+                if (value.caseCompositeType == 2) {
+                  let arr = [];
+                  for (let flowNode of value.flowNodes) {
+                    arr.push(+flowNode.flowNodeId);
                   }
-                });
-              }
-              _this.sceneIds.length = [];
-              _this.sceneCaseMap.clear();
-              _this.flowNodesMap.clear();
-              _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
-              if (_this.testSceneList) {
-                for (var j = 0; j < _this.testSceneList.length; j++) {
-                  var scene = _this.testSceneList[j];
-                  // sceneIds save the id of scene  [4,5,6]
-                  _this.sceneIds.push(scene.sceneId);
-                  var caselist = [];
-                  for (var i = 0; i < scene.testCaseList.length; i++) {
-                    var c = scene.testCaseList[i];
-                    // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
-                    caselist.push(scene.sceneId + "-" + c.caseId);
-
-                    if (c.caseCompositeType == 2) {
-                      _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
-                      let flowNodes = [];
-                      for (let flowNode of c.flowNodes) {
-                        // caselist also save the flowNodeId in flowCase in the form of
-                        //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
-                        caselist.push(
-                          scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
-                        );
-                        flowNodes.push(
-                          scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
-                        );
-                      }
-                      // flowNodesMap save the map of caseId between flowNodes in the following form
-                      // {
-                      //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
-                      // }
-                      _this.flowNodesMap.set(
-                        scene.sceneId + "-" + c.caseId,
-                        flowNodes
-                      );
-                    }
-                  }
-                  // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
-                  // {
-                  //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
-                  // }
-                  _this.sceneCaseMap.set(scene.sceneId, caselist);
+                  _this.flowNodeIds.set(+value.caseId, arr);
                 }
-              }
-            }else {
-              this.$alert('场景中不存在测试用例，不能添加到执行序列')
+              });
             }
           }
 
-         
+          _this.sceneIds.length = [];
+          _this.sceneCaseMap.clear();
+          _this.flowNodesMap.clear();
+          _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
+          if (_this.testSceneList) {
+            for (var j = 0; j < _this.testSceneList.length; j++) {
+              var scene = _this.testSceneList[j];
+              // sceneIds save the id of scene  [4,5,6]
+              _this.sceneIds.push(scene.sceneId);
+              var caselist = [];
+              for (var i = 0; i < scene.testCaseList.length; i++) {
+                var c = scene.testCaseList[i];
+                // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
+                caselist.push(scene.sceneId + "-" + c.caseId);
+
+                if (c.caseCompositeType == 2) {
+                  _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
+                  let flowNodes = [];
+                  for (let flowNode of c.flowNodes) {
+                    // caselist also save the flowNodeId in flowCase in the form of
+                    //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
+                    caselist.push(
+                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                    );
+                    flowNodes.push(
+                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                    );
+                  }
+                  // flowNodesMap save the map of caseId between flowNodes in the following form
+                  // {
+                  //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+                  // }
+                  _this.flowNodesMap.set(
+                    scene.sceneId + "-" + c.caseId,
+                    flowNodes
+                  );
+                }
+              }
+              // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+              // {
+              //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+              // }
+              _this.sceneCaseMap.set(scene.sceneId, caselist);
+            }
+          }
         },
       });
       _this.getBatchIdForTestPlan(data.testPlanId); //查询批次的执行状态并且展示
