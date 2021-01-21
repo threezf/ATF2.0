@@ -2271,30 +2271,34 @@ export default {
             console.log();
             _this.testCaseList = data.executeInstanceResult.testCaseList;
             _this.testSceneList = data.executeInstanceResult.testSceneList;
-            _this.$nextTick(() => {
-              _this.setDraggable();
-            });
-            /*if(!(data.testCaseList && data.testCaseList.length)) {
-                            // Vac.alert('未查询到相关的用例信息！')
-                            return;
-                        }*/
-            if (!(_this.testSceneList && _this.testSceneList.length)) {
-              // Vac.alert('未查询到相关的场景信息！')
-              return;
-            }
-            _this.caseIds.length = 0;
-            _this.flowNodeIds.clear();
-            if (_this.testCaseList != null) {
-              _this.testCaseList.forEach((value) => {
-                Vac.pushNoRepeat(_this.caseIds, value.caseId);
-                if (value.caseCompositeType == 2) {
-                  let arr = [];
-                  for (let flowNode of value.flowNodes) {
-                    arr.push(+flowNode.flowNodeId);
-                  }
-                  _this.flowNodeIds.set(+value.caseId, arr);
-                }
+            if(_this.testSceneList.length > 0) {
+              _this.$nextTick(() => {
+                _this.setDraggable();
               });
+              /*if(!(data.testCaseList && data.testCaseList.length)) {
+                              // Vac.alert('未查询到相关的用例信息！')
+                              return;
+                          }*/
+              if (!(_this.testSceneList && _this.testSceneList.length)) {
+                // Vac.alert('未查询到相关的场景信息！')
+                return;
+              }
+              _this.caseIds.length = 0;
+              _this.flowNodeIds.clear();
+              if (_this.testCaseList != null) {
+                _this.testCaseList.forEach((value) => {
+                  Vac.pushNoRepeat(_this.caseIds, value.caseId);
+                  if (value.caseCompositeType == 2) {
+                    let arr = [];
+                    for (let flowNode of value.flowNodes) {
+                      arr.push(+flowNode.flowNodeId);
+                    }
+                    _this.flowNodeIds.set(+value.caseId, arr);
+                  }
+                });
+              }
+            }else {
+              this.$alert('场景中不存在测试用例，不能添加到执行序列')
             }
           }
 

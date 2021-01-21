@@ -1049,7 +1049,7 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://140.143.16.21:9090//atfcloud2.0a/testcase/exportTestCase'
+            exportUrl: 'http://140.143.16.21:9090/atfcloud2.0a/testcase/exportTestCase'
         };
     },
     computed: {

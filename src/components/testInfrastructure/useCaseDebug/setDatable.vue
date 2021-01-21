@@ -798,7 +798,7 @@
     >
       <searchtestcase @condition-list="changeCondition"></searchtestcase>
     </el-dialog>
-    <el-dialog title="批量添加元素" :visible.sync="exportDialog" width="30%">
+    <el-dialog title="导入数据" :visible.sync="exportDialog" width="30%">
       <el-upload
         class="upload-demo"
         ref="upload"
