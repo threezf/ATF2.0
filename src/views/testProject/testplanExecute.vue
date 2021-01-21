@@ -2297,56 +2297,57 @@ export default {
                   }
                 });
               }
+              _this.sceneIds.length = [];
+              _this.sceneCaseMap.clear();
+              _this.flowNodesMap.clear();
+              _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
+              if (_this.testSceneList) {
+                for (var j = 0; j < _this.testSceneList.length; j++) {
+                  var scene = _this.testSceneList[j];
+                  // sceneIds save the id of scene  [4,5,6]
+                  _this.sceneIds.push(scene.sceneId);
+                  var caselist = [];
+                  for (var i = 0; i < scene.testCaseList.length; i++) {
+                    var c = scene.testCaseList[i];
+                    // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
+                    caselist.push(scene.sceneId + "-" + c.caseId);
+
+                    if (c.caseCompositeType == 2) {
+                      _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
+                      let flowNodes = [];
+                      for (let flowNode of c.flowNodes) {
+                        // caselist also save the flowNodeId in flowCase in the form of
+                        //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
+                        caselist.push(
+                          scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                        );
+                        flowNodes.push(
+                          scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                        );
+                      }
+                      // flowNodesMap save the map of caseId between flowNodes in the following form
+                      // {
+                      //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+                      // }
+                      _this.flowNodesMap.set(
+                        scene.sceneId + "-" + c.caseId,
+                        flowNodes
+                      );
+                    }
+                  }
+                  // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+                  // {
+                  //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+                  // }
+                  _this.sceneCaseMap.set(scene.sceneId, caselist);
+                }
+              }
             }else {
               this.$alert('场景中不存在测试用例，不能添加到执行序列')
             }
           }
 
-          _this.sceneIds.length = [];
-          _this.sceneCaseMap.clear();
-          _this.flowNodesMap.clear();
-          _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
-          if (_this.testSceneList) {
-            for (var j = 0; j < _this.testSceneList.length; j++) {
-              var scene = _this.testSceneList[j];
-              // sceneIds save the id of scene  [4,5,6]
-              _this.sceneIds.push(scene.sceneId);
-              var caselist = [];
-              for (var i = 0; i < scene.testCaseList.length; i++) {
-                var c = scene.testCaseList[i];
-                // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
-                caselist.push(scene.sceneId + "-" + c.caseId);
-
-                if (c.caseCompositeType == 2) {
-                  _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
-                  let flowNodes = [];
-                  for (let flowNode of c.flowNodes) {
-                    // caselist also save the flowNodeId in flowCase in the form of
-                    //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
-                    caselist.push(
-                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
-                    );
-                    flowNodes.push(
-                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
-                    );
-                  }
-                  // flowNodesMap save the map of caseId between flowNodes in the following form
-                  // {
-                  //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
-                  // }
-                  _this.flowNodesMap.set(
-                    scene.sceneId + "-" + c.caseId,
-                    flowNodes
-                  );
-                }
-              }
-              // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
-              // {
-              //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
-              // }
-              _this.sceneCaseMap.set(scene.sceneId, caselist);
-            }
-          }
+         
         },
       });
       _this.getBatchIdForTestPlan(data.testPlanId); //查询批次的执行状态并且展示
