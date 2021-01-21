@@ -2270,8 +2270,8 @@ export default {
           } else {
             console.log();
             _this.testCaseList = data.executeInstanceResult.testCaseList;
-            _this.testSceneList = data.executeInstanceResult.testSceneList;
-            if(_this.testSceneList.length > 0) {
+            if(data.executeInstanceResult.testSceneList.length > 0) {
+              _this.testSceneList = data.executeInstanceResult.testSceneList;
               _this.$nextTick(() => {
                 _this.setDraggable();
               });
