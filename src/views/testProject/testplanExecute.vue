@@ -2270,13 +2270,7 @@ export default {
           } else {
             console.log();
             _this.testCaseList = data.executeInstanceResult.testCaseList;
-            _this.testSceneList = data.executeInstanceResult.testSceneList.fiter(item => {
-              if(item.testCaseList.length > 0) {
-                return item.testCaseList.length > 0
-              }else {
-                return this.$message.warning('不存在测试用例，禁止添加')
-              }
-            });
+            _this.testSceneList = data.executeInstanceResult.testSceneList;
             _this.$nextTick(() => {
               _this.setDraggable();
             });
