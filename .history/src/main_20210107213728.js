@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VCharts from 'v-charts'
+import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
 
 import $ from 'jquery'     //引入jquery
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
@@ -26,6 +27,10 @@ Vue.use(VCharts)
 Vue.use(moment)
 Vue.use(VueBus)
 Vue.use(page)
+Vue.use(onMounted)
+Vue.use(onBeforeUnmount)
+Vue.use(ref)
+Vue.use(reactive)
 window.activeMenu;
 
 // 路由钩子
