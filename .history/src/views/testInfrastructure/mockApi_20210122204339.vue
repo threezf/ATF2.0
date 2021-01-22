@@ -53,7 +53,7 @@
         :before-close="handleBeforeClose">
         <el-form>
           <el-form-item label="创建人" label-width="100px">
-            <el-input disabled size="small" class="dialogInput" v-model="creatorName" :value="creatorName"></el-input>
+            <el-input  size="small" class="dialogInput" v-model="creatorName" :value="creatorName"></el-input>
           </el-form-item>
           <el-form-item label="期望名称" label-width="100px">
             <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
@@ -102,7 +102,7 @@ export default {
       previewCard: true, //是否选择previewCard
       dialogVisible: false,
       addTitle: "添加新规则",
-      creatorName: sessionStorage.getItem('username'), //创建人
+      creatorName: sessionStorage.getItem('userId'), //创建人
       expectedName: "", //期望名称
       actions: ["response", "forward"], //动作
       selectedAction: "response", //选择的动作

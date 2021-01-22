@@ -53,7 +53,7 @@
         :before-close="handleBeforeClose">
         <el-form>
           <el-form-item label="创建人" label-width="100px">
-            <el-input disabled size="small" class="dialogInput" v-model="creatorName" :value="creatorName"></el-input>
+            <el-input  size="small" class="dialogInput" v-model="creatorName"></el-input>
           </el-form-item>
           <el-form-item label="期望名称" label-width="100px">
             <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
@@ -78,8 +78,8 @@
         </el-row>
       </el-dialog>
     </el-container>
-    <el-footer>
-      <p class="footParagraphTop">Copyright © 1998－2021 BUPT All Rights Reserved</p>
+    <el-footer class="footStyle">
+      <p class="footParagraphTop">Copyright © 1998－2019 BUPT All Rights Reserved</p>
       <p class="footParagraphBottom">教育部信息网络工程研究中心 版权所有</p>
     </el-footer>
   </div>
@@ -102,7 +102,7 @@ export default {
       previewCard: true, //是否选择previewCard
       dialogVisible: false,
       addTitle: "添加新规则",
-      creatorName: sessionStorage.getItem('username'), //创建人
+      creatorName: "", //创建人
       expectedName: "", //期望名称
       actions: ["response", "forward"], //动作
       selectedAction: "response", //选择的动作
@@ -309,12 +309,6 @@ export default {
 </script>
 
 <style scoped>
-.el-container {
-  min-height: calc(100vh - 70px)
-}
-.el-footer {
-  height: 50px;
-}
 .box-card {
   width: 270px;
   margin-top: 0px;
@@ -358,6 +352,9 @@ export default {
 }
 .footParagraphTop {
   margin-top: 15px;
+}
+.footStyle {
+  margin-bottom: -30px;
 }
 .buttonGroupStyle {
   margin-bottom: -9px;

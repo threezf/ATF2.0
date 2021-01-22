@@ -231,7 +231,7 @@
         </el-form>
       </el-tab-pane>
       <div class="copyright">
-        Copyright © 1998－2021 BUPT All Rights Reserved
+        Copyright © 1998－2019 BUPT All Rights Reserved
         教育部信息网络工程研究中心 版权所有
       </div>
     </el-tabs>

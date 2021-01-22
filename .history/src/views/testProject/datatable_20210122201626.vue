@@ -39,7 +39,7 @@
                     <el-button v-if='selectedTemplate !== -1' size="small" @click='dataTemplate' type="primary">
                         下载数据模板
                     </el-button>
-                    <el-tooltip v-if='selectedTemplate !== -1' class="item" effect="dark" content="下载模板，配置脚本数据再导入" placement="top">
+                    <el-tooltip class="item" effect="dark" content="下载模板，配置脚本数据再导入" placement="top">
                         <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
                             导入数据
                         </el-button>

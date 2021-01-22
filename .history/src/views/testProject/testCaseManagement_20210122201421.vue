@@ -613,8 +613,7 @@
             </el-dialog>
             <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
-                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile"
-                 :on-remove="handleRemove" :file-list="fileList" accept=".xlsx" :before-upload="beforeUpload">
+                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">选择文件</el-button>
                     <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择xlsx文件</i>
                 </el-upload>
@@ -1880,19 +1879,6 @@ export default {
                 }
             }
             this.fileListM.splice(index, 1);
-        },
-        //限制文件上传类型
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                   
-            const extension2 = testmsg === 'xlsx'                    
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是 xls、xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }
-            return extension2 
         },
         handlePreview(file) {
             console.log(file);

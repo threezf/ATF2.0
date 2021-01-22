@@ -39,11 +39,9 @@
                     <el-button v-if='selectedTemplate !== -1' size="small" @click='dataTemplate' type="primary">
                         下载数据模板
                     </el-button>
-                    <el-tooltip v-if='selectedTemplate !== -1' class="item" effect="dark" content="下载模板，配置脚本数据再导入" placement="top">
-                        <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
-                            导入数据
-                        </el-button>
-                    </el-tooltip>
+                    <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
+                        导入数据
+                    </el-button>
                 </el-col>
                 <el-col :span="15" v-if='selectedTemplate !== -1'>
                     <el-button v-if='!fullScreen' size="small" @click='fullScreen = true' type="primary">
@@ -1575,8 +1573,5 @@ li:hover {
 
 .wide-ele-right {
     width: 96% !important;
-}
-.item {
-      margin: 4px;
 }
 </style>

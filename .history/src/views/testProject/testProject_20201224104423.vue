@@ -316,9 +316,6 @@ export default {
             }).then((res) => {
                 this.dialogVisible = false
                 this.getTestProject()
-                this.$alert('修改项目成功', '成功', {
-                confirmButtonText: '确定',
-            });
             }, (err) => {
                 this.$message(res.respMsg)
                 this.dialogVisible = false
