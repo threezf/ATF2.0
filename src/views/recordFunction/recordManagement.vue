@@ -409,7 +409,8 @@ export default {
 		},
 		// 录制工具下载
 		downloadTools() {
-			window.location = "http://10.101.167.184:8080/atf-data/atf-recorder.zip"
+			window.location = "http://140.143.16.21:9090/atf-data/atf-recorder.zip"
+			// window.location = "http://10.101.167.184:8080/atf-data/atf-recorder.zip"
 		}
   }
 };

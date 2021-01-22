@@ -231,7 +231,7 @@
             //   "&sessionId=" +
             //   res.sessionId;
             _this.imageURL =
-              "http://10.101.167.184:8080/atfcloud2.0a/userController/authCode?abc=" +
+              "http://140.143.16.21:9090/atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
               "&sessionId=" +
               res.sessionId;

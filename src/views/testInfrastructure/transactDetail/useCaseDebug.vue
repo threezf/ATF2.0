@@ -53,6 +53,7 @@
       this.autId = query.autId
       this.caseId = query.caseId
       this.scriptId = query.scriptId
+      sessionStorage.setItem('scriptId', this.scriptId)
       this.queryScriptDebugTestPlan(this.caseId)
     },
     methods: {
@@ -68,7 +69,6 @@
             this.caselibId = res.testPlanEntity.caseLibId
             this.testPlanId = res.testPlanEntity.id
             sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
-            this.$message.success('caselibId:' + res.testPlanEntity.caseLibId)
           }
         }).catch(error => {
           console.log('run查询测试计划失败', error)

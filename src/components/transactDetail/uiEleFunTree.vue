@@ -7,7 +7,7 @@
  */
 <template>
 <div>
-    <div>
+    <div v-if="currentPath !== 'useCaseDebug'">
         <el-row>
             <el-col :span="5">
                 <span>
@@ -15,10 +15,10 @@
                 </span>
             </el-col>
         </el-row>
-        <el-tree default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
+        <el-tree  style="max-height: 400px; overflow:scroll;" default-expand-all :show-checkbox='multiselection' :data="UITree" :props="defaultProps" check-on-click-node @check-change="eleCheckChange">
         </el-tree>
     </div>
-    <div>
+    <div v-if="currentPath === 'useCaseDebug' || currentPath === 'datatable'">
         <el-row>
             <el-col :span="5">
                 <span>
@@ -76,13 +76,17 @@ export default {
     },
     watch: {
         addItemFlag() {
-        	  this.eleSelected=[],
-						this.funSelected=[],
-					  this.getEleTree()
+            this.eleSelected=[],
+            this.funSelected=[],
+            this.getEleTree()
             this.getFunTree()
         }
     },
-    computed: {},
+    computed: {
+        currentPath() {
+            return this.$route.path.split('/')[2]
+        }
+    },
     methods: {
         eleCheckChange(data, status) {
             if ('children' in data) {
@@ -212,12 +216,11 @@ export default {
         },
     },
     created() {
-
-		},
+	},
     mounted() {
         this.getEleTree()
         this.getFunTree()
-        console.log(this.showFlag)
+        console.log('11111', this.$route.path)
     }
 };
 </script>

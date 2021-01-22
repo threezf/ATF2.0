@@ -15,7 +15,8 @@
             accordion
             :data="filterTree"
             :props="defaultProps"
-            @node-click="handleNodeClick">
+            @node-click="handleNodeClick"
+          >
           </el-tree>
         </div>
         <div class="treeHideIcon" v-if="saidBarShow">
@@ -50,14 +51,16 @@
               v-if="selectedTemplate !== -1"
               size="small"
               @click="dataTemplate"
-              type="primary">
+              type="primary"
+            >
               下载数据模板
             </el-button>
             <el-button
               v-if="selectedTemplate !== -1"
               size="small"
               @click="exportData"
-              type="primary">
+              type="primary"
+            >
               导入数据
             </el-button>
           </el-col>
@@ -91,7 +94,12 @@
               >
               </el-option>
             </el-select>
-            <el-button size="small" hidden @click="searchTemplate" type="primary">
+            <el-button
+              size="small"
+              hidden
+              @click="searchTemplate"
+              type="primary"
+            >
               用例筛选
             </el-button>
           </el-col>
@@ -827,7 +835,7 @@ import draggable from "vuedraggable";
 import Sortable from "sortablejs";
 
 export default {
-  name: 'SetDatable',
+  name: "SetDatable",
   mixins: [VueMixins],
   components: {
     uiEleFunTree,
@@ -850,10 +858,12 @@ export default {
     },
   },
   data() {
+    let scriprId = sessionStorage.getItem("scriptId");
     let caseLibId = sessionStorage.getItem("caselibId");
     return {
       publishActionUrl:
-        "http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile",
+        "http://140.143.16.21:9090/atfcloud2.0a/dataCenter/importDataFromFile",
+      // "http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile",
       columnHidden: [], // 隐藏的列
       selectedTemplate: -1, // 选中的行
       editedData: {},
@@ -899,11 +909,6 @@ export default {
       // 筛选条件
       conditionList: [
         {
-          propertyName: "executor",
-          compareType: "=",
-          propertyValueList: ["3"],
-        },
-        {
           propertyName: "executeMethod",
           compareType: "=",
           propertyValueList: ["2"],
@@ -917,6 +922,11 @@ export default {
           propertyName: "caseLibId",
           compareType: "=",
           propertyValueList: [caseLibId],
+        },
+        {
+          propertyName: "scriptModeId",
+          compareType: "=",
+          propertyValueList: [scriprId],
         },
       ],
       rowdata: {},
@@ -941,11 +951,13 @@ export default {
       multipleSelection2: [],
       dataCheckFunList: [],
       fullScreen: false,
-      testSysNameStorage: ''
+      testSysNameStorage: "",
     };
   },
   mounted() {
-    this.testSysNameStorage = sessionStorage.getItem("testSysNameStorage").substring(1, sessionStorage.getItem("testSysNameStorage").length - 1)
+    this.testSysNameStorage = sessionStorage
+      .getItem("testSysNameStorage")
+      .substring(1, sessionStorage.getItem("testSysNameStorage").length - 1);
     this.getFilterTree();
   },
   methods: {
@@ -958,7 +970,7 @@ export default {
         method: "post",
         params: {
           autId: this.selectedTemplate.autId,
-          companyId: JSON.parse(localStorage.getItem('loginInfo')).companyId
+          companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
         },
       }).then((resp) => {
         this.funtionDic = resp.omMethodRespDTOList;
@@ -1542,7 +1554,7 @@ export default {
         },
         (err) => {
           console.log(err);
-          this.$message.warning(err)
+          this.$message.warning(err);
         }
       );
     },
@@ -1576,35 +1588,33 @@ export default {
           this.filterTree = [];
           let filterTree = res.filterTree;
           for (let i = 0; i < filterTree.length; i++) {
-            if(filterTree[i].autName === this.testSysNameStorage) {
-              let aut = {
-                label: filterTree[i].autName,
-                id: filterTree[i].autId,
+            let aut = {
+              label: filterTree[i].autName,
+              id: filterTree[i].autId,
+              children: [],
+            };
+            let transactList = filterTree[i].transactList;
+            for (let l = 0; l < transactList.length; l++) {
+              let trans = {
+                label: transactList[l].transName,
+                id: transactList[l].transId,
                 children: [],
               };
-              let transactList = filterTree[i].transactList;
-              for (let l = 0; l < transactList.length; l++) {
-                let trans = {
-                  label: transactList[l].transName,
-                  id: transactList[l].transId,
-                  children: [],
+              console.log("aaaaaaaaaaaaaaa", trans);
+              let scriptTemplateList = transactList[0].scriptTemplateList;
+              for (let j = 0; j < scriptTemplateList.length; j++) {
+                let scriptTemplate = {
+                  label: scriptTemplateList[j].scriptName,
+                  id: scriptTemplateList[j].scriptId,
+                  transId: trans.id,
+                  autId: aut.id,
+                  flag: true,
                 };
-                let scriptTemplateList = transactList[l].scriptTemplateList;
-                for (let j = 0; j < scriptTemplateList.length; j++) {
-                  let scriptTemplate = {
-                    label: scriptTemplateList[j].scriptName,
-                    id: scriptTemplateList[j].scriptId,
-                    transId: trans.id,
-                    autId: aut.id,
-                    flag: true,
-                  };
-                  trans.children.push(scriptTemplate);
-                }
-                aut.children.push(trans);
+                trans.children.push(scriptTemplate);
               }
-              console.log(aut);
-              this.filterTree.push(aut);
+              aut.children.push(trans);
             }
+            this.filterTree.push(aut);
           }
         },
         (err) => {
@@ -1639,7 +1649,7 @@ export default {
         },
         (err) => {
           console.log(err);
-          this.$message.warning('未参数化，请先参数化')
+          this.$message.warning("未参数化，请先参数化");
         }
       );
     },
