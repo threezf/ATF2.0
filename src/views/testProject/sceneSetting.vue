@@ -273,8 +273,11 @@
                 </el-table-column>
                 <el-table-column
                   label="任务描述"
-                  prop="cronExpression"
                   min-width="50%">
+                  <template slot-scope="scope">
+                    <span>{{getDateStr(scope.row.cronExpression)}}</span>
+                  </template>
+                  
                 </el-table-column>
                 <el-table-column
                   label="操作"
@@ -307,7 +310,7 @@
                       v-if="scope.row.status !== 1"
                       size="mini"
                       @click="viewTimer(scope.row)"
-                      >查看
+                      hidden>查看
                     </el-button>
                   </template>
                 </el-table-column>
@@ -905,6 +908,7 @@
 <script>
   // 导入定时cron组件库
   import {cron} from 'vue-cron';
+  import {cronToDate} from '../../utils/cron'
   // 导入cron反解析
   import Request from "@/libs/request.js";
   import CronSet from '@/components/utils/cron/index'
@@ -945,7 +949,7 @@
           "触发器设置",
           "执行过程控制",
           "数据资源池配置",
-          // "配置移动端设备信息",
+          "配置移动端设备信息",
           "定时任务管理"
         ],
         selectedDrawIndex: 0,
@@ -1099,6 +1103,24 @@
       })
     },
     methods: {
+      cronToDate: cronToDate,
+      getDateStr(raw) {
+        let strObj = this.cronToDate("0 45 20 * 2 ? 2020")
+        console.log('格式化raw', strObj)
+        let result = ""
+        if(strObj.year) {
+          result = result + strObj.year + '年'
+        }
+        if(strObj.loopType === '月循环') {
+          result = result + "每月"
+        }else if(strObj.loopType === '天循环') {
+          if(strObj.mounth) {
+            result = result + strObj.mounth + '月' + "每天"
+          }
+        }
+        result = result + strObj.loopTime + '循环'
+        return result
+      },
       // 执行排序操作_
       sort() {
         let _this = this;

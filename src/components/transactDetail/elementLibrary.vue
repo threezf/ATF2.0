@@ -141,7 +141,7 @@
             <el-button size="small" @click="addEleDialogFlag = false">取 消</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="批量添加元素" :visible.sync="branchAddEleDialogFlag" width="30%">
+    <el-dialog title="导入数据" :visible.sync="branchAddEleDialogFlag" width="30%">
         <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success="tempSuccess" :on-error="tempError" :limit="1" :auto-upload="false">
             <el-button size="small" slot="trigger" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器
@@ -557,6 +557,7 @@ export default {
                 },
                 (err) => {
                     console.log(err);
+                    this.$message.warning(err)
                 }
             );
         },

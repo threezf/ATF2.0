@@ -79,6 +79,7 @@
 import Request from "@/libs/request.js";
 import BreadCrumb from '@/components/breadCrumb/breadCrumb.vue';
 import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
+import {cronToDate} from './utils/cron.js'
 export default {
     components: {
         BreadCrumb
@@ -157,6 +158,7 @@ export default {
         }
     },
     methods: {
+        crons: cronToDate,
         logout() {
             this.$confirm('是否注销登录', '警告', {
                 confirmButton: '确定',
@@ -258,6 +260,7 @@ export default {
         if(this.userPriority == 0) {
             this.leftCount = parseInt(sessionStorage.getItem('leftCount'))
         }
+        console.log('crons', this.crons('0 45 20 2 * ? 2020'))
     },
     mounted() {
         this.$bus.on('setUrls', (urls) => {
