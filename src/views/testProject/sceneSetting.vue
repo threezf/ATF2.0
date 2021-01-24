@@ -1067,7 +1067,7 @@
         selectSceneDto: {},
         indetermintate: false,
         isCheckedAll: false,
-        cronExpression: '0 45 20 * * ? 2020',
+        cronExpression: '0 45 14 * * ? 2021',
         isSave: false,
         timerId: '', // 定时器id
         /**
