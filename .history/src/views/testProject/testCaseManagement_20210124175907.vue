@@ -1874,7 +1874,8 @@ export default {
         beforeUpload(file) {           
             console.log(file)           
             var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                    
+            const extension2 = testmsg === 'xlsx'           
+            // const isLt2M = file.size / 1024 / 1024 < 10            
             if(!extension2) {                
                 this.$message({                    
                     message: '上传文件只能是xlsx格式!',                    

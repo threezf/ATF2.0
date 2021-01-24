@@ -53,7 +53,7 @@
         :before-close="handleBeforeClose">
         <el-form>
           <el-form-item label="创建人" label-width="100px">
-            <el-input disabled size="small" class="dialogInput" v-model="creatorName" :value="creatorName"></el-input>
+            <el-input disabled size="small" class="dialogInput" v-model="creatorName" value="creatorName"></el-input>
           </el-form-item>
           <el-form-item label="期望名称" label-width="100px">
             <el-input size="small" class="dialogInput" v-model="expectedName"></el-input>
