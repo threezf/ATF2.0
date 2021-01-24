@@ -2113,7 +2113,7 @@ export default {
         success: function (data) {
           $("#add-modal").modal("hide");
           if (data.respCode === "0000") {
-            Vac.alert("添加成功");
+            Vac.alert(data.respMsg);
             _this.getCases();
             // _this.alertShow = true;
             // _this.tooltipMessage = '添加成功';
