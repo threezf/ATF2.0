@@ -300,11 +300,10 @@
                     this.dialogVisible = false
                     this.getScenes()
                 },(err) => {
-                    this.$message(res.respMsg)
                     this.dialogVisible = false;
                     console.log('error occur')
                     console.log(err)
-                    this.$message(err.respMsg)
+                    this.$message.warning(err)
                     this.dialogVisible = false
                 }).catch((err) => {
                     console.log(err)
