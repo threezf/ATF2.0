@@ -1105,7 +1105,7 @@
     methods: {
       cronToDate: cronToDate,
       getDateStr(raw) {
-        let strObj = this.cronToDate("0 45 20 * 2 ? 2020")
+        let strObj = this.cronToDate(raw)
         console.log('格式化raw', strObj)
         let result = ""
         if(strObj.year) {
