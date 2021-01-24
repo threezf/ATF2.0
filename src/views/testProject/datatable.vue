@@ -895,9 +895,15 @@ export default {
             if (this.addItemFlag == 1) {
                 rows = this.beforeOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var beforeItem = {
                         arguShow: true,
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        name: name,
                         functions: [{
                             name: functionInfo[i].name,
                             parameterlist: ""
@@ -922,8 +928,14 @@ export default {
 
             }
             if (this.addItemFlag == 2) {
-                rows = this.d
+                rows = this.afterOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var afterItem = {
                         arguShow: true,
                         // name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
@@ -937,7 +949,7 @@ export default {
                             element: "",
                             ui: ""
                         },
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        name: name,
                         parameters: functionInfo[i].arguments ? functionInfo[i].arguments.map(item => ({
                             Name: item.name,
                             Value: '',
@@ -952,9 +964,15 @@ export default {
             if (this.addItemFlag == 3) {
                 rows = this.dataOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var addItem = {
                         arguShow: true,
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        name: name,
                         functions: {
                             name: functionInfo[i].name,
                             parameterlist: ""
