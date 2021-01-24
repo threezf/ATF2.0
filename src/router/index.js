@@ -17,6 +17,8 @@ import MockApi from '@/views/testInfrastructure/mockApi';
 import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
 import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
+import MessageBoard from '@/views/messageBoard/msgboard'
+import MsgDetail from '@/views/messageBoard/msgdetail'
 
 
 Vue.use(Router)
@@ -134,8 +136,25 @@ export default new Router({
 						parent: 'TestInfrastructure',
 						hide: true
 					},
-				}
+				},
 			]
+		},
+		{
+			path: '/mssageboard',
+			name: 'MessageBoard',
+			component: MessageBoard,
+			meta: {
+				name: '留言板',
+				another: 'atf/interface'
+			},
+		},
+		{
+			path: 'msgdetail',
+			name: 'MsgDetail',
+			component: MsgDetail,
+			meta: {
+				// parent: 'MessageBoard'
+			}
 		},
     ]
 })
