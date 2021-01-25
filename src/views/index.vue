@@ -123,17 +123,10 @@ export default {
                             <source src="../assets/videos/architecture2.mp4" type="video/mp4">
                         </video>
                     </el-col>
-                    <el-col :span="10" style="margin-top: 50px;" class="fileStyles">
-                        <p>自动化构件又称为原子构件，用于识别被测系统中的某类型元素，并对其进</p>
-                        <p>行操作，是对被测系统进行的操作步骤的最小单位。例如Web网页中的下拉</p>
-                        <p>框，可以封装成一个WebList下拉框构件，构件方法支持对Web中的下拉框进</p>
-                        <p>行选择、点击等操作。调用自动化构件并配以合适的数据，就得到自动化脚</p>
-                        <p>本。自动化构件是编写脚本的基础。</p>
-                        <p>由于开发使用的语言、架构不同，开发出来的程序也千差万别。我们每种开</p>
-                        <p>发语言和框架称为一个开发架构，各开发架构分开处理、编写自动化构件。</p>
-                        <p>开发架构又区分为抽象架构和具体被测系统架构。</p>
-                        <p>具体被测系统架构与具体被测系统关联，其中的控件类型和操作方法用于实</p>
-                        <p>现具体被测系统的自动化，这样可以满足具体被测系统更复杂的定制化需求。</p>
+                    <el-col :span="10" style="margin-top: 2%;" class="fileStyles">
+                        <p>自动化构件又称为原子构件，用于识别被测系统中的某类型元素，并对其进行操作，是对被测系统进行的操作步骤的最小单位。例如Web网页中的下拉框，可以封装成一个WebList下拉框构件，构件方法支持对Web中的下拉框进行选择、点击等操作。调用自动化构件并配以合适的数据，就得到自动化脚本。自动化构件是编写脚本的基础。</p>
+                        <p>由于开发使用的语言、架构不同，开发出来的程序也千差万别。我们每种开发语言和框架称为一个开发架构，各开发架构分开处理、编写自动化构件。开发架构又区分为抽象架构和具体被测系统架构。</p>
+                        <p>具体被测系统架构与具体被测系统关联，其中的控件类型和操作方法用于实现具体被测系统的自动化，这样可以满足具体被测系统更复杂的定制化需求。</p>
                     </el-col>
                 </el-row>
             </el-tab-pane>
@@ -143,7 +136,7 @@ export default {
                         <source src="../assets/videos/testInfrastructure.mp4" type="video/mp4">
                     </video>
                 </el-col>
-                <el-col :span="10" style="margin-top: 50px;">
+                <el-col :span="10" style="margin-top: 2%;" class="fileStyles">
                     <p>被测系统是要进行测试的软件对象。测试基础设施包括对被测系统本身的管理，
                         对被测系统中的功能点进行管理，对各功能点的自动化资源进行管理，对后面
                         的自动化执行提供支持作用。
@@ -162,7 +155,7 @@ export default {
                         <source src="../assets/videos/testProject.mp4" type="video/mp4">
                     </video>
                 </el-col>
-                <el-col :span="10" style="margin-top: 50px;">
+                <el-col :span="10" style="margin-top: 2%;" class="fileStyles">
                     <p>
 											按照测试步骤的顺序，项目测试可分为测试项目管理，测试用例管理，测试资源管理，
 											测试场景管理，测试计划及执行，批次执行查询六个部分。
@@ -196,6 +189,7 @@ F
 
 .fileStyles p {
     margin-bottom: 0.5rem;
+	  line-height:200%
 }
 
 .blue {
@@ -389,4 +383,8 @@ F
     font-size: 38px;
     vertical-align: middle;
 }
+	.activeIndex{
+		margin-left:4.2%;
+		/*font-size: 18px;*/
+	}
 </style>

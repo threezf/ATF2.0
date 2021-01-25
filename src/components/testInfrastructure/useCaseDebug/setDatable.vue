@@ -853,7 +853,7 @@ export default {
     let caseLibId = sessionStorage.getItem("caselibId");
     return {
       publishActionUrl:
-        "http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile",
+        "http://140.143.16.21:8080/atfcloud2.0a/dataCenter/importDataFromFile",
       columnHidden: [], // 隐藏的列
       selectedTemplate: -1, // 选中的行
       editedData: {},
@@ -1503,7 +1503,7 @@ export default {
         // _type: 'file'
       }).then((res) => {
         let url =
-          "http://10.101.167.184:8080/" + res.filePath.split("/webapps/")[1];
+          "http://140.143.16.21:8080/" + res.filePath.split("/webapps/")[1];
         window.location.href = url;
       });
     },

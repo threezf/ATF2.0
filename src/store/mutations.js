@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-04 16:37:46
+ * @LastEditTime: 2020-12-15 21:49:41
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \ATF2.0\src\store\mutations.js
+ */
 export default {
   changeFlag(state, payload) {
     state.flag = payload

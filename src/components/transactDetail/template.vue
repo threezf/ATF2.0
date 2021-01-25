@@ -16,7 +16,7 @@
                     添加脚本用例
                 </el-button>
             </el-row>
-            <div style="height: 300px; overflow: scroll;">
+            <div style=" overflow: scroll;">
                 <el-table v-loading="templateLoading" border ref="singleTable" :data="templateList" highlight-current-row row-key="id" @row-click="chooseTemplate" style="width: 100%">
                     <el-table-column lable="选择" width="35">
                         <template slot-scope="scope">
@@ -859,6 +859,6 @@ export default {
     height: 28px;
 }
 .ele-container {
-    
+
 }
 </style>
