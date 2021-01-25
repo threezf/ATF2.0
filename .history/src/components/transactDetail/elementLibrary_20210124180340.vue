@@ -185,7 +185,7 @@ export default {
     },
     data() {
         return {
-            publishActionUrl: "http://140.143.16.21:9090/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
+            publishActionUrl: "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
             branchAddEleDialogFlag: false, // 批量添加的dialog
             userId: sessionStorage.getItem("userId"),
             fileList: [], // 上传文件列表

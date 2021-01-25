@@ -39,11 +39,9 @@
                     <el-button v-if='selectedTemplate !== -1' size="small" @click='dataTemplate' type="primary">
                         下载数据模板
                     </el-button>
-                    <el-tooltip v-if='selectedTemplate !== -1' class="item" effect="dark" content="下载数据模板后，配置数据再导入" placement="top">
-                        <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
-                            导入数据
-                        </el-button>
-                    </el-tooltip>
+                    <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
+                        导入数据
+                    </el-button>
                 </el-col>
                 <el-col :span="15" v-if='selectedTemplate !== -1'>
                     <el-button v-if='!fullScreen' size="small" @click='fullScreen = true' type="primary">
@@ -518,8 +516,7 @@
         <searchtestcase @condition-list='changeCondition'></searchtestcase>
     </el-dialog>
     <el-dialog title="导入数据" :visible.sync="exportDialog" width='30%'>
-        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1"
-         :auto-upload="false" accept=".xlsx" :before-upload="beforeUpload">
+        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
         </el-upload>
@@ -885,18 +882,6 @@ export default {
             this.$message.success('上传成功')
 
             this.getTestcaseInfo()
-        },
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                     
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }                       
-            return extension2        
         },
         // 接受添加多项的
         async addTreeInfo(tree) {
@@ -1798,8 +1783,5 @@ li:hover {
 
 .wide-ele-right {
     width: 96% !important;
-}
-.item {
-      margin: 4px;
 }
 </style>

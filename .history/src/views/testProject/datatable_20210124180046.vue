@@ -897,7 +897,7 @@ export default {
                 });            
             }                       
             return extension2        
-        },
+        }
         // 接受添加多项的
         async addTreeInfo(tree) {
             console.log("qqqqq", tree)

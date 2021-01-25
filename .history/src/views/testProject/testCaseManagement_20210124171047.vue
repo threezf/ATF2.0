@@ -13,11 +13,9 @@
                 <el-button @click="addCase" type="primary" size="small" icon="el-icon-plus">
                     添加
                 </el-button>
-                 <el-tooltip class="item" effect="dark" content="下载模板，根据提示添加用例再导入" placement="top">
-                    <el-button @click="uploadCase" type="primary" size="small" icon="el-icon-upload2">
-                        导入
-                    </el-button>
-                 </el-tooltip>
+                <el-button @click="uploadCase" type="primary" size="small" icon="el-icon-upload2">
+                    导入
+                </el-button>
                 <el-button @click="toUploadRecord" type="primary" size="small" icon="el-icon-upload2">
                     导入记录
                 </el-button>
@@ -613,8 +611,7 @@
             </el-dialog>
             <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
-                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove"
-                 :file-list="fileList" accept=".xlsx" :before-upload="beforeUpload" >
+                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">选择文件</el-button>
                     <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择xlsx文件</i>
                 </el-upload>
@@ -1871,18 +1868,6 @@ export default {
             this.fileListM.push(file);
             console.log("怎么办")
         },
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                    
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }                       
-            return extension2        
-        },
         handleRemove(file, fileList) {
             var index = 0
             for (var i = 0; i < fileList.length; i++) {
@@ -2190,8 +2175,5 @@ export default {
 
 .tabPosition {
     position: relative
-}
-.item {
-      margin: 4px;
 }
 </style>

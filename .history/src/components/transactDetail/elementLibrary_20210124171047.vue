@@ -142,8 +142,7 @@
         </div>
     </el-dialog>
     <el-dialog title="导入数据" :visible.sync="branchAddEleDialogFlag" width="30%">
-        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success="tempSuccess" :on-error="tempError" :limit="1"
-         :auto-upload="false" accept=".xlsx" :before-upload="beforeUpload">
+        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success="tempSuccess" :on-error="tempError" :limit="1" :auto-upload="false">
             <el-button size="small" slot="trigger" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器
             </el-button>
@@ -185,7 +184,7 @@ export default {
     },
     data() {
         return {
-            publishActionUrl: "http://140.143.16.21:9090/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
+            publishActionUrl: "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
             branchAddEleDialogFlag: false, // 批量添加的dialog
             userId: sessionStorage.getItem("userId"),
             fileList: [], // 上传文件列表
@@ -293,18 +292,6 @@ export default {
             }
             this.branchAddEleDialogFlag = false;
             this.$message.success("上传成功");
-        },
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                    
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }                       
-            return extension2        
         },
         handlePreview(file) {
             console.log(file);
