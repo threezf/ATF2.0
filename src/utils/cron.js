@@ -1,5 +1,5 @@
 // cron表达式解析
-const cronToDate = function (str) {
+let cronToDate = function(str) {
   var toDate = {}
   if (!str) {
     toDate.loopType = '单次循环'
@@ -36,6 +36,16 @@ const cronToDate = function (str) {
       toDate.loopType = '天循环'
     }
     toDate.loopTime = nArr[2] + ':' + nArr[1] + ':' + nArr[0]
+    let year = parseInt(nArr[6])
+    console.log(year)
+    if(!isNaN(year)) {
+        toDate.year = year
+    }
+    let mounth = parseInt(nArr[4])
+    console.log(mounth)
+    if(!isNaN(mounth)) {
+        toDate.mounth = mounth
+    }
   }
   return toDate
 }

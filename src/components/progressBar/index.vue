@@ -34,17 +34,12 @@ export default {
         },
         '$route': {
             handler (to, from) {
-                console.log('==============================================')
-                console.log(to)
-                console.log('to.meta.parent',to.name)
-                console.log('to.meta.parent',to.meta.parent)
+                console.log('to.meta.parent',to)
                 for(let i = 0 ; i < this.paths.length; i++){
-                console.log(i)
-                console.log(this.paths[i].pathName )
-                console.log(to.meta.parent )
-                console.log('=======================2222=======================')
+                    console.log('to.meta.parent i' + i, this.paths[i].pathName )
                     for(let j = 0 ; j < this.paths[i].item.length; j++){
                         if(this.paths[i].item[j].pathName.split('/')[0] === to.name){
+                            console.log('to.meta.parent',to.name, i, j)
                             this.bigActive = i
                             this.smallActive = j
                             if(to.query.steps == 0) {
@@ -52,7 +47,6 @@ export default {
                             }else if(to.query.steps == 1) {
                                 this.smallActive = 3
                             }
-                            console.log('=======================1111=======================')
                             break
                         }
                     }
@@ -66,7 +60,7 @@ export default {
     methods: {
         goToPage(name){
             console.log('name')
-            console.log('路径跳转', name)
+            console.log('to.meta.parent路径跳转', name)
             if(name === 'TransactDetail/1') {
                 console.log("1")
                 return this.$router.push({
@@ -85,11 +79,11 @@ export default {
                     }
                 })
             }else if(name === 'testplanExecute'){
-							return this.$router.push({
-								path: '/testProjectIndext/testplanExecute',
-							})
-						}
-							this.$router.push({
+                return this.$router.push({
+                    path: '/testProjectIndext/testplanExecute',
+                })
+            }
+            this.$router.push({
                 name: name
             })
         },

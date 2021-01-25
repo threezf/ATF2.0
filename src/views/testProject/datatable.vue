@@ -20,7 +20,7 @@
     <div class='ele-container'>
         <div :class="'ele-left '+(saidBarShow?'':'narrow-ele-left')">
             <div class='treeDiv' v-show='saidBarShow'>
-                <el-tree accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick">
+                <el-tree :default-expanded-keys="defaultExpandedKeys" node-key="id" accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick">
                 </el-tree>
             </div>
             <div class='treeHideIcon' v-if="saidBarShow">
@@ -39,9 +39,11 @@
                     <el-button v-if='selectedTemplate !== -1' size="small" @click='dataTemplate' type="primary">
                         下载数据模板
                     </el-button>
-                    <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
-                        导入数据
-                    </el-button>
+                    <el-tooltip v-if='selectedTemplate !== -1' class="item" effect="dark" content="下载数据模板后，配置数据再导入" placement="top">
+                        <el-button v-if='selectedTemplate !== -1' size="small" @click='exportData' type="primary">
+                            导入数据
+                        </el-button>
+                    </el-tooltip>
                 </el-col>
                 <el-col :span="15" v-if='selectedTemplate !== -1'>
                     <el-button v-if='!fullScreen' size="small" @click='fullScreen = true' type="primary">
@@ -61,7 +63,7 @@
             </el-row>
 
             <div @contextmenu.prevent>
-                <el-table border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%">
+                <el-table border stripe highlight-current-row :data="tableData" :cell-class-name='cellClassName' @row-contextmenu="rightMenu" @cell-dblclick='tdedit' @cell-click='tdchoose' style="width: 100%" v-loading="testInfoLoading">
                     <el-table-column type="index" width="50">
                     </el-table-column>
                     <el-table-column label="查看脚本" width="100">
@@ -73,8 +75,8 @@
                     </el-table-column>
                     <el-table-column prop="caseCode" label="用例编号" width="100">
                     </el-table-column>
-                    <el-table-column v-if="!columnHidden.includes('测试点')" prop="testPoint" label="测试点">
-                    </el-table-column>
+                    <!-- <el-table-column v-if="!columnHidden.includes('测试点')" prop="testPoint" label="测试点">
+                    </el-table-column> -->
                     <el-table-column v-if="!columnHidden.includes('测试意图')" prop="testDesign" label="测试意图">
                     </el-table-column>
                     <el-table-column v-if="!columnHidden.includes('测试步骤')" prop="testStep" label="测试步骤" width="200">
@@ -154,10 +156,10 @@
                 </el-input>
             </el-col>
             <el-col :span="8" :offset="1">
-                <el-button size="small" @click='插入数据' type="primary">
+                <el-button size="small" @click='insertData' type="primary">
                     插入数据
                 </el-button>
-                <el-button size="small" @click='插入函数' type="primary">
+                <el-button size="small" @click='insertFunc' type="primary">
                     插入函数
                 </el-button>
             </el-col>
@@ -515,14 +517,65 @@
     <el-dialog title="用例筛选" :visible.sync="searchTemplateDailog" width="30%">
         <searchtestcase @condition-list='changeCondition'></searchtestcase>
     </el-dialog>
-    <el-dialog title="批量添加元素" :visible.sync="exportDialog" width='30%'>
-        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1" :auto-upload="false">
+    <el-dialog title="导入数据" :visible.sync="exportDialog" width='30%'>
+        <el-upload class="upload-demo" ref="upload" :action="actionUrl" :on-success='tempSuccess' :on-error='tempError' :limit="1"
+         :auto-upload="false" accept=".xlsx" :before-upload="beforeUpload">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
         </el-upload>
         <div slot="footer" class="dialog-footer">
             <el-button size="small" @click="exportDialog = false">关闭</el-button>
         </div>
+    </el-dialog>
+    <el-dialog :title="insertName" :visible.sync="insertVisible" width="30%">
+        <div v-if="insertName == '插入数据'">
+            <el-row>
+                <el-col :span="10">
+                    <el-select v-model="dataPoolType">
+                        <el-option v-for="(item, index) in dataOptions" :key="'dpt' + index" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="14">
+                    <el-input v-model="dataName"></el-input>
+                </el-col>
+            </el-row>
+            <div v-show="dataPoolType === 4 || dataPoolType === 4" style="margin-top: 10px">
+                <el-radio-group v-model="dataWritable">
+                    <el-radio label="writable">可读可写</el-radio>
+                    <el-radio label="readable">只读</el-radio>
+                </el-radio-group>
+            </div>
+        </div>
+        <div v-if="insertName == '插入函数'">
+            <el-select v-model="functionName">
+                <el-option v-for="(item, index) in functionList" :key="'func' + index" :label="item.desc" :value="item.name">
+                </el-option>
+            </el-select>
+            <el-table :data="paramsList" stripe border>
+                <el-table-column
+                    label="参数名称"
+                    prop="paramName"
+                    min-width="100px">
+                </el-table-column>
+                <el-table-column
+                    label="参数类型"
+                    prop="paramType"
+                    min-width="100px">
+                </el-table-column>
+                <el-table-column
+                    label="参数值"
+                    min-width="100px">
+                    <template >
+                        <el-input v-model="paramsValue"></el-input>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <template v-slot:footer>
+            <el-button type="info" plain @click="insertVisible = false">取消</el-button>
+            <el-button type="primary" @click="insertSure">确定</el-button>
+        </template>
     </el-dialog>
 </div>
 </template>
@@ -556,13 +609,45 @@ export default {
                 data: this.scriptTableData,
                 pageTotal: 1
             }
+        },
+        defaultExpandedKeys() {
+            let defalut = []
+            if(this.isClick) {
+                return []
+            }
+            if(this.filterTree.length > 0){
+                let obj = this.filterTree[0]
+                if(obj.children) {
+                    let children = obj.children
+                    while('children' in children[0]) {
+                        if('children' in children[0]) {
+                            children = children[0].children
+                        }else {}
+                    }
+                    console.log('存在', children.id)
+                    defalut.push(children[0].id)
+                    this.selectedTemplate = children[0]
+                }else {
+                    defalut.push(obj.id)
+                    this.selectedTemplate = obj
+                }
+                this.getCheckFunTree()
+            }
+            console.log('存在', typeof this.selectedTemplate)
+            if(typeof this.selectedTemplate === 'object') {
+                this.getTestcaseInfo()
+            }
+            return defalut
         }
     },
     data() {
         let caseLibId = sessionStorage.getItem('caselibId')
         return {
+            testInfoLoading: false,
+            isClick: false,
             scriptHeader: TableHeader,
-            publishActionUrl: 'http://140.143.16.21:8080/atfcloud2.0a/dataCenter/importDataFromFile',
+            publishActionUrl: 'http://140.143.16.21:9090/atfcloud2.0a/dataCenter/importDataFromFile',
+            // publishActionUrl: 'http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile',
             columnHidden: [], // 隐藏的列
             selectedTemplate: -1, // 选中的行
             editedData: {},
@@ -623,6 +708,7 @@ export default {
             rowColumn: '',
             beforeOperationRows: [],
             afterOperationRows: [],
+            d: [],
             dataOperationRows: [],
             dataType: '1',
             addItemShow: false,
@@ -642,7 +728,46 @@ export default {
             fullScreen: false,
             // 接口参数化
             interFaceVisible: false,
-            scriptTableData: []
+            scriptTableData: [],
+            // 默认展开
+
+            // 插入数据
+            dataPoolType: '',
+            dataWritable: '',
+            dataName: '',
+            dataOptions: [
+                {
+                    label: '用例内部变量',
+                    value: 1
+                },
+                {
+                    label: '流程用例数据池',
+                    value: 2
+                },
+                {
+                    label: '组合用例数据',
+                    value: 3
+                },
+                {
+                    label: '场景数据',
+                    value: 4
+                },
+                {
+                    label: '全局数据',
+                    value: 5
+                },
+                {
+                    label: '环境数据',
+                    value: 6
+                },
+            ],
+            // 插入函数
+            insertVisible: false,
+            insertName: '插入数据',
+            functionList: [],
+            functionName: '',
+            paramsList: [],
+            paramsValue: ''
         }
     },
     mounted() {
@@ -661,6 +786,21 @@ export default {
         }
         this.getFilterTree()
     },
+    watch: {
+        functionName(newVal) {
+            const params = this.functionList.find(item => item.name === newVal)
+                console.log(params, params.paramList)
+            if(params.paramList.length > 0) {
+                this.paramsList = params.paramList
+            } else {
+                let nothing = {};
+                nothing.paramName = "无";
+                nothing.paramType = "";
+                nothing.required = false;
+                this.paramsList = [nothing]
+            }
+        }
+    },
     filters: {
         jsonParser(val) {
             console.log('格式化', val)
@@ -668,6 +808,49 @@ export default {
         }
     },
     methods: {
+        // 插入数据
+        insertData() {
+            this.insertVisible = true
+            this.insertName = '插入数据'
+        },
+        // 插入函数
+        insertFunc() {
+            this.insertVisible = true
+            this.insertName = '插入函数'
+            this.functionList = []
+            Request({
+                url: '/dataCenter/getUtilFuncList',
+                method: 'post',
+                params: {
+                    autId: this.selectedTemplate.autId
+                }
+            }).then(res => {
+                console.log('res.....', res.functionList)
+                this.functionList = res.functionList.map(item => {
+                    return {
+                        ...item
+                    }
+                })
+            })
+        },
+        //  插入数据
+        insertSure() {
+            let str = ""
+            if(this.insertName === '插入数据') {
+                switch (this.dataPoolType) {
+                    case 1: str = "var(\"" + this.dataName + "\")"; break;
+                    case 2: str = "Data.Flow(\"" + this.dataName + "\")"; break;
+                    case 3: str = "Data.Com(\"" + this.dataName + "\")"; break;
+                    case 4: str = this.dataWritable === "readable" ? "Data.Scene(\"" + this.dataName + "\")": "Data.SceneShare(\"" + this.dataName + "\")"; break;
+                    case 5: str = this.dataWritable === "readable" ? "Data.Scene(\"" + this.dataName + "\")": "Data.SceneShare(\"" + this.dataName + "\")"; break;
+                    case 6: str = "Data.Env(\"" + this.dataName + "\")"; break;
+                }
+            }else {
+                str = this.functionName + "(" + this.paramsValue + ")"
+            }
+            this.input4 = str
+            this.insertVisible = false
+        },
         getFunction() {
             this.funtionDic = []
             // selectedTemplate.transId
@@ -703,9 +886,21 @@ export default {
 
             this.getTestcaseInfo()
         },
+        beforeUpload(file) {           
+            console.log(file)           
+            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
+            const extension2 = testmsg === 'xlsx'                     
+            if(!extension2) {                
+                this.$message({                    
+                    message: '上传文件只能是xlsx格式!',                    
+                    type: 'warning'               
+                });            
+            }                       
+            return extension2        
+        },
         // 接受添加多项的
         async addTreeInfo(tree) {
-            console.log("qqqqq" + this.beforeOperationRows)
+            console.log("qqqqq", tree)
             let treeInfo = tree.elementTree
             let functionInfo = tree.functionTree
             console.log('treeInfo', treeInfo)
@@ -715,9 +910,15 @@ export default {
             if (this.addItemFlag == 1) {
                 rows = this.beforeOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var beforeItem = {
                         arguShow: true,
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        name: name,
                         functions: [{
                             name: functionInfo[i].name,
                             parameterlist: ""
@@ -744,6 +945,12 @@ export default {
             if (this.addItemFlag == 2) {
                 rows = this.afterOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var afterItem = {
                         arguShow: true,
                         // name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
@@ -757,6 +964,7 @@ export default {
                             element: "",
                             ui: ""
                         },
+                        name: name,
                         parameters: functionInfo[i].arguments ? functionInfo[i].arguments.map(item => ({
                             Name: item.name,
                             Value: '',
@@ -764,15 +972,22 @@ export default {
                         })) : [],
                         selected: false,
                     }
+                    this.d.push(afterItem)
                     this.afterOperationRows.push(afterItem)
                 }
             }
             if (this.addItemFlag == 3) {
                 rows = this.dataOperationRows
                 for (let i = 0; i < functionInfo.length; i++) {
+                    let name = ''
+                    if(treeInfo[0]) {
+                        name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+                    }else {
+                        name = functionInfo[i].name
+                    }
                     var addItem = {
                         arguShow: true,
-                        name: "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName,
+                        name: name,
                         functions: {
                             name: functionInfo[i].name,
                             parameterlist: ""
@@ -827,8 +1042,8 @@ export default {
                 this.beforeOperationRows = this.beforeOperationRows.filter(item => !item.selected)
             }
             if (flag == 2) {
-                console.log(this.afterOperationRows.filter(item => !item.selected))
-                this.afterOperationRows = this.afterOperationRows.filter(item => !item.selected)
+                console.log(this.d.filter(item => !item.selected))
+                this.d = this.d.filter(item => !item.selected)
             }
             if (flag == 3) {
                 console.log(this.dataOperationRows.filter(item => !item.selected))
@@ -850,7 +1065,7 @@ export default {
                 }
             } else if (type == 2) {
                 let flag3 = false
-                for (let i = 0; i < this.afterOperationRows.length; i++) {
+                for (let i = 0; i < this.d.length; i++) {
                     if (this.multipleSelection2.some(v => (v.id === this.afterOperationRows[i].id))) {
                         if (flag3) {
                             let tmp = this.afterOperationRows.splice(i, 1)[0]
@@ -994,13 +1209,12 @@ export default {
         },
         // 编辑数据弹框
         editData(row, column) {
-            console.log(row)
-            console.log(column)
+            console.log('qqqqq', row, column)
             // handlechange(scope.row,scope.column)
-            this.editDataFlag = true
-            console.log(this.rowdata['data_' + this.rowColumn])
+            console.log('qqqqq', this.rowdata['data_' + this.rowColumn], this.rowColumn)
             let cellData = this.rowdata['data_' + this.rowColumn]
-            if (cellData) {
+            if (cellData !== undefined) {
+                this.editDataFlag = true
                 this.beforeOperationRows = [];
                 this.afterOperationRows = [];
                 this.dataOperationRows = [];
@@ -1014,6 +1228,7 @@ export default {
                 if (cellData.includes('@after')) {
                     var afterStr = cellData.slice(cellData.indexOf('@after\n') + 6, cellData.indexOf('@display') === -1 ? undefined : cellData.indexOf('@display'));
                     var afterArr = afterStr.split(';\n');
+                    console.log('after', afterStr, afterArr)
                     this.parseScript(afterArr, this.afterOperationRows, 2);
                 }
                 if (cellData.includes('@display')) {
@@ -1041,6 +1256,8 @@ export default {
                     this.dataType = 1;
                     this.input1 = valueStr
                 }
+            }else {
+                this.$message.warning('当前cell数据请在测试用例处编辑')
             }
             clearTimeout(this.timer); //清除延迟执行
             this.timer = setTimeout(() => { //设置延迟执行
@@ -1056,6 +1273,7 @@ export default {
                     if (!str.length) return;
                     // @before\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');\n@value\n{expr= }\n@after\nUI('aa').WebElement('bb').click('a','b','c');UI('a2').WebElement('b2').click('a','b','c');
                     if (str.includes('UI(')) {
+                        console.log('qqqqq包含uI', operationRows)
                         var script = str.split(').');
                         var operation = {};
                         var arr = script[1].split('(');
@@ -1210,7 +1428,8 @@ export default {
                 // _type: 'file'
             }).then(res => {
 
-                let url = 'http://140.143.16.21:8080/' + res.filePath.split('/webapps/')[1]
+                let url = 'http://140.143.16.21:9090/' + res.filePath.split('/webapps/')[1]
+                // let url = 'http://10.101.167.184:8080/' + res.filePath.split('/webapps/')[1]
                 //console.log( url)
                 window.location.href = url
                 // let url = window.URL.createObjectURL(new Blob([res]))
@@ -1222,6 +1441,7 @@ export default {
             })
 
         },
+
         exportData() {
             this.exportDialog = true
         },
@@ -1279,6 +1499,7 @@ export default {
         handleNodeClick(data) {
             console.log('data======================================')
             console.log(data)
+            this.isClick = true
             if (data.flag) {
                 this.selectedTemplate = data
                 this.getTestcaseInfo()
@@ -1331,7 +1552,8 @@ export default {
             })
         },
         getTestcaseInfo() {
-            console.log(this.selectedTemplate)
+            this.testInfoLoading = true
+            console.log('存在', this.selectedTemplate)
             Request({
                 url: '/dataCenter/queryTestcaseInfo',
                 method: 'post',
@@ -1355,10 +1577,13 @@ export default {
                 this.tableHead = res.tableHead
             }, (err) => {
                 console.log(err)
+            }).finally(_ => {
+                this.testInfoLoading = false
             })
         },
         // 右键事件
         rightMenu(row, column, event) {
+            console.log('qqqqq', row)
             this.rowdata = row
             this.columndata = column
             this.rowColumn = column.label.split('-')[1]
@@ -1437,6 +1662,7 @@ export default {
             this.handlechange(this.rowdata, this.columndata)
         },
         getCheckFunTree() {
+            console.log('修改')
             Request({
                 url: '/aut/selectCheckFunctionSet',
                 method: 'post',
@@ -1444,6 +1670,7 @@ export default {
                     'id': +this.selectedTemplate.autId
                 }
             }).then((res) => {
+                console.log('修改', res.omMethodRespDTOList)
                 this.dataCheckFunList = res.omMethodRespDTOList
             }, (err) => {
                 console.log(err)
@@ -1571,5 +1798,8 @@ li:hover {
 
 .wide-ele-right {
     width: 96% !important;
+}
+.item {
+      margin: 4px;
 }
 </style>

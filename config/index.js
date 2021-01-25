@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-25 09:41:14
+ * @LastEditTime: 2021-01-25 09:44:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ATF2.0\config\index.js
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -13,7 +21,7 @@ module.exports = {
     proxyTable: {
         // 配置代理转发,具体配置看相关文档
         '/': {
-            target: 'http://140.143.16.21:8080/',
+            target: 'http://140.143.16.21:9090/',
             // target: 'http://10.28.204.206:8080/',
             changeOrigin: true
         }

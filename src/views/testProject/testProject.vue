@@ -14,7 +14,7 @@
                         添加
                     </el-button>
                     <el-button @click='manageProject' type="primary" size="small" icon="el-icon-setting">
-                        管理功能点
+                        管理项目
                     </el-button>
                 </el-col>
             </el-row>
@@ -259,7 +259,7 @@ export default {
                 nameMedium,
                 descMedium,
             }
-            this.timeValue.push(planedStartDate, planedEndDate)
+            this.timeValue = [planedStartDate, planedEndDate]
             this.dialogVisible = true
         },
         // 添加测试项目
@@ -306,6 +306,8 @@ export default {
         },
         // 修改测试项目
         updateProject() {
+            this.addForm.planedStartDate = this.timeValue[0]
+            this.addForm.planedEndDate = this.timeValue[1]
             Request({
                 url: '/testProjectController/modifySingleTestProject',
                 method: 'post',
@@ -316,6 +318,7 @@ export default {
             }).then((res) => {
                 this.dialogVisible = false
                 this.getTestProject()
+                this.$message.success('修改成功')
             }, (err) => {
                 this.$message(res.respMsg)
                 this.dialogVisible = false

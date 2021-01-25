@@ -133,7 +133,7 @@
                             <el-option v-for="(item,index) in bodyFormats" :key="index" :value="item.id" :label="item.value">
                             </el-option>
                         </el-select>
-                        <el-button class="decode" type="primary" size="small" style="display: none" @click="decode">解码
+                        <el-button class="decode" type="primary" size="small" @click="decode">参数化
                         </el-button>
                     </el-form-item>
                     <el-form-item prop="bodyContent" class="descForm" label-width="100px" label="报文内容">
@@ -567,39 +567,17 @@ export default {
         },
         // 解码
         decode() {
-            // Request({
-            //     url: '/interface/parseXmlBody',
-            //     method: 'POST',
-            //     params: {
-            //         interfaceId: this.transactsForm.id,
-            //         xmlBody: this.transactsForm.bodyContent
-            //     }
-            // }).then(res => {
-            //     if (res.respCode == "0000") {
-
-            //     } else {
-            //         this.$alert('解码失败', '警告', {
-            //             confirmButtonText: '确定',
-            //             type: 'error'
-            //         })
-            //     }
-            // }).catch(error => {
-            //     this.$alert('网络连接失败', '警告', {
-            //         confirmButtonText: '确定',
-            //         type: 'error'
-            //     })
-            // })
             try{
-                let obj = JSON.parse(this.manageInfo.bodyContent)
-                console.log('参数化', obj)
-                for(let key in obj) {
-                    obj[key] = '${' + `${key}` + "}"
-                }
-                obj.statusCheck = "${statusCheck}"
-                let str = JSON.stringify(obj);
-                this.manageInfo.bodyContent = str
+                console.log('参数化', JSON.parse(this.manageInfo.bodyContent))
+                let obj = JSON.parse(this.manageInfo.bodyContent)
+                for(let key in obj) {
+                    obj[key] = '${' + `${key}` + "}"
+                }
+                obj.statusCheck = "${statusCheck}"
+                let str = JSON.stringify(obj);
+                this.manageInfo.bodyContent = str
             }catch(e) {
-                this.$message.warning('JSON格式错误')
+                this.$message.warning('JSON格式错误')
             }
         },
         // 数据编辑时添加一行

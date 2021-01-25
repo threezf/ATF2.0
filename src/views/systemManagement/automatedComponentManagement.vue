@@ -142,7 +142,7 @@
 							</el-button>
 							<el-button
 								size="small"
-								@click="dialogVisibleB=!dialogVisibleB"
+								@click="dialogVisibleB=true"
 								type="primary">
 								添加
 							</el-button>
@@ -619,7 +619,7 @@
 						<el-row></el-row>
 						<el-row class="el-button-margin" type="flex" justify="center">
 							<el-button size="small" type="primary"  @click="addMethod">添加</el-button>
-							<el-button size="small" @click="dialogVisibleD=!dialogVisibleD">取消</el-button>
+							<el-button size="small" @click="dialogVisibleB = false">取消</el-button>
 						</el-row>
 					</el-form>
 				</el-dialog>

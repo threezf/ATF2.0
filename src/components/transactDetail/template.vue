@@ -65,11 +65,11 @@
                         </el-table-column>
                         <el-table-column label="选择" type="selection" width="55">
                         </el-table-column>
-                        <el-table-column label="操作项" width="200" prop="name">
+                        <el-table-column label="操作项" width="260" prop="name">
                         </el-table-column>
                         <el-table-column label="方法" width="180">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.methodName" placeholder="请选择" @change="changeMethod(scope.row)">
+                                <el-select v-model="scope.row.methodName" placeholder="请选择" @change="changeMethod(scope.row)" :disabled="(scope.row.name.indexOf('公共函数') > -1)">
                                     <el-option v-for="item in methods[scope.row.elementWidget]" :key="item.id" :label="item.name" :value="item.name">
                                     </el-option>
                                 </el-select>
@@ -78,7 +78,7 @@
                         <el-table-column prop="arguments" label="参数">
                             <template slot-scope="scope">
                                 <div v-if="scope.row.arguShow">
-                                    <el-row v-for="item in scope.row.arguments" :key="item.index">
+                                    <el-row v-for="(item, index) in scope.row.arguments" :key="'show' + index">
                                         <el-col :span="5">
                                             <span> 名称 </span>
                                         </el-col>
@@ -86,7 +86,7 @@
                                             <span> 参数值 </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for="item in scope.row.arguments" :key="item.name">
+                                    <el-row v-for="(item, index) in scope.row.arguments" :key="'edit' + index">
                                         <el-col :span="5" class="fixedHeight">
                                             <span>
                                                 {{ item.name }}
@@ -98,7 +98,7 @@
                                             </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row>
+                                    <el-row v-if="scope.row.arguments.length > 0">
                                         <el-button size="mini" type="primary" icon="el-icon-edit" @click="scope.row.arguShow = false" :disabled="showFlag">
                                             编辑
                                         </el-button>
@@ -113,7 +113,7 @@
                                             <span> 参数值 </span>
                                         </el-col>
                                     </el-row>
-                                    <el-row v-for="item in scope.row.arguments" :key="item.name">
+                                    <el-row v-for="(item, index) in scope.row.arguments" :key="'eidting' + index">
                                         <el-col :span="5" class="fixedHeight">
                                             <span>
                                                 {{ item.name }}
@@ -126,21 +126,21 @@
                                     <el-row>
                                         <el-col :span="5">
                                             <el-button @click="
-                            scope.row.arguments.forEach((v) => {
-                              v.newvalue = v.value;
-                            });
-                            scope.row.arguShow = true;
-                          " size="mini">
+                                                scope.row.arguments.forEach((v) => {
+                                                v.newvalue = v.value;
+                                                });
+                                                scope.row.arguShow = true;
+                                            " size="mini">
                                                 取消
                                             </el-button>
                                         </el-col>
                                         <el-col :span="5">
                                             <el-button type="primary" size="mini" @click="
-                            scope.row.arguments.forEach((v) => {
-                              v.value = v.newvalue;
-                            });
-                            scope.row.arguShow = true;
-                          ">
+                                                scope.row.arguments.forEach((v) => {
+                                                v.value = v.newvalue;
+                                                });
+                                                scope.row.arguShow = true;
+                                            ">
                                                 确认
                                             </el-button>
                                         </el-col>
@@ -333,8 +333,41 @@ export default {
                     methodName: this.methods[treeInfo[i].elementWidget][0].name,
                     arguments: argu,
                     arguShow: true, // 参数一列的展示方式 ( arguShow ? 展示 : 可编辑 )
+                    selectable: true
                 });
             }
+            console.log('gghsj', functionInfo)
+            for(let i = 0; i < functionInfo.length; i ++) {
+                let argument;
+                if(functionInfo[i].arguments.length > 0) {
+                    argument = functionInfo[i].arguments.map((item, index) => {
+                        return {
+                            ...item,
+                            index
+                        }
+                    })
+                } else {
+                    argument = []
+                }
+                if(!(this.templateInfo.findIndex(info => info.name === '公共函数：' + functionInfo[i].name) > -1)) {
+                    this.templateInfo.push({
+                        sortid: this.sortidNum ++,
+                        name: '公共函数：' + functionInfo[i].name,
+                        uiname: "",
+                        elementName: functionInfo[i].name,
+                        methodName: functionInfo[i].name,
+                        elementWidget: [{name: functionInfo[i].name, id: functionInfo[i].name + '1'}],
+                        arguShow: true,
+                        arguments: argument,
+                        selectable: false
+                    })
+                }else {
+                    break;
+                }
+            }
+            functionInfo.forEach(item => {
+                
+            })
         },
         // 删除脚本
         deleteTemplateInfo() {
