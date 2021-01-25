@@ -25,6 +25,8 @@ var _recordFunction = _interopRequireDefault(require("./recordFunction"));
 
 var _quicklyStart = _interopRequireDefault(require("./quicklyStart"));
 
+var _mobile=_interopRequireDefault(require("./mobile"));
+
 var _ui = _interopRequireDefault(require("@/views/UIorCGI/ui"));
 
 var _CGI = _interopRequireDefault(require("@/views/UIorCGI/CGI"));
@@ -88,7 +90,7 @@ var _default = new _vueRouter["default"]({
     meta: {
       name: '接口测试'
     }
-  }, _testProject["default"], _recordFunction["default"], _quicklyStart["default"]]
+  },_mobile["default"],_testProject["default"], _recordFunction["default"], _quicklyStart["default"]]
 });
 
 exports["default"] = _default;

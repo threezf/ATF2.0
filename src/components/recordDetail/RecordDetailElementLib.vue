@@ -638,7 +638,7 @@ export default {
     // 模板下载
     dowmloadTemplate() {
       window.location =
-        "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/getExcelTemporary/1609";
+        "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/getExcelTemporary/1609";
     },
     // 查询单个UI
     querySingleUI(repositoryId, uiId) {

@@ -54,7 +54,8 @@
 					'quicklyElement':'维护元素库',
 					'quicklyTemplate':'配置用例',
 					'quicklyRun':'执行用例',
-					'quicklyResult':'查看结果'
+					'quicklyResult':'查看结果',
+					'mobile':'移动端测试'
 				},
 				breadList: [],
 				showFlag:true,

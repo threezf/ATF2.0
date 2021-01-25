@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-25 09:41:14
+ * @LastEditTime: 2021-01-25 09:44:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ATF2.0\config\index.js
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.

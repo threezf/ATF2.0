@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Login from '@/views/login/index'
+import Mobile from '@/views/testProject/mobile'
 import Rigester from '@/views/login/rigester';
 import NoReceived from '@/views/login/noReviewed'
 import Index from '@/views/index'
@@ -100,6 +101,16 @@ export default new Router({
 			SystemManagement,
 			QuicklyStart,
         Addition,
+			{
+				path: '/testProject/mobile',
+				name: 'Mobile',
+				component: Mobile,
+				meta: {
+					name: '移动端测试',
+					another: 'atf/interface',
+					hide:true
+				},
+			},
         {
 			path: '/mockApi',
 			name: "MockApi",
@@ -107,7 +118,7 @@ export default new Router({
 			meta: {
 				name: "Mock API",
 				parent: "TestInfrastructure",
-                another: 'atf/interface'
+        another: 'atf/interface'
 			},
 			children: [
 				{

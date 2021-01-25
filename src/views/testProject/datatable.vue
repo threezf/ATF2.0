@@ -566,7 +566,7 @@
                 <el-table-column
                     label="参数值"
                     min-width="100px">
-                    <template slot-scope="scope">
+                    <template >
                         <el-input v-model="paramsValue"></el-input>
                     </template>
                 </el-table-column>
