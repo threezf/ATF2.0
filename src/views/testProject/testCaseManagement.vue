@@ -613,10 +613,10 @@
             </el-dialog>
             <el-dialog title="导入" :visible.sync="dialogVisibleI" width="30%">
                 <!-- ElementUI上传 -->
-                <el-upload class="upload-demo in-file" :action="importURL" :limit="1" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove"
+                <el-upload class="upload-demo in-file" :action="importURL" :limit="2" :auto-upload="false" :on-change="changeFile" :on-remove="handleRemove"
                  :file-list="fileList" accept=".xlsx" :before-upload="beforeUpload" >
                     <el-button size="small" type="primary">选择文件</el-button>
-                    <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择xlsx文件</i>
+                    <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择一个xlsx文件</i>
                 </el-upload>
                 <el-divider></el-divider>
                 <!--		<div>-->
@@ -1501,7 +1501,7 @@ export default {
                         _this.addForm.autId = _this.autList[0].id;
                         _this.caseNodeNums[0].addNodeForm.autId =
                             _this.autList[0].id;
-                        _this.getTrans(_this.autList[0].id);
+                        _this.getTrans(_this.autList[0].id, 0);
                     },
                     err => {
                         console.log(err);
@@ -1542,7 +1542,7 @@ export default {
 					 });
 			 },
         //得到功能点
-        getTrans(autId) {
+        getTrans(autId,flag) {
             var _this = this;
             Request({
                     url: "/transactController/pagedBatchQueryTransact",
@@ -1559,11 +1559,13 @@ export default {
                     res => {
                         _this.transList = res.list;
                         _this.addForm.transId = _this.transList[0].id;
-                        _this.caseNodeNums[0].addNodeForm.transId =
-                            _this.transList[0].id;
-										  	_this.caseNodeNums[0].addNodeForm.transList =
-												_this.transList;
-                        _this.getTemplate(_this.transList[0].id);
+                        if(flag==0){
+													_this.caseNodeNums[0].addNodeForm.transId =
+													    _this.transList[0].id;
+													_this.caseNodeNums[0].addNodeForm.transList =
+													_this.transList;
+												}
+                        _this.getTemplate(_this.transList[0].id,flag);
                     },
                     err => {
                         console.log(err);
@@ -1573,6 +1575,7 @@ export default {
                     console.log(err);
                 });
         },
+
 			//流程节点得到基础脚本
 			getTemplate1(transId,i) {
 				var _this = this;
@@ -1603,7 +1606,7 @@ export default {
 					});
 			},
         //得到基础脚本
-        getTemplate(transId) {
+        getTemplate(transId,flag) {
             var _this = this;
             Request({
                     url: "/scriptTemplate/queryTemplateByTransId",
@@ -1617,17 +1620,21 @@ export default {
                         _this.templateList = res.scriptTemplateList;
                         if (_this.templateList.length == 0) {
                             _this.addForm.scriptModeFlag = "";
-                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
-                                "";
-													  _this.caseNodeNums[0].addNodeForm.templateList =
-														[];
+                            if(flag==0){
+															_this.caseNodeNums[0].addNodeForm.scriptModeFlag =
+															    "";
+															_this.caseNodeNums[0].addNodeForm.templateList =
+															[];
+														}
                         } else {
                             _this.addForm.scriptModeFlag =
                                 _this.templateList[0].id;
-                            _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
-                                _this.templateList[0].id;
-													_this.caseNodeNums[0].addNodeForm.templateList =
-														_this.templateList;
+													if(flag==0) {
+														  _this.caseNodeNums[0].addNodeForm.scriptModeFlag =
+														      _this.templateList[0].id;
+														_this.caseNodeNums[0].addNodeForm.templateList =
+															_this.templateList;
+													}
                         }
                     },
                     err => {
@@ -1733,7 +1740,7 @@ export default {
 					}else if(i==0){
 						this.getTrans1(e,i)
 					} else if(!i){
-						this.getTrans(e);
+						this.getTrans(e,1);
 					}else{
         		this.getTrans1(e,i)
 					}
@@ -1765,7 +1772,7 @@ export default {
         	if(i==0){
 						this.getTemplate1(e,i)
 					}else if(!i){
-						this.getTemplate(e);
+						this.getTemplate(e,1);
 					}else{
         		this.getTemplate1(e,i)
 					}
@@ -1868,20 +1875,25 @@ export default {
             this.dialogVisibleI = true;
         },
         changeFile(file) {
+        	if(this.fileListM.length>=1){
+						this.fileListM=[]
+						this.fileList=[]
+					}
             this.fileListM.push(file);
+					  this.fileList.push(file);
             console.log("怎么办")
         },
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                    
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }                       
-            return extension2        
+        beforeUpload(file) {
+            console.log(file)
+            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+            const extension2 = testmsg === 'xlsx'
+            if(!extension2) {
+                this.$message({
+                    message: '上传文件只能是xlsx格式!',
+                    type: 'warning'
+                });
+            }
+            return extension2
         },
         handleRemove(file, fileList) {
             var index = 0
@@ -1921,7 +1933,7 @@ export default {
                 .then(res => {
                     if (res.respCode == "0000") {
                         this.dialogVisibleI = false;
-                        this.$alert("导入成功，请点击刷新按钮", "导入情况", {
+                        this.$alert("上传成功，请点击导入记录查看导入情况", "上传情况", {
                             confirmButtonText: "确定",
                             callback: action => {
                                 this.$message({
@@ -1934,19 +1946,18 @@ export default {
                     } else {
 
                         this.dialogVisibleI = false;
-                        this.$alert("导入失败", "导入情况", {
-                            confirmButtonText: "确定",
-                            callback: action => {
-                                this.$message({
-                                    type: "info",
-                                    message: `action: ${action}`
-                                });
-                            }
-                        });
+                        this.$alert("上传失败"+res.respMsg);
+
                     }
-                })
-                .catch(err => {
-                    console.log(err);
+                }, (err) => {
+									this.dialogVisibleI = false;
+									var error=err.split(":")
+									this.$alert("上传失败："+error[error.length-1]);
+
+									}).catch(err => {
+							this.dialogVisibleI = false;
+							var error=err.split(":")
+							this.$alert("上传失败："+error[error.length-1]);
                 });
         },
         outputCase() {
