@@ -20,7 +20,7 @@
     <div class='ele-container'>
         <div :class="'ele-left '+(saidBarShow?'':'narrow-ele-left')">
             <div class='treeDiv' v-show='saidBarShow'>
-                <el-tree :default-expanded-keys="defaultExpandedKeys" node-key="id" accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick">
+                <el-tree :default-expanded-keys="defaultExpandedKeys" node-key="id" accordion :data="filterTree" :props="defaultProps" @node-click="handleNodeClick" highlight-current>
                 </el-tree>
             </div>
             <div class='treeHideIcon' v-if="saidBarShow">

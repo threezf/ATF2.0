@@ -367,99 +367,101 @@
             <!-- 执行过程控制 -->
             <el-form class="executionProcess" v-if="selectedDrawIndex == 2" label-width="140px">
               <h3>执行策略选择：</h3>
-              <p>用例级</p>
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <el-form-item label="执行状态策略">
-                    <el-select size="small" v-model="exeStrategy1Status">
-                      <el-option
-                        v-for="(item,index) in executionStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <p>流程节点级</p>
-              <el-row :gutter="20">
-                <el-col :span="6">
-                  <el-form-item label="起始节点策略">
-                    <el-select size="small" v-model="exeStrategy2Start">
-                      <el-option
-                        v-for="(item,index) in startStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6" >
-                  <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select size="small" v-model="exeStrategy2Order">
-                      <el-option
-                        v-for="(item,index) in orderStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6" :offset="1">
-                  <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select size="small" v-model="exeStrategy2Status">
-                      <el-option
-                        v-for="(item,index) in executionStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <p>组合用例级</p>
-              <el-row :gutter="20">
-                <el-col :span="6">
-                  <el-form-item label="起始用例策略">
-                    <el-select size="small" v-model="exeStrategy3Start">
-                      <el-option
-                        v-for="(item,index) in startStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item label-width="170px" label="执行顺序策略">
-                    <el-select size="small" v-model="exeStrategy3Order">
-                      <el-option
-                        v-for="(item,index) in orderStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6" :offset="1">
-                  <el-form-item label-width="130px" label="执行状态策略">
-                    <el-select size="small" v-model="exeStrategy3Status">
-                      <el-option
-                        v-for="(item,index) in executionStrategy"
-                        :key="index"
-                        :label="item.label"
-                        :value="item.id"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+              <div hidden>
+                <p>用例级</p>
+                <el-row :gutter="20">
+                  <el-col :span="8">
+                    <el-form-item label="执行状态策略">
+                      <el-select size="small" v-model="exeStrategy1Status">
+                        <el-option
+                          v-for="(item,index) in executionStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <p>流程节点级</p>
+                <el-row :gutter="20">
+                  <el-col :span="6">
+                    <el-form-item label="起始节点策略">
+                      <el-select size="small" v-model="exeStrategy2Start">
+                        <el-option
+                          v-for="(item,index) in startStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" >
+                    <el-form-item label-width="170px" label="执行顺序策略">
+                      <el-select size="small" v-model="exeStrategy2Order">
+                        <el-option
+                          v-for="(item,index) in orderStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" :offset="1">
+                    <el-form-item label-width="130px" label="执行状态策略">
+                      <el-select size="small" v-model="exeStrategy2Status">
+                        <el-option
+                          v-for="(item,index) in executionStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <p>组合用例级</p>
+                <el-row :gutter="20">
+                  <el-col :span="6">
+                    <el-form-item label="起始用例策略">
+                      <el-select size="small" v-model="exeStrategy3Start">
+                        <el-option
+                          v-for="(item,index) in startStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label-width="170px" label="执行顺序策略">
+                      <el-select size="small" v-model="exeStrategy3Order">
+                        <el-option
+                          v-for="(item,index) in orderStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" :offset="1">
+                    <el-form-item label-width="130px" label="执行状态策略">
+                      <el-select size="small" v-model="exeStrategy3Status">
+                        <el-option
+                          v-for="(item,index) in executionStrategy"
+                          :key="index"
+                          :label="item.label"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </div>
               <p>错误处理模式</p>
               <el-row :gutter="20">
                 <el-col :span="4">

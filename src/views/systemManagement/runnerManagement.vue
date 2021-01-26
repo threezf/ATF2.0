@@ -1,6 +1,6 @@
 <template>
 <page>
-    <el-header>
+    <el-header style="height: 100px">
         <el-button size="small" type="primary" icon="el-icon-refresh" @click='reFresh'>
             刷新
         </el-button>
@@ -15,6 +15,16 @@
             <p>5. 刷新执行机查询页面，此使出现已启动的执行机。</p>
             <el-button style="margin-left:10px" size="small" type="primary" slot="reference" icon='el-icon-info'>执行机使用说明</el-button>
         </el-popover>
+        <el-button style="margin-left: 10px" type="primary" size="small" icon="el-icon-download" @click="downloadRunner">下载执行机</el-button>
+        <el-button type="primary" size="small" icon="el-icon-download" v-if="isDownload == false" @click="isDownload = true">下载浏览器</el-button>
+        <span v-else style="margin-left: 10px">
+            选择浏览器版本
+            <el-button type="text" @click="downloadWin(1)">chrome-87-win</el-button>
+            <el-button type="text" @click="downloadWin(2)">firefox-win</el-button>
+            <el-button type="text" @click="downloadMac(1)">chrome-87-mac</el-button>
+            <el-button type="text" @click="downloadMac(2)">firefox-mac</el-button>
+        </span>
+           
     </el-header>
     <el-table stripe border :data="tableData" class='table'>
         <el-table-column label="名称" property="identifiableName" width="180" />
@@ -55,8 +65,9 @@ export default {
         return {
             tableData: [],
             log: '',
-            logVisible: false
-
+            logVisible: false,
+            // 下载浏览器
+            isDownload: false
         }
     },
     computed: {
@@ -67,6 +78,32 @@ export default {
         this.getRunners()
     },
     methods: {
+         // 浏览器下载
+        downloadWin(type) {
+            switch(type) {
+                case 1:
+                window.location.href = this.address4 + 'atf-data/browser_windows/chrome_87_install.zip'
+                break;
+                case 2: 
+                window.location.href = this.address4 + 'atf-data/browser_windows/Firefox-install.zip'
+                break;
+                default:
+                break;
+            }
+            },
+
+            downloadMac(type) {
+            switch(type) {
+                case 1:
+                window.location.href = this.address4 + 'atf-data/browser_mac/chrome_87_install.zip'
+                break;
+                case 2: 
+                window.location.href = this.address4 + 'atf-data/browser_mac/Firefox-install.zip'
+                break;
+                default:
+                break;
+            }
+        },
         // 刷新当前展示的执行机
         reFresh() {
             this.getRunners()

@@ -102,7 +102,7 @@
                       <label label-width=30% class="executeStatus" v-html="exeStautShow"></label>
                     </el-row>
                   </el-form>
-                <div class="test-control container" style="margin: 15px 5px">
+                <div class="test-control container" style="display: flex; margin: 15px 5px; height: 40px">
                   <div style="font-size: 12px; color: #999"></div>
                   <el-button type="primary" size="mini" @click="executeAll()" v-if="notTimerFlag"
                     ><i class="icon-play" ></i> 批量执行
@@ -129,6 +129,14 @@
                     ><i class="icon-refresh"></i> 重新查询执行结果</el-button
                   >
                   <el-button type="primary" size="mini" icon="el-icon-download" @click="downloadRunner">下载执行机</el-button>
+                  <el-button type="primary" size="mini" icon="el-icon-download" v-if="isDownload == false" @click="isDownload = true">下载浏览器</el-button>
+                  <div v-else style="margin-left: 10px;">
+                      选择浏览器版本
+                      <el-button type="text" @click="downloadWin(1)">chrome-87-win</el-button>
+                      <el-button type="text" @click="downloadWin(2)">firefox-win</el-button>
+                      <el-button type="text" @click="downloadMac(1)">chrome-87-mac</el-button>
+                      <el-button type="text" @click="downloadMac(2)">firefox-mac</el-button>
+                  </div>
                 </div>
                 <div id="">
                   <div class="logcontainer">
@@ -1318,6 +1326,9 @@ export default {
       testPlanDialog: false,
       addTestPlanDialog: false,
       notTimerFlag: true,
+
+      // 下载浏览器
+      isDownload: false
     };
   },
   mounted() {
@@ -1390,6 +1401,34 @@ export default {
     this.queryRunners();
   },
   methods: {
+    // 浏览器下载
+    downloadWin(type) {
+      switch(type) {
+        case 1:
+          window.location.href = this.address4 + 'atf-data/browser_windows/chrome_87_install.zip'
+          break;
+        case 2: 
+          window.location.href = this.address4 + 'atf-data/browser_windows/Firefox-install.zip'
+          break;
+        default:
+          break;
+      }
+    },
+
+    downloadMac(type) {
+      switch(type) {
+        case 1:
+          window.location.href = this.address4 + 'atf-data/browser_mac/chrome_87_install.zip'
+          break;
+        case 2: 
+          window.location.href = this.address4 + 'atf-data/browser_mac/Firefox-install.zip'
+          break;
+        default:
+          break;
+      }
+    },
+
+
     onSubmit() {
       console.log("submit!");
     },

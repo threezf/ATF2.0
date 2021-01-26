@@ -28,7 +28,7 @@
                 </span>
             </el-col>
         </el-row>
-        <el-tree style="max-height: 450px; overflow: auto" v-loading="treeLoading" :show-checkbox='multiselection' :data="funTree" check-on-click-node :props="defaultProps" @check-change="funCheckChange">
+        <el-tree style="max-height: 450px; overflow: auto" v-loading="treeLoading" :show-checkbox='multiselection' :data="funTree" check-on-click-node :render-content="renderContent" :props="defaultProps" @check-change="funCheckChange">
         </el-tree>
     </div>
     <el-row type="flex" justify="center" style="margin-bottom: -10px">
@@ -92,6 +92,20 @@ export default {
         }
     },
     methods: {
+        renderContent(createElement, { node, data, store }) {
+            console.log('render', data, store)
+            let desc = ""
+            if(data.arguments && data.arguments.length > 0) {
+                Object.keys(data.arguments[0]).forEach(key => {
+                    desc = desc + `${key}: ${data.arguments[0][key]},`
+                })
+                desc = desc.substring(0, desc.length - 1)
+            }
+            const test = "render"
+            return (
+                <el-tooltip placement="right" content={`{${desc}}`}><span>{data.label}</span></el-tooltip>
+            );
+        },
         eleCheckChange(data, status) {
             if ('children' in data) {
                 return
