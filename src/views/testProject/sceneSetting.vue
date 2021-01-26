@@ -267,7 +267,7 @@
                 </el-table-column>
                 <el-table-column
                   label="上次执行日期"
-                  prop="executedTime"
+                  prop="dateStr"
                   min-width="20%"
                   hidden>
                 </el-table-column>
