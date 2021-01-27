@@ -862,7 +862,7 @@ export default {
     let caseLibId = sessionStorage.getItem("caselibId");
     return {
       publishActionUrl:
-        "http://140.143.16.21:9090/atfcloud2.0a/dataCenter/importDataFromFile",
+        "http://140.143.16.21:8080/atfcloud2.0a/dataCenter/importDataFromFile",
       // "http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile",
       columnHidden: [], // 隐藏的列
       selectedTemplate: -1, // 选中的行
