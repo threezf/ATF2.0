@@ -3035,7 +3035,6 @@ export default {
       .main-content {
         position: relative;
         flex: 1 0 auto;
-        overflow: auto;
         background-color: #fff;
         padding: 0px 0px;
         min-width: 100%;

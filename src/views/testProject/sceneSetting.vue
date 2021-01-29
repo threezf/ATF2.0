@@ -596,9 +596,11 @@
                 v-model="addForm.caseIds"
                 :default-first-option="true"
                 @change="changeSelect"
+                style="width: 560px; margin-right: -40px"
                 filterable
                 clearable
                 multiple
+                collapse-tags
               >
                 <el-option
                   v-for="(item, index) in testcaseViewRespDTOList"
@@ -607,6 +609,9 @@
                   :value="item.id"
                 ></el-option>
               </el-select>
+              <el-checkbox v-model="selectAllCase" style="position: absolute">
+                全选
+              </el-checkbox>
             </el-form-item>
             <el-row type="flex" justify="center">
               <el-button type="primary" size="small" @click="addSure">添加</el-button>
@@ -1081,6 +1086,23 @@
     components: {
       cron,
       CronSet
+    },
+    computed: {
+      selectAllCase: {
+        get() {
+          return this.addForm.caseIds.length === this.testcaseViewRespDTOList.length
+        },
+        set(newVal) {
+          console.log('全选', newVal)
+          if(newVal) {
+            this.addForm.caseIds = this.testcaseViewRespDTOList.map(item => {
+              return item.id
+            })
+          }else {
+            this.addForm.caseIds = []
+          }
+        }
+      }
     },
     created() {
       // 获取上个界面传递的sceneId
@@ -2137,6 +2159,7 @@
     }
   }
   .mainCard {
+    
     .boxRow {
       margin-bottom: 10px;
       display: flex;
@@ -2153,6 +2176,10 @@
         border: 1px solid rgb(221, 213, 213);
       }
 
+    }
+    .home {
+      max-height: 500px;
+      overflow: scroll;
     }
     .checkAllBox {
       margin-top: 15px;
