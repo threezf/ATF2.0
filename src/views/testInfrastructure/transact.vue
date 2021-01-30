@@ -463,7 +463,7 @@ export default {
                 url: '/swaggerController/insertSwaggerAPI',
                 method: 'POST',
                 params: {
-                    url: "http://localhost:8080/v2/api-docs",
+                    url: "http://localhost:9090/v2/api-docs",
                     systemId: 1659,
                     creatorId: 3
                 }

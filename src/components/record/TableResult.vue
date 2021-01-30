@@ -61,8 +61,8 @@ export default {
     // 查看报告
     viewReport(row) {
       // 空白页打开
-      window.open("http://140.143.16.21:8080/" + row.resourcePath);
-    //   window.open("http://10.101.167.184:8080/" + row.resourcePath);
+      window.open("http://140.143.16.21:9090/" + row.resourcePath);
+    //   window.open("http://10.101.167.184:9090/" + row.resourcePath);
     },
     // 执行操作
     showDetail(row) {
