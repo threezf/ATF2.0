@@ -28,6 +28,12 @@
                         <p class="executeStatus" v-html="exeStautShow"></p>
                     </el-form-item>
                 </el-col>
+                <el-col :lg="10" :md="10" :sm="12" :xs="12">
+                    <el-form-item label="设置执行次数" class="set-time">
+                        <el-input-number class="input_number" v-model="runNumber" clearable></el-input-number>
+                        <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
+                    </el-form-item>
+                </el-col>
             </el-form>
         </el-row>
         <el-row class="buttonRow">
@@ -165,7 +171,8 @@ export default {
             selectedSceneCases: [], // 选择的场景用例
             exeStautShow: '执行状态：<i class="el-icon-info""></i>无计划', // 设置执行状态
             tagType: "primary",
-            interruptData: {}
+            interruptData: {},
+            runNumber: 1
         }
     },
     props: {
@@ -195,7 +202,7 @@ export default {
                 url: '/testPlanController/queryScriptDebugTestPlan',
                 method: 'POST',
                 params: {
-                    caseId
+                    scriptId: this.scriptId
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
@@ -585,6 +592,27 @@ export default {
                 this.$message.warning("网络错误，请重新查询")
             })
         },
+        // 保存定时
+        setTimeNumber() {
+            Request({
+                url: '/caseExecuteInstance/setCaseRunTime',
+                method: 'post',
+                params: {
+                    casesRunNumberList:[{
+                        caseId: this.caseId,
+                        runNumber: this.runNumber
+                    }],
+                    flowNodesRunNumberList:[ ],
+                    sceneId: this.sceneId
+                }
+            }).then(res => {
+                if(res.respCode === '0000') {
+                    this.$message.success('设置成功')
+                }
+            }).catch(_ => {
+                this.$message.warning('设置失败')
+            })
+        }
     }
 }
 </script>
@@ -605,6 +633,17 @@ export default {
     .runnerSelect {
         width: 200px;
     }
+    .set-time {
+        display: flex;
+        justify-content: flex-start;
+        .input_number {
+            width: 200px;
+        }
+        .save-button {
+            margin-left: 10px;
+        }
+    }
+    
 }
 
 .buttonRow {

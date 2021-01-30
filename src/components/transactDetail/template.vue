@@ -817,6 +817,7 @@ export default {
                     }
                 }).catch(error => {
                     console.log("脚本调试添加失败", error)
+                    this.$message.warning(error)
                 })
             } else {
                 this.$message.warning("请选择要调试的脚本")
@@ -838,7 +839,7 @@ export default {
                         query: {
                             scriptId: this.templateRadio,
                             autId: this.autId,
-                            caseId: res.caseId
+                            caseId: res.testcaseEntities[0].id
                         },
                     });
                     console.log('debugRes', res)

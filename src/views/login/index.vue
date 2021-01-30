@@ -35,12 +35,14 @@
 
 <script>
   import Request from "@/libs/request.js";
+  import VueMixins from '@/libs/vueMixins.js'
   import { SessionStorage } from "wii-fe-utils";
   import ElSlPanel from "element-ui/packages/color-picker/src/components/sv-panel";
   import { setCanvas } from "@/libs/login/login.js";
   import { setCanvasApp } from "@/libs/login/loginApp.js";
   export default {
     name: "Login",
+    mixins: [VueMixins],
     components: {
       ElSlPanel,
     },
@@ -231,7 +233,7 @@
             //   "&sessionId=" +
             //   res.sessionId;
             _this.imageURL =
-              "http://140.143.16.21:8080/atfcloud2.0a/userController/authCode?abc=" +
+              this.address4+"atfcloud2.0a/userController/authCode?abc=" +
               Math.random() +
               "&sessionId=" +
               res.sessionId;

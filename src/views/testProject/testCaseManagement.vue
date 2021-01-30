@@ -635,7 +635,7 @@
                 </div>
             </el-dialog>
             <el-dialog title="导出" :visible.sync="dialogVisibleO" width="30%">
-                <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="exportUrl">
+                <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="address4 + '/atfcloud2.0a/testcase/exportTestCase'">
                     <div hidden>
                         <el-input type="text" name="testCaseIdList" v-for="(id,index) in selectList" :value="id" :key="index">
                         </el-input>
@@ -778,6 +778,7 @@ export default {
     },
 
     data() {
+        let addressBase = this.address4
         return {
             addForm: {
                 actionList: [],
@@ -1052,7 +1053,6 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://140.143.16.21:9090/atfcloud2.0a/testcase/exportTestCase'
         };
     },
     computed: {
@@ -1074,7 +1074,7 @@ export default {
             return obj[this.titleFlag]
         },
 			importURL() {
-				return "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
+				return "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
 				// return "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
 			},
     },
@@ -1980,11 +1980,11 @@ export default {
             if (val == 0) {
                 let url =
                     // "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
-                    "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImport/file/template/simple";
+                    "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImport/file/template/simple";
                 window.location.href = url;
             } else {
                 let url =
-                    "http://140.143.16.21:9090/atfcloud2.0a/testcase/getStandardExcelTemporary?companyId=" + JSON.parse(localStorage.getItem('loginInfo')).companyId;
+                    "http://140.143.16.21:8080/atfcloud2.0a/testcase/getStandardExcelTemporary?companyId=" + JSON.parse(localStorage.getItem('loginInfo')).companyId;
                     // "http://10.101.167.184:8080/atfcloud2.0a/testcase/getStandardExcelTemporary?companyId=" + JSON.parse(localStorage.getItem('loginInfo')).companyId;
                 window.location.href = url;
             }

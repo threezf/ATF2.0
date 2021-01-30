@@ -865,7 +865,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-default" data-dismiss="modal" @click="senceDialog = false">
           取消
         </button>
         <button type="button" class="btn btn-primary" @click="sendSceneData()">
@@ -1088,7 +1088,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-default" type="button">
+        <button data-dismiss="modal" class="btn btn-default" type="button" @click="addTestPlanDialog = false">
           取消
         </button>
         <button
@@ -3035,7 +3035,6 @@ export default {
       .main-content {
         position: relative;
         flex: 1 0 auto;
-        overflow: auto;
         background-color: #fff;
         padding: 0px 0px;
         min-width: 100%;

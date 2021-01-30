@@ -645,7 +645,7 @@ export default {
             testInfoLoading: false,
             isClick: false,
             scriptHeader: TableHeader,
-            publishActionUrl: 'http://140.143.16.21:9090/atfcloud2.0a/dataCenter/importDataFromFile',
+            publishActionUrl: 'http://140.143.16.21:8080/atfcloud2.0a/dataCenter/importDataFromFile',
             // publishActionUrl: 'http://10.101.167.184:8080/atfcloud2.0a/dataCenter/importDataFromFile',
             columnHidden: [], // 隐藏的列
             selectedTemplate: -1, // 选中的行
@@ -1415,7 +1415,7 @@ export default {
                 // _type: 'file'
             }).then(res => {
 
-                let url = 'http://140.143.16.21:9090/' + res.filePath.split('/webapps/')[1]
+                let url = 'http://140.143.16.21:8080/' + res.filePath.split('/webapps/')[1]
                 // let url = 'http://10.101.167.184:8080/' + res.filePath.split('/webapps/')[1]
                 //console.log( url)
                 window.location.href = url

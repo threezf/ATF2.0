@@ -39,8 +39,12 @@
 </template>
 
 <script>
+import JsonViewer from '@/components/common/json-viewer.vue'
 import Request from '@/libs/request.js'
 export default {
+    components: {
+        JsonViewer
+    },
     props: {
         transId: {
             type: String,
@@ -93,17 +97,44 @@ export default {
     },
     methods: {
         renderContent(createElement, { node, data, store }) {
-            console.log('render', data, store)
+            console.log('render', data)
+            let obj = {}
             let desc = ""
             if(data.arguments && data.arguments.length > 0) {
                 Object.keys(data.arguments[0]).forEach(key => {
-                    desc = desc + `${key}: ${data.arguments[0][key]},`
+                    if(key != 'desc') {
+                        obj[key] = data.arguments[0][key]
+                    }
+                    desc = data.arguments[0].desc
                 })
-                desc = desc.substring(0, desc.length - 1)
             }
+            console.log(obj)
+            const left = 3
+            const right = 21
             const test = "render"
             return (
-                <el-tooltip placement="right" content={`{${desc}}`}><span>{data.label}</span></el-tooltip>
+                <el-popover width="400" trigger="hover" placement="right">
+                    <div>
+                        <el-row style="margin-bottom: -15px">
+                            <el-col span={left}>
+                                Desc:
+                            </el-col>
+                            <el-col span={right}>
+                                <b>{desc}</b>
+                            </el-col>
+                        </el-row>
+                        <el-divider style="height: 5px; margin: 0px"></el-divider>
+                        <el-row style="margin-top: -15px">
+                            <el-col span={left}>
+                                Detail:
+                            </el-col>
+                            <el-col span={right}>
+                                <json-viewer style="margin-top: -3px" json={obj}></json-viewer>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <span slot="reference">{data.label}</span>
+                </el-popover>
             );
         },
         eleCheckChange(data, status) {
