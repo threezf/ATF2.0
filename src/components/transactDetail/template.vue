@@ -839,7 +839,7 @@ export default {
                         query: {
                             scriptId: this.templateRadio,
                             autId: this.autId,
-                            caseId: res.caseId
+                            caseId: res.testcaseEntities[0].id
                         },
                     });
                     console.log('debugRes', res)

@@ -271,7 +271,7 @@ export default {
             return buttonArray[this.dialogModelFlag];
         },
         importURL() {
-            return "http://140.143.16.21:8080/atfcloud2.0a/transactController/batchImportTransact"; // 上传的URL
+            return this.address4 + "atfcloud2.0a/transactController/batchImportTransact"; // 上传的URL
         },
     },
     methods: {

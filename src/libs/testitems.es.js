@@ -4,6 +4,7 @@ import Vac from './vac-functions.es'
 
 var address2 = ' http://140.143.16.21:8080/atfcloud2.0a/';
 var address4 = ' http://140.143.16.21:8080/';
+var currentPort = '9090'
 // var address2 = ' http://10.101.167.184:8080/atfcloud2.0a/';
 // var address4 = ' http://10.101.167.184:8080/';
 var showRows = null;

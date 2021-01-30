@@ -635,7 +635,7 @@
                 </div>
             </el-dialog>
             <el-dialog title="导出" :visible.sync="dialogVisibleO" width="30%">
-                <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="exportUrl">
+                <el-form ref="outputForm" prop="outputForm" label-width="80px" method="POST" :action="address4 + '/atfcloud2.0a/testcase/exportTestCase'">
                     <div hidden>
                         <el-input type="text" name="testCaseIdList" v-for="(id,index) in selectList" :value="id" :key="index">
                         </el-input>
@@ -778,6 +778,7 @@ export default {
     },
 
     data() {
+        let addressBase = this.address4
         return {
             addForm: {
                 actionList: [],
@@ -1052,7 +1053,6 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://140.143.16.21:8080/atfcloud2.0a/testcase/exportTestCase'
         };
     },
     computed: {

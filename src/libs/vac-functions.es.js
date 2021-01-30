@@ -3,6 +3,7 @@ import $ from 'jquery'
 
 import ElementUI from "element-ui"
 var address2 = ' http://140.143.16.21:8080/atfcloud2.0a/';
+var currentPort = '9090'
 // var address2 = ' http://10.101.167.184:8080/atfcloud2.0a/';
 var Vac = Vac || {};
 //检测用户登录状态，添加 更改操作需要有登陆权限

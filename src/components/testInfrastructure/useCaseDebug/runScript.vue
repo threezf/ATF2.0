@@ -28,10 +28,10 @@
                         <p class="executeStatus" v-html="exeStautShow"></p>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="7" :md="10" :sm="12" :xs="12">
+                <el-col :lg="10" :md="10" :sm="12" :xs="12">
                     <el-form-item label="设置执行次数" class="set-time">
                         <el-input-number class="input_number" v-model="runNumber" clearable></el-input-number>
-                        <el-button class="save-button" type="primary" @click="setTimeNumber">保存</el-button>
+                        <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
                     </el-form-item>
                 </el-col>
             </el-form>
@@ -202,7 +202,7 @@ export default {
                 url: '/testPlanController/queryScriptDebugTestPlan',
                 method: 'POST',
                 params: {
-                    caseId
+                    scriptId: this.scriptId
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
