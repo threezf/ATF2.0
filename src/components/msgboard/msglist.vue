@@ -131,35 +131,37 @@ export default {
         }
     },
   updated() {
-      this.editor = new wangEditor(this.$refs.editor)
+      const editor = new wangEditor(this.$refs.editor)
 
       //限制图片上传大小
-      this.editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
       //使用 base64 格式保存图片
-      this.editor.config.uploadImgShowBase64 = true
+      editor.config.uploadImgShowBase64 = true
       //限制图片类型
-      this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-      this.editor.config.showLinkImg = false
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
       // 取消自动 focus
-      this.editor.config.focus = false
+      editor.config.focus = false
       // 创建编辑器
-      this.editor.create()
+      editor.create()
+      this.editor = editor
   
   },
   mounted() {
-      this.editor = new wangEditor(this.$refs.editor)
-      //限制图片上传大小
-      this.editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-      //使用 base64 格式保存图片
-      this.editor.config.uploadImgShowBase64 = true
-      //限制图片类型
-      this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-      this.editor.config.showLinkImg = false
-      // 取消自动 focus
-      this.editor.config.focus = false
-      // 创建编辑器
-      this.editor.create()
+      const editor = new wangEditor(this.$refs.editor)
 
+      //限制图片上传大小
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      //使用 base64 格式保存图片
+      editor.config.uploadImgShowBase64 = true
+      //限制图片类型
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
+      // 取消自动 focus
+      editor.config.focus = false
+      // 创建编辑器
+      editor.create()
+      this.editor = editor
   },
   components: {
       wangEditor
@@ -226,6 +228,7 @@ export default {
             }).then((res) => {
                 this.getTestProject();
                 this.editor.txt.clear()
+                this.$message.success('留言成功')
             }, (err) => {
                 console.log(submitForm)
                 this.$alert('添加留言失败', '失败', {
@@ -258,9 +261,7 @@ export default {
                 method: 'post',
                 params: replyForm
             }).then((res) => {
-                this.$alert('发表评论成功', '成功', {
-                    confirmButtonText: '确定',
-                });
+                this.$message.success('发表评论成功')
                 this.getTestProject()
                 this.replyContents=""
                 this.replyconfirm=""
@@ -352,7 +353,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 10px;
+  padding-top: 7px;
   text-align: center;
 }
 .firstphoto {
