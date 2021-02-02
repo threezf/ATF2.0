@@ -2308,19 +2308,19 @@ export default {
             Vac.alert(data.respMsg);
           } else {
             console.log();
+            /*if(!(data.testCaseList && data.testCaseList.length)) {
+              // Vac.alert('未查询到相关的用例信息！')
+                            return;
+                        }*/
+            if (!(data.executeInstanceResult.testSceneList && data.executeInstanceResult.testSceneList.length !== 0)) {
+              // Vac.alert('未查询到相关的场景信息！')
+              return this.$message.warning('当前场景下无用例，不允许添加');
+            }
             _this.testCaseList = data.executeInstanceResult.testCaseList;
             _this.testSceneList = data.executeInstanceResult.testSceneList;
             _this.$nextTick(() => {
               _this.setDraggable();
             });
-            /*if(!(data.testCaseList && data.testCaseList.length)) {
-                            // Vac.alert('未查询到相关的用例信息！')
-                            return;
-                        }*/
-            if (!(_this.testSceneList && _this.testSceneList.length)) {
-              // Vac.alert('未查询到相关的场景信息！')
-              return;
-            }
             _this.caseIds.length = 0;
             _this.flowNodeIds.clear();
             if (_this.testCaseList != null) {

@@ -114,11 +114,11 @@ export default new Router({
         {
 			path: '/mockApi',
 			name: "MockApi",
-			component: MockApi,
+            component: MockApi,
 			meta: {
 				name: "Mock API",
 				parent: "TestInfrastructure",
-        another: 'atf/interface'
+                another: 'atf/interface'
 			},
 			children: [
 				{
