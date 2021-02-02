@@ -1,6 +1,5 @@
 <template>
   <div>
-      {{messageId}}
         <el-card class="leftCard">
           <div slot="header">
             <span style="font-weight:bold;font-size:20px">{{messageTitle}}</span>
@@ -13,7 +12,7 @@
               {{creatorUsername}}
             </el-col>
             <el-col :span="22" class="colRight">
-              <div class="answerContents">
+              <div class="answerContents" v-html="messageContent">
                 {{messageContent}}
               </div>
               <el-row type="flex" justify="end" class="timerow">
@@ -32,7 +31,7 @@
             </el-col>
             <el-col :span="22" class="colRight">
               <div>
-                <div class="answerContents">
+                <div class="answerContents" v-html="item.answerContent">
                   {{item.answerContent}}
                 </div>
                 <el-row type="flex" justify="end" class="timerow">
@@ -83,15 +82,12 @@
                 <span>发表回复</span>            
             </div>
             <div style="padding:10px 20px 0 20px">
-                <vue-ueditor-wrap
-                  v-model="message" 
-                  :config="myConfig">
-                </vue-ueditor-wrap>
+            <div ref="editor"></div>
             </div>
             <div class="bottom">
                 <el-button 
                 class="submitbutton"
-                @click="addAnswer(message)"
+                @click="addAnswer()"
                 size="small"
                 type="primary">
                 发表
@@ -104,9 +100,9 @@
 <script>
 import Request from "../../libs/request";
 import VueMixins from "@/libs/vueMixins.js";
-import VueUeditorWrap from 'vue-ueditor-wrap';
 import imgUrl1 from '@/assets/images/img1.jpg'
 import imgUrl2 from '@/assets/images/img2.jpg'
+import wangEditor from 'wangeditor';
 export default {
   mixin: [VueMixins],
   name: "msglist",
@@ -122,66 +118,53 @@ export default {
         answerId:"",
         berepliedId:"",
         berepliedUsername:"",
-        editorOption: {
-          placeholder: '有什么问题请留言~'
-        },
         imgUrl1:imgUrl1,
         imgUrl2:imgUrl2,
-        myConfig: {
-          toolbars: [
-              [
-                  'undo', //撤销
-                  'redo', //重做
-                  'bold', //加粗
-                  'indent', //首行缩进
-                  'snapscreen', //截图
-                  'italic', //斜体
-                  'underline', //下划线
-                  'strikethrough', //删除线
-                  'subscript', //下标
-                  'fontborder', //字符边框
-                  'superscript', //上标
-                  'formatmatch', //格式刷
-                  'source', //源代码
-                  'blockquote', //引用
-                  'pasteplain', //纯文本粘贴模式
-                  'selectall', //全选
-                  'horizontal', //分隔线
-                  'removeformat', //清除格式
-                  'time', //时间
-                  'date', //日期
-                  'unlink', //取消链接
-                  'cleardoc', //清空文档
-                  'insertcode', //代码语言
-                  'fontfamily', //字体
-                  'fontsize', //字号
-                  'paragraph', //段落格式
-                  'simpleupload', //单图上传
-                  'insertimage', //多图上传
-                  'link', //超链接
-                  'emotion', //表情
-                  'justifyleft', //居左对齐
-                  'justifyright', //居右对齐
-                  'justifycenter', //居中对齐
-                  'justifyjustify', //两端对齐
-                  'forecolor', //字体颜色
-                  'backcolor', //背景色
-              ],
-            // 编辑器不自动被内容撑高
-            autoHeightEnabled: false,
-            // 初始容器高度
-            initialFrameHeight: 240,
-            // 初始容器宽度
-            initialFrameWidth: '100%',
-            wordCount: false,
-            // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-            serverUrl: 'http://35.201.165.105:8000/controller.php',
-            UEDITOR_HOME_URL: '/static/ueditor/'
-        },
+        editor: null,
+        editorData: ''
     }
   },
+  beforeUpdate(){
+        if(this.editor!=null){
+            this.editor.destroy()
+            this.editor = null
+        }
+    },
+  updated() {
+      const editor = new wangEditor(this.$refs.editor)
+
+      //限制图片上传大小
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      //使用 base64 格式保存图片
+      editor.config.uploadImgShowBase64 = true
+      //限制图片类型
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
+      // 取消自动 focus
+      editor.config.focus = false
+      // 创建编辑器
+      editor.create()
+      this.editor = editor
+  
+  },
+  mounted() {
+      const editor = new wangEditor(this.$refs.editor)
+
+      //限制图片上传大小
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      //使用 base64 格式保存图片
+      editor.config.uploadImgShowBase64 = true
+      //限制图片类型
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
+      // 取消自动 focus
+      editor.config.focus = false
+      // 创建编辑器
+      editor.create()
+      this.editor = editor
+  },
   components: {
-        VueUeditorWrap
+      wangEditor
   },
   props:{
       answerList: {
@@ -221,11 +204,17 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    // 调用销毁 API 对当前编辑器实例进行销毁
+    this.editor.destroy()
+    this.editor = null
+  },
   methods: {
         getfocus() {
           this.$refs.answer.focus();
         },
         addAnswer() {
+            this.message = this.editor.txt.html()
             let submitForm = {}
             submitForm.messageId = sessionStorage.getItem('messageId')
             submitForm.userId = sessionStorage.getItem('userId')
@@ -237,11 +226,8 @@ export default {
                 method: 'post',
                 params: submitForm
             }).then((res) => {
-                this.$alert('发表留言成功', '成功', {
-                    confirmButtonText: '确定',
-                });
                 this.getTestProject();
-                this.message=""
+                this.editor.txt.clear()
             }, (err) => {
                 console.log(submitForm)
                 this.$alert('添加留言失败', '失败', {
@@ -337,7 +323,6 @@ export default {
 }
 .answerContents {
   padding: 10px ;
-  height: 100px;
   margin-top: 10px;
 }
 .timerow {
@@ -355,13 +340,14 @@ export default {
   border-bottom: 1px solid #e1e4e6;
   padding-bottom: 20px;
   padding-right: 20px;
+  height: auto;
 }
 .colLeft {
   display: flex;
   justify-content: center;
   flex-direction: column;
   border-top: 1px solid #e1e4e6;
-  padding-top: 10px;
+
   text-align: center;
 }
 .colLeft0 {

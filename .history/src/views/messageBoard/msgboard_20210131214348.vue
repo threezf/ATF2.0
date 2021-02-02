@@ -191,7 +191,6 @@ export default {
             this.getTestProject()
             this.title=""
             this.editor.txt.clear()
-            this.$message.success('留言成功')
         }, (err) => {
             this.$alert('添加留言失败', '失败', {
                 confirmButtonText: '确定',
