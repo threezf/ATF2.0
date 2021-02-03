@@ -2307,14 +2307,14 @@ export default {
           if ("0000" != data.respCode) {
             Vac.alert(data.respMsg);
           } else {
-            console.log(isAdd, data.executeInstanceResult.testSceneList === null,data.executeInstanceResult.testSceneList.length !== 0,'节点');
+            console.log(isAdd, data.executeInstanceResult.testSceneList,data.executeInstanceResult.testSceneList.length !== 0,'节点');
             /*if(!(data.testCaseList && data.testCaseList.length)) {
               // Vac.alert('未查询到相关的用例信息！')
                             return;
                         }*/
             if ((isAdd &&(data.executeInstanceResult.testSceneList === null || data.executeInstanceResult.testSceneList.length !== 0))) {
               // Vac.alert('未查询到相关的场景信息！')
-              return this.$message.warning('当前场景下无用例，不允许添加');
+              return _this.$message.warning('当前场景下无用例，不允许添加');
             }else {
               _this.testCaseList = data.executeInstanceResult.testCaseList;
               _this.testSceneList = data.executeInstanceResult.testSceneList;
