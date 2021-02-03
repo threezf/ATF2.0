@@ -214,15 +214,20 @@ export default {
         }
     },
     created() {
+        console.log('测试数据created')
         this.autId = this.$route.query.id;
         this.ownedSystem = this.$route.query.nameMedium;
         this.creatorId = JSON.parse(sessionStorage.getItem("toTransact")).creatorId
         this.creatorName = JSON.parse(sessionStorage.getItem("toTransact")).creatorName
-        this.getAllFunction();
-        this.getAllSystem();
+        this.isInterface = this.$route.query.isInterface + '' === 'true';
+        this.isInterface ?
+            (this.ruleForm.functionType = "接口") :
+            (this.functionType = "UI");
         this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
         const user = sessionStorage.getItem('userId')
-        console.log('测试数据', this.transInfo, user, this.transInfo.creatorId)
+        console.log('测试数据', this.transInfo, user, this.transInfo.creatorId, this.isInterface)
+        this.getAllFunction();
+        this.getAllSystem();
         this.queryAccess(this.autId)
         // this.disableFunc = (user != this.transInfo.creatorId)
 
@@ -230,13 +235,12 @@ export default {
     activated() {
         this.autId = this.$route.query.id;
         this.ownedSystem = this.$route.query.nameMedium;
-        this.isInterface = this.$route.query.isInterface;
+        this.isInterface = Boolean(this.$route.query.isInterface);
         this.isInterface ?
             (this.ruleForm.functionType = "接口") :
             (this.functionType = "UI");
         this.getAllFunction();
         this.getAllSystem();
-        console.log('is interface', this.isInterface, this.$route.query)
         this.transInfo = JSON.parse(sessionStorage.getItem('toTransact'))
         const user = sessionStorage.getItem('userId')
         // this.disableFunc = (user != this.transInfo.creatorId)
@@ -592,7 +596,7 @@ export default {
                 })
                 .then(
                     (res) => {
-                        console.log("获取res", res, this.isInterface);
+                        console.log("获取res", res, this.isInterface, res);
                         if (res.list.length === 0) {
                             this.isInterface ?
                                 (this.dialogModelFlag = 5) :

@@ -71,6 +71,7 @@ export default {
         return {
             UITree: [],
             funTree: [],
+            moreInfoTree: [],
             eleSelected: [],
             funSelected: [],
             defaultProps: {
@@ -100,15 +101,15 @@ export default {
             console.log('render', data)
             let obj = {}
             let desc = ""
+            let targetCodeContent = ""
             if(data.arguments && data.arguments.length > 0) {
                 Object.keys(data.arguments[0]).forEach(key => {
-                    if(key != 'desc') {
-                        obj[key] = data.arguments[0][key]
-                    }
-                    desc = data.arguments[0].desc
+                    obj[key] = data.arguments[0][key]
                 })
             }
-            console.log(obj)
+            desc = data.descShort
+            targetCodeContent = data.targetCodeContent
+            console.log('render1', desc, data, Object.keys(data))
             const left = 3
             const right = 21
             const test = "render"
@@ -124,6 +125,15 @@ export default {
                             </el-col>
                         </el-row>
                         <el-divider style="height: 5px; margin: 0px"></el-divider>
+                        <el-row style="margin-bottom: -15px">
+                            <el-col span={left}>
+                                Code:
+                            </el-col>
+                            <el-col span={right}>
+                                <div>{targetCodeContent}</div>
+                            </el-col>
+                        </el-row>
+                        <el-divider style="height: 5px; margin: 0px"></el-divider>
                         <el-row style="margin-top: -15px">
                             <el-col span={left}>
                                 Detail:
@@ -136,6 +146,23 @@ export default {
                     <span slot="reference">{data.label}</span>
                 </el-popover>
             );
+        },
+        getAllFun() {
+            Request({
+                url: '/arcClass/queryArcVisibleOmMethods',
+                method: 'post',
+                params: {"id":56,"userId":"110","companyId":2,"classId":56}
+            }).then(res => {
+                console.log('alllll', this.funTree, res.arcMethodRespDTOList)
+                this.moreInfoTree = res.arcMethodRespDTOList
+                this.funTree.forEach(item => {
+                    const fun = this.moreInfoTree.find(moreInfo => moreInfo.id == item.id)
+                    if(fun) {
+                        item.descShort = fun.descShort
+                        item.targetCodeContent = fun.targetCodeContent
+                    }
+                })
+            })
         },
         eleCheckChange(data, status) {
             if ('children' in data) {
@@ -256,11 +283,14 @@ export default {
                         classId: res.omMethodRespDTOList[i].classId,
                         label: res.omMethodRespDTOList[i].name,
                         arguments: JSON.parse(res.omMethodRespDTOList[i].arguments),
+                        descShort: '',
+                        targetCodeContent: ''
                     }
                     tree.push(node)
                 }
                 _this.funTree = tree
                 console.log('_this.funTree', _this.funTree)
+                _this.getAllFun()
             }, (err) => {
                 console.log(err)
             }).catch((err) => {
@@ -271,8 +301,9 @@ export default {
         },
     },
     created() {
+       
 	},
-    mounted() {
+    created() {
         this.getEleTree()
         this.getFunTree()
         console.log('11111', this.$route.path)

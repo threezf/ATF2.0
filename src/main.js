@@ -19,8 +19,12 @@ import moment from 'moment'
 import store from './store/index'
 import VueBus from 'vue-bus'
 import page from './components/page/index.js'
+import vueDragSelectPro from 'vue-drag-select-pro'
+// 注意：一定要引入css样式
+import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
 
 Vue.config.productionTip = false
+Vue.use(vueDragSelectPro)
 Vue.use(ElementUI)
 Vue.use(VCharts)
 Vue.use(moment)

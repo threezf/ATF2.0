@@ -2,7 +2,7 @@
 测试页面，作为二级路由主页面
  */
 <template>
-    <div class="page-outer">
+    <div class="page-outer" @click.self="isShow=false">
         <div class="el-select" @click="clickSelect">
             <div class="el-input el-input--suffix is-focus">
                 <input type="text" readonly="readonly" autocomplete="off" placeholder="请选择" class="el-input__inner" v-model="selectedListKey">
@@ -13,14 +13,14 @@
                 </span>
             </div>
         </div>
-        <div v-show="isShow" class="el-select-dropdown el-popper" style="min-width: 220px; transform-origin: center top; z-index: 2007; position: absolute; top: 172px; left: 102px;" x-placement="bottom-start">
+        <div v-show="isShow" class="el-select-dropdown el-popper" style="min-width: 220px; transform-origin: center top; z-index: 2007; position: absolute; top: 40px; left: 0px;" x-placement="bottom-start">
             <div class="el-scrollbar" style="">
                 <div class="el-select-dropdown__wrap el-scrollbar__wrap" style="margin-bottom: -15px; margin-right: -15px;">
                     <vue-drag-select v-model="selectedList" value-key="name" :item-margin="[0, 10, 10, 0]" ref="dragSelect" class="el-scrollbar__view el-select-dropdown__list content-wrap"><!---->
                         <template v-for="(item, index) in dataList" >
-                            <drag-select-option :key="index" :value="item" :item-index="index" class="el-select-dropdown__item item"> 
+                            <drag-select-option :key="index" :value="item" :item-index="index" class="el-select-dropdown__item item" :class="{'is-select': makeStyle(item)}"> 
                                 <div class="item-self">
-                                    <span>{{item.id}}</span>
+                                    <span>{{item.casecode+' | '+ item.autName + ' | ' + item.transName + ' | ' + item.scriptTemplateName}}</span>
                                 </div>
                             </drag-select-option>
                         </template>
@@ -45,37 +45,45 @@
 
 <script>
     export default {
+        props: {
+            originData: {
+                type: Array,
+                default: []
+            }
+        },
         data() {
             return {
                 selectedList: [],
                 isShow: false,
-                dataList: [{
-                    id: '黄金糕'
-                }, {
-                    id: '双皮奶'
-                }, {
-                    id: '蚵仔煎'
-                }, {
-                    id: '龙须面'
-                }, {
-                    id: '北京烤鸭'
-                }, {
-                    id: '黄金糕'
-                }, {
-                    id: '双皮奶'
-                }, {
-                    id: '蚵仔煎'
-                }, {
-                    id: '龙须面'
-                }, {
-                    id: '北京烤鸭'
-                }]
+                dataList: []
+            }
+        },
+        watch: {
+            originData: {
+                handler(newVal) {
+                    this.dataList = newVal
+                },
+                immediate: true
+            },
+            selectedIds: {
+                handler(newVal) {
+                    console.log(newVal)
+                    this.$emit('change', newVal)
+                },
+                immediate: true
             }
         },
         methods: {
             clickSelect() {
                 console.log('select')
                 this.isShow = !this.isShow
+            },
+            makeStyle(item) {
+                console.log('make', item)
+                return this.selectedList.findIndex(select => select.id == item.id) > -1
+            },
+            clearSelected() {
+                this.selectedList = []
             }
         },
         computed: {
@@ -84,9 +92,17 @@
                     return []
                 }
                 return this.selectedList.map(item => {
-                    return item.id
+                    return item.casecode+' | '+ item.autName + ' | ' + item.transName + ' | ' + item.scriptTemplateName
                 })
             },
+            selectedIds() {
+                if(this.selectedList.length === 0) {
+                    return []
+                }
+                return this.selectedList.map(item => {
+                    return item.id
+                })
+            }
         },
         mounted() {
             let inner = document.querySelector('.select-wrapper')
@@ -99,7 +115,8 @@
 
 <style lang="less" scoped>
     .page-outer {
-        padding: 100px;
+        padding: 0px;
+        position: relative;
     }
     .el-select {
         width: 240px;

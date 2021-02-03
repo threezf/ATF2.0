@@ -329,6 +329,28 @@ export default {
         this.querySingleInterface(this.transactsForm.id)
 
     },
+    beforeRouteEnter (to, from, next) {
+        // ...
+        console.log('进入接口页面', to, from)
+        next()
+    },
+    beforeRouteUpdate (to, from, next) {
+        // ...
+        if(to.name === 'Transact') {
+            next(vm => {
+                console.log('测试数据离开接口页面', to.query, from)
+                vm.$router.push({
+                    name: 'Transact',
+                    query: {
+                        ...from.query,
+                        isInterface: true
+                    }
+                })
+            })
+        }else {
+            next()
+        }
+    },
     watch:{
     	// showFlag(val){
     	// 	this.$alert("奇奇怪怪")
