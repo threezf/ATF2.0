@@ -2306,7 +2306,7 @@ export default {
           if ("0000" != data.respCode) {
             Vac.alert(data.respMsg);
           } else {
-            console.log(isAdd, data.executeInstanceResult.testSceneList,data.executeInstanceResult.testSceneList.length !== 0,'节点');
+            console.log(isAdd, data.executeInstanceResult.testSceneList,data.executeInstanceResult.testSceneList.length !== 0, isFirst,'节点');
             /*if(!(data.testCaseList && data.testCaseList.length)) {
               // Vac.alert('未查询到相关的用例信息！')
                             return;
