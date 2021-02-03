@@ -2311,7 +2311,7 @@ export default {
               // Vac.alert('未查询到相关的用例信息！')
                             return;
                         }*/
-            if ((isAdd &&(data.executeInstanceResult.testSceneList[0].testCaseList === null || data.executeInstanceResult.testSceneList[0].testCaseList.length !== 0))) {
+            if ((isAdd &&(data.executeInstanceResult.testSceneList[0].testCaseList === null || data.executeInstanceResult.testSceneList[0].testCaseList.length == 0))) {
               // Vac.alert('未查询到相关的场景信息！')
               return _this.$message.warning('当前场景下无用例，不允许添加');
             }else {
