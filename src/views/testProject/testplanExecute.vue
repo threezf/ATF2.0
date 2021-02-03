@@ -1384,7 +1384,7 @@ export default {
     });
     getPlans
       .then(() => {
-        _this.getCases();
+        _this.getCases(true);
       })
       .catch((err) => {
         Vac.alert(err);
