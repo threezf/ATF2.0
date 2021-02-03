@@ -2130,7 +2130,7 @@ export default {
             $("#vac-confirm").modal("hide");
             _this.selectedScenes = [];
             Vac.alert("移除成功");
-            _this.getCases(false);
+            _this.getCases(false, true);
           } else {
             Vac.alert("移除失败");
           }
@@ -2287,7 +2287,7 @@ export default {
         },
       });
     },
-    getCases(isAdd) {
+    getCases(isAdd, isFirst) {
       var _this = this;
       var data = {
         caselibId: _this.caselibId,
@@ -2312,6 +2312,9 @@ export default {
                             return;
                         }*/
             if ((isAdd &&(data.executeInstanceResult.testSceneList[0].testCaseList === null || data.executeInstanceResult.testSceneList[0].testCaseList.length == 0))) {
+              if(isFirst) {
+                return
+              }
               // Vac.alert('未查询到相关的场景信息！')
               return _this.$message.warning('当前场景下无用例，不允许添加');
             }else {
