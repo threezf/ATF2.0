@@ -1917,6 +1917,7 @@ export default {
 			},
         //实际导入函数
         uploadTemp() {
+            console.log('上传失败')
             let file = this.fileListM[0];
             let param = new FormData();
             var caseLibId = sessionStorage.getItem("caselibId");
@@ -1947,18 +1948,14 @@ export default {
 
                         this.dialogVisibleI = false;
                         this.$alert("上传失败"+res.respMsg);
+                        console.log("上传失败"+res.respMsg.split('；')[1].split['：'][1]);
 
                     }
                 }, (err) => {
-									this.dialogVisibleI = false;
-									var error=err.split(":")
-									this.$alert("上传失败："+error[error.length-1]);
-
-									}).catch(err => {
-							this.dialogVisibleI = false;
-							var error=err.split(":")
-							this.$alert("上传失败："+error[error.length-1]);
-                });
+                    console.log('上传失败', typeof err, )
+                    this.dialogVisibleI = false;
+                    this.$alert("上传失败："+err.split('；')[1].split("：")[1]);
+                })
         },
         outputCase() {
             this.dialogVisibleO = true;

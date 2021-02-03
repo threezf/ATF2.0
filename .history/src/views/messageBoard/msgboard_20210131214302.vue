@@ -100,20 +100,19 @@ export default {
         }
     },
     updated() {
-        const editor = new wangEditor(this.$refs.editor)
+        this.editor = new wangEditor(this.$refs.editor)
 
         //限制图片上传大小
-        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+        this.editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
         //使用 base64 格式保存图片
-        editor.config.uploadImgShowBase64 = true
+        this.editor.config.uploadImgShowBase64 = true
         //限制图片类型
-        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        editor.config.showLinkImg = false
+        this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+        this.editor.config.showLinkImg = false
         // 取消自动 focus
-        editor.config.focus = false
+        this.editor.config.focus = false
         // 创建编辑器
-        editor.create()
-        this.editor = editor
+        this.editor.create()
     
     },
     mounted() {
@@ -191,7 +190,6 @@ export default {
             this.getTestProject()
             this.title=""
             this.editor.txt.clear()
-            this.$message.success('留言成功')
         }, (err) => {
             this.$alert('添加留言失败', '失败', {
                 confirmButtonText: '确定',

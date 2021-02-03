@@ -5,7 +5,7 @@ import SystemManagementIndex from '@/views/systemManagement/index'
 import EnterpriseManagement from '@/views/systemManagement/EnterpriseManagement'
 import RoleManagement from '@/views/systemManagement/RoleManagement'
 import MenuManagement from '@/views/systemManagement/MenuManagement'
-import UserManagement from '@/views/systemManagement/userManagement'
+import UserManagement from '@/views/systemManagement/usermanagement'
 import RunnerManagement from '@/views/systemManagement/runnerManagement'
 import AutomatedComponentManagement from '@/views/systemManagement/automatedComponentManagement';
 

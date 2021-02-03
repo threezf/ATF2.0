@@ -2130,7 +2130,7 @@ export default {
             $("#vac-confirm").modal("hide");
             _this.selectedScenes = [];
             Vac.alert("移除成功");
-            _this.getCases();
+            _this.getCases(false);
           } else {
             Vac.alert("移除失败");
           }
@@ -2153,7 +2153,7 @@ export default {
           $("#add-modal").modal("hide");
           if (data.respCode === "0000") {
             Vac.alert(data.respMsg);
-            _this.getCases();
+            _this.getCases(true);
             // _this.alertShow = true;
             // _this.tooltipMessage = '添加成功';
             _this.$nextTick(() => {
@@ -2288,7 +2288,7 @@ export default {
         },
       });
     },
-    getCases() {
+    getCases(isAdd) {
       var _this = this;
       var data = {
         caselibId: _this.caselibId,
@@ -2308,19 +2308,19 @@ export default {
             Vac.alert(data.respMsg);
           } else {
             console.log();
+            /*if(!(data.testCaseList && data.testCaseList.length)) {
+              // Vac.alert('未查询到相关的用例信息！')
+                            return;
+                        }*/
+            if ((isAdd &&(data.executeInstanceResult.testSceneList === null || data.executeInstanceResult.testSceneList.length !== 0))) {
+              // Vac.alert('未查询到相关的场景信息！')
+              return this.$message.warning('当前场景下无用例，不允许添加');
+            }
             _this.testCaseList = data.executeInstanceResult.testCaseList;
             _this.testSceneList = data.executeInstanceResult.testSceneList;
             _this.$nextTick(() => {
               _this.setDraggable();
             });
-            /*if(!(data.testCaseList && data.testCaseList.length)) {
-                            // Vac.alert('未查询到相关的用例信息！')
-                            return;
-                        }*/
-            if (!(_this.testSceneList && _this.testSceneList.length)) {
-              // Vac.alert('未查询到相关的场景信息！')
-              return;
-            }
             _this.caseIds.length = 0;
             _this.flowNodeIds.clear();
             if (_this.testCaseList != null) {

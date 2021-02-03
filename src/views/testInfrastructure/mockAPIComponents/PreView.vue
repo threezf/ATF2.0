@@ -15,7 +15,7 @@
     </el-row>
     <el-row class="rowStyle">
       <el-col :span="12" :offset="0">
-        <span class="detailInfoTitle">更新时间</span>
+        <span class="detailInfoTitle">更新时间</span> 
         <label class="labelContent">{{updateTime}}</label>
       </el-col>
     </el-row>

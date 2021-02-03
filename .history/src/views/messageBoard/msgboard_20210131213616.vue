@@ -93,44 +93,33 @@ export default {
         }
 
     },
-    beforeUpdate(){
-        if(this.editor!=null){
-            this.editor.destroy()
-            this.editor = null
-        }
-    },
-    updated() {
-        const editor = new wangEditor(this.$refs.editor)
+    setup() {
+        const editor = ref();
+        let instance;
+        onMounted(() => {
+            instance = new WangEditor(editor.value);
+            Object.assign(instance.config, {
+                //限制图片上传大小
+                uploadImgMaxSize: 3 * 1024 * 1024, // 3M
+                //使用 base64 格式保存图片
+                uploadImgShowBase64: true,
+                //限制图片类型
+                uploadImgAccept: ['jpg', 'jpeg', 'png', 'gif'],
+                showLinkImg: false,
+                // 取消自动 focus
+                focus: false
+            });
+            instance.create();
+        });
 
-        //限制图片上传大小
-        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-        //使用 base64 格式保存图片
-        editor.config.uploadImgShowBase64 = true
-        //限制图片类型
-        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        editor.config.showLinkImg = false
-        // 取消自动 focus
-        editor.config.focus = false
-        // 创建编辑器
-        editor.create()
-        this.editor = editor
-    
-    },
-    mounted() {
-        const editor = new wangEditor(this.$refs.editor)
+        onBeforeUnmount(() => {
+            instance.destroy();
+            instance = null;
+        });
+         return {
+            editor,
 
-        //限制图片上传大小
-        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-        //使用 base64 格式保存图片
-        editor.config.uploadImgShowBase64 = true
-        //限制图片类型
-        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        editor.config.showLinkImg = false
-        // 取消自动 focus
-        editor.config.focus = false
-        // 创建编辑器
-        editor.create()
-        this.editor = editor
+        };
     },
     components: {
         wangEditor
@@ -191,7 +180,6 @@ export default {
             this.getTestProject()
             this.title=""
             this.editor.txt.clear()
-            this.$message.success('留言成功')
         }, (err) => {
             this.$alert('添加留言失败', '失败', {
                 confirmButtonText: '确定',

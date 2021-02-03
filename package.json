@@ -30,6 +30,7 @@
     "vue": "^2.5.2",
     "vue-bus": "^1.2.1",
     "vue-cron": "^1.0.9",
+    "vue-drag-select-pro": "^1.0.4",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-ueditor-wrap": "^2.4.4",

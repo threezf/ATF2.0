@@ -15,7 +15,7 @@ import UI from '@/views/UIorCGI/ui'
 import CGI from '@/views/UIorCGI/CGI'
 import Addition from './addition'
 import MockApi from '@/views/testInfrastructure/mockApi';
-import Preview from '@/views/testInfrastructure/mockAPIComponents/Preview'
+import Preview from '@/views/testInfrastructure/mockAPIComponents/PreView'
 import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 import MessageBoard from '@/views/messageBoard/msgboard'
@@ -114,11 +114,11 @@ export default new Router({
         {
 			path: '/mockApi',
 			name: "MockApi",
-			component: MockApi,
+            component: MockApi,
 			meta: {
 				name: "Mock API",
 				parent: "TestInfrastructure",
-        another: 'atf/interface'
+                another: 'atf/interface'
 			},
 			children: [
 				{
