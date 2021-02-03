@@ -2152,7 +2152,6 @@ export default {
         success: function (data) {
           $("#add-modal").modal("hide");
           if (data.respCode === "0000") {
-            Vac.alert(data.respMsg);
             _this.getCases(true);
             // _this.alertShow = true;
             // _this.tooltipMessage = '添加成功';
@@ -2312,7 +2311,7 @@ export default {
               // Vac.alert('未查询到相关的用例信息！')
                             return;
                         }*/
-            if ((isAdd &&(data.executeInstanceResult.testSceneList === null || data.executeInstanceResult.testSceneList.length !== 0))) {
+            if ((isAdd &&(data.executeInstanceResult.testSceneList[0].testCaseList === null || data.executeInstanceResult.testSceneList[0].testCaseList.length !== 0))) {
               // Vac.alert('未查询到相关的场景信息！')
               return _this.$message.warning('当前场景下无用例，不允许添加');
             }else {
@@ -2380,6 +2379,9 @@ export default {
                 //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
                 // }
                 _this.sceneCaseMap.set(scene.sceneId, caselist);
+                if(isAdd) {
+                  Vac.alert(data.respMsg);
+                }
               }
             }
           }
