@@ -587,16 +587,16 @@
           </el-drawer>
         </el-card>
         <el-dialog
-          class="addDialog" width="50%" title="添加用例" :visible.sync="addDialogVisible">
+          class="addDialog" width="50%" title="添加用例" :visible.sync="addDialogVisible" @click.self="closeShow">
           <p class="addTitle">用例展示形式为：用例编号 | 被测系统 | 功能点 | 关联脚本名称</p>
           <el-form :model="addForm" label-width="88px">
             <el-form-item label="添加用例">
-              <el-select
+              <!-- <el-select
                 size="small"
                 v-model="addForm.caseIds"
                 :default-first-option="true"
                 @change="changeSelect"
-                style="width: 560px; margin-right: -40px"
+                style="width: 500px; margin-right: -40px"
                 filterable
                 clearable
                 multiple
@@ -608,10 +608,16 @@
                   :label="item.casecode+' | '+ item.autName + ' | ' + item.transName + ' | ' + item.scriptTemplateName"
                   :value="item.id"
                 ></el-option>
-              </el-select>
-              <el-checkbox v-model="selectAllCase" style="position: absolute">
+              </el-select> -->
+              <dragSelect ref="dragSelect" style="display:inline-block" :originData="testcaseViewRespDTOList" @change="changeSelect"></dragSelect>
+              <el-checkbox v-model="selectAllCase" style="position: absolute ;left: 240px; top: 0px">
                 全选
               </el-checkbox>
+              <span style="position: absolute; right: 170px; top: 0px">用例类型:</span>
+              <el-checkbox-group v-model="transTypes" size="mini" style="position: absolute; right: 60px; top: 0px">
+                <el-checkbox-button label="1" value="1">UI</el-checkbox-button>
+                <el-checkbox-button label="2" value="2">接口</el-checkbox-button>
+              </el-checkbox-group>
             </el-form-item>
             <el-row type="flex" justify="center">
               <el-button type="primary" size="small" @click="addSure">添加</el-button>
@@ -907,6 +913,9 @@
             </el-row>
           </el-form>
         </el-dialog>
+        <el-dialog width="100%" title="测试" :visible.sync="testVisible">
+          <dragSelect :originData="testcaseViewRespDTOList" @change="changeSelect"></dragSelect>
+        </el-dialog>
       </el-main>
     </el-container>
   </div>
@@ -923,6 +932,7 @@
   import qs from "qs";
   import Sortable from "sortablejs";
   import parser from 'cron-parser'
+  import dragSelect from '@/components/common/drag-select.vue'
   export default {
     name: "ScenceSetting",
     mixins: [VueMixins],
@@ -934,12 +944,14 @@
         caseLibId: '1278',
         sceneEntity: {}, // scene实体
         addDialogVisible: false, //添加对话框是否可视
+        testVisible: false,
         addForm: {
           caseIds: [],
           creatorId: "",
           id: ""
         }, //添加时的表单对象
         testcaseViewRespDTOList: [], //场景数据
+        storedTestcaseViewRespDTOList: [], //存储场景
         isIndeterminate: true, // 设置 indeterminate 状态，只负责样式控制
         checkAll: false, // 是否全选
         checkedSceneTestCases: [], //选中的场景
@@ -1080,12 +1092,36 @@
         /**
          * 定时执行与管理
          */
-        getTimers: []
+        getTimers: [],
+        transTypes: []
       };
     },
     components: {
       cron,
-      CronSet
+      CronSet,
+      dragSelect
+    },
+    watch: {
+      transTypes: {
+        handler(newVal) {
+          if(newVal.length === 2 || newVal.length === 0) {
+            this.testcaseViewRespDTOList = this.storedTestcaseViewRespDTOList
+          }else {
+            this.testcaseViewRespDTOList = this.storedTestcaseViewRespDTOList.filter(item => item.transType == newVal[0])
+          }
+        },
+        immediate: true
+      },
+      addDialogVisible: {
+        handler(newVal) {
+          if(!newVal) {
+            this.addForm.caseIds = []
+            console.log('dragSelect', this.$refs.dragSelect)
+            this.$refs.dragSelect.clearSelected()
+            this.$refs.dragSelect.isShow = false
+          }
+        },immediate: true
+      }
     },
     computed: {
       selectAllCase: {
@@ -1128,6 +1164,10 @@
     },
     methods: {
       cronToDate: cronToDate,
+      closeShow() {
+        console.log('show')
+        this.$refs.dragSelect.isShow = false
+      },
       getDateStr(raw) {
         let strObj = this.cronToDate(raw)
         console.log('格式化raw', strObj)
@@ -1221,10 +1261,34 @@
           .then(res => {
             console.log("res", res);
             this.testcaseViewRespDTOList = res.testcaseViewRespDTOList;
+            this.storedTestcaseViewRespDTOList = res.testcaseViewRespDTOList;
+            let request = this.createRequest(this.testcaseViewRespDTOList)
+            Promise.all(request).then(res => {
+              console.log('transact', res)
+              res.forEach((item, index) => {
+                this.testcaseViewRespDTOList[index].transType = item.transType
+                this.storedTestcaseViewRespDTOList[index].transType = item.transType
+              })
+            })
           })
           .catch(error => {
             this.$message.error("场景列表获取失败");
           });
+      },
+      // 聚合请求
+      createRequest(testcaseViewRespDTOList) {
+        let request = []
+        testcaseViewRespDTOList.forEach(item => {
+          console.log('item111', item.transId)
+          request.push(Request({
+            url: '/transactController/querySingleTransact',
+            method: 'post',
+            params: {
+              id: item.transId
+            }
+          }))
+        })
+        return request
       },
       // 获取移动端内容
       getMobileInfo() {
@@ -1279,8 +1343,10 @@
             this.$message.error("添加失败");
           });
       },
-      changeSelect() {
-        console.log(this.addForm.caseIds);
+      changeSelect(val) {
+        // console.log(this.addForm.caseIds);
+        console.log(val)
+        this.addForm.caseIds = val
       },
       // 添加场景事件
       addScene() {

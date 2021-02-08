@@ -1384,7 +1384,7 @@ export default {
     });
     getPlans
       .then(() => {
-        _this.getCases();
+        _this.getCases(true);
       })
       .catch((err) => {
         Vac.alert(err);
@@ -2130,7 +2130,7 @@ export default {
             $("#vac-confirm").modal("hide");
             _this.selectedScenes = [];
             Vac.alert("移除成功");
-            _this.getCases();
+            _this.getCases(false, true);
           } else {
             Vac.alert("移除失败");
           }
@@ -2152,8 +2152,7 @@ export default {
         success: function (data) {
           $("#add-modal").modal("hide");
           if (data.respCode === "0000") {
-            Vac.alert(data.respMsg);
-            _this.getCases();
+            _this.getCases(true);
             // _this.alertShow = true;
             // _this.tooltipMessage = '添加成功';
             _this.$nextTick(() => {
@@ -2288,7 +2287,7 @@ export default {
         },
       });
     },
-    getCases() {
+    getCases(isAdd, isFirst) {
       var _this = this;
       var data = {
         caselibId: _this.caselibId,
@@ -2307,79 +2306,83 @@ export default {
           if ("0000" != data.respCode) {
             Vac.alert(data.respMsg);
           } else {
-            console.log();
-            _this.testCaseList = data.executeInstanceResult.testCaseList;
-            _this.testSceneList = data.executeInstanceResult.testSceneList;
-            _this.$nextTick(() => {
-              _this.setDraggable();
-            });
+            console.log(isAdd, data.executeInstanceResult.testSceneList,data.executeInstanceResult.testSceneList.length !== 0, isFirst,'节点');
             /*if(!(data.testCaseList && data.testCaseList.length)) {
-                            // Vac.alert('未查询到相关的用例信息！')
+              // Vac.alert('未查询到相关的用例信息！')
                             return;
                         }*/
-            if (!(_this.testSceneList && _this.testSceneList.length)) {
+            if ((isAdd &&(data.executeInstanceResult.testSceneList[0].testCaseList === null || data.executeInstanceResult.testSceneList[0].testCaseList.length == 0))) {
               // Vac.alert('未查询到相关的场景信息！')
-              return;
-            }
-            _this.caseIds.length = 0;
-            _this.flowNodeIds.clear();
-            if (_this.testCaseList != null) {
-              _this.testCaseList.forEach((value) => {
-                Vac.pushNoRepeat(_this.caseIds, value.caseId);
-                if (value.caseCompositeType == 2) {
-                  let arr = [];
-                  for (let flowNode of value.flowNodes) {
-                    arr.push(+flowNode.flowNodeId);
-                  }
-                  _this.flowNodeIds.set(+value.caseId, arr);
-                }
+              return _this.$message.warning('当前场景下无用例，不允许添加');
+            }else {
+              _this.testCaseList = data.executeInstanceResult.testCaseList;
+              _this.testSceneList = data.executeInstanceResult.testSceneList;
+              _this.$nextTick(() => {
+                _this.setDraggable();
               });
+              _this.caseIds.length = 0;
+              _this.flowNodeIds.clear();
+              if (_this.testCaseList != null) {
+                _this.testCaseList.forEach((value) => {
+                  Vac.pushNoRepeat(_this.caseIds, value.caseId);
+                  if (value.caseCompositeType == 2) {
+                    let arr = [];
+                    for (let flowNode of value.flowNodes) {
+                      arr.push(+flowNode.flowNodeId);
+                    }
+                    _this.flowNodeIds.set(+value.caseId, arr);
+                  }
+                });
+              }
             }
-          }
-
-          _this.sceneIds.length = [];
-          _this.sceneCaseMap.clear();
-          _this.flowNodesMap.clear();
-          _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
-          if (_this.testSceneList) {
-            for (var j = 0; j < _this.testSceneList.length; j++) {
-              var scene = _this.testSceneList[j];
-              // sceneIds save the id of scene  [4,5,6]
-              _this.sceneIds.push(scene.sceneId);
-              var caselist = [];
-              for (var i = 0; i < scene.testCaseList.length; i++) {
-                var c = scene.testCaseList[i];
-                // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
-                caselist.push(scene.sceneId + "-" + c.caseId);
-
-                if (c.caseCompositeType == 2) {
-                  _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
-                  let flowNodes = [];
-                  for (let flowNode of c.flowNodes) {
-                    // caselist also save the flowNodeId in flowCase in the form of
-                    //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
-                    caselist.push(
-                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
-                    );
-                    flowNodes.push(
-                      scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+  
+            _this.sceneIds.length = [];
+            _this.sceneCaseMap.clear();
+            _this.flowNodesMap.clear();
+            _this.testSceneList.sort(_this.compare("orderNum")); //更新排序后的场景列表
+            if (_this.testSceneList) {
+              for (var j = 0; j < _this.testSceneList.length; j++) {
+                var scene = _this.testSceneList[j];
+                // sceneIds save the id of scene  [4,5,6]
+                _this.sceneIds.push(scene.sceneId);
+                var caselist = [];
+                for (var i = 0; i < scene.testCaseList.length; i++) {
+                  var c = scene.testCaseList[i];
+                  // caselist save the caseid in the form of  'sceneId-caseId' ['3-45','3-56']
+                  caselist.push(scene.sceneId + "-" + c.caseId);
+  
+                  if (c.caseCompositeType == 2) {
+                    _this.sceneCaseIds.push(scene.sceneId + "-" + c.caseId);
+                    let flowNodes = [];
+                    for (let flowNode of c.flowNodes) {
+                      // caselist also save the flowNodeId in flowCase in the form of
+                      //  'sceneId-caseId-flowNodeId' ['3-45-34','3-56-55']
+                      caselist.push(
+                        scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                      );
+                      flowNodes.push(
+                        scene.sceneId + "-" + c.caseId + "-" + flowNode.flowNodeId
+                      );
+                    }
+                    // flowNodesMap save the map of caseId between flowNodes in the following form
+                    // {
+                    //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
+                    // }
+                    _this.flowNodesMap.set(
+                      scene.sceneId + "-" + c.caseId,
+                      flowNodes
                     );
                   }
-                  // flowNodesMap save the map of caseId between flowNodes in the following form
-                  // {
-                  //  	'sceneId-caseId':  [ sceneId-caseId-flowNodeId,  sceneId-caseId-flowNodeId ]
-                  // }
-                  _this.flowNodesMap.set(
-                    scene.sceneId + "-" + c.caseId,
-                    flowNodes
-                  );
+                }
+                // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
+                // {
+                //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
+                // }
+                _this.sceneCaseMap.set(scene.sceneId, caselist);
+                if(isAdd) {
+                  Vac.alert(data.respMsg);
                 }
               }
-              // sceneCaseMap save the map of sceneId between flowNodeId and caseId in the following form
-              // {
-              //  	'sceneId':  [ sceneId-caseId, sceneId-caseId-flowNodeId ]
-              // }
-              _this.sceneCaseMap.set(scene.sceneId, caselist);
             }
           }
         },

@@ -123,7 +123,16 @@ export default {
     console.log('transactmock',sessionStorage.getItem('userId'), this.companyId)
     this.loadExpectation();
   },
-  mounted() {},
+  mounted() {
+    console.log('mockmounted');
+  },
+  beforeRouteEnter (to, from, next) {
+    // ...
+    next(vm => {
+      vm.companyId = JSON.parse(localStorage.getItem('loginInfo')).companyId
+      vm.loadExpectation();
+    })
+  },
   //当动态路由切换时，vue为了节省内存，不会对已经注册的路由对象再次注册
   beforeRouterUpdate(to, from, next) {
     next();
