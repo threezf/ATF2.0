@@ -1,0 +1,1178 @@
+[
+  {
+    "id": 1,
+    "keyword": "getURL",
+    "explain": "进入指定网址",
+    "operation": "输入需要进入的网站",
+    "paramList": {
+      "param": "url",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 2,
+    "keyword": "Url",
+    "explain": "获取浏览器当前网址",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "U"
+  },
+  {
+    "id": 3,
+    "keyword": "Source",
+    "explain": "获取当前页面HTML源码",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 4,
+    "keyword": "Title",
+    "explain": "获取当前页面标题",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "T"
+  },
+  {
+    "id": 5,
+    "keyword": "closeBrowser",
+    "explain": "关闭所有浏览器进程",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 6,
+    "keyword": "returnAlert",
+    "explain": "返回弹窗文本值",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "R"
+  },
+  {
+    "id": 7,
+    "keyword": "getAllHandle",
+    "explain": "获取所有标签页句柄",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 8,
+    "keyword": "getAllUrl",
+    "explain": "获取所有标签页URL",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 9,
+    "keyword": "getAllSource",
+    "explain": "获取所有标签页HTML",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 10,
+    "keyword": "getAllCookie",
+    "explain": "获取所有Cookie",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 11,
+    "keyword": "deleteAllCookie",
+    "explain": "删除所有Cookie",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "D"
+  },
+  {
+    "id": 12,
+    "keyword": "getSpecificCookie",
+    "explain": "获取指定name的Cookie",
+    "operation": "输入name",
+    "paramList": {
+      "param": "name",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 13,
+    "keyword": "deleteSpecificCookie",
+    "explain": "删除指定name的Cookie",
+    "operation": "输入name",
+    "paramList": {
+      "param": "name",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "D"
+  },
+  {
+    "id": 14,
+    "keyword": "addSpecificCookie",
+    "explain": "增加指定Cookie",
+    "operation": "输入cookie",
+    "paramList": {
+      "param": "coo",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "A"
+  },
+  {
+    "id": 15,
+    "keyword": "closeAlert",
+    "explain": "关闭弹窗",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "cookie"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 16,
+    "keyword": "screenFile",
+    "explain": "截图保存在c盘",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 17,
+    "keyword": "runJavaScript",
+    "explain": "执行js程序",
+    "operation": "输入js程序及name",
+    "paramList": {
+      "param": "js/name",
+      "type": "JavascriptExecutor/str"
+    },
+    "remark": "",
+    "category": "R"
+  },
+  {
+    "id": 18,
+    "keyword": "back",
+    "explain": "浏览器页面后退",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "B"
+  },
+  {
+    "id": 19,
+    "keyword": "forward",
+    "explain": "浏览器页面前进",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "F"
+  },
+  {
+    "id": 20,
+    "keyword": "refresh",
+    "explain": "刷新浏览器",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "R"
+  },
+  {
+    "id": 21,
+    "keyword": "GetBrowserSize",
+    "explain": "打印并返回当前浏览器大小",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 22,
+    "keyword": "setSize",
+    "explain": "设置页面大小",
+    "operation": "输入宽和高",
+    "paramList": {
+      "param": "weight/height",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 23,
+    "keyword": "setPosition",
+    "explain": "设置浏览器位置",
+    "operation": "输入宽和高",
+    "paramList": {
+      "param": "weight/height",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 24,
+    "keyword": "getBrowserPosition",
+    "explain": "获取当前浏览器位置",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 25,
+    "keyword": "getAllTitle",
+    "explain": "获取所有标签页标题",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 26,
+    "keyword": "maximize",
+    "explain": "最大化浏览器",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "M"
+  },
+  {
+    "id": 27,
+    "keyword": "switchToOldHandle",
+    "explain": "浏览器回到原来选项卡并关闭其他选项卡(这里默认原选项卡为第一个)",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 28,
+    "keyword": "switchToNewHandle",
+    "explain": "Selenium切换到当前选项卡",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 29,
+    "keyword": "switchToSpecificHandle",
+    "explain": "selenium切换到指定选项卡",
+    "operation": "输入指定标签页",
+    "paramList": {
+      "param": "num",
+      "type": "int"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 30,
+    "keyword": "switchToNewHandleNoClose",
+    "explain": "Selenium切换到当前选项卡（不关闭原来的选项卡）",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 31,
+    "keyword": "switchToIFrameByIndex",
+    "explain": "selenium切换iframe",
+    "operation": "输入需要进入iframe数",
+    "paramList": {
+      "param": "index",
+      "type": "int"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 32,
+    "keyword": "switchToNewIFrameByXpath",
+    "explain": "根据xpath切换frame",
+    "operation": "输入xpath",
+    "paramList": {
+      "param": "xpath",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 33,
+    "keyword": "switchToIframeByIdOrName",
+    "explain": "根据id或name修改frame",
+    "operation": "输入id或name",
+    "paramList": {
+      "param": "idOrName",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 34,
+    "keyword": "sleep",
+    "explain": "页面等待",
+    "operation": "输入等待时间",
+    "paramList": {
+      "param": "waitTime",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 35,
+    "keyword": "ScrrollBy",
+    "explain": "页面前往指定坐标",
+    "operation": "输入宽和高",
+    "paramList": {
+      "param": "weight/height",
+      "type": "int"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 36,
+    "keyword": "seleniumCheckText",
+    "explain": "检查元素的text",
+    "operation": "检查页面元素text",
+    "paramList": {
+      "param": "type/path/rightText",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 37,
+    "keyword": "seleniumCheckValue",
+    "explain": "检查元素的value",
+    "operation": "检查页面元素value",
+    "paramList": {
+      "param": "type/path/rightText",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 38,
+    "keyword": "checkListAllOptionTextOrValue",
+    "explain": "检查下拉框所有选项的text或value",
+    "operation": "检查下拉框所有选项的text或value",
+    "paramList": {
+      "param": "type/path/pattern/rightText",
+      "type": "定位属性类型/定位属性值/text或value/预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 39,
+    "keyword": "checkListSelectedOptionsTextOrValue",
+    "explain": "检查所有下拉框被选中选项的text或value",
+    "operation": "检查所有下拉框被选中选项的text或value",
+    "paramList": {
+      "param": "type/path/pattern/rightText",
+      "type": "定位属性类型/定位属性值/text或value/预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 40,
+    "keyword": "checkVisibility",
+    "explain": "检查元素的可见性（多个元素）",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "type/path",
+      "type": "定位属性类型/定位属性值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 41,
+    "keyword": "checkAlert",
+    "explain": "检查是否有弹出框",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 42,
+    "keyword": "checkClickable",
+    "explain": "检查元素是否可被点击或编辑",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "type/path",
+      "type": "定位属性类型/定位属性值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 43,
+    "keyword": "checkPageContainText",
+    "explain": "检查页面是否包含了某文本",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 44,
+    "keyword": "checkUrlTitle",
+    "explain": "检查浏览器标题是否一致",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 45,
+    "keyword": "checkUrl",
+    "explain": "检查浏览器网址是否一致",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 46,
+    "keyword": "checkUrlContain",
+    "explain": "检查浏览器网址是否包含相应文本",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 47,
+    "keyword": "checkAlertText",
+    "explain": "检查弹窗文本(仅支持HTML原生的)",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 48,
+    "keyword": "checkMySqlEqualText",
+    "explain": "检查数据库查询文本中是否含有",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 49,
+    "keyword": "SelectAll",
+    "explain": "全选按钮",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 50,
+    "keyword": "selectByVisibleText",
+    "explain": "通过选项可见的的文本选择",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "visibleText",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "S"
+  },
+  {
+    "id": 51,
+    "keyword": "selectByIndex",
+    "explain": "通过选项排序的序号选择",
+    "operation": "输入序号",
+    "paramList": {
+      "param": "index",
+      "type": "int"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "S"
+  },
+  {
+    "id": 52,
+    "keyword": "multiSelectByVisibleTextReg",
+    "explain": "通过输入选项可见文本的正则表达式进行多个选择",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "visibleTextReg",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "M"
+  },
+  {
+    "id": 53,
+    "keyword": "checkAllOptionsEqualText",
+    "explain": "检查所有选项的text是否符合预期值",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 54,
+    "keyword": "checkAllOptionsIncludeText",
+    "explain": "检查所有选项的text是否包含目标文本",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 55,
+    "keyword": "checkAllOptionsMatchTextReg",
+    "explain": "检查所有选项的text是否符合正则表达式",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 56,
+    "keyword": "cancelSelectByVisibleText",
+    "explain": "取消选择某选项（通过可见文本）",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 57,
+    "keyword": "cancelSelectByIndex",
+    "explain": "取消选择某选项（通过序号）",
+    "operation": "输入序号",
+    "paramList": {
+      "param": "index",
+      "type": "int"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 58,
+    "keyword": "cancelMultSelectByVisibleTextReg",
+    "explain": "取消选择多个选项（通过可见文本正则表达式）",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "visibleTextReg",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 59,
+    "keyword": "tryLocateObject",
+    "explain": "一种特殊处理，当用户定位到checkbox某个选项时也能向上找到整个的组",
+    "operation": "输入时间",
+    "paramList": {
+      "param": "timeOutMilliSec",
+      "type": "int"
+    },
+    "remark": "",
+    "category": "T"
+  },
+  {
+    "id": 60,
+    "keyword": "datepickSet",
+    "explain": "直接将日期字符串输入进日期输入框",
+    "operation": "输入日期字符串",
+    "paramList": {
+      "param": "dateStr",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "D"
+  },
+  {
+    "id": 61,
+    "keyword": "datepickClear",
+    "explain": "清空日期选择框",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "D"
+  },
+  {
+    "id": 62,
+    "keyword": "datepickPick",
+    "explain": "模拟手工操作，点击各个控件，实际要根据日期选择框的实际时间字符串格式进行修改，仅适用于选择年月日的标准日期框",
+    "operation": "输入日期标准格式(yy-MM-dd)",
+    "paramList": {
+      "param": "dateStr/dateFormat",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "D"
+  },
+  {
+    "id": 63,
+    "keyword": "PickWithRange",
+    "explain": "简单的日期范围选择框,展开是两个日历控件组合在一起的大控件菜单",
+    "operation": "输入启示日期和终止或者直接输入日期",
+    "paramList": {
+      "param": "beginDateStr/endDateStr/dateFormat",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "P"
+  },
+  {
+    "id": 64,
+    "keyword": "checkDateEqualDateStr",
+    "explain": "检查日期选择框内容是否符合",
+    "operation": "输入期望日期",
+    "paramList": {
+      "param": "dateStr",
+      "type": "预期值"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 65,
+    "keyword": "handleYearTextOrMonthText",
+    "explain": "处理年份或月份字符串，转化为年份或月份数字返回",
+    "operation": "输入年或月",
+    "paramList": {
+      "param": "text/type",
+      "type": "str/月或年"
+    },
+    "remark": "",
+    "category": "H"
+  },
+  {
+    "id": 66,
+    "keyword": "tryLocateObject",
+    "explain": "一种特殊处理，当用户定位到datepicker某个内部选项时也能向上找到整个的datepicker",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "T"
+  },
+  {
+    "id": 67,
+    "keyword": "edit",
+    "explain": "输入框输入",
+    "operation": "在输入框内输入内容",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "E"
+  },
+  {
+    "id": 68,
+    "keyword": "inputAlert",
+    "explain": "向弹框中输入值",
+    "operation": "向弹框中输入值",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "I"
+  },
+  {
+    "id": 69,
+    "keyword": "editSet",
+    "explain": "在输入框输入内容",
+    "operation": "在输入框输入内容",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "E"
+  },
+  {
+    "id": 70,
+    "keyword": "editClear",
+    "explain": "清空输入框",
+    "operation": "清空输入框",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "E"
+  },
+  {
+    "id": 71,
+    "keyword": "Select",
+    "explain": "在{}中选择项",
+    "operation": "输入选择内容",
+    "paramList": {
+      "param": "itemPattern",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 72,
+    "keyword": "MultiSelect",
+    "explain": "在{}中选择项",
+    "operation": "输入选择内容",
+    "paramList": {
+      "param": "itemPattern",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "M"
+  },
+  {
+    "id": 73,
+    "keyword": "cancelSelect",
+    "explain": "在{}中取消选择项",
+    "operation": "输入取消选择的内容",
+    "paramList": {
+      "param": "itemPattern",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 74,
+    "keyword": "Click",
+    "explain": "点击",
+    "operation": "点击",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 75,
+    "keyword": "DblClick",
+    "explain": "双击",
+    "operation": "双击",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "D"
+  },
+  {
+    "id": 76,
+    "keyword": "expandList",
+    "explain": "打开下拉框",
+    "operation": "打开下拉框",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "E"
+  },
+  {
+    "id": 77,
+    "keyword": "checkText",
+    "explain": "检查元素文本或value",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "type/path/rightText",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 78,
+    "keyword": "checkClickable",
+    "explain": "检查元素是否可以被点击",
+    "operation": "检查元素是否可以被点击",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 79,
+    "keyword": "clearAllSelectByButton",
+    "explain": "通过按钮点击取消所有选择",
+    "operation": "仅限于当select框拥有取消按钮时才可以使用此方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 80,
+    "keyword": "SelectLastOption",
+    "explain": "选择最后一个选项",
+    "operation": "在下拉框中选择最后一个选项",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "S"
+  },
+  {
+    "id": 81,
+    "keyword": "checkSelectedOptionsEqualText",
+    "explain": "检查选中选项的text",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 82,
+    "keyword": "checkSelectedOptionsEqualValue",
+    "explain": "检查选中选项的值value",
+    "operation": "输入元素",
+    "paramList": {
+      "param": "rightText",
+      "type": "预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "C"
+  },
+  {
+    "id": 83,
+    "keyword": "getFirstSelectedOptionText",
+    "explain": "获取第一个被选中选项的文本",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 84,
+    "keyword": "getFirstSelectedOptionValue",
+    "explain": "获取第一个被选中选项的value",
+    "operation": "直接加入方法",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 85,
+    "keyword": "checkSelectable",
+    "explain": "检查是否可被选择",
+    "operation": "检查下拉框是否可被选择",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 86,
+    "keyword": "getValue",
+    "explain": "获取文本框的value",
+    "operation": "获取文本框的value",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "category": "G"
+  },
+  {
+    "id": 87,
+    "keyword": "checkEditable",
+    "explain": "检查是否可编辑",
+    "operation": "检查输入框是否可被编辑",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "C"
+  },
+  {
+    "id": 88,
+    "keyword": "append",
+    "explain": "附加值",
+    "operation": "在输入框中附加值",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "A"
+  },
+  {
+    "id": 89,
+    "keyword": "forceSet",
+    "explain": "强制性填入值",
+    "operation": "在输入框中输入值",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "F"
+  },
+  {
+    "id": 90,
+    "keyword": "sleepForOneSecond",
+    "explain": "睡眠一秒",
+    "operation": "自动开始等待一秒",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 91,
+    "keyword": "getScreenCapture",
+    "explain": "截图",
+    "operation": "截图",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "G"
+  },
+  {
+    "id": 92,
+    "keyword": "scrrollBy",
+    "explain": "页面滚动",
+    "operation": "页面滚动",
+    "paramList": {
+      "param": "***",
+      "type": "***"
+    },
+    "remark": "",
+    "category": "S"
+  },
+  {
+    "id": 93,
+    "keyword": "radioSelectByIndex",
+    "explain": "根据序号选择radio",
+    "operation": "根据序号选择radio",
+    "paramList": {
+      "param": "index",
+      "type": "int"
+    },
+    "remark": "",
+    "category": "R"
+  },
+  {
+    "id": 94,
+    "keyword": "radioSelectByVisibleText",
+    "explain": "根据选项文本选择radio",
+    "operation": "根据选项文本选择radio",
+    "paramList": {
+      "param": "text",
+      "type": "str"
+    },
+    "remark": "",
+    "category": "R"
+  },
+  {
+    "id": 95,
+    "keyword": "WebRadioClick",
+    "explain": "点击table里面某一个单元格的radio，预先写好了radio的定位属性",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} \"列的单选钮\"",
+    "paramList": {
+      "param": "element/rowIndex/colIndex",
+      "type": "str/int/int"
+    },
+    "remark": "",
+    "category": "W"
+  },
+  {
+    "id": 96,
+    "keyword": "WebCheckBoxSet",
+    "explain": "选择table单元格里的某个checkbox，预先填写好了checkbox的定位参数",
+    "operation": "在表格{{element}}中选择第{{rowIndex}}行第{{colIndex}} 列的复选框状态为\" {{status}}",
+    "paramList": {
+      "param": "element/rowIndex/colIndex/status",
+      "type": "str/int/int/str"
+    },
+    "remark": "",
+    "category": "W"
+  },
+  {
+    "id": 97,
+    "keyword": "WebButtonClick",
+    "explain": "点击表格内某个单元格内的某个按钮，需要传入按钮的定位xpath",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} 列的按钮\" ",
+    "paramList": {
+      "param": "element/rowIndex/colIndex/status",
+      "type": "str/int/int/str"
+    },
+    "remark": "",
+    "category": "W"
+  },
+  {
+    "id": 98,
+    "keyword": "WebLinkClick",
+    "explain": "点击某个单元格里的链接，需要填写链接的定位属性",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} \"列的链接\"",
+    "paramList": {
+      "param": "element/rowIndex/colIndex",
+      "type": "str/int/int"
+    },
+    "remark": "",
+    "category": "W"
+  }
+]
