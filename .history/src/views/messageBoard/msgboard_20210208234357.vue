@@ -2,6 +2,16 @@
 <div class="page-inner">
     <el-container>
         <el-main>
+            <el-row style="margin-bottom:10px">
+                <el-col :span="4">
+                    <el-input size="small" v-model="searchInput" placeholder="请输入搜索内容"></el-input>
+                </el-col>
+                <el-col :span="20">
+                    <el-button @click='getTestProject(1)' icon="el-icon-setting" size="small" type="primary">
+                        搜索
+                    </el-button>
+                </el-col>
+            </el-row>
             <el-table size="medium" stripe :data="msgBoardList.slice((currentPage - 1) * pageSize, currentPage*pageSize)" border class='table'>
                 <el-table-column label="编号" prop="messageId" width="50px" align="center" >
                 </el-table-column>
@@ -33,10 +43,7 @@
                             style="margin-bottom:10px;width:100%;height:40px"
                             >
                         </el-input>
-						<div id="demo1"></div>
-                        <button type="button" class="btn" @click="getEditorData">获取当前内容</button>
-                        <h3>内容预览</h3>
-                        <textarea name="" id="" cols="170" rows="20" readonly v-model="editorData"></textarea>
+						<div ref="editor"></div>
                         <div class="bottom">
                             <el-button
                             class="submitbutton"
@@ -81,22 +88,26 @@ export default {
             dialogVisible: false,
 			imgURL:"",
             editor: null,
-            editorData: ''
+            isClear: false,
+            searchInput:""
         }
 
     },
     mounted() {
-    const editor = new wangEditor(`#demo1`)
+        const editor = new wangEditor(this.$refs.editor)
 
-    // 配置 onchange 回调函数，将数据同步到 vue 中
-    editor.config.onchange = (newHtml) => {
-       this.editorData = newHtml
-    }
-
-    // 创建编辑器
-    editor.create()
-
-    this.editor = editor
+        //限制图片上传大小
+        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+        //使用 base64 格式保存图片
+        editor.config.uploadImgShowBase64 = true
+        //限制图片类型
+        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+        editor.config.showLinkImg = false
+        // 取消自动 focus
+        editor.config.focus = false
+        // 创建编辑器
+        editor.create()
+        this.editor = editor
     },
     components: {
         wangEditor
@@ -106,16 +117,11 @@ export default {
 
     },
     beforeDestroy() {
-    // 调用销毁 API 对当前编辑器实例进行销毁
-    this.editor.destroy()
-    this.editor = null
+        // 调用销毁 API 对当前编辑器实例进行销毁
+        this.editor.destroy()
+        this.editor = null
     },
     methods: {
-        getEditorData() {
-        // 通过代码获取编辑器内容
-        let data = this.editor.txt.html()
-        alert(data)
-        },
         handleRadioChange(val) {
             this.row = val
         },
@@ -145,107 +151,106 @@ export default {
           });
         });
       },
-        // 添加留言帖
-        addMsg() {
-            let submitForm = {}
-                submitForm.userId = sessionStorage.getItem('userId')
-                submitForm.username = sessionStorage.getItem('username')
-            if(this.message !== ''&&this.title !== ''){
-                submitForm.messageContent = this.message
-                submitForm.messageTitle = this.title
-            Request({
-                url: '/messageBoxController/insertMessage',
-                method: 'post',
-                params: submitForm
-            }).then((res) => {
-                this.$alert('添加留言成功', '成功', {
-                    confirmButtonText: '确定',
+    // 添加留言帖
+    addMsg() {
+        let submitForm = {}
+            this.message = this.editor.txt.html()
+            submitForm.userId = sessionStorage.getItem('userId')
+            submitForm.username = sessionStorage.getItem('username')
+        if(this.message !== ''&&this.title !== ''){
+            submitForm.messageContent = this.message
+            submitForm.messageTitle = this.title
+        Request({
+            url: '/messageBoxController/insertMessage',
+            method: 'post',
+            params: submitForm
+        }).then((res) => {
+            this.getTestProject()
+            this.title=""
+            this.editor.txt.clear()
+            this.$message.success('留言成功')
+        }, (err) => {
+            this.$alert('添加留言失败', '失败', {
+                confirmButtonText: '确定',
+            });
+        }).catch((err) => {
+            this.$alert('添加留言失败', '失败', {
+                confirmButtonText: '确定',
+            });
+        })
+        }else {
+            this.$alert('留言不能为空', '失败', {
+                confirmButtonText: '确定',
                 });
-                this.getTestProject()
-                this.message=""
-                this.title=""
-            }, (err) => {
-                this.$alert('添加留言失败', '失败', {
-                    confirmButtonText: '确定',
-                });
-            }).catch((err) => {
-                this.$alert('添加留言失败', '失败', {
-                    confirmButtonText: '确定',
-                });
-            })
-            }else {
-                this.$alert('留言不能为空', '失败', {
-                    confirmButtonText: '确定',
-                    });
+        }
+    },
+    // 查看留言
+    toDisplayMessage(row) {
+        sessionStorage.setItem("messageId", row.messageId) //存储messageId到sessionstorage
+        console.log('messageId', row.messageId)
+        this.$router.push({
+            // path: '/messageBoard/msgdetail'
+            name: 'MsgDetail'
+        })
+    },
+    // 删除留言
+    deletemsg() {
+        Request({
+            url: '/messageBoxController/deleteMessage',
+            method: 'post',
+            params: {
+                messageId: this.selectedId,
             }
+        }).then((res) => {
+            this.getTestProject()
+            this.$alert('删除留言成功', '成功', {
+                confirmButtonText: '确定',
+            });
+        }, (err) => {
+            this.$message(res.respMsg)
+            console.log(err)
+            this.$alert('您没有权限删除', '失败', {
+                confirmButtonText: '确定',
+            });
+        }).catch((err) => {
+            console.log(err)
+            this.$alert('您没有权限删除', '失败', {
+                confirmButtonText: '确定',
+            });
+        })
+    },
+    //展示所有留言
+    getTestProject() {
+        Request({
+            url: '/messageBoxController/displayTitle',
+            method: 'post',
+            // params: this.params
+        }).then((res) => {
+            this.msgBoardList = res.list
+            this.listSort()
+            this.totalCount = res.numberOfTitles
+            console.log(this.msgBoardList)
+        }, (err) => {
+            this.$message(res.respMsg)
+            console.log(err)
+        }).catch((err) => {
+            console.log(err)
+        })
+    },
+    //列表排序函数,调用相应排序方法
+        listSort: function() {
+                this.msgBoardList.sort(this.desc_oder)
         },
-        // 查看留言
-        toDisplayMessage(row) {
-            sessionStorage.setItem("messageId", row.messageId) //存储messageId到sessionstorage
-            console.log('messageId', row.messageId)
-            this.$router.push({
-                // path: '/messageBoard/msgdetail'
-                name: 'MsgDetail'
-            })
-        },
-        // 删除留言
-        deletemsg() {
-            Request({
-                url: '/messageBoxController/deleteAnswer',
-                method: 'post',
-                params: {
-                    messageId: this.selectedId,
-                }
-            }).then((res) => {
-                this.getTestProject()
-                this.$alert('删除留言成功', '成功', {
-                    confirmButtonText: '确定',
-                });
-            }, (err) => {
-                this.$message(res.respMsg)
-                console.log(err)
-                this.$alert('您没有权限删除', '失败', {
-                    confirmButtonText: '确定',
-                });
-            }).catch((err) => {
-                console.log(err)
-                this.$alert('您没有权限删除', '失败', {
-                    confirmButtonText: '确定',
-                });
-            })
-        },
-        //展示所有留言
-        getTestProject() {
-            Request({
-                url: '/messageBoxController/displayTitle',
-                method: 'post',
-                // params: this.params
-            }).then((res) => {
-                this.msgBoardList = res.list
-                this.listSort()
-                this.totalCount = res.numberOfTitles
-                console.log(this.msgBoardList)
-            }, (err) => {
-                this.$message(res.respMsg)
-                console.log(err)
-            }).catch((err) => {
-                console.log(err)
-            })
-        },
-        //列表排序函数,调用相应排序方法
-            listSort: function() {
-                    this.msgBoardList.sort(this.desc_oder)
-            },
 
-            /**
-             * 编号降序函数
-             * @param {Object} a 第一个留言
-             * @param {Object} b 第二个留言
-             */
-            desc_oder: function(a, b) {
-             //这里注意传入的参数为对象，而我们要比较的是messageId
-                return b.messageId - a.messageId
-            },
+        /**
+         * 编号降序函数
+         * @param {Object} a 第一个留言
+         * @param {Object} b 第二个留言
+         */
+        desc_oder: function(a, b) {
+            //这里注意传入的参数为对象，而我们要比较的是messageId
+            return b.messageId - a.messageId
+        },
     }
 }
 </script>
