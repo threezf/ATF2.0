@@ -20,13 +20,8 @@ var Path = [{
     status: "",
     pre: 1
   }, {
-    name: "添加UI及元素",
-    pathName: "TransactDetail/1",
-    status: "",
-    pre: 2
-  }, {
-    name: "配置脚本",
-    pathName: "TransactDetail/2",
+    name: "配置接口",
+    pathName: "InterfacesManagement",
     status: "",
     pre: 2
   }]
@@ -58,27 +53,27 @@ var Path = [{
   }]
 }, {
   name: "测试执行",
-  pathName: "TestplanExecute",
+  pathName: "testplanExecute",
   status: false,
   pre: 3,
   item: [{
     name: "添加测试计划",
-    pathName: "TestplanExecute",
+    pathName: "testplanExecute",
     status: "",
     pre: 3
   }, {
     name: "添加待执行场景",
-    pathName: "TestplanExecute",
+    pathName: "testplanExecute",
     status: "",
     pre: 3
   }, {
     name: "选择执行机",
-    pathName: "TestplanExecute",
+    pathName: "testplanExecute",
     status: "",
     pre: 3
   }, {
     name: "执行",
-    pathName: "TestplanExecute",
+    pathName: "testplanExecute",
     status: "",
     pre: 3
   }]

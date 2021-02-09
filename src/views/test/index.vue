@@ -1,45 +1,13 @@
 /**
 测试页面，作为二级路由主页面
  */
-<template>
-    <div class="page-outer">
-        <div class="el-select" @click="clickSelect">
-            <div class="el-input el-input--suffix is-focus">
-                <input type="text" readonly="readonly" autocomplete="off" placeholder="请选择" class="el-input__inner" v-model="selectedListKey">
-                <span class="el-input__suffix">
-                    <span class="el-input__suffix-inner">
-                        <i class="el-select__caret el-input__icon el-icon-arrow-up is-reverse"></i>
-                    </span>
-                </span>
-            </div>
-        </div>
-        <div v-show="isShow" class="el-select-dropdown el-popper" style="min-width: 220px; transform-origin: center top; z-index: 2007; position: absolute; top: 172px; left: 102px;" x-placement="bottom-start">
-            <div class="el-scrollbar" style="">
-                <div class="el-select-dropdown__wrap el-scrollbar__wrap" style="margin-bottom: -15px; margin-right: -15px;">
-                    <vue-drag-select v-model="selectedList" value-key="name" :item-margin="[0, 10, 10, 0]" ref="dragSelect" class="el-scrollbar__view el-select-dropdown__list content-wrap"><!---->
-                        <template v-for="(item, index) in dataList" >
-                            <drag-select-option :key="index" :value="item" :item-index="index" class="el-select-dropdown__item item"> 
-                                <div class="item-self">
-                                    <span>{{item.id}}</span>
-                                </div>
-                            </drag-select-option>
-                        </template>
-                    </vue-drag-select>
-                </div>
-
-                <div class="el-scrollbar__bar is-horizontal">
-                    <div class="el-scrollbar__thumb" style="transform: translateX(0%);">
-                    </div>
-                </div>
-
-                <div class="el-scrollbar__bar is-vertical">
-                    <div class="el-scrollbar__thumb" style="transform: translateY(0%);">
-                    </div>
-                </div>
-            </div><!---->
-            <div x-arrow="" class="popper__arrow" style="left: 35px;">
-            </div>
-        </div>
+<template >
+    <div @keyup.right="handleArrowRight">
+        <el-carousel ref="carousel" @keyup.enter="handleArrowLeft" @change="handleChange" :autoplay="false">
+            <el-carousel-item v-for="item in 4" :key="item">
+                <h3>{{ item }}</h3>
+            </el-carousel-item>
+        </el-carousel>
     </div>
 </template>
 
@@ -47,53 +15,34 @@
     export default {
         data() {
             return {
-                selectedList: [],
-                isShow: false,
-                dataList: [{
-                    id: '黄金糕'
-                }, {
-                    id: '双皮奶'
-                }, {
-                    id: '蚵仔煎'
-                }, {
-                    id: '龙须面'
-                }, {
-                    id: '北京烤鸭'
-                }, {
-                    id: '黄金糕'
-                }, {
-                    id: '双皮奶'
-                }, {
-                    id: '蚵仔煎'
-                }, {
-                    id: '龙须面'
-                }, {
-                    id: '北京烤鸭'
-                }]
+
             }
         },
         methods: {
-            clickSelect() {
-                console.log('select')
-                this.isShow = !this.isShow
-            }
-        },
-        computed: {
-            selectedListKey() {
-                if(this.selectedList.length === 0) {
-                    return []
+            handleChange(val) {
+                console.log(val)
+            },
+            handleArrowLeft(event) {
+                console.log(event)
+                if(event.keyCode === 37) {
+                    console.log('arrow left')
+                    this.$refs.carousel.prev()
                 }
-                return this.selectedList.map(item => {
-                    return item.id
-                })
+                if(event.keyCode === 39) {
+                    console.log('arrow right')
+                    this.$refs.carousel.next()
+                }
             },
         },
-        mounted() {
-            let inner = document.querySelector('.select-wrapper')
-            inner.style.minHeight = ""
-            inner.style.cssText = ""
-            console.log(inner.style)
+        computed: {
+            
         },
+        mounted() {
+            window.addEventListener('keyup',this.handleArrowLeft)
+        },
+        destroyed() {
+            window.removeEventListener('keyup', this.handleArrowLeft)
+        }
     }
 </script>
 
@@ -101,37 +50,27 @@
     .page-outer {
         padding: 100px;
     }
-    .el-select {
-        width: 240px;
+    .el-carousel {
+        margin: 100px auto;
+        width: 800px;
     }
-    .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
-        background-color: #f5f7fa;
+    .el-carousel__item {
+        width: 800px;
     }
-    .el-select-dropdown__item {
-        font-size: 14px;
-        padding: 0 20px;
-        position: relative;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: #606266;
-        height: 34px;
-        line-height: 34px;
-        box-sizing: border-box;
-        cursor: pointer;
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 18px;
+        opacity: 0.75;
+        line-height: 300px;
+        text-align: center;
+        margin: 0;
     }
-    .el-scrollbar__wrap {
-        overflow: scroll;
-        height: 100%;
+    
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
     }
-    .item {
-        width: 80% !important; 
-        height: 30px !important; 
-        margin: 0px 5px 10px -10px !important; 
-        top: 0px !important; 
-        left: 0px !important;
-    }
-    .is-select {
-        background-color: #eee;
+    
+    .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
     }
 </style>

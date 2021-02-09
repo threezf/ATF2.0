@@ -10,6 +10,7 @@ import TestInfrastructure from './testInfrastructure.js'
 import SystemManagement from './systemManagement.js'
 import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
+import Test from '@/views/test'
 import QuicklyStart from './quicklyStart'
 import UI from '@/views/UIorCGI/ui'
 import CGI from '@/views/UIorCGI/CGI'
@@ -35,6 +36,7 @@ export default new Router({
         {
             path: '/login',
             name: 'Login',
+            // component: Test,
             component: Login,
             meta: {
                 name: '登录',

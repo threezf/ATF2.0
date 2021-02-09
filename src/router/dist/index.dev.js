@@ -11,7 +11,11 @@ var _vueRouter = _interopRequireDefault(require("vue-router"));
 
 var _index = _interopRequireDefault(require("@/views/login/index"));
 
+var _mobile = _interopRequireDefault(require("@/views/testProject/mobile"));
+
 var _rigester = _interopRequireDefault(require("@/views/login/rigester"));
+
+var _noReviewed = _interopRequireDefault(require("@/views/login/noReviewed"));
 
 var _index2 = _interopRequireDefault(require("@/views/index"));
 
@@ -23,13 +27,27 @@ var _testProject = _interopRequireDefault(require("./testProject.js"));
 
 var _recordFunction = _interopRequireDefault(require("./recordFunction"));
 
-var _quicklyStart = _interopRequireDefault(require("./quicklyStart"));
+var _test = _interopRequireDefault(require("@/views/test"));
 
-var _mobile=_interopRequireDefault(require("./mobile"));
+var _quicklyStart = _interopRequireDefault(require("./quicklyStart"));
 
 var _ui = _interopRequireDefault(require("@/views/UIorCGI/ui"));
 
 var _CGI = _interopRequireDefault(require("@/views/UIorCGI/CGI"));
+
+var _addition = _interopRequireDefault(require("./addition"));
+
+var _mockApi = _interopRequireDefault(require("@/views/testInfrastructure/mockApi"));
+
+var _PreView = _interopRequireDefault(require("@/views/testInfrastructure/mockAPIComponents/PreView"));
+
+var _Edit = _interopRequireDefault(require("@/views/testInfrastructure/mockAPIComponents/Edit"));
+
+var _Run = _interopRequireDefault(require("@/views/testInfrastructure/mockAPIComponents/Run"));
+
+var _msgboard = _interopRequireDefault(require("@/views/messageBoard/msgboard"));
+
+var _msgdetail = _interopRequireDefault(require("@/views/messageBoard/msgdetail"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -44,9 +62,11 @@ _vueRouter["default"].prototype.push = function push(location) {
 };
 
 var _default = new _vueRouter["default"]({
+  // mode: 'history',
   routes: [{
     path: '/login',
     name: 'Login',
+    // component: Test,
     component: _index["default"],
     meta: {
       name: '登录',
@@ -70,27 +90,95 @@ var _default = new _vueRouter["default"]({
       name: '首页'
     }
   }, {
+    path: '/noReceived',
+    name: 'NoReceived',
+    component: _noReviewed["default"],
+    meta: {
+      name: '待审核',
+      another: 'atf/interface',
+      hide: true
+    }
+  }, {
     path: '/',
     redirect: '/login',
     name: 'default',
     meta: {
       name: '首页'
     }
-  }, _systemManagement["default"], _testInfrastructure["default"], {
+  }, _testInfrastructure["default"], {
     path: '/testInfrastructure/ui',
     name: 'UI',
     component: _ui["default"],
     meta: {
-      name: 'UI测试'
+      name: 'UI测试',
+      another: 'atf/ui'
     }
   }, {
     path: '/testInfrastructure/cgi',
     component: _CGI["default"],
     name: 'CGI',
     meta: {
-      name: '接口测试'
+      name: '接口测试',
+      another: 'atf/interface'
     }
-  },_mobile["default"],_testProject["default"], _recordFunction["default"], _quicklyStart["default"]]
+  }, _testProject["default"], _systemManagement["default"], _quicklyStart["default"], _addition["default"], {
+    path: '/testProject/mobile',
+    name: 'Mobile',
+    component: _mobile["default"],
+    meta: {
+      name: '移动端测试',
+      another: 'atf/interface',
+      hide: true
+    }
+  }, {
+    path: '/mockApi',
+    name: "MockApi",
+    component: _mockApi["default"],
+    meta: {
+      name: "Mock API",
+      parent: "TestInfrastructure",
+      another: 'atf/interface'
+    },
+    children: [{
+      path: 'preview/:id',
+      name: 'Preview',
+      component: _PreView["default"],
+      meta: {
+        parent: 'TestInfrastructure',
+        hide: true
+      }
+    }, {
+      path: 'edit/:id',
+      name: 'Edit',
+      component: _Edit["default"],
+      meta: {
+        parent: 'TestInfrastructure',
+        hide: true
+      }
+    }, {
+      path: 'run/:id',
+      name: 'Run',
+      component: _Run["default"],
+      meta: {
+        parent: 'TestInfrastructure',
+        hide: true
+      }
+    }]
+  }, {
+    path: '/mssageboard',
+    name: 'MessageBoard',
+    component: _msgboard["default"],
+    meta: {
+      name: '留言板',
+      another: 'atf/interface'
+    }
+  }, {
+    path: 'msgdetail',
+    name: 'MsgDetail',
+    component: _msgdetail["default"],
+    meta: {// parent: 'MessageBoard'
+    }
+  }]
 });
 
 exports["default"] = _default;
