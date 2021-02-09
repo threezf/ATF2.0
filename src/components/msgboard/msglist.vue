@@ -124,6 +124,29 @@ export default {
         editorData: ''
     }
   },
+  beforeUpdate(){
+        if(this.editor!=null){
+            this.editor.destroy()
+            this.editor = null
+        }
+    },
+  updated() {
+      const editor = new wangEditor(this.$refs.editor)
+
+      //限制图片上传大小
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      //使用 base64 格式保存图片
+      editor.config.uploadImgShowBase64 = true
+      //限制图片类型
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
+      // 取消自动 focus
+      editor.config.focus = false
+      // 创建编辑器
+      editor.create()
+      this.editor = editor
+  
+  },
   mounted() {
       const editor = new wangEditor(this.$refs.editor)
 

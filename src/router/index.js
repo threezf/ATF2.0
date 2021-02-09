@@ -20,7 +20,6 @@ import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 import MessageBoard from '@/views/messageBoard/msgboard'
 import MsgDetail from '@/views/messageBoard/msgdetail'
-import HelpInfo from '@/views/help/helpInfo'
 
 
 Vue.use(Router)
@@ -119,7 +118,7 @@ export default new Router({
 			meta: {
 				name: "Mock API",
 				parent: "TestInfrastructure",
-                another: 'atf/interface'
+        another: 'atf/interface'
 			},
 			children: [
 				{
@@ -159,16 +158,7 @@ export default new Router({
 				name: '留言板',
 				another: 'atf/interface'
 			},
-        },
-        {
-            path: '/helpinfo',
-            name: 'HelpInfo',
-            component: HelpInfo,
-            meta: {
-                name: '帮助',
-                another: 'atf/interface'
-            },
-        },
+		},
 		{
 			path: 'msgdetail',
 			name: 'MsgDetail',
@@ -176,7 +166,6 @@ export default new Router({
 			meta: {
 				// parent: 'MessageBoard'
 			}
-        },
-        
+		},
     ]
 })
