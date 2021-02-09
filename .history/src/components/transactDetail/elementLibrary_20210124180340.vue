@@ -185,7 +185,7 @@ export default {
     },
     data() {
         return {
-            publishActionUrl: "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
+            publishActionUrl: "http://10.101.167.184:9090/atfcloud2.0a/elementRepository/batchImportElementAndUi" ,
             branchAddEleDialogFlag: false, // 批量添加的dialog
             userId: sessionStorage.getItem("userId"),
             fileList: [], // 上传文件列表
@@ -260,12 +260,12 @@ export default {
     methods: {
         // 录制工具下载
         downloadTools() {
-            window.location = "http://140.143.16.21:8080/atf-data/atf-recorder.zip"
+            window.location = "http://140.143.16.21:9090/atf-data/atf-recorder.zip"
             // window.location = "http://10.101.167.184:8080/atf-data/atf-recorder.zip"
         },
         downloadTemp() {
             let url =
-                "http://140.143.16.21:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" +
+                "http://140.143.16.21:9090/atfcloud2.0a/elementRepository/getExcelTemporary/" +
                 // "http://10.101.167.184:8080/atfcloud2.0a/elementRepository/getExcelTemporary/" +
                 this.autId;
             console.log(url);

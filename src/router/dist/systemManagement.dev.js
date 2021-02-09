@@ -9,19 +9,15 @@ var _index = _interopRequireDefault(require("@/views/systemManagement/index"));
 
 var _EnterpriseManagement = _interopRequireDefault(require("@/views/systemManagement/EnterpriseManagement"));
 
-var _AdministratorManagement = _interopRequireDefault(require("@/views/systemManagement/AdministratorManagement"));
-
 var _RoleManagement = _interopRequireDefault(require("@/views/systemManagement/RoleManagement"));
 
 var _MenuManagement = _interopRequireDefault(require("@/views/systemManagement/MenuManagement"));
 
-var _ProjectManagement = _interopRequireDefault(require("@/views/systemManagement/ProjectManagement"));
-
-var _ProjectManagerManagement = _interopRequireDefault(require("@/views/systemManagement/ProjectManagerManagement"));
-
-var _userManagement = _interopRequireDefault(require("@/views/systemManagement/userManagement"));
+var _usermanagement = _interopRequireDefault(require("@/views/systemManagement/usermanagement"));
 
 var _runnerManagement = _interopRequireDefault(require("@/views/systemManagement/runnerManagement"));
+
+var _automatedComponentManagement = _interopRequireDefault(require("@/views/systemManagement/automatedComponentManagement"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -34,7 +30,8 @@ var _default = {
   component: _index["default"],
   redirect: '/systemManagement/enterpriseManagement',
   meta: {
-    name: '系统管理'
+    name: '系统管理',
+    another: 'atf/system'
   },
   children: [{
     path: 'enterpriseManagement',
@@ -43,16 +40,8 @@ var _default = {
     meta: {
       name: '企业管理',
       parent: 'SystemManagement',
-      icon: 'el-icon-s-platform'
-    }
-  }, {
-    path: 'administratorManagement',
-    name: 'administratorManagement',
-    component: _AdministratorManagement["default"],
-    meta: {
-      name: '系统管理员管理',
-      parent: 'SystemManagement',
-      icon: 'el-icon-user-solid'
+      icon: 'el-icon-s-platform',
+      another: 'atf/company'
     }
   }, {
     path: 'roleManagement',
@@ -61,7 +50,8 @@ var _default = {
     meta: {
       name: '角色管理',
       parent: 'SystemManagement',
-      icon: 'el-icon-user'
+      icon: 'el-icon-user',
+      another: 'atf/role'
     }
   }, {
     path: 'menuManagement',
@@ -70,35 +60,28 @@ var _default = {
     meta: {
       name: '系统菜单',
       parent: 'SystemManagement',
-      icon: 'el-icon-menu'
-    }
-  }, {
-    path: 'projectManagement',
-    name: 'projectManagement',
-    component: _ProjectManagement["default"],
-    meta: {
-      name: '项目组管理',
-      parent: 'SystemManagement',
-      icon: 'el-icon-s-management'
-    }
-  }, {
-    path: 'projectManagerManagement',
-    name: 'ProjectManagerManagement',
-    component: _ProjectManagerManagement["default"],
-    meta: {
-      name: '项目经理管理',
-      parent: 'SystemManagement',
-      icon: 'el-icon-user',
-      hide: true
+      icon: 'el-icon-menu',
+      another: 'atf/menu'
     }
   }, {
     path: 'userManagement',
     name: 'userManagement',
-    component: _userManagement["default"],
+    component: _usermanagement["default"],
     meta: {
       name: '用户管理',
       parent: 'SystemManagement',
-      icon: 'el-icon-s-custom'
+      icon: 'el-icon-s-custom',
+      another: 'atf/user'
+    }
+  }, {
+    path: 'automatedComponentManagement',
+    name: 'AutomatedComponentManagement',
+    component: _automatedComponentManagement["default"],
+    meta: {
+      name: '自动化构件管理',
+      parent: 'TestInfrastructure',
+      icon: "el-icon-notebook-2",
+      another: 'atf/infrastructure'
     }
   }, {
     path: 'runnerManagement',
@@ -107,7 +90,8 @@ var _default = {
     meta: {
       name: '执行机管理',
       parent: 'SystemManagement',
-      icon: 'el-icon-setting'
+      icon: 'el-icon-setting',
+      another: 'atf/runner'
     }
   }]
 };
