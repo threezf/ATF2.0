@@ -2,16 +2,6 @@
 <div class="page-inner">
     <el-container>
         <el-main>
-            <el-row style="margin-bottom:10px">
-                <el-col :span="4">
-                    <el-input size="small" v-model="searchInput" placeholder="请输入搜索内容"></el-input>
-                </el-col>
-                <el-col :span="20">
-                    <el-button @click='getTestProject(1)' icon="el-icon-setting" size="small" type="primary">
-                        搜索
-                    </el-button>
-                </el-col>
-            </el-row>
             <el-table size="medium" stripe :data="msgBoardList.slice((currentPage - 1) * pageSize, currentPage*pageSize)" border class='table'>
                 <el-table-column label="编号" prop="messageId" width="50px" align="center" >
                 </el-table-column>
@@ -43,7 +33,7 @@
                             style="margin-bottom:10px;width:100%;height:40px"
                             >
                         </el-input>
-						<div ref="editor"></div>
+						<div id="editor1"></div>
                         <div class="bottom">
                             <el-button
                             class="submitbutton"
@@ -89,25 +79,51 @@ export default {
 			imgURL:"",
             editor: null,
             isClear: false,
-            searchInput:""
         }
 
     },
-    mounted() {
-        const editor = new wangEditor(this.$refs.editor)
+    beforeUpdate(){
+        this.editor.destroy()
+        this.editor = null
+    },
+    updated() {
+        if(this.editor==null){
+            const editor = new wangEditor(`#editor1`)
 
-        //限制图片上传大小
-        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-        //使用 base64 格式保存图片
-        editor.config.uploadImgShowBase64 = true
-        //限制图片类型
-        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        editor.config.showLinkImg = false
-        // 取消自动 focus
-        editor.config.focus = false
-        // 创建编辑器
-        editor.create()
-        this.editor = editor
+            //限制图片上传大小
+            editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+            //使用 base64 格式保存图片
+            editor.config.uploadImgShowBase64 = true
+            //限制图片类型
+            editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+            editor.config.showLinkImg = false
+            // 取消自动 focus
+            editor.config.focus = false
+            // 创建编辑器
+            editor.create()
+
+            this.editor = editor
+        }
+    
+    },
+    mounted() {
+        if(this.editor==null){
+            const editor = new wangEditor(`#editor1`)
+
+            //限制图片上传大小
+            editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+            //使用 base64 格式保存图片
+            editor.config.uploadImgShowBase64 = true
+            //限制图片类型
+            editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+            editor.config.showLinkImg = false
+            // 取消自动 focus
+            editor.config.focus = false
+            // 创建编辑器
+            editor.create()
+
+            this.editor = editor
+        }
     },
     components: {
         wangEditor
@@ -168,7 +184,9 @@ export default {
             this.getTestProject()
             this.title=""
             this.editor.txt.clear()
-            this.$message.success('留言成功')
+            this.$alert('添加留言成功', '成功', {
+                confirmButtonText: '确定',
+            });
         }, (err) => {
             this.$alert('添加留言失败', '失败', {
                 confirmButtonText: '确定',
