@@ -120,7 +120,7 @@ export default new Router({
 			meta: {
 				name: "Mock API",
 				parent: "TestInfrastructure",
-                another: 'atf/interface'
+        another: 'atf/interface'
 			},
 			children: [
 				{
