@@ -62,7 +62,8 @@
           url: '/testPlanController/queryScriptDebugTestPlan',
           method: 'POST',
           params: {
-            caseId
+            caseId,
+            scriptId: this.scriptId
           }
         }).then(res => {
           if(res.respCode === '0000') {

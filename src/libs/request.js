@@ -45,10 +45,11 @@ axios.interceptors.response.use(function (response) {
         console.log('返回码201', response)
         return response
     }
-    if(+response.data.respCode === 401) {
-        // alert('异地账号登录') // 待优化
-        window.location = "/index/index.html#/login"
-    }
+    // if(+response.data.respCode === 401) {
+    //     // alert('异地账号登录') // 待优化
+    //     // ElementUI.message.warning('异地登陆')
+    //     // window.location = "/index/index.html#/login"
+    // }
     if (! (+response.status === 200)) {
         let message = "http请求失败：失败码：" + response.status+ "；失败信息："+response.statusText
         return Promise.reject(message)
