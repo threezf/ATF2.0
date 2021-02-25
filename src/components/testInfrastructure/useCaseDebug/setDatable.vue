@@ -243,10 +243,10 @@
           </el-input>
         </el-col>
         <el-col :span="8" :offset="1">
-          <el-button size="small" @click="插入数据;" type="primary">
+          <el-button size="small" @click='insertData' type="primary">
             插入数据
           </el-button>
-          <el-button size="small" @click="插入函数;" type="primary">
+          <el-button size="small" @click='insertFunc' type="primary">
             插入函数
           </el-button>
         </el-col>
@@ -823,6 +823,57 @@
         <el-button @click="exportDialog = false">关闭</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="insertName" :visible.sync="insertVisible" width="30%">
+        <div v-if="insertName == '插入数据'">
+            <el-row>
+                <el-col :span="10">
+                    <el-select v-model="dataPoolType">
+                        <el-option v-for="(item, index) in dataOptions" :key="'dpt' + index" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="14">
+                    <el-input v-model="dataName"></el-input>
+                </el-col>
+            </el-row>
+            <div v-show="dataPoolType === 4 || dataPoolType === 4" style="margin-top: 10px">
+                <el-radio-group v-model="dataWritable">
+                    <el-radio label="writable">可读可写</el-radio>
+                    <el-radio label="readable">只读</el-radio>
+                </el-radio-group>
+            </div>
+        </div>
+        <div v-if="insertName == '插入函数'">
+            <el-select v-model="functionName">
+                <el-option v-for="(item, index) in functionList" :key="'func' + index" :label="item.desc" :value="item.name">
+                </el-option>
+            </el-select>
+            <el-table :data="paramsList" stripe border>
+                <el-table-column
+                    label="参数名称"
+                    prop="paramName"
+                    min-width="100px">
+                </el-table-column>
+                <el-table-column
+                    label="参数类型"
+                    prop="paramType"
+                    min-width="100px">
+                </el-table-column>
+                <el-table-column
+                    label="参数值"
+                    min-width="100px">
+                    <template >
+                      <el-input v-model="paramsValue"></el-input>
+                      <el-input v-model="num"></el-input>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <template v-slot:footer>
+            <el-button type="info" plain @click="insertVisible = false">取消</el-button>
+            <el-button type="primary" @click="insertSure">确定</el-button>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -934,6 +985,7 @@ export default {
       rowColumn: "",
       beforeOperationRows: [],
       afterOperationRows: [],
+      d: [],
       dataOperationRows: [],
       dataType: "1",
       addItemShow: false,
@@ -952,7 +1004,67 @@ export default {
       dataCheckFunList: [],
       fullScreen: false,
       testSysNameStorage: "",
+
+      // 插入数据
+      dataPoolType: '',
+      dataWritable: '',
+      dataName: '',
+      dataOptions: [
+          {
+              label: '用例内部变量',
+              value: 1
+          },
+          {
+              label: '流程用例数据池',
+              value: 2
+          },
+          {
+              label: '组合用例数据',
+              value: 3
+          },
+          {
+              label: '场景数据',
+              value: 4
+          },
+          {
+              label: '全局数据',
+              value: 5
+          },
+          {
+              label: '环境数据',
+              value: 6
+          },
+      ],
+      // 插入函数
+      insertVisible: false,
+      insertName: '插入数据',
+      functionList: [],
+      functionName: '',
+      paramsList: [],
+      paramsValue: '',
+      num: ''
     };
+  },
+  watch: {
+    functionName(newVal) {
+        const params = this.functionList.find(item => item.name === newVal)
+            console.log(params, params.paramList)
+        if(params.paramList.length > 0) {
+            this.paramsList = params.paramList
+        } else {
+            let nothing = {};
+            nothing.paramName = "无";
+            nothing.paramType = "";
+            nothing.required = false;
+            this.paramsList = [nothing]
+        }
+    }
+  },
+  filters: {
+      jsonParser(val) {
+          console.log('格式化', val)
+          return JSON.stringify(JSON.parse(val), null, "\n")
+      }
   },
   mounted() {
     this.testSysNameStorage = sessionStorage
@@ -961,6 +1073,49 @@ export default {
     this.getFilterTree();
   },
   methods: {
+    // 插入数据
+    insertData() {
+        this.insertVisible = true
+        this.insertName = '插入数据'
+    },
+    // 插入函数
+    insertFunc() {
+        this.insertVisible = true
+        this.insertName = '插入函数'
+        this.functionList = []
+        Request({
+            url: '/dataCenter/getUtilFuncList',
+            method: 'post',
+            params: {
+                autId: this.selectedTemplate.autId
+            }
+        }).then(res => {
+            console.log('res.....', res.functionList)
+            this.functionList = res.functionList.map(item => {
+                return {
+                    ...item
+                }
+            })
+        })
+    },
+    //  插入数据
+    insertSure() {
+        let str = ""
+        if(this.insertName === '插入数据') {
+            switch (this.dataPoolType) {
+                case 1: str = "var(\"" + this.dataName + "\")"; break;
+                case 2: str = "Data.Flow(\"" + this.dataName + "\")"; break;
+                case 3: str = "Data.Com(\"" + this.dataName + "\")"; break;
+                case 4: str = this.dataWritable === "readable" ? "Data.Scene(\"" + this.dataName + "\")": "Data.SceneShare(\"" + this.dataName + "\")"; break;
+                case 5: str = this.dataWritable === "readable" ? "Data.Scene(\"" + this.dataName + "\")": "Data.SceneShare(\"" + this.dataName + "\")"; break;
+                case 6: str = "Data.Env(\"" + this.dataName + "\")"; break;
+            }
+        }else {
+            str = this.functionName + "(" + this.paramsValue + ")"
+        }
+        this.input4 = str
+        this.insertVisible = false
+    },
     getFunction() {
       this.funtionDic = [];
       // selectedTemplate.transId
@@ -1004,8 +1159,15 @@ export default {
       if (this.addItemFlag == 1) {
         rows = this.beforeOperationRows;
         for (let i = 0; i < functionInfo.length; i++) {
+          let name = ''
+          if(treeInfo[0]) {
+              name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+          }else {
+              name = functionInfo[i].name
+          }
           let beforeItem = {
             arguShow: true,
+            name: name,
             functions: [
               {
                 name: functionInfo[i].name,
@@ -1018,8 +1180,7 @@ export default {
               element: "",
               ui: "",
             },
-            parameters: functionInfo[i].arguments
-              ? functionInfo[i].arguments.map((item) => ({
+            parameters: functionInfo[i].arguments ? functionInfo[i].arguments.map((item) => ({
                   Name: item.name,
                   Value: "",
                   newValue: "",
@@ -1033,6 +1194,12 @@ export default {
       if (this.addItemFlag == 2) {
         rows = this.afterOperationRows;
         for (let i = 0; i < functionInfo.length; i++) {
+          let name = ''
+          if(treeInfo[0]) {
+              name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+          }else {
+              name = functionInfo[i].name
+          }
           let afterItem = {
             arguShow: true,
             functions: [
@@ -1047,6 +1214,7 @@ export default {
               element: "",
               ui: "",
             },
+            name: name,
             parameters: functionInfo[i].arguments
               ? functionInfo[i].arguments.map((item) => ({
                   Name: item.name,
@@ -1054,15 +1222,24 @@ export default {
                   newValue: "",
                 }))
               : [],
+            selected: false,
           };
+          this.d.push(afterItem)
           this.afterOperationRows.push(afterItem);
         }
       }
       if (this.addItemFlag == 3) {
         rows = this.dataOperationRows;
         for (let i = 0; i < functionInfo.length; i++) {
+          let name = ''
+          if(treeInfo[0]) {
+              name = "UI：" + treeInfo[0].uiname + " 元素：" + treeInfo[0].elementName
+          }else {
+              name = functionInfo[i].name
+          }
           let beforeItem = {
             arguShow: true,
+            name: name,
             functions: {
               name: functionInfo[i].name,
               parameterlist: "",
@@ -1537,19 +1714,29 @@ export default {
       }).then(
         (res) => {
           this.templateInfoData = [];
-          for (let i = 0; i < res.scriptList.length; i++) {
-            let info = res.scriptList[i];
-            let templateInfo = {};
-            templateInfo.operationItem =
-              "UI: " + info.ui + "  元素: " + info.element;
-            templateInfo.classType = info.classType;
-            templateInfo.method = info.method;
-            templateInfo.parameters = "";
-            for (let j = 0; j < info.parameters.length; j++) {
-              templateInfo.parameters +=
-                "参数" + j + ": " + info.parameters[j] + ";";
+          if(res.hasOwnProperty('urlPath')) {
+                    this.interFaceVisible = true
+                    let obj = {}
+                    obj.path = res.urlPath,
+                    obj.method = res.method
+                    obj.protocol = res.protocol
+                    obj.bodyTemplate = res.bodyTemplate
+                    this.scriptTableData.push(obj)
+                    console.log('查看娇嫩', "接口")
+          }else {
+            for (let i = 0; i < res.scriptList.length; i++) {
+              let info = res.scriptList[i];
+              let templateInfo = {};
+              templateInfo.operationItem = "UI: " + info.ui + "  元素: " + info.element;
+              templateInfo.classType = info.classType;
+              templateInfo.method = info.method;
+              templateInfo.parameters = "";
+              for (let j = 0; j < info.parameters.length; j++) {
+                templateInfo.parameters +=
+                  "参数" + j + ": " + info.parameters[j] + ";";
+              }
+              this.templateInfoData.push(templateInfo);
             }
-            this.templateInfoData.push(templateInfo);
           }
         },
         (err) => {
