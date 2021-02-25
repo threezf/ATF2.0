@@ -331,30 +331,41 @@ export default {
         },
         // 获取最近的执行批次id
         getBatchIdForTestPlan(testPlanId) {
+            console.log('测试计划获取成功run - id', testPlanId)
             var _this = this;
-            Vac.ajax({
-                url: "/batchRunCtrlController/queryLatestBatchIdForTestPlan",
-                type: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    testPlanId: testPlanId,
-                }),
-                success: function (data) {
-                    if (data.respCode == "0000") {
-                        _this.batchId = data.batchId;
-                        _this.getSinglebranchStatus();
-                    } else if (data.respCode == "10012000") {
-                        _this.exeStautShow =
-                            '执行状态：<i class="el-icon-video-play"></i>尚未执行';
-                        _this.tagType = "warning";
-                        _this.exeStauts = true;
-                        Vac.alert(data.respMsg);
-                    } else Vac.alert("查询branchId出错啦");
-                },
-                error: function () {
-                    Vac.alert("网络错误");
-                },
-            });
+            Request({
+                url: '/batchRunCtrlController/queryLatestBatchIdForTestPlan',
+                method: 'post',
+                params: {
+                    testPlanId: testPlanId
+                }
+            }).then(data => {
+                console.log("测试计划获取成功run", res)
+                if (data.respCode == "0000") {
+                    _this.batchId = data.batchId;
+                    _this.getSinglebranchStatus();
+                }
+            }).catch(err => {
+                this.$message.warning(err)
+                _this.exeStautShow = '执行状态：<i class="el-icon-video-play"></i>尚未执行';
+                _this.tagType = "warning";
+                _this.exeStauts = true;
+            })
+            // Vac.ajax({
+            //     url: "",
+            //     type: "post",
+            //     contentType: "application/json",
+            //     data: JSON.stringify({
+                    
+            //     }),
+            //     success: function (data) {
+            //         
+            //         } else Vac.alert("查询branchId出错啦");
+            //     },
+            //     error: function () {
+            //         Vac.alert("网络错误");
+            //     },
+            // });
         },
         getSinglebranchStatus() {
             //查询单个批次结果 并展示执行状态

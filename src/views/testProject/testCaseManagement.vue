@@ -21,9 +21,11 @@
                 <el-button @click="toUploadRecord" type="primary" size="small" icon="el-icon-upload2">
                     导入记录
                 </el-button>
-                <el-button @click="outputCase" type="primary" size="small" icon="el-icon-download">
-                    导出
-                </el-button>
+                <el-tooltip class="item" effect="dark" content="流程用例不可导出单个节点" placement="top">
+                    <el-button @click="outputCase" type="primary" size="small" icon="el-icon-download">
+                        导出
+                    </el-button>
+                </el-tooltip>
                 <el-button @click="addNodeShow" type="primary" size="small" icon="el-icon-plus">
                     添加流程节点
                 </el-button>
@@ -644,7 +646,7 @@
                         <el-input :disabled="true" placeholder="部分"></el-input>
                     </el-form-item>
                     <div class="in-file">
-                        <el-button size="small" type="primary" native-type="submit">导出</el-button>
+                        <el-button size="small" type="primary" native-type="submit" :disabled='subIdList.length != 0'>导出</el-button>
                         <el-button size="small" type="primary" @click="dialogVisibleO = !dialogVisibleO">取消</el-button>
                     </div>
                 </el-form>
@@ -1988,6 +1990,7 @@ export default {
         },
         //选择一级表格
         handleSelectionChange(val) {
+            console.log(val)
             this.multipleSelection = val;
             this.idList = []; //选择流程用例
             this.selectList = []; //选择所有用例
@@ -2027,12 +2030,18 @@ export default {
         },
         //选择二级表格
         subHandleSelectionChange(val) {
-            this.subMultipleSelection = val
-            this.subIdList = []
-            for (var i = 0; i < this.subMultipleSelection.length; i++) {
-                this.subIdList.push(this.subMultipleSelection[i].id);
+            console.log(val)
+            if(val.length > 0) {
+                this.subMultipleSelection = val
+                this.subIdList = []
+                this.selectList = []
+                for (var i = 0; i < this.subMultipleSelection.length; i++) {
+                    this.subIdList.push(this.subMultipleSelection[i].id);
+                }
+                this.hostId = this.subMultipleSelection[0].caseId
+            }else {
+                this.subIdList = []
             }
-            this.hostId = this.subMultipleSelection[0].caseId
         },
         //行拖拽流程节点
         rowDrop() {
