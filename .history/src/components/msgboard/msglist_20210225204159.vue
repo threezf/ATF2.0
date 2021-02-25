@@ -82,10 +82,7 @@
                 <span>发表回复</span>            
             </div>
             <div style="padding:10px 20px 0 20px">
-            <div id="demo2"></div>
-            <button type="button" class="btn" @click="getEditorData">获取当前内容</button>
-            <h3>内容预览</h3>
-            <textarea name="" id="" cols="170" rows="20" readonly v-model="editorData"></textarea>
+            <div ref="editor"></div>
             </div>
             <div class="bottom">
                 <el-button 
@@ -127,25 +124,21 @@ export default {
         editorData: ''
     }
   },
-  activated() {
-    this.editor = null
-    const editor = new wangEditor(`#demo2`)
+  mounted() {
+      const editor = new wangEditor(this.$refs.editor)
 
-    // 配置 onchange 回调函数，将数据同步到 vue 中
-    editor.config.onchange = (newHtml) => {
-       this.editorData = newHtml
-    }
-    //限制图片上传大小
-    editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-    //使用 base64 格式保存图片
-    editor.config.uploadImgShowBase64 = true
-    //限制图片类型
-    editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-    editor.config.showLinkImg = false
-    // 创建编辑器
-    editor.create()
-
-    this.editor = editor
+      //限制图片上传大小
+      editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+      //使用 base64 格式保存图片
+      editor.config.uploadImgShowBase64 = true
+      //限制图片类型
+      editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+      editor.config.showLinkImg = false
+      // 取消自动 focus
+      editor.config.focus = false
+      // 创建编辑器
+      editor.create()
+      this.editor = editor
   },
   components: {
       wangEditor
@@ -194,11 +187,6 @@ export default {
     this.editor = null
   },
   methods: {
-        getEditorData() {
-        // 通过代码获取编辑器内容
-        let data = this.editor.txt.html()
-        alert(data)
-        },
         getfocus() {
           this.$refs.answer.focus();
         },
@@ -215,11 +203,9 @@ export default {
                 method: 'post',
                 params: submitForm
             }).then((res) => {
-                this.$alert('发表留言成功', '成功', {
-                    confirmButtonText: '确定',
-                });
                 this.getTestProject();
-                this.editor.txt.html('')
+                this.editor.txt.clear()
+                this.$message.success('留言成功')
             }, (err) => {
                 console.log(submitForm)
                 this.$alert('添加留言失败', '失败', {
@@ -252,9 +238,7 @@ export default {
                 method: 'post',
                 params: replyForm
             }).then((res) => {
-                this.$alert('发表评论成功', '成功', {
-                    confirmButtonText: '确定',
-                });
+                this.$message.success('发表评论成功')
                 this.getTestProject()
                 this.replyContents=""
                 this.replyconfirm=""
@@ -339,14 +323,14 @@ export default {
   justify-content: center;
   flex-direction: column;
   border-top: 1px solid #e1e4e6;
-  padding-top: 10px;
+
   text-align: center;
 }
 .colLeft0 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 10px;
+  padding-top: 7px;
   text-align: center;
 }
 .firstphoto {

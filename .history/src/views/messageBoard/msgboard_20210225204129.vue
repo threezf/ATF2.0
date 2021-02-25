@@ -93,42 +93,21 @@ export default {
         }
 
     },
-    beforeUpdate(){
-        if(this.editor!=null){
-            this.editor.destroy()
-            this.editor = null
-        }
-    },
-    updated() {
-        this.editor = new wangEditor(this.$refs.editor)
-
-        //限制图片上传大小
-        this.editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
-        //使用 base64 格式保存图片
-        this.editor.config.uploadImgShowBase64 = true
-        //限制图片类型
-        this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        this.editor.config.showLinkImg = false
-        // 取消自动 focus
-        this.editor.config.focus = false
-        // 创建编辑器
-        this.editor.create()
-    
-    },
     mounted() {
-        this.editor = new wangEditor(this.$refs.editor)
+        const editor = new wangEditor(this.$refs.editor)
 
         //限制图片上传大小
-        this.editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
+        editor.config.uploadImgMaxSize = 3 * 1024 * 1024 // 3M
         //使用 base64 格式保存图片
-        this.editor.config.uploadImgShowBase64 = true
+        editor.config.uploadImgShowBase64 = true
         //限制图片类型
-        this.editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
-        this.editor.config.showLinkImg = false
+        editor.config.uploadImgAccept = ['jpg', 'jpeg', 'png', 'gif']
+        editor.config.showLinkImg = false
         // 取消自动 focus
-        this.editor.config.focus = false
+        editor.config.focus = false
         // 创建编辑器
-        this.editor.create()
+        editor.create()
+        this.editor = editor
     },
     components: {
         wangEditor
@@ -189,6 +168,7 @@ export default {
             this.getTestProject()
             this.title=""
             this.editor.txt.clear()
+            this.$message.success('留言成功')
         }, (err) => {
             this.$alert('添加留言失败', '失败', {
                 confirmButtonText: '确定',
