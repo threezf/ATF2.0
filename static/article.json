@@ -1,0 +1,1472 @@
+[
+  {
+    "id": 1,
+    "keyword": "getURL",
+    "explain": "进入指定网址",
+    "operation": "输入需要进入的网址",
+    "code": "Browser.getInstance.getURL(${{url}})",
+    "paramList": {
+      "param": "url",
+      "paramstyle": "\n{\n\"name\" : \"url\",\n\n\"type\" : \"str\",\n\n\"parameterizeColumn\" : \"{{element}}\",\n\n\"desc\" : \"网页url\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"进入页面:\"+${{url}})",
+    "category": "G"
+  },
+  {
+    "id": 2,
+    "keyword": "Url",
+    "explain": "获取浏览器当前网址",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.Url()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器当前网址\"+Url)",
+    "category": "U"
+  },
+  {
+    "id": 3,
+    "keyword": "Source",
+    "explain": "获取当前页面HTML源码",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.Source()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器当前源码HTML\"+Source)",
+    "category": "S"
+  },
+  {
+    "id": 4,
+    "keyword": "Title",
+    "explain": "获取当前页面标题",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.Title()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器当前标题\"+Title)",
+    "category": "T"
+  },
+  {
+    "id": 5,
+    "keyword": "closeBrowser",
+    "explain": "关闭所有浏览器进程",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.closeBrowser()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"关闭浏览器\")",
+    "category": "C"
+  },
+  {
+    "id": 6,
+    "keyword": "returnAlert",
+    "explain": "返回弹窗文本值",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.returnAlert()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"返回弹窗值为\"+Alert)",
+    "category": "R"
+  },
+  {
+    "id": 7,
+    "keyword": "getAllHandle",
+    "explain": "获取所有标签页句柄",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getAllHandle()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器所有标签页句柄为\"+AllHandle)",
+    "category": "G"
+  },
+  {
+    "id": 8,
+    "keyword": "getAllUrl",
+    "explain": "获取所有标签页URL",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getAllUrl()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器所有标签页URL为\"+AllUrl)",
+    "category": "G"
+  },
+  {
+    "id": 9,
+    "keyword": "getAllSource",
+    "explain": "获取所有标签页HTML",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getAllHTML()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器所有标签页HTML为\"+AllHTML)",
+    "category": "G"
+  },
+  {
+    "id": 10,
+    "keyword": "getAllCookie",
+    "explain": "获取所有Cookie",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getAllCookie()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器所有标签页Cookie为\"+AllCookie)",
+    "category": "G"
+  },
+  {
+    "id": 11,
+    "keyword": "deleteAllCookie",
+    "explain": "删除所有Cookie",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.deleteAllCookie()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"删除所有Cookie\")",
+    "category": "D"
+  },
+  {
+    "id": 12,
+    "keyword": "getSpecificCookie",
+    "explain": "获取指定name的Cookie",
+    "operation": "输入Cookie的name",
+    "code": "Browser.getInstance.getSpecificCookie(${{name}})",
+    "paramList": {
+      "param": "name",
+      "paramstyle": "{\n\"name\" : \"name\",\n\n\"type\" : \"str\",\n\n\"parameterizeColumn\" : \"{{element}}\",\n\n\"desc\" : \"Cookie的name\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"名称为\"+name+\"的cookie信息是\"+此cookie信息)",
+    "category": "G"
+  },
+  {
+    "id": 13,
+    "keyword": "deleteSpecificCookie",
+    "explain": "删除指定name的Cookie",
+    "operation": "输入Cookie的name",
+    "code": "Browser.getInstance.deleteSpecificCookie(${{name}})",
+    "paramList": {
+      "param": "name",
+      "paramstyle": "{\n\"name\" : \"name\",\n\n\"type\" : \"str\",\n\n\"parameterizeColumn\" : \"{{element}}\",\n\n\"desc\" : \"Cookie的name\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"删除页面中name为\"+name+\"的cookie\")",
+    "category": "D"
+  },
+  {
+    "id": 14,
+    "keyword": "addSpecificCookie",
+    "explain": "增加指定Cookie",
+    "operation": "输入Cookie的cookie信息",
+    "code": "Browser.getInstance.addSpecificCookie(${{coo}})",
+    "paramList": {
+      "param": "coo",
+      "paramstyle": "{\n\"name\" : \"coo\",\n\n\"type\" : \"cookie\",\n\n\"parameterizeColumn\" : \"{{element}}\",\n\n\"desc\" : \"cookie\"\n\n}",
+      "type": "cookie"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"增加指定信息的Cookie\"+coo)",
+    "category": "A"
+  },
+  {
+    "id": 15,
+    "keyword": "closeAlert",
+    "explain": "关闭弹窗",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.closeAlert()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"弹窗关闭\")",
+    "category": "C"
+  },
+  {
+    "id": 16,
+    "keyword": "screenFile",
+    "explain": "截图保存在c盘",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.screenFile()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"截取图片\")",
+    "category": "S"
+  },
+  {
+    "id": 17,
+    "keyword": "runJavaScript",
+    "explain": "执行js程序",
+    "operation": "输入js程序及name",
+    "code": "Browser.getInstance.runJavaScript(${{js}},${{name}})",
+    "paramList": {
+      "param": "js/name",
+      "paramstyle": "{\n\"name\" : \"js\",\"name\"\n\n\"type\" : \"JavascriptExecutor\",\"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"js程序\",\"名称\"\n\n}",
+      "type": "JavascriptExecutor/str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"\"执行js程序\"\")",
+    "category": "R"
+  },
+  {
+    "id": 18,
+    "keyword": "back",
+    "explain": "浏览器页面后退",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.back()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"操作浏览器后退\")",
+    "category": "B"
+  },
+  {
+    "id": 19,
+    "keyword": "forward",
+    "explain": "浏览器页面前进",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.forward()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"操作浏览器前进\")",
+    "category": "F"
+  },
+  {
+    "id": 20,
+    "keyword": "refresh",
+    "explain": "刷新浏览器",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.refresh()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"刷新浏览器\")",
+    "category": "R"
+  },
+  {
+    "id": 21,
+    "keyword": "GetBrowserSize",
+    "explain": "打印并返回当前浏览器大小",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.GetBrowserSize()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器大小为\"+浏览器大小)",
+    "category": "G"
+  },
+  {
+    "id": 22,
+    "keyword": "setSize",
+    "explain": "设置页面大小",
+    "operation": "输入宽和高",
+    "code": "Browser.getInstance.setSize(${{weight}},${{height}})",
+    "paramList": {
+      "param": "weight/height",
+      "paramstyle": "{\n\"name\" : \"weight\",\"height\"\n\n\"type\" : \"str\",\"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"宽\",\"高\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器页面大小设置为宽\" + weight + \",高\" + height)",
+    "category": "S"
+  },
+  {
+    "id": 23,
+    "keyword": "setPosition",
+    "explain": "设置浏览器位置",
+    "operation": "输入宽和高",
+    "code": "Browser.getInstance.setSize(${{weight}},${{height}})",
+    "paramList": {
+      "param": "weight/height",
+      "paramstyle": "{\n\"name\" : \"weight\",\"height\"\n\n\"type\" : \"str\",\"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"宽\",\"高\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器位置设置为宽\"+weight+\",高\"+height\")",
+    "category": "S"
+  },
+  {
+    "id": 24,
+    "keyword": "getBrowserPosition",
+    "explain": "获取当前浏览器位置",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.GetBrowserPosition()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"当前浏览器位置为\"+位置)",
+    "category": "G"
+  },
+  {
+    "id": 25,
+    "keyword": "getAllTitle",
+    "explain": "获取所有标签页标题",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getAllTitle()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"所有标签页的标题为\"+标题)",
+    "category": "G"
+  },
+  {
+    "id": 26,
+    "keyword": "maximize",
+    "explain": "最大化浏览器",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.maximize()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器页面最大化\")",
+    "category": "M"
+  },
+  {
+    "id": 27,
+    "keyword": "switchToOldHandle",
+    "explain": "浏览器回到原来选项卡并关闭其他选项卡(这里默认原选项卡为第一个)",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.switchToOldHandle()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器回到原来选项卡\")",
+    "category": "S"
+  },
+  {
+    "id": 28,
+    "keyword": "switchToNewHandle",
+    "explain": "Selenium切换到当前选项卡",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.switchToSpecificHandle(${{num}})",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器切换到当前选项卡\")",
+    "category": "S"
+  },
+  {
+    "id": 29,
+    "keyword": "switchToSpecificHandle",
+    "explain": "selenium切换到指定选项卡",
+    "operation": "输入指定标签页",
+    "code": "Browser.getInstance.switchToSpecificHandle(${{num}})",
+    "paramList": {
+      "param": "num",
+      "paramstyle": "{\n\"name\" : \"num\"\n\n\"type\" : \"int\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项卡数字\"\n\n}",
+      "type": "int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器切换到选项卡\"+(numb+1))",
+    "category": "S"
+  },
+  {
+    "id": 30,
+    "keyword": "switchToNewHandleNoClose",
+    "explain": "Selenium切换到当前选项卡（不关闭原来的选项卡）",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.switchToNewHandleNoClose()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器切换到选项卡\"+(numb+1))",
+    "category": "S"
+  },
+  {
+    "id": 31,
+    "keyword": "switchToIFrameByIndex",
+    "explain": "selenium切换iframe",
+    "operation": "输入需要进入iframe数",
+    "code": "Browser.getInstance.switchToIFrameByIndex(${{index}})",
+    "paramList": {
+      "param": "index",
+      "paramstyle": "{\n\"name\" : \"index\"\n\n\"type\" : \"int\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"iframe的层数\"\n\n}",
+      "type": "int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"浏览器切换iframe\"+index)",
+    "category": "S"
+  },
+  {
+    "id": 32,
+    "keyword": "switchToNewIFrameByXpath",
+    "explain": "根据xpath切换frame",
+    "operation": "输入xpath",
+    "code": "Browser.getInstance.switchToIFrameByXpath(${{xpath}})",
+    "paramList": {
+      "param": "xpath",
+      "paramstyle": "{\n\"name\" : \"xpath\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"xpath定位方式\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"通过\"+xpath+\"浏览器切换iframe\")",
+    "category": "S"
+  },
+  {
+    "id": 33,
+    "keyword": "switchToIframeByIdOrName",
+    "explain": "根据id或name修改frame",
+    "operation": "输入id或name",
+    "code": "Browser.getInstance.switchToIframeByIdOrName(${{Id}},${{name}})",
+    "paramList": {
+      "param": "idOrName",
+      "paramstyle": "{\n\"name\" : \"id\",\"name\"\n\n\"type\" : \"str\",\"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"id定位方式\",\"name定位方式\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"通过\"+id/name+\"浏览器切换iframe\")",
+    "category": "S"
+  },
+  {
+    "id": 34,
+    "keyword": "sleep",
+    "explain": "页面等待",
+    "operation": "输入等待时间",
+    "code": "Browser.getInstance.sleep(${{waitTime}})",
+    "paramList": {
+      "param": "waitTime",
+      "paramstyle": "{\n\"name\" : \"waitTime\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"等待时间\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"开始等待\" + waitTime + \"毫秒\")",
+    "category": "S"
+  },
+  {
+    "id": 35,
+    "keyword": "ScrrollBy",
+    "explain": "页面前往指定坐标",
+    "operation": "输入宽和高",
+    "code": "Browser.getInstance.scrrollBy(${{weight}},${{height}})",
+    "paramList": {
+      "param": "weight/height",
+      "paramstyle": "{\n\"name\" : \"weight\",\"height\"\n\n\"type\" : \"int\",\"int\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"宽\",\"高\"\n\n}",
+      "type": "int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"页面往坐标(\" + weight + \",\" + height + \")移动\")",
+    "category": "S"
+  },
+  {
+    "id": 36,
+    "keyword": "seleniumCheckText",
+    "explain": "检查元素的text",
+    "operation": "检查页面元素text",
+    "code": "Browser.getInstance.seleniumCheckText(${{type}},${{path}},${{rightText}})",
+    "paramList": {
+      "param": "type/path/rightText",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\",\"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"，\"预期值\"\n\n}",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"预期值\"+ rightText + \",实际值\" + elementText + \",二者相同\")",
+    "category": "S"
+  },
+  {
+    "id": 37,
+    "keyword": "seleniumCheckValue",
+    "explain": "检查元素的value",
+    "operation": "检查页面元素value",
+    "code": "Browser.getInstance.seleniumCheckValue(${{type}},${{path}},${{rightText}})",
+    "paramList": {
+      "param": "type/path/rightText",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\",\"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"，\"预期值\"\n\n}",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"预期值\"+ rightText + \",实际值value\" + elementText + \",二者相同\")",
+    "category": "S"
+  },
+  {
+    "id": 38,
+    "keyword": "checkListAllOptionTextOrValue",
+    "explain": "检查下拉框所有选项的text或value",
+    "operation": "检查下拉框所有选项的text或value",
+    "code": "Browser.getInstance.checkListAllOptionTextOrValue(${{type}},${{path}},${{pattern}},${{rightText}})",
+    "paramList": {
+      "param": "type/path/pattern/rightText",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\",\"pattern\",\"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"，\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"，\"检查的是text还是value\",\"预期值\"\n\n}",
+      "type": "定位属性类型/定位属性值/text或value/预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"预期值\"+ rightText + \",实际值text/value\" + elementText + \",二者相同\")",
+    "category": "C"
+  },
+  {
+    "id": 39,
+    "keyword": "checkListSelectedOptionsTextOrValue",
+    "explain": "检查所有下拉框被选中选项的text或value",
+    "operation": "检查所有下拉框被选中选项的text或value",
+    "code": "Browser.getInstance.checkListSelectedOptionsTextOrValue(${{type}},${{path}},${{pattern}},${{rightText}})",
+    "paramList": {
+      "param": "type/path/pattern/rightText",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\",\"pattern\",\"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"，\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"，\"检查的是text还是value\",\"预期值\"\n\n}",
+      "type": "定位属性类型/定位属性值/text或value/预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"预期值\"+ rightText + \",实际值text/value\" + elementText + \",二者相同\")",
+    "category": "C"
+  },
+  {
+    "id": 40,
+    "keyword": "checkVisibility",
+    "explain": "检查元素的可见性（多个元素）",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkVisibility(${{type}},${{path}})",
+    "paramList": {
+      "param": "type/path",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"\n\n}",
+      "type": "定位属性类型/定位属性值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"元素:\" + path + \"可见性获取成功\")",
+    "category": "C"
+  },
+  {
+    "id": 41,
+    "keyword": "checkAlert",
+    "explain": "检查是否有弹出框",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.checkAlert()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"存在弹出框\")",
+    "category": "C"
+  },
+  {
+    "id": 42,
+    "keyword": "checkClickable",
+    "explain": "检查元素是否可被点击或编辑",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkClickable(${{type}},${{path}})",
+    "paramList": {
+      "param": "type/path",
+      "paramstyle": "{\n\"name\" : \"type\",\"path\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"定位属性类型\",\"定位属性值\"\n\n}",
+      "type": "定位属性类型/定位属性值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"元素可被点击或编辑\")",
+    "category": "C"
+  },
+  {
+    "id": 43,
+    "keyword": "checkPageContainText",
+    "explain": "检查页面是否包含了某文本",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkPageContainText(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查当前页面是否包含文本\" + rightText)",
+    "category": "C"
+  },
+  {
+    "id": 44,
+    "keyword": "checkUrlTitle",
+    "explain": "检查浏览器标题是否一致",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkUrlTitle(${{rightTitle}})",
+    "paramList": {
+      "param": "rightTitle",
+      "paramstyle": "{\n\"name\" : \"rightTitle\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查当前页面标题是否一致\" + rightTitle)",
+    "category": "C"
+  },
+  {
+    "id": 45,
+    "keyword": "checkUrl",
+    "explain": "检查浏览器网址是否一致",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkUrl(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查当前页面网址是否一致\" + rightText)",
+    "category": "C"
+  },
+  {
+    "id": 46,
+    "keyword": "checkUrlContain",
+    "explain": "检查浏览器网址是否包含相应文本",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkUrlContain(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查当前页面网址是否包含文本\"+rightText)",
+    "category": "C"
+  },
+  {
+    "id": 47,
+    "keyword": "checkAlertText",
+    "explain": "检查弹窗文本(仅支持HTML原生的)",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkAlertText(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查弹窗文本中是否有:\" + rightText)",
+    "category": "C"
+  },
+  {
+    "id": 48,
+    "keyword": "checkMySqlEqualText",
+    "explain": "检查数据库查询文本中是否含有",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkMySqlEqualText(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查数据库查询文本中是否有:\" + rightText)",
+    "category": "C"
+  },
+  {
+    "id": 49,
+    "keyword": "SelectAll",
+    "explain": "全选按钮",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.SelectAll()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"全选\")",
+    "category": "S"
+  },
+  {
+    "id": 50,
+    "keyword": "selectByVisibleText",
+    "explain": "通过选项可见的的文本选择",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.SelectByVisibleText(${{visibleText}})",
+    "paramList": {
+      "param": "visibleText",
+      "paramstyle": "{\n\"name\" : \"visibleText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项中的可见文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中通过\"+visibleText+\"选择项：{}\")",
+    "category": "S"
+  },
+  {
+    "id": 51,
+    "keyword": "selectByIndex",
+    "explain": "通过选项排序的序号选择",
+    "operation": "输入序号",
+    "code": "Browser.getInstance.selectByIndex(${{index}})",
+    "paramList": {
+      "param": "index",
+      "paramstyle": "{\n\"name\" : \"index\"\n\n\"type\" : \"int\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项序号\"\n\n}",
+      "type": "int"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中通过序号\"+index+\"选择项：{}\")",
+    "category": "S"
+  },
+  {
+    "id": 52,
+    "keyword": "multiSelectByVisibleTextReg",
+    "explain": "通过输入选项可见文本的正则表达式进行多个选择",
+    "operation": "输入文本的正则表达式",
+    "code": "Browser.getInstance.multiSelectByVisibleTextReg(${{visibleTextReg}})",
+    "paramList": {
+      "param": "visibleTextReg",
+      "paramstyle": "{\n\"name\" : \"visibleTextReg\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项文本的正则表达式\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中通过文本正则表达式\"+visibleTextReg+\"选择项：{}\")",
+    "category": "M"
+  },
+  {
+    "id": 53,
+    "keyword": "checkAllOptionsEqualText",
+    "explain": "检查所有选项的text是否符合预期值",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkAllOptionsEqualText(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"{}是否为\"+text)",
+    "category": "C"
+  },
+  {
+    "id": 54,
+    "keyword": "checkAllOptionsIncludeText",
+    "explain": "检查所有选项的text是否包含目标文本",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkAllOptionsIncludeText(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项包含文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"{}是否包含\"+text)",
+    "category": "C"
+  },
+  {
+    "id": 55,
+    "keyword": "checkAllOptionsMatchTextReg",
+    "explain": "检查所有选项的text是否符合正则表达式",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkAllOptionsMatchTextReg(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"{}是否符合文本正则表达式\"+text)",
+    "category": "C"
+  },
+  {
+    "id": 56,
+    "keyword": "cancelSelectByVisibleText",
+    "explain": "取消选择某选项（通过可见文本）",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.cancelSelectByVisibleText(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"通过选项中\"+text+\"取消选择{}\")",
+    "category": "C"
+  },
+  {
+    "id": 57,
+    "keyword": "cancelSelectByIndex",
+    "explain": "取消选择某选项（通过序号）",
+    "operation": "输入序号",
+    "code": "Browser.getInstance.cancelSelectByVisibleText(${{index}})",
+    "paramList": {
+      "param": "index",
+      "paramstyle": "{\n\"name\" : \"index\"\n\n\"type\" : \"int\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项序号\"\n\n}",
+      "type": "int"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"通过选项的\"+index+\"取消选择{}\")",
+    "category": "C"
+  },
+  {
+    "id": 58,
+    "keyword": "cancelMultSelectByVisibleTextReg",
+    "explain": "取消选择多个选项（通过可见文本正则表达式）",
+    "operation": "输入可见的文本正则表达式",
+    "code": "Browser.getInstance.cancelMultSelectByVisibleTextReg(${{index}})",
+    "paramList": {
+      "param": "visibleTextReg",
+      "paramstyle": "{\n\"name\" : \"visibleTextReg\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选项文本正则表达式\"\n\n}",
+      "type": "str"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"通过选项的正则表达式\"+visibleTextReg+\"取消选择{}\")",
+    "category": "C"
+  },
+  {
+    "id": 59,
+    "keyword": "tryLocateObject",
+    "explain": "一种特殊处理，当用户定位到checkbox某个选项时也能向上找到整个的组",
+    "operation": "输入时间",
+    "code": "Browser.getInstance.tryLocateObject(${{timeOutMilliSec}})",
+    "paramList": {
+      "param": "timeOutMilliSec",
+      "paramstyle": "{\n\"name\" : \"timeOutMilliSec\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"寻找时间\"\n\n}",
+      "type": "int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"找寻整个选项组\")",
+    "category": "T"
+  },
+  {
+    "id": 60,
+    "keyword": "datepickSet",
+    "explain": "直接将日期字符串输入进日期输入框",
+    "operation": "输入日期字符串",
+    "code": "Browser.getInstance.Set(${{dateStr}})",
+    "paramList": {
+      "param": "dateStr",
+      "paramstyle": "{\n\"name\" : \"dateStr\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"日期字符串\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在日期选择框{}中输入值：{}\")",
+    "category": "D"
+  },
+  {
+    "id": 61,
+    "keyword": "datepickClear",
+    "explain": "清空日期选择框",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.Clear()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"清空日期选择框{}\")",
+    "category": "D"
+  },
+  {
+    "id": 62,
+    "keyword": "datepickPick",
+    "explain": "模拟手工操作，点击各个控件，实际要根据日期选择框的实际时间字符串格式进行修改，仅适用于选择年月日的标准日期框",
+    "operation": "输入日期标准格式(yy-MM-dd)",
+    "code": "Browser.getInstance.Pick(${{dateStr}},${{dateFormat}})",
+    "paramList": {
+      "param": "dateStr/dateFormat",
+      "paramstyle": "{\n\"name\" : \"dateStr\",\"dateFormat\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"日期字符串\",\"dateFormat为dateStr标准形式\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"日期选择框{}输入\"+dateStr)",
+    "category": "D"
+  },
+  {
+    "id": 63,
+    "keyword": "PickWithRange",
+    "explain": "简单的日期范围选择框,展开是两个日历控件组合在一起的大控件菜单",
+    "operation": "输入启示日期和终止或者直接输入日期",
+    "code": "Browser.getInstance.PickWithRange(${{beginDateStr}},${{endDateStr}},${{dateFormat}})",
+    "paramList": {
+      "param": "beginDateStr/endDateStr/dateFormat",
+      "paramstyle": "{\n\"name\" : \"beginDateStr\",\"dateFormat\",\"endDateStr\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"起始日期字符串\",\"dateFormat为dateStr标准形式\",\"截止日期字符串\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"日期选择框{}范围\"+beginDateStr+\"-\"+endDateStr)",
+    "category": "P"
+  },
+  {
+    "id": 64,
+    "keyword": "checkDateEqualDateStr",
+    "explain": "检查日期选择框内容是否符合",
+    "operation": "输入期望日期",
+    "code": "Browser.getInstance.checkDateEqualDateStr(${{dateStr}})",
+    "paramList": {
+      "param": "dateStr",
+      "paramstyle": "{\n\"name\" : \"dateStr\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"预期日期字符串\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"确认日期选择框{}中值：{}\"+dateStr)",
+    "category": "C"
+  },
+  {
+    "id": 65,
+    "keyword": "handleYearTextOrMonthText",
+    "explain": "处理年份或月份字符串，转化为年份或月份数字返回",
+    "operation": "输入年或月",
+    "code": "Browser.getInstance.handleYearTextOrMonthText(${{text}},${{type}})",
+    "paramList": {
+      "param": "text/type",
+      "paramstyle": "{\n\"name\" : \"text\",\"type\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"日期字符串\",\"类型\"\n\n}",
+      "type": "str/月或年"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"日期\"+text+\"判断类型为\"+\"type\"+\"转换格式为\"+\"text\")",
+    "category": "H"
+  },
+  {
+    "id": 66,
+    "keyword": "tryLocateObject",
+    "explain": "一种特殊处理，当用户定位到datepicker某个内部选项时也能向上找到整个的datepicker",
+    "operation": "输入寻找时间",
+    "code": "Browser.getInstance.tryLocateObject(${{timeOutMilliSec}})",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"找寻整个日期选项组\")",
+    "category": "T"
+  },
+  {
+    "id": 67,
+    "keyword": "edit",
+    "explain": "输入框输入",
+    "operation": "在输入框内输入内容",
+    "code": "Browser.getInstance.edit(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在输入框内输入\"+\"text\")",
+    "category": "E"
+  },
+  {
+    "id": 68,
+    "keyword": "inputAlert",
+    "explain": "向弹框中输入值",
+    "operation": "向弹框中输入值",
+    "code": "Browser.getInstance.inputAlert(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"弹框中输入\"+text)",
+    "category": "I"
+  },
+  {
+    "id": 69,
+    "keyword": "editSet",
+    "explain": "在输入框输入内容",
+    "operation": "在输入框输入内容",
+    "code": "Browser.getInstance.editSet(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在输入框内输入\"+text)",
+    "category": "E"
+  },
+  {
+    "id": 70,
+    "keyword": "editClear",
+    "explain": "清空输入框",
+    "operation": "清空输入框",
+    "code": "Browser.getInstance.editClear()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"输入框{}清空\")",
+    "category": "E"
+  },
+  {
+    "id": 71,
+    "keyword": "Select",
+    "explain": "在{}中选择项",
+    "operation": "输入选择内容",
+    "code": "Browser.getInstance.select(${{itemPattern}})",
+    "paramList": {
+      "param": "itemPattern",
+      "paramstyle": "{\n\"name\" : \"itemPattern\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选择项\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中选择项：{}\"+itemPattern)",
+    "category": "S"
+  },
+  {
+    "id": 72,
+    "keyword": "MultiSelect",
+    "explain": "在{}中选择多项",
+    "operation": "输入选择内容",
+    "code": "Browser.getInstance.MultiSelect(${{itemPattern}})",
+    "paramList": {
+      "param": "itemPatterns",
+      "paramstyle": "{\n\"name\" : \"itemPatterns\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选择项\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中选择项：{}\"+itemPatterns)",
+    "category": "M"
+  },
+  {
+    "id": 73,
+    "keyword": "cancelSelect",
+    "explain": "在{}中取消选择项",
+    "operation": "输入取消选择的内容",
+    "code": "Browser.getInstance.cancelSelect(${{itemPattern}})",
+    "paramList": {
+      "param": "itemPattern",
+      "paramstyle": "{\n\"name\" : \"itemPattern\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选择项\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在{}中取消选择项：{}\"+itemPattern)",
+    "category": "C"
+  },
+  {
+    "id": 74,
+    "keyword": "Click",
+    "explain": "点击",
+    "operation": "点击",
+    "code": "Browser.getInstance.Click()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"点击{}{}\")",
+    "category": "C"
+  },
+  {
+    "id": 75,
+    "keyword": "DblClick",
+    "explain": "双击",
+    "operation": "双击",
+    "code": "Browser.getInstance.DblClick()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"双击{}{}\")",
+    "category": "D"
+  },
+  {
+    "id": 76,
+    "keyword": "expandList",
+    "explain": "打开下拉框",
+    "operation": "打开下拉框",
+    "code": "Browser.getInstance.expandList()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"打开下拉框\")",
+    "category": "E"
+  },
+  {
+    "id": 77,
+    "keyword": "checkText",
+    "explain": "检查元素文本或value",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkText(${{type}},${{path}},${{rightText}})",
+    "paramList": {
+      "param": "type/path/rightText",
+      "paramstyle": "",
+      "type": "定位属性类型/定位属性值/预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"预期值为:\"+rightText)",
+    "category": "C"
+  },
+  {
+    "id": 78,
+    "keyword": "checkClickable",
+    "explain": "检查元素是否可以被点击",
+    "operation": "检查元素是否可以被点击",
+    "code": "Browser.getInstance.checkClickable()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"检查元素是否可被点击\")",
+    "category": "C"
+  },
+  {
+    "id": 79,
+    "keyword": "clearAllSelectByButton",
+    "explain": "通过按钮点击取消所有选择",
+    "operation": "仅限于当select框拥有取消按钮时才可以使用此方法",
+    "code": "Browser.getInstance.clearAllSelectByButton()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"取消全部选择选项\")",
+    "category": "C"
+  },
+  {
+    "id": 80,
+    "keyword": "SelectLastOption",
+    "explain": "选择最后一个选项",
+    "operation": "在下拉框中选择最后一个选项",
+    "code": "Browser.getInstance.SelectLastOption()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在下拉框中选择最后一个选项\")",
+    "category": "S"
+  },
+  {
+    "id": 81,
+    "keyword": "checkSelectedOptionsEqualText",
+    "explain": "检查选中选项的text",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkSelectedOptionsEqualText(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选中选项预期文本\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"选中选项为\"+rightText)",
+    "category": "C"
+  },
+  {
+    "id": 82,
+    "keyword": "checkSelectedOptionsEqualValue",
+    "explain": "检查选中选项的值value",
+    "operation": "输入元素",
+    "code": "Browser.getInstance.checkSelectedOptionsEqualValue(${{rightText}})",
+    "paramList": {
+      "param": "rightText",
+      "paramstyle": "{\n\"name\" : \"rightText\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"选中选项预期值\"\n\n}",
+      "type": "预期值"
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"选中选项预期值为\"+rightText)",
+    "category": "C"
+  },
+  {
+    "id": 83,
+    "keyword": "getFirstSelectedOptionText",
+    "explain": "获取第一个被选中选项的文本",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getFirstSelectedOptionText()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"第一个被选中选项的文本\"+text)",
+    "category": "G"
+  },
+  {
+    "id": 84,
+    "keyword": "getFirstSelectedOptionValue",
+    "explain": "获取第一个被选中选项的value",
+    "operation": "直接加入方法",
+    "code": "Browser.getInstance.getFirstSelectedOptionValue()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"第一个被选中选项的值\"+value)",
+    "category": "G"
+  },
+  {
+    "id": 85,
+    "keyword": "checkSelectable",
+    "explain": "检查是否可被选择",
+    "operation": "检查下拉框是否可被选择",
+    "code": "Browser.getInstance.checkSelectable()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"下拉框可被选择\")",
+    "category": "C"
+  },
+  {
+    "id": 86,
+    "keyword": "getValue",
+    "explain": "获取文本框的value",
+    "operation": "获取文本框的value",
+    "code": "Browser.getInstance.getValue()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "通用性方法，在不同控件中对应着不同控件目标",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"文本框值为\"+value)",
+    "category": "G"
+  },
+  {
+    "id": 87,
+    "keyword": "checkEditable",
+    "explain": "检查是否可编辑",
+    "operation": "检查输入框是否可被编辑",
+    "code": "Browser.getInstance.checkEditable()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"输入框是否可被编辑\")",
+    "category": "C"
+  },
+  {
+    "id": 88,
+    "keyword": "append",
+    "explain": "附加值",
+    "operation": "在输入框中附加值",
+    "code": "Browser.getInstance.append(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在输入框中附加\"+text)",
+    "category": "A"
+  },
+  {
+    "id": 89,
+    "keyword": "forceSet",
+    "explain": "强制性填入值",
+    "operation": "在输入框中输入值",
+    "code": "Browser.getInstance.forceSet(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在输入框强制输入\"+text)",
+    "category": "F"
+  },
+  {
+    "id": 90,
+    "keyword": "sleepForOneSecond",
+    "explain": "睡眠一秒",
+    "operation": "自动开始等待一秒",
+    "code": "Browser.getInstance.sleepForOneSecond()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"等待一秒\")",
+    "category": "S"
+  },
+  {
+    "id": 91,
+    "keyword": "getScreenCapture",
+    "explain": "截图",
+    "operation": "截图",
+    "code": "Browser.getInstance.getScreenCapture()",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"截取当前页面\")",
+    "category": "G"
+  },
+  {
+    "id": 92,
+    "keyword": "scrrollBy",
+    "explain": "页面滚动",
+    "operation": "页面滚动",
+    "code": "Browser.getInstance.getScreenCapture(${{weight}},${{height}})",
+    "paramList": {
+      "param": "",
+      "paramstyle": "",
+      "type": ""
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"页面横向滚动\"+weight+\"页面纵向滚动\"+height)",
+    "category": "S"
+  },
+  {
+    "id": 93,
+    "keyword": "radioSelectByIndex",
+    "explain": "根据序号选择radio",
+    "operation": "根据序号选择radio",
+    "code": "Browser.getInstance.radioSelectByIndex(${{index}})",
+    "paramList": {
+      "param": "index",
+      "paramstyle": "{\n\"name\" : \"index\"\n\n\"type\" : \"int\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"radio选项序号\"\n\n}",
+      "type": "int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"选取\"+index+\"号radio\")",
+    "category": "R"
+  },
+  {
+    "id": 94,
+    "keyword": "radioSelectByVisibleText",
+    "explain": "根据选项文本选择radio",
+    "operation": "根据选项文本选择radio",
+    "code": "Browser.getInstance.radioSelectByVisibleText(${{text}})",
+    "paramList": {
+      "param": "text",
+      "paramstyle": "{\n\"name\" : \"text\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\"\n\n\"desc\" : \"输入文本\"\n\n}",
+      "type": "str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"选取\"+text+\"对应的radio\")",
+    "category": "R"
+  },
+  {
+    "id": 95,
+    "keyword": "WebRadioClick",
+    "explain": "点击table里面某一个单元格的radio，预先写好了radio的定位属性",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} \"列的单选钮\"",
+    "code": "Browser.getInstance.WebRadioClick(${{element}},${{rowIndex}},${{colIndex}})",
+    "paramList": {
+      "param": "element/rowIndex/colIndex",
+      "paramstyle": "{\n\"name\" : \"element\",\"rowIndex\",\"colIndex\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"表格名称\",\"行序号\"，\"列序号\"\n\n}",
+      "type": "str/int/int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在表格\"+element+\"中点击第\"+rowIndex+\"行第\"+colIndex+\"列的单选钮\")",
+    "category": "W"
+  },
+  {
+    "id": 96,
+    "keyword": "WebCheckBoxSet",
+    "explain": "选择table单元格里的某个checkbox，预先填写好了checkbox的定位参数",
+    "operation": "在表格{{element}}中选择第{{rowIndex}}行第{{colIndex}} 列的复选框状态为\" {{status}}",
+    "code": "Browser.getInstance.WebCheckBoxSet(${{element}},${{rowIndex}},${{colIndex}},${{status}})",
+    "paramList": {
+      "param": "element/rowIndex/colIndex/status",
+      "paramstyle": "{\n\"name\" : \"element\",\"rowIndex\",\"colIndex\",\"status\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"，\"{{element}}\"\n\n\"desc\" : \"表格名称\",\"行序号\"，\"列序号\",\"复选框状态\"\n\n}",
+      "type": "str/int/int/str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在表格\"+element+\"中点击第\"+rowIndex+\"行第\"+colIndex+\"列的单选钮复选框状态为\" +status)",
+    "category": "W"
+  },
+  {
+    "id": 97,
+    "keyword": "WebButtonClick",
+    "explain": "点击表格内某个单元格内的某个按钮，需要传入按钮的定位xpath",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} 列的按钮\" ",
+    "code": "Browser.getInstance.WebButtonClick(${{element}},${{rowIndex}},${{colIndex}},${{status}})",
+    "paramList": {
+      "param": "element/rowIndex/colIndex/status",
+      "paramstyle": "{\n\"name\" : \"element\",\"rowIndex\",\"colIndex\",\"status\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"，\"{{element}}\"\n\n\"desc\" : \"表格名称\",\"行序号\"，\"列序号\",\"复选框状态\"\n\n}",
+      "type": "str/int/int/str"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在表格\"+element+\"中点击第\"+rowIndex+\"行第\"+colIndex+\"列的单选钮\")",
+    "category": "W"
+  },
+  {
+    "id": 98,
+    "keyword": "WebLinkClick",
+    "explain": "点击某个单元格里的链接，需要填写链接的定位属性",
+    "operation": "在表格{{element}}中点击第{{rowIndex}}行第{{colIndex}} \"列的链接\"",
+    "code": "Browser.getInstance.WebLinkClick(${{element}},${{rowIndex}},${{colIndex}})",
+    "paramList": {
+      "param": "element/rowIndex/colIndex",
+      "paramstyle": "{\n\"name\" : \"element\",\"rowIndex\",\"colIndex\"\n\n\"type\" : \"str\"\n\n\"parameterizeColumn\" : \"{{element}}\",\"{{element}}\",\"{{element}}\"\n\n\"desc\" : \"表格名称\",\"行序号\"，\"列序号\"\n\n}",
+      "type": "str/int/int"
+    },
+    "remark": "",
+    "log": "ScriptExecuteTools.Reporter.log(\"debug\",\"在表格\"+element+\"中点击第\"+rowIndex+\"行第\"+colIndex+\"列的链接\")",
+    "category": "W"
+  }
+]
