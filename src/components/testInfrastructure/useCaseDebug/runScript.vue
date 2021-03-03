@@ -11,28 +11,30 @@
         <p class="runTitle">脚本调试</p>
         <el-row class="menuRow" :gutter="20">
             <el-form label-width="100px">
-                <el-col :lg="7" :md="10" :sm="12" :xs="12">
+                <el-col :lg="5" :md="10" :sm="12" :xs="12">
                     <!-- <el-form-item
               label="当前测试计划">
               <el-tag type="primary">{{testPlanEntity.nameMedium}}</el-tag>
             </el-form-item> -->
                     <el-form-item label="执行机选择">
-                        <el-select class="runnerSelect" placeholder="请选择执行机" v-model="runnersSelected">
+                        <el-select class="runnerSelect" placeholder="请选择执行机" v-model="runnersSelected" size="small">
                             <el-option v-for="(item, index) in runners" :key="'runner'+index" :label="item.runnerName" :value="item.identifiableName">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="7" :md="10" :sm="12" :xs="12">
+                <el-col :lg="4" :md="10" :sm="12" :xs="12">
                     <el-form-item label="" label-width="20px">
                         <p class="executeStatus" v-html="exeStautShow"></p>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="10" :md="10" :sm="12" :xs="12">
-                    <el-form-item label="设置执行次数" class="set-time">
-                        <el-input-number class="input_number" v-model="runNumber" clearable></el-input-number>
-                        <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
-                    </el-form-item>
+                <el-col :lg="15" :md="15" :sm="12" :xs="12">
+                    <span style="margin-right: 10px; font-size: 14px">设置执行次数</span>
+                    <el-select v-model="selectCase" size="small" style="width: 350px" v-if="testSceneList.length > 0">
+                        <el-option v-for="(testCase, index) in testSceneList[0].testCaseList" :key="'case' + index" :label="testCase.caseCode" :value="testCase.caseId"></el-option>
+                    </el-select>
+                    <el-input-number size="small" class="input_number" v-model="runNumber" clearable></el-input-number>
+                    <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
                 </el-col>
             </el-form>
         </el-row>
@@ -84,7 +86,7 @@
               </pre>
                     </div>
                 </el-card>
-                <div v-else id="loghidden">
+                <div v-else id="loghidden" hidden>
                     <div id="hidden">
                         <el-button size="small" @click="showScreen">
                             <i class="fa fa-angle-double-left">
@@ -172,7 +174,10 @@ export default {
             exeStautShow: '执行状态：<i class="el-icon-info""></i>无计划', // 设置执行状态
             tagType: "primary",
             interruptData: {},
-            runNumber: 1
+            runNumber: 1,
+            selectCase: "", // 选择的case
+            sceneId: '',
+            copyTestCase: ''
         }
     },
     props: {
@@ -187,6 +192,27 @@ export default {
         scriptId: {
             type: Number,
             default: 0
+        }
+    },
+    watch: {
+        caseId: {
+            handler(newVal) {
+                this.copyTestCase = newVal
+            },
+            immediate: true
+        },
+        selectCase: {
+            handler(newVal) {
+                console.log(newVal)
+                console.log()
+                if(this.testSceneList.length > 0) {
+                    const item = this.testSceneList[0].testCaseList.find(item => item.caseId === newVal)
+                    console.log(item)
+                    this.runNumber = item.runTotalNumber
+                    this.copyTestCase = item.caseId
+                }
+            },
+            immediate: true
         }
     },
     mounted() {
@@ -234,6 +260,8 @@ export default {
                     this.$message.success('查询成功')
                 }
                 this.testSceneList = res.executeInstanceResult.testSceneList
+                this.selectCase = this.testSceneList[0].testCaseList[0].caseId
+                this.sceneId = this.testSceneList[0].sceneId
                 console.log('run', this.testSceneList)
             }).catch(error => {
                 console.log('场景用例获取失败')
@@ -331,30 +359,41 @@ export default {
         },
         // 获取最近的执行批次id
         getBatchIdForTestPlan(testPlanId) {
+            console.log('测试计划获取成功run - id', testPlanId)
             var _this = this;
-            Vac.ajax({
-                url: "/batchRunCtrlController/queryLatestBatchIdForTestPlan",
-                type: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    testPlanId: testPlanId,
-                }),
-                success: function (data) {
-                    if (data.respCode == "0000") {
-                        _this.batchId = data.batchId;
-                        _this.getSinglebranchStatus();
-                    } else if (data.respCode == "10012000") {
-                        _this.exeStautShow =
-                            '执行状态：<i class="el-icon-video-play"></i>尚未执行';
-                        _this.tagType = "warning";
-                        _this.exeStauts = true;
-                        Vac.alert(data.respMsg);
-                    } else Vac.alert("查询branchId出错啦");
-                },
-                error: function () {
-                    Vac.alert("网络错误");
-                },
-            });
+            Request({
+                url: '/batchRunCtrlController/queryLatestBatchIdForTestPlan',
+                method: 'post',
+                params: {
+                    testPlanId: testPlanId
+                }
+            }).then(data => {
+                console.log("测试计划获取成功run", res)
+                if (data.respCode == "0000") {
+                    _this.batchId = data.batchId;
+                    _this.getSinglebranchStatus();
+                }
+            }).catch(err => {
+                this.$message.warning(err)
+                _this.exeStautShow = '执行状态：<i class="el-icon-video-play"></i>尚未执行';
+                _this.tagType = "warning";
+                _this.exeStauts = true;
+            })
+            // Vac.ajax({
+            //     url: "",
+            //     type: "post",
+            //     contentType: "application/json",
+            //     data: JSON.stringify({
+                    
+            //     }),
+            //     success: function (data) {
+            //         
+            //         } else Vac.alert("查询branchId出错啦");
+            //     },
+            //     error: function () {
+            //         Vac.alert("网络错误");
+            //     },
+            // });
         },
         getSinglebranchStatus() {
             //查询单个批次结果 并展示执行状态
@@ -599,10 +638,10 @@ export default {
                 method: 'post',
                 params: {
                     casesRunNumberList:[{
-                        caseId: this.caseId,
+                        caseId: this.copyTestCase,
                         runNumber: this.runNumber
                     }],
-                    flowNodesRunNumberList:[ ],
+                    flowNodesRunNumberList:[],
                     sceneId: this.sceneId
                 }
             }).then(res => {
@@ -636,9 +675,6 @@ export default {
     .set-time {
         display: flex;
         justify-content: flex-start;
-        .input_number {
-            width: 200px;
-        }
         .save-button {
             margin-left: 10px;
         }

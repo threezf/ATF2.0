@@ -1052,7 +1052,7 @@ export default {
             row: {},
             conditionList: [],
             timer: null,
-            exportUrl: 'http://140.143.16.21:8080/atfcloud2.0a/testcase/exportTestCase'
+            exportUrl: 'http://140.143.16.21:9090/atfcloud2.0a/testcase/exportTestCase'
         };
     },
     computed: {
@@ -1074,7 +1074,7 @@ export default {
             return obj[this.titleFlag]
         },
 			importURL() {
-				return "http://140.143.16.21:8080/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
+				return "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
 				// return "http://10.101.167.184:8080/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
 			},
     },

@@ -9,8 +9,12 @@
                 <el-button icon="el-icon-delete" size="small" :disabled="showFlag" type="primary" @click="deleteTemplateShow">
                     删除{{ name }}
                 </el-button>
-                <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript" v-if="caseNotNeedAdd">调试执行
-                </el-button>
+                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptClicked">
+                    <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
+                </el-tooltip>
+                <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试页面">
+                    <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button>
+                </el-tooltip>
                 <el-button type="primary" size="small" @click="addScriptTemplateDebug" v-else>
                     <i class="fa fa-plus-circle"></i>
                     添加脚本用例
@@ -31,7 +35,141 @@
                     <el-table-column property="desc" label="描述"> </el-table-column>
                 </el-table>
             </div>
-            <div class="templatInfo">
+            
+            <div class="templatInfo" v-if="isUseDebug">
+                <el-tabs v-model="currentTab" type="border-card">
+                    <el-tab-pane v-for="(item, index) in tabs" :key="index" :label="item.label" :name="item.name" style="margin-top: -10px; max-height: 500px; overflow: scroll">
+                        <template v-if="item.name === 'params'">
+                            <el-row hidden>
+                                <span> {{ name }}数据 </span>
+                            </el-row>
+                            <div>
+                                <el-row v-if="templateRadio !== ''">
+                                    <el-button size="small" type="primary" icon="el-icon-plus" @click="addItemShow = true" :disabled="showFlag">
+                                        添加多项
+                                    </el-button>
+                                    <el-button icon="el-icon-delete" size="small" type="primary" @click="deleteTemplateInfo" :disabled="showFlag">
+                                        删除
+                                    </el-button>
+                                    <el-button icon="el-icon-arrow-up" size="small" type="primary" @click="eleUp" :disabled="showFlag">
+                                        上移
+                                    </el-button>
+                                    <el-button icon="el-icon-arrow-down" size="small" type="primary" @click="eleDown" :disabled="showFlag">
+                                        下移
+                                    </el-button>
+                                    <el-button icon="el-icon-document" size="small" type="primary" @click="saveInfo" :disabled="showFlag">
+                                        保存
+                                    </el-button>
+                                    <el-button icon="el-icon-printer" size="small" type="primary" @click="giveParam" :disabled="showFlag">
+                                        参数化
+                                    </el-button>
+                                </el-row>
+                                <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
+                                    <el-table-column label="排序" width="55">
+                                        <template slot-scope="scope">
+                                            <i :id="scope.row.date" class="el-icon-sort"></i>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="选择" type="selection" width="55">
+                                    </el-table-column>
+                                    <el-table-column label="操作项" width="260" prop="name">
+                                    </el-table-column>
+                                    <el-table-column label="方法" width="180">
+                                        <template slot-scope="scope">
+                                            <el-select v-model="scope.row.methodName" placeholder="请选择" @change="changeMethod(scope.row)" :disabled="(scope.row.name.indexOf('公共函数') > -1)">
+                                                <el-option v-for="item in methods[scope.row.elementWidget]" :key="item.id" :label="item.name" :value="item.name">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="arguments" label="参数">
+                                        <template slot-scope="scope">
+                                            <div v-if="scope.row.arguShow">
+                                                <el-row v-for="(item, index) in scope.row.arguments" :key="'show' + index">
+                                                    <el-col :span="5">
+                                                        <span> 名称 </span>
+                                                    </el-col>
+                                                    <el-col :span="10">
+                                                        <span> 参数值 </span>
+                                                    </el-col>
+                                                </el-row>
+                                                <el-row v-for="(item, index) in scope.row.arguments" :key="'edit' + index">
+                                                    <el-col :span="5" class="fixedHeight">
+                                                        <span>
+                                                            {{ item.name }}
+                                                        </span>
+                                                    </el-col>
+                                                    <el-col :span="10">
+                                                        <span>
+                                                            {{ item.value }}
+                                                        </span>
+                                                    </el-col>
+                                                </el-row>
+                                                <el-row v-if="scope.row.arguments.length > 0">
+                                                    <el-button size="mini" type="primary" icon="el-icon-edit" @click="scope.row.arguShow = false" :disabled="showFlag">
+                                                        编辑
+                                                    </el-button>
+                                                </el-row>
+                                            </div>
+                                            <div v-else>
+                                                <el-row v-for="item in scope.row.arguments" :key="item.index">
+                                                    <el-col :span="5">
+                                                        <span> 名称 </span>
+                                                    </el-col>
+                                                    <el-col :span="10">
+                                                        <span> 参数值 </span>
+                                                    </el-col>
+                                                </el-row>
+                                                <el-row v-for="(item, index) in scope.row.arguments" :key="'eidting' + index">
+                                                    <el-col :span="5" class="fixedHeight">
+                                                        <span>
+                                                            {{ item.name }}
+                                                        </span>
+                                                    </el-col>
+                                                    <el-col :span="10">
+                                                        <el-input size="mini" @dragenter.stop.prevent="return false;" @dragover.stop.prevent="return false;" v-model="item.newvalue"></el-input>
+                                                    </el-col>
+                                                </el-row>
+                                                <el-row>
+                                                    <el-col :span="5">
+                                                        <el-button @click="
+                                                            scope.row.arguments.forEach((v) => {
+                                                            v.newvalue = v.value;
+                                                            });
+                                                            scope.row.arguShow = true;
+                                                        " size="mini">
+                                                            取消
+                                                        </el-button>
+                                                    </el-col>
+                                                    <el-col :span="5">
+                                                        <el-button type="primary" size="mini" @click="
+                                                            scope.row.arguments.forEach((v) => {
+                                                            v.value = v.newvalue;
+                                                            });
+                                                            scope.row.arguShow = true;
+                                                        ">
+                                                            确认
+                                                        </el-button>
+                                                    </el-col>
+                                                </el-row>
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <div slot="empty">暂无数据,请选择{{ name }}</div>
+                                </el-table>
+                            </div>
+                        </template>
+                        <template v-if="item.name === 'script'">
+                             <set-datable></set-datable>
+                        </template>
+                        <template v-if="item.name === 'result'">
+                             <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
+                        </template>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+
+            <div class="templatInfo" v-else>
                 <el-row>
                     <span> {{ name }}数据 </span>
                 </el-row>
@@ -189,12 +327,16 @@ import VueMixins from "@/libs/vueMixins.js";
 import draggable from "vuedraggable";
 import Sortable from "sortablejs";
 import uiEleFunTree from "./uiEleFunTree";
+import SetDatable from '@/components/testInfrastructure/useCaseDebug/setDatable'
+import RunScript from '@/components/testInfrastructure/useCaseDebug/runScript'
 
 export default {
     name: "TemplateManage",
     components: {
         draggable,
         uiEleFunTree,
+        SetDatable,
+        RunScript
     },
     mixins: [VueMixins],
     props: {
@@ -246,6 +388,27 @@ export default {
             caseId: '', //创建测试用例的id
             caseNotNeedAdd: true, //脚本需要添加
             selectCase: '',
+            isScriptClicked: false,
+            currentTab: 'params',
+            tabs: [{
+                label: '脚本参数',
+                name: 'params', 
+            }, {
+                label: '配置数据',
+                name: 'script'
+            }, {
+                label: '执行结果',
+                name: 'result'
+            }],
+
+
+            // 脚本调试数据
+            scripId: "",
+            caselibId: "",
+            testPlanId: "",
+            scriptable: false,
+            resultable: false,
+            isUseDebug: false
         };
     },
     watch: {
@@ -254,6 +417,12 @@ export default {
                 this.getTemplates();
             }
         },
+        templateRadio: {
+            handler(newVal) {
+                this.scriptId = newVal
+            },
+            immediate: true
+        }
     },
     created() {},
     computed: {},
@@ -583,49 +752,49 @@ export default {
                     let _this = this;
                     if (this.isQuick) {
                         Request({
-                                url: "/testcase/addTestcase",
-                                method: "POST",
-                                params: {
-                                    actionList: [],
-                                    autId: _this.autId,
-                                    author: sessionStorage.getItem("userId") || "3",
-                                    automaton: "",
-                                    caseCompositeType: "1",
-                                    caseLibId: "253",
-                                    casecode: "casecode" + Date.now(),
-                                    caseproperty: "1",
-                                    casetype: "1",
-                                    categoryTeam: "",
-                                    checkpoint: "",
-                                    datarequest: "",
-                                    executeMethod: "2",
-                                    executor: "3",
-                                    expectresult: "1",
-                                    functionModule: "",
-                                    modifyChannel: "",
-                                    modifyChannelNo: "",
-                                    note: _this.addTemplateForm.description,
-                                    prerequisites: "",
-                                    priority: "1",
-                                    reviewer: "3",
-                                    scriptMode: "1",
-                                    scriptModeFlag: res.scriptId,
-                                    submissionId: "49",
-                                    tags: "",
-                                    testdesign: 1,
-                                    testpoint: _this.addTemplateForm.name,
-                                    teststep: "1",
-                                    transId: _this.transId,
-                                    useStatus: "1",
-                                    version: "",
-                                },
-                            })
-                            .then((res) => {
-                                if (this.isQuick == true) {
-                                    this.insertTestcaseToScene(res.caseId)
-                                }
-                            })
-                            .catch((err) => {});
+                            url: "/testcase/addTestcase",
+                            method: "POST",
+                            params: {
+                                actionList: [],
+                                autId: _this.autId,
+                                author: sessionStorage.getItem("userId") || "3",
+                                automaton: "",
+                                caseCompositeType: "1",
+                                caseLibId: "253",
+                                casecode: "casecode" + Date.now(),
+                                caseproperty: "1",
+                                casetype: "1",
+                                categoryTeam: "",
+                                checkpoint: "",
+                                datarequest: "",
+                                executeMethod: "2",
+                                executor: "3",
+                                expectresult: "1",
+                                functionModule: "",
+                                modifyChannel: "",
+                                modifyChannelNo: "",
+                                note: _this.addTemplateForm.description,
+                                prerequisites: "",
+                                priority: "1",
+                                reviewer: "3",
+                                scriptMode: "1",
+                                scriptModeFlag: res.scriptId,
+                                submissionId: "49",
+                                tags: "",
+                                testdesign: 1,
+                                testpoint: _this.addTemplateForm.name,
+                                teststep: "1",
+                                transId: _this.transId,
+                                useStatus: "1",
+                                version: "",
+                            },
+                        })
+                        .then((res) => {
+                            if (this.isQuick == true) {
+                                this.insertTestcaseToScene(res.caseId)
+                            }
+                        })
+                        .catch((err) => {});
                     }
                     this.getTemplates();
                 },
@@ -783,20 +952,28 @@ export default {
         //选择脚本
         chooseTemplate(row, column, event) {
             this.templateRadio = row.id;
+            this.isScriptClicked = true
             this.getTemplateInfo();
             this.handleSelectRadio(row)
         },
         // 调试脚本
         debugScript() {
+            this.isUseDebug = true
             if (this.templateRadio) {
+                this.isScriptClicked = false
                 this.queryScriptTemplateDebugTestCaseByScriptId()
             } else {
                 this.$message.warning("请选择调试脚本");
             }
         },
+        // 添加新的调试脚本
+        addScript() {
+            console.log('添加新的调试脚本')
+            this.addScriptTemplateDebug('添加成功', true)
+        },
         // 添加脚本调试接口
-        addScriptTemplateDebug() {
-            if (this.templateRadio) {
+        addScriptTemplateDebug(msg, flag) {
+            if (flag != undefined || this.templateRadio) {
                 Request({
                     url: '/scriptTemplate/addScriptTemplateDebug',
                     method: 'POST',
@@ -809,14 +986,13 @@ export default {
                 }).then(res => {
                     if (res.respCode === "0000") {
                         // 这里会返回caseId
-                        this.$message.success('添加成功，您可以选择脚本进行调试')
+                        this.$message.success('操作成功')
                         this.caseId = res.caseId
                         this.caseNotNeedAdd = true
                     } else {
                         return console.log('获取失败')
                     }
                 }).catch(error => {
-                    console.log("脚本调试添加失败", error)
                     this.$message.warning(error)
                 })
             } else {
@@ -834,15 +1010,22 @@ export default {
             }).then(res => {
                 if (res.respCode === '0000') {
                     // 返回caseId
-                    this.$router.push({
-                        name: "UseCaseDebug",
-                        query: {
-                            scriptId: this.templateRadio,
-                            autId: this.autId,
-                            caseId: res.testcaseEntities[0].id
-                        },
-                    });
-                    console.log('debugRes', res)
+                    // this.$router.push({
+                    //     name: "UseCaseDebug",
+                    //     query: {
+                    //         scriptId: this.templateRadio,
+                    //         autId: this.autId,
+                    //         caseId: res.testcaseEntities[0].id
+                    //     },
+                    // });
+                    this.caseId = res.testcaseEntities[0].id
+                    console.log('debugRes', {
+                        scriptId: this.templateRadio,
+                        autId: this.autId,
+                        caseId: res.testcaseEntities[0].id
+                    })
+                    this.queryScriptDebugTestPlan(this.caseId)
+                    sessionStorage.setItem('scriptId', this.scriptId)
                 } else {
                     return console.log('数据获取失败')
                 }
@@ -852,6 +1035,27 @@ export default {
                 this.caseNotNeedAdd = false
             })
         },
+        // 查询脚本调试测试计划
+        queryScriptDebugTestPlan(caseId) {
+            Request({
+                url: '/testPlanController/queryScriptDebugTestPlan',
+                method: 'POST',
+                params: {
+                    caseId,
+                    scriptId: this.scriptId
+                }
+            }).then(res => {
+                if(res.respCode === '0000') {
+                    this.caselibId = res.testPlanEntity.caseLibId
+                    this.testPlanId = res.testPlanEntity.id
+                    sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
+                    console.log(res, '---------')
+                }
+            }).catch(error => {
+                this.$message.warning('该测试计划尚未发起执行')
+            })
+            
+        }
     },
     created() {},
     mounted() {
