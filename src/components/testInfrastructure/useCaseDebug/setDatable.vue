@@ -85,6 +85,7 @@
               multiple
               v-model="columnHidden"
               placeholder="请选择隐藏列"
+              collapse-tags
             >
               <el-option
                 v-for="item in selectOptions"

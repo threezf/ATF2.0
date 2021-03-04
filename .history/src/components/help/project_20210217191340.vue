@@ -15,21 +15,15 @@
             <!--<div class="project-desc" v-html="project.desc"></div>-->
             <div class="project-content" :id="'content' + project.id">
                 <div class="main" >
-                    <span v-if="showshort">具体操作：{{project.operation}}</span>
+                    <span v-if="showshort">{{project.operation}}</span>
                     <div class="project-url" v-else>
-                        <span>具体操作：{{project.operation}}</span>
+                        <span>{{project.operation}}</span>
                         <br/>
                         <div class="project-url project-link">
                             <i class="octicon octicon-star" aria-hidden="true"></i>
                             <span>参数：{{project.paramList.param}}</span>
                         </div>
-                        <br/>
-                        <div class="project-url project-link" style="height:auto"> 
-                            <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
-                            <span>参数形式：</span>
-                            <pre>{{project.paramList.paramstyle}}</pre>
-                        </div>
-                        <br/>
+
                         <div class="project-url project-link">
                             <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
                             <span>类型：{{project.paramList.type}}</span>
@@ -40,18 +34,12 @@
             <div class="no-show">
                 <div class="project-content-copy" :id="'content-copy' + project.id">
                     <div class="project-url">
-                    <span>具体操作：{{project.operation}}</span>
+                    <span>{{project.operation}}</span>
                     <div class="project-url project-link">
                         <i class="octicon octicon-star" aria-hidden="true"></i>
                         <span>参数：{{project.paramList.param}}</span>
                     </div>
-                    <br/>
-                    <div class="project-url project-link">
-                        <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
-                        <span>参数形式：</span>
-                        <pre>{{project.paramList.paramstyle}}</pre>
-                    </div>
-                    <br/>
+
                     <div class="project-url project-link">
                         <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
                         <span>类型：{{project.paramList.type}}</span>
@@ -63,12 +51,7 @@
 
                 <div class="project-link">
                     <i class="fa fa-code custom-fa" aria-hidden="true">{{project.remark}}</i>
-                    <span>备注：{{project.remark}}</span>
-                </div>
-                <br/>
-                <div class="project-link">
-                    <i class="fa fa-code custom-fa" aria-hidden="true">{{project.remark}}</i>
-                    <span>日志结果显示：{{project.log}}</span>
+                    <span>{{project.remark}}</span>
                 </div>
                 <a href="javascript:void(0)" @click="expand" class="project-link expand">
                     <i class="fa " :class="{'fa-angle-double-down': showshort, 'fa-angle-double-up': !showshort}"
@@ -97,7 +80,7 @@
         data: function () {
             return {
                 showshort: true,
-                preHeight: '',
+                preHeight: ''
             }
         },
         methods: {
