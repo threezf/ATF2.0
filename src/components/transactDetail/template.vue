@@ -12,8 +12,9 @@
                 <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptClicked">
                     <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
-                <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试页面">
-                    <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button>
+                <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
+                    <!-- <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button> -->
+                    <el-switch v-model="isUseDebug" inactive-text="配置脚本数据模式" active-text="脚本调试模式" :disabled="isScriptSelcted"></el-switch>
                 </el-tooltip>
                 <el-button type="primary" size="small" @click="addScriptTemplateDebug" v-else>
                     <i class="fa fa-plus-circle"></i>
@@ -422,10 +423,23 @@ export default {
                 this.scriptId = newVal
             },
             immediate: true
-        }
+        },
+        isUseDebug: {
+            handler(newVal) {
+                if(newVal) {
+                    this.debugScript()
+                }
+            },
+            immediate: true
+        },
     },
     created() {},
-    computed: {},
+    computed: {
+        isScriptSelcted() {
+            console.log(this.scriptId)
+            return this.templateRadio == ""
+        }
+    },
     methods: {
         handleSelectRadio(row) {
             Request({
