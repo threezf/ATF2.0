@@ -15,9 +15,9 @@
             <!--<div class="project-desc" v-html="project.desc"></div>-->
             <div class="project-content" :id="'content' + project.id">
                 <div class="main" >
-                    <span v-if="showshort">具体操作：{{project.operation}}</span>
+                    <span v-if="showshort">{{project.operation}}</span>
                     <div class="project-url" v-else>
-                        <span>具体操作：{{project.operation}}</span>
+                        <span>具体方法：{{project.operation}}</span>
                         <br/>
                         <div class="project-url project-link">
                             <i class="octicon octicon-star" aria-hidden="true"></i>
@@ -26,8 +26,7 @@
                         <br/>
                         <div class="project-url project-link" style="height:auto"> 
                             <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
-                            <span>参数形式：</span>
-                            <pre>{{project.paramList.paramstyle}}</pre>
+                            <span v-html="JSON.stringify(project.paramList.paramstyle, null, 4)"></span>
                         </div>
                         <br/>
                         <div class="project-url project-link">
@@ -40,7 +39,7 @@
             <div class="no-show">
                 <div class="project-content-copy" :id="'content-copy' + project.id">
                     <div class="project-url">
-                    <span>具体操作：{{project.operation}}</span>
+                    <span>具体方法：{{project.operation}}</span>
                     <div class="project-url project-link">
                         <i class="octicon octicon-star" aria-hidden="true"></i>
                         <span>参数：{{project.paramList.param}}</span>
@@ -48,8 +47,7 @@
                     <br/>
                     <div class="project-url project-link">
                         <i class="octicon octicon-repo-forked" aria-hidden="true"></i>
-                        <span>参数形式：</span>
-                        <pre>{{project.paramList.paramstyle}}</pre>
+                        <span>参数形式：{{JSON.stringify(JSON.parse(project.paramList.paramstyle))}}</span>
                     </div>
                     <br/>
                     <div class="project-url project-link">
