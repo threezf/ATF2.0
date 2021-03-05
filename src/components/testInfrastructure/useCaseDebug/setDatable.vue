@@ -129,46 +129,20 @@
                 </el-button>
               </template>
             </el-table-column>
-            <el-table-column prop="caseCode" label="用例编号" width="100">
+            <el-table-column prop="caseCode" label="用例编号" width="200">
             </el-table-column>
             <el-table-column
               v-if="!columnHidden.includes('测试点')"
               prop="testPoint"
               label="测试点"
-            >
-            </el-table-column>
-            <el-table-column
-              v-if="!columnHidden.includes('测试意图')"
-              prop="testDesign"
-              label="测试意图"
-            >
-            </el-table-column>
-            <el-table-column
-              v-if="!columnHidden.includes('测试步骤')"
-              prop="testStep"
-              label="测试步骤"
               width="200"
             >
             </el-table-column>
-            <el-table-column
-              v-if="!columnHidden.includes('预期结果')"
-              prop="expectResult"
-              label="预期结果"
-              width="150"
-            >
-            </el-table-column>
-            <el-table-column
-              v-if="!columnHidden.includes('检查点')"
-              width="150"
-              prop="checkPoint"
-              label="检查点"
-            >
-            </el-table-column>
-            <el-table-column
+          <el-table-column
               v-for="(item, index) in tableHead"
               :key="index"
               :label="item[0] + '-' + item[1]"
-              width="180"
+              width="350"
             >
               <template slot-scope="scope">
                 <div

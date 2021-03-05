@@ -478,7 +478,7 @@ export default {
                     logType: 2,
                     reqSyncNo: null,
                     sessionId: null,
-                    testPlanId: this.testPlanId,
+                    testPlanId: 1492,
                     latestLineNum: 50
                 }
             }).then(res => {
