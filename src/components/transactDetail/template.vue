@@ -163,7 +163,7 @@
                         <template v-if="item.name === 'script'">
                              <set-datable></set-datable>
                         </template>
-                        <template v-if="item.name === 'result'">
+                        <template v-if="item.name === 'result' && currentTab === 'result'">
                              <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
                         </template>
                     </el-tab-pane>

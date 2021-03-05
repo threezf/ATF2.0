@@ -8,7 +8,6 @@
 <div>
     <hr>
     <el-card>
-        <p class="runTitle">脚本调试</p>
         <el-row class="menuRow" :gutter="20">
             <el-form label-width="100px">
                 <el-col :lg="5" :md="10" :sm="12" :xs="12">
@@ -97,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <div class="sceneslist" style="margin-top: 20px">
+        <div class="sceneslist" style="margin-top: 20px" hidden>
             <div class="scene-list-wrapper" style="padding: 0px 20px 10px 20px" v-for="(scene, index) in testSceneList" :key="index">
                 <el-row class="sceneTitleRow">
                     <i class="fa fa-arrows" style="color: #5a3c3c">
@@ -135,6 +134,13 @@
                 </div>
             </div>
         </div>
+        <div class="execute-result"
+            v-loading="isRunning"
+            element-loading-text="脚本调试中..."
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.7)">
+            
+        </div>
     </el-card>
 </div>
 </template>
@@ -156,6 +162,7 @@ export default {
             logShow: false,
             testSceneList: [], //测试场景列表
             isExpanding: false,
+            isRunning: true,
             exeImgs: {
                 0: "/index/static/img/waiting.png",
                 10: "/index/static/img/init.png",
@@ -478,7 +485,7 @@ export default {
                     logType: 2,
                     reqSyncNo: null,
                     sessionId: null,
-                    testPlanId: 1492,
+                    testPlanId: this.testPlanId,
                     latestLineNum: 50
                 }
             }).then(res => {
@@ -811,6 +818,11 @@ export default {
             margin-left: 5px;
         }
     }
+}
+
+.execute-result {
+    border: 1px solid #eee;
+    height: 200px;
 }
 
 .case-lib {
