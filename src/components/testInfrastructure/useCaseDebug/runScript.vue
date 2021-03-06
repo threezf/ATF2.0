@@ -386,7 +386,7 @@ export default {
             }).then(res => {
                 if (res.respCode === '0000') {
                     console.log('一步查询状态', res)
-                    syncQueryIncLog(res)
+                    this.syncQueryIncLog(res)
                 }
             }).catch(error => {
                 console.log('异步查询失败', error)
@@ -395,34 +395,32 @@ export default {
                 this.$message.warning("消息队列获取失败")
             })
 
-            function syncQueryIncLog(values) {
-                Request({
-                    url: "/executeController/syncQueryLog",
-                    method: "post",
-                    params: {
-                        logType: 2,
-                        reqSyncNo: values.respSyncNo,
-                        sessionId: values.sessionId,
-                        testPlanId: values.testPlanId,
-                        latestLineNum: 50,
-                    }
-                }).then(data => {
-                    if (data.respCode == "0000") {
-                        console.log('执行撞他', data)
-                        if(this.isRunning) {
-                            syncQueryIncLog(data);
-                        }
-                    } else {
-                        Vac.alert(data.respMsg);
-                        this.isRunning = false
-                        this.operationMsg = '脚本调试执行结束'
-                    }
-                }).catch(err => {
-                    Vac.alert("网络错误！请点击重新查询！");
-
-                })
-            }
         },
+        syncQueryIncLog(values) {
+            Request({
+                url: "/executeController/syncQueryLog",
+                method: "POST",
+                params: {
+                    logType: 2,
+                    reqSyncNo: values.respSyncNo,
+                    sessionId: values.sessionId,
+                    testPlanId: values.testPlanId,
+                    latestLineNum: 50,
+                }
+            }).then(data => {
+                if (data.respCode == "0000") {
+                    if(this.isRunning) {
+                        this.syncQueryIncLog(data);
+                    }
+                } else {
+                    this.isRunning = false
+                    this.operationMsg = '脚本调试执行结束'
+                }
+            }).catch(err => {
+                Vac.alert("网络错误！请点击重新查询！");
+
+            })
+        }
         /**
          * 日志相关
          */
