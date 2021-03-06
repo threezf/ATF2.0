@@ -409,6 +409,7 @@ export default {
                     }),
                     success: function (data) {
                         if (data.respCode == "0000") {
+                            console.log('执行撞他', data)
                             if(this.isRunning) {
                                 syncQueryIncLog(data);
                             }
