@@ -18,11 +18,11 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="5" :md="10" :sm="12" :xs="12">
+                <!-- <el-col :lg="5" :md="10" :sm="12" :xs="12">
                     <el-form-item label="" label-width="20px">
                         <p style="padding-left: 0px" v-html="exeStautShow"></p>
                     </el-form-item>
-                </el-col>
+                </el-col> -->
                 <el-col :lg="14" :md="15" :sm="12" :xs="12">
                     <span style="margin-right: 0px; font-size: 14px">设置执行次数</span>
                     <el-select v-model="selectCase" size="small" style="width: 350px" v-if="testSceneList.length > 0">
@@ -289,8 +289,8 @@ export default {
                     testPlanId: testPlanId
                 }
             }).then(data => {
-                console.log("测试计划获取成功run", res)
                 if (data.respCode == "0000") {
+                    console.log("测试计划获取成功run", res)
                     _this.batchId = data.batchId;
                     _this.getSinglebranchStatus();
                 }
