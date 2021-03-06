@@ -413,11 +413,12 @@ export default {
                         this.syncQueryIncLog(data);
                     }
                 } else {
-                    this.isRunning = false
-                    this.operationMsg = '脚本调试执行结束'
-                }
+                    }
             }).catch(err => {
-                Vac.alert("网络错误！请点击重新查询！");
+                // Vac.alert("网络错误！请点击重新查询！");
+                console.log(err)
+                this.isRunning = false
+                this.operationMsg = '脚本调试执行结束'
 
             })
         },
