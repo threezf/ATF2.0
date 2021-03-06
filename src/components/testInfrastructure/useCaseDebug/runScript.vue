@@ -11,10 +11,6 @@
         <el-row class="menuRow" :gutter="20">
             <el-form label-width="100px">
                 <el-col :lg="5" :md="10" :sm="12" :xs="12">
-                    <!-- <el-form-item
-              label="当前测试计划">
-              <el-tag type="primary">{{testPlanEntity.nameMedium}}</el-tag>
-            </el-form-item> -->
                     <el-form-item label="执行机选择">
                         <el-select class="runnerSelect" placeholder="请选择执行机" v-model="runnersSelected" size="small">
                             <el-option v-for="(item, index) in runners" :key="'runner'+index" :label="item.runnerName" :value="item.identifiableName">
@@ -22,13 +18,13 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="4" :md="10" :sm="12" :xs="12">
+                <el-col :lg="5" :md="10" :sm="12" :xs="12">
                     <el-form-item label="" label-width="20px">
-                        <p class="executeStatus" v-html="exeStautShow"></p>
+                        <p style="padding-left: 0px" v-html="exeStautShow"></p>
                     </el-form-item>
                 </el-col>
-                <el-col :lg="15" :md="15" :sm="12" :xs="12">
-                    <span style="margin-right: 10px; font-size: 14px">设置执行次数</span>
+                <el-col :lg="14" :md="15" :sm="12" :xs="12">
+                    <span style="margin-right: 0px; font-size: 14px">设置执行次数</span>
                     <el-select v-model="selectCase" size="small" style="width: 350px" v-if="testSceneList.length > 0">
                         <el-option v-for="(testCase, index) in testSceneList[0].testCaseList" :key="'case' + index" :label="testCase.caseCode" :value="testCase.caseId"></el-option>
                     </el-select>
@@ -38,108 +34,23 @@
             </el-form>
         </el-row>
         <el-row class="buttonRow">
-            <el-button size="small" type="primary" @click="startExecution">
-                <i class="fa fa-play"></i>
+            <el-button size="small" type="primary" icon="el-icon-video-play" :loading="isRunning" @click="startExecution">
                 开始调试
             </el-button>
             <el-button size="small" type="primary" @click="stopExecute">
                 <i class="fa fa-stop"></i>
                 终止调试
             </el-button>
-            <el-button size="small" type="primary" @click="queryCaseExecuteInstance(1)">
-                <i class="fa fa-eye"></i>
-                查询
-            </el-button>
-            <el-button size="small" type="primary">
-                <i class="fa fa-refresh"></i>
-                重新查询调试结果
-            </el-button>
+            <el-button class="save-button" icon="el-icon-view" size="small" type="primary" @click="viewResult">查看执行结果</el-button>
         </el-row>
-        <el-row class="tipRow">
-            <span>场景列表</span>
-            <span class="infoTip">
-                <i class="fa fa-info-circle"></i>
-                场景内的用例串行执行，场景之间并行执行
-            </span>
-        </el-row>
-        <div id="runBody">
-            <div class="logcontainer">
-                <el-card class="box-card" v-if="logShow">
-                    <div slot="header" class="clearfix">
-                        <span>日志信息</span>
-                        <el-button style="float: right; margin-right: 5px; padding: 0px" type="text" @click="updateScreen()">
-                            <i class="fa fa-angle-double-right"></i>
-                        </el-button>
-                        <el-button class="el-icon-full-screen" v-if="fullFlag" style="float: right; margin-right: 5px; padding: 0px" type="text" @click="fullScreen()">
-                        </el-button>
-                        <el-button v-else style="float: right; margin-right: 5px; padding: 0px" type="text" @click="subScreen()">
-                            <i class="fa fa-compress"></i>
-                        </el-button>
-                    </div>
-                    <div id="area">
-                        <pre class="pre">
-                <code  
-                  id="logarea" 
-                  class="javascript">
-                </code>
-              </pre>
-                    </div>
-                </el-card>
-                <div v-else id="loghidden" hidden>
-                    <div id="hidden">
-                        <el-button size="small" @click="showScreen">
-                            <i class="fa fa-angle-double-left">
-                                <font color="black" style="margin-left: 3px">展开日志</font>
-                            </i>
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="sceneslist" style="margin-top: 20px" hidden>
-            <div class="scene-list-wrapper" style="padding: 0px 20px 10px 20px" v-for="(scene, index) in testSceneList" :key="index">
-                <el-row class="sceneTitleRow">
-                    <i class="fa fa-arrows" style="color: #5a3c3c">
-                    </i>&nbsp;&nbsp;
-                    <span class="sceneNameStyle">{{scene.sceneName}}</span>
-                    <el-button class="showHidden" size="mini" type="primary" @click="operateRow">
-                        <div v-if="isExpanding">
-                            <span>折叠</span>
-                            <i class="fa fa-caret-left" style="margin-left: 1px"></i>
-                        </div>
-                        <div v-else>
-                            <span>展开</span>
-                            <i class="fa fa-caret-right" style="margin-left: 1px"></i>
-                        </div>
-                    </el-button>
-                </el-row>
-                <div v-show="isExpanding" class="case-lib case-lib-pad" v-for="(case_wrapper, index) in scene.testCaseList" :key="case_wrapper.caseId + index">
-                    <template v-if="case_wrapper.caseCompositeType == 1">
-                        <div class="case-wrapper">
-                            <div class="case" @mousedown.stop="1">
-                                <div class="case-header">
-                                    <img :src="exeImgs[0]" :id="'img' +'-' +scene.sceneId +'-' +case_wrapper.caseId" />
-                                    <p class="width-limit" :title="case_wrapper.caseCode">
-                                        {{ case_wrapper.caseCode }}
-                                    </p>
-                                    <p class="case-main">
-                                        <a class="view-case">
-                                            <span>查看</span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
         <div class="execute-result"
             v-loading="isRunning"
             element-loading-text="脚本调试中..."
             element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.7)">
-            
+            <div v-if="!runnned" class="no-runned">
+                <span v-if="!isRunning">{{operationMsg}}</span>
+            </div>
         </div>
     </el-card>
 </div>
@@ -162,7 +73,8 @@ export default {
             logShow: false,
             testSceneList: [], //测试场景列表
             isExpanding: false,
-            isRunning: true,
+            isRunning: false,
+            runnned: false,
             exeImgs: {
                 0: "/index/static/img/waiting.png",
                 10: "/index/static/img/init.png",
@@ -184,7 +96,8 @@ export default {
             runNumber: 1,
             selectCase: "", // 选择的case
             sceneId: '',
-            copyTestCase: ''
+            copyTestCase: '',
+            operationMsg: '脚本暂未调试'
         }
     },
     props: {
@@ -210,11 +123,8 @@ export default {
         },
         selectCase: {
             handler(newVal) {
-                console.log(newVal)
-                console.log()
                 if(this.testSceneList.length > 0) {
                     const item = this.testSceneList[0].testCaseList.find(item => item.caseId === newVal)
-                    console.log(item)
                     this.runNumber = item.runTotalNumber
                     this.copyTestCase = item.caseId
                 }
@@ -298,13 +208,14 @@ export default {
         // 执行代码
         startExecution() {
             if (this.runnersSelected.length === 0) {
-                Vac.alert('请选择执行机')
+                return Vac.alert('请选择执行机')
             }
             if (!this.exeStauts) {
                 Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行")
                 return;
             }
             let selectedExeInstances = []
+            this.isRunning = true
             Request({
                 url: '/executeController/t1',
                 method: 'POST',
@@ -362,6 +273,9 @@ export default {
             }).catch(error => {
                 console.log('终止失败', error)
                 this.$message.info('批次已结束')
+            }).finally(_ => {
+                this.isRunning = false
+                this.operationMsg = '脚本调试已终止'
             })
         },
         // 获取最近的执行批次id
@@ -386,61 +300,42 @@ export default {
                 _this.tagType = "warning";
                 _this.exeStauts = true;
             })
-            // Vac.ajax({
-            //     url: "",
-            //     type: "post",
-            //     contentType: "application/json",
-            //     data: JSON.stringify({
-                    
-            //     }),
-            //     success: function (data) {
-            //         
-            //         } else Vac.alert("查询branchId出错啦");
-            //     },
-            //     error: function () {
-            //         Vac.alert("网络错误");
-            //     },
-            // });
         },
         getSinglebranchStatus() {
             //查询单个批次结果 并展示执行状态
-            var _this = this;
-            Vac.ajax({
-                url: "/batchRunCtrlController/syncQueryIncInsStatus",
-                type: "post",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    batchId: _this.batchId,
+            Request({
+                url: '/batchRunCtrlController/syncQueryIncInsStatus',
+                method: 'post',
+                params: {
+                    batchId: this.batchId,
                     reqSyncNo: null,
                     sessionId: null,
-                }),
-                success: function (data) {
-                    if (data.respCode == "0000") {
-                        if (data.respSyncNo == -1) {
-                            _this.setResultIcon(data.insStatuses);
-                            _this.exeStautShow =
-                                '执行状态：<i class="el-icon-circle-check"></i>已执行';
-                            _this.tagType = "success";
-                            _this.exeStauts = true;
-                        } else {
-                            _this.setResultIcon(data.insStatuses);
-                            _this.exeStautShow =
-                                '执行状态：<i class="el-icon-loading"></i>执行中';
-                            _this.tagType = "primary";
-                            _this.exeStauts = false;
-                        }
+                }
+            }).then(data => {
+                if(data.respCode === '0000') {
+                    if (data.respSyncNo == -1) {
+                        this.setResultIcon(data.insStatuses);
+                        this.exeStautShow =
+                            '执行状态：<i class="el-icon-circle-check"></i>已执行';
+                        this.tagType = "success";
+                        this.isRunning = false
+                        this.exeStauts = true;
                     } else {
-                        _this.exeStautShow =
-                            '执行状态：<i class="el-icon-question"></i>未知';
-                        _this.tagType = "info";
-                        _this.exeStauts = false;
-                        Vac.alert(data.respMsg);
+                        this.setResultIcon(data.insStatuses);
+                        this.exeStautShow =
+                            '执行状态：<i class="el-icon-loading"></i>执行中';
+                        this.tagType = "primary";
+                        this.exeStauts = false;
+                        this.isRunning = true
                     }
-                },
-                error: function () {
-                    Vac.alert("网络错误！请点击重新查询！");
-                },
-            });
+                }
+            }).catch(err => {
+                this.exeStautShow = '执行状态：<i class="el-icon-question"></i>未知';
+                this.tagType = "info";
+                this.exeStauts = false;
+                this.isRunning = false
+                this.$message.warning(err)
+            })
         },
         // 异步查询状态
         syncQueryIncInsStatus(res) {
@@ -490,14 +385,13 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
-                    let textarea = $("#textarea")
-                    textarea.text(res.logSeg)
-                    const logarea = document.getElementById("logarea")
-                    textarea.scrollTop(99999)
+                    console.log('一步查询状态', res)
                     syncQueryIncLog(res)
                 }
             }).catch(error => {
                 console.log('异步查询失败', error)
+                this.operationMsg = error
+                this.isRunning = false
                 this.$message.warning("消息队列获取失败")
             })
 
@@ -515,15 +409,13 @@ export default {
                     }),
                     success: function (data) {
                         if (data.respCode == "0000") {
-                            let textarea = $("#logarea");
-                            if (data.logSeg != null) {
-                                textarea.text(textarea.text() + data.logSeg);
-                                var logarea = document.getElementById("logarea");
+                            if(this.isRunning) {
+                                syncQueryIncLog(data);
                             }
-                            textarea.scrollTop(99999999999);
-                            syncQueryIncLog(data);
                         } else {
                             Vac.alert(data.respMsg);
+                            this.isRunning = false
+                            this.operationMsg = '脚本调试执行结束'
                         }
                     },
                     error: function () {
@@ -658,6 +550,14 @@ export default {
             }).catch(_ => {
                 this.$message.warning('设置失败')
             })
+        },
+        // 查看执行结果
+        viewResult() {
+            console.log(this.caselibId)
+            sessionStorage.setItem('caselibId', this.caselibId)
+            this.$router.push({
+                name: 'BatchExecutionQuery'
+            })
         }
     }
 }
@@ -677,7 +577,7 @@ export default {
     padding-left: 0px;
 
     .runnerSelect {
-        width: 200px;
+        width: 170px;
     }
     .set-time {
         display: flex;
@@ -690,8 +590,8 @@ export default {
 }
 
 .buttonRow {
-    margin-top: -15px;
-    padding-left: 10px;
+    margin-top: -35px;
+    padding-left: 15px;
 }
 
 .tipRow {
@@ -822,7 +722,15 @@ export default {
 
 .execute-result {
     border: 1px solid #eee;
-    height: 200px;
+    margin-top: 10px;
+    height: 240px;
+    .no-runned {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 }
 
 .case-lib {

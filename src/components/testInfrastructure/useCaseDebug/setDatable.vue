@@ -1,5 +1,5 @@
 <template>
-  <div class="page-inner">
+  <div class="page-inner" v-loading="pageLoading" v-if="isRouterAlive">
     <el-row class="border" hidden>
       <el-col :span="4">
         <el-button @click="checkout" type="primary">
@@ -1017,7 +1017,10 @@ export default {
       functionName: '',
       paramsList: [],
       paramsValue: '',
-      num: ''
+      num: '',
+      pageLoading: false,
+      isRouterAlive: true,
+      filterTreeData: {}
     };
   },
   watch: {
@@ -1042,12 +1045,17 @@ export default {
       }
   },
   mounted() {
-    this.testSysNameStorage = sessionStorage
-      .getItem("testSysNameStorage")
-      .substring(1, sessionStorage.getItem("testSysNameStorage").length - 1);
+    this.testSysNameStorage = sessionStorage.getItem("testSysNameStorage").substring(1, sessionStorage.getItem("testSysNameStorage").length - 1);
     this.getFilterTree();
   },
   methods: {
+    // 刷新组件
+    reload() {
+      this.handleNodeClick(this.filterTreeData)
+      this.$nextTick(_ => {
+        console.log('局部刷新方法', this.filterTreeData)
+      })
+    },
     // 插入数据
     insertData() {
         this.insertVisible = true
@@ -1730,6 +1738,7 @@ export default {
     },
     handleNodeClick(data) {
       console.log("data======================================", data);
+      this.filterTreeData = data
       if (data.flag) {
         this.selectedTemplate = data;
         this.getTestcaseInfo();
@@ -1739,6 +1748,7 @@ export default {
     },
     //获取该测试系统下 所有的控件类型
     getFilterTree() {
+      this.pageLoading = true
       Request({
         url: "/dataCenter/queryFilterTree",
         method: "post",
@@ -1782,7 +1792,9 @@ export default {
         (err) => {
           console.log(err);
         }
-      );
+      ).finally(_ => {
+        this.pageLoading = false
+      })
     },
     getTestcaseInfo() {
       console.log(this.selectedTemplate);

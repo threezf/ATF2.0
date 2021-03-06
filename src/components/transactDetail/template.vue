@@ -9,7 +9,7 @@
                 <el-button icon="el-icon-delete" size="small" :disabled="showFlag" type="primary" @click="deleteTemplateShow">
                     删除{{ name }}
                 </el-button>
-                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptClicked">
+                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isUseDebug && isScriptClicked">
                     <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
@@ -39,7 +39,12 @@
             
             <div class="templatInfo" v-if="isUseDebug">
                 <el-tabs v-model="currentTab" type="border-card">
-                    <el-tab-pane v-for="(item, index) in tabs" :key="index" :label="item.label" :name="item.name" style="margin-top: -10px; max-height: 500px; overflow: scroll">
+                    <el-tab-pane 
+                        v-for="(item, index) in tabs" 
+                        :key="index" :label="item.label" 
+                        :name="item.name" 
+                        :disabled="index != 0 && !caseNotNeedAdd"
+                        style="margin-top: -10px; max-height: 500px; overflow: scroll">
                         <template v-if="item.name === 'params'">
                             <el-row hidden>
                                 <span> {{ name }}数据 </span>
@@ -160,8 +165,8 @@
                                 </el-table>
                             </div>
                         </template>
-                        <template v-if="item.name === 'script'">
-                             <set-datable></set-datable>
+                        <template v-if="item.name === 'script' && currentTab === 'script'">
+                             <set-datable ref="debugConfData"></set-datable>
                         </template>
                         <template v-if="item.name === 'result' && currentTab === 'result'">
                              <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
@@ -974,7 +979,6 @@ export default {
         debugScript() {
             this.isUseDebug = true
             if (this.templateRadio) {
-                this.isScriptClicked = false
                 this.queryScriptTemplateDebugTestCaseByScriptId()
             } else {
                 this.$message.warning("请选择调试脚本");
@@ -1000,7 +1004,13 @@ export default {
                 }).then(res => {
                     if (res.respCode === "0000") {
                         // 这里会返回caseId
-                        this.$message.success('操作成功')
+                        this.$message.success('操作成功，请配置数据')
+                        if(this.currentTab != 'script') {
+                            this.currentTab = 'script'
+                        }else {
+                            console.log(this.$refs.debugConfData)
+                            this.$refs.debugConfData[0].reload()
+                        }
                         this.caseId = res.caseId
                         this.caseNotNeedAdd = true
                     } else {
@@ -1023,15 +1033,6 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
-                    // 返回caseId
-                    // this.$router.push({
-                    //     name: "UseCaseDebug",
-                    //     query: {
-                    //         scriptId: this.templateRadio,
-                    //         autId: this.autId,
-                    //         caseId: res.testcaseEntities[0].id
-                    //     },
-                    // });
                     this.caseId = res.testcaseEntities[0].id
                     console.log('debugRes', {
                         scriptId: this.templateRadio,

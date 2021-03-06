@@ -1328,7 +1328,8 @@ export default {
       notTimerFlag: true,
 
       // 下载浏览器
-      isDownload: false
+      isDownload: false,
+      isStop: false
     };
   },
   mounted() {
@@ -1498,6 +1499,7 @@ export default {
         success: function (data) {
           if (data.respCode == "0000") {
             Vac.alert(data.respMsg);
+            this.isStop = true
             _this.startQueryResult();
           } else {
             Vac.alert(data.respMsg);
