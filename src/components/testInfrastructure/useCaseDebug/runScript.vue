@@ -396,33 +396,31 @@ export default {
             })
 
             function syncQueryIncLog(values) {
-                Vac.ajax({
+                Request({
                     url: "executeController/syncQueryLog",
-                    type: "post",
-                    contentType: "application/json",
-                    data: JSON.stringify({
+                    method: "post",
+                    params: {
                         logType: 2,
                         reqSyncNo: values.respSyncNo,
                         sessionId: values.sessionId,
                         testPlanId: values.testPlanId,
                         latestLineNum: 50,
-                    }),
-                    success: function (data) {
-                        if (data.respCode == "0000") {
-                            console.log('执行撞他', data)
-                            if(this.isRunning) {
-                                syncQueryIncLog(data);
-                            }
-                        } else {
-                            Vac.alert(data.respMsg);
-                            this.isRunning = false
-                            this.operationMsg = '脚本调试执行结束'
+                    }
+                }).then(data => {
+                    if (data.respCode == "0000") {
+                        console.log('执行撞他', data)
+                        if(this.isRunning) {
+                            syncQueryIncLog(data);
                         }
-                    },
-                    error: function () {
-                        Vac.alert("网络错误！请点击重新查询！");
-                    },
-                });
+                    } else {
+                        Vac.alert(data.respMsg);
+                        this.isRunning = false
+                        this.operationMsg = '脚本调试执行结束'
+                    }
+                }).catch(err => {
+                    Vac.alert("网络错误！请点击重新查询！");
+
+                })
             }
         },
         /**
