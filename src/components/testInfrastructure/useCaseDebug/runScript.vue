@@ -397,7 +397,7 @@ export default {
 
             function syncQueryIncLog(values) {
                 Request({
-                    url: "executeController/syncQueryLog",
+                    url: "/executeController/syncQueryLog",
                     method: "post",
                     params: {
                         logType: 2,
