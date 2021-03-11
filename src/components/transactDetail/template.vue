@@ -10,7 +10,7 @@
                     删除{{ name }}
                 </el-button>
                 <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isUseDebug && isScriptClicked">
-                    <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
+                    <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本1</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
                     <!-- <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button> -->
@@ -66,9 +66,11 @@
                                     <el-button icon="el-icon-document" size="small" type="primary" @click="saveInfo" :disabled="showFlag">
                                         保存
                                     </el-button>
-                                    <el-button icon="el-icon-printer" size="small" type="primary" @click="giveParam" :disabled="showFlag">
-                                        参数化
-                                    </el-button>
+                                    <el-popover trigger="hover" placement="top" content="参数化流程，需要配置数据">
+                                        <el-button slot="refrence" icon="el-icon-printer" size="small" type="primary" @click="giveParam" :disabled="showFlag">
+                                            参数化
+                                        </el-button>
+                                    </el-popover>
                                 </el-row>
                                 <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
                                     <el-table-column label="排序" width="55">

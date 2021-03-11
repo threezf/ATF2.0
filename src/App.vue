@@ -25,6 +25,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-download" @click.native="downResource">下载资源</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="handleReceiver" v-if="userPriority == 0">待审核<el-badge :value="leftCount"></el-badge></el-dropdown-item>
                         <el-dropdown-item icon='el-icon-circle-close' @click.native="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>
@@ -71,6 +72,37 @@
                 </el-select>
             </el-form-item>
         </el-form>
+    </el-dialog>
+    <el-dialog title="下载资源" width="22vw" :visible.sync="linkVisible">
+        <div style="padding: 10px">
+            <el-collapse accordion style="margin: -20px 10px;">
+                <el-collapse-item>
+                    <template slot="title">
+                    下载浏览器<i class="header-icon"></i>
+                    </template>
+                    <p style="margin-left: 10px; margin-bottom: -20px">
+                        <el-button type="text" @click="downloadBrowser(0)" icon="el-icon-download">chrome-87-win</el-button>
+                        <el-button type="text" @click="downloadBrowser(1)" icon="el-icon-download">firefox-win</el-button>
+                        <el-button type="text" @click="downloadBrowser(2)" icon="el-icon-download">chrome-87-mac</el-button>
+                        <el-button type="text" @click="downloadBrowser(3)" icon="el-icon-download">firefox-mac</el-button>
+                    </p>
+                </el-collapse-item>
+                <el-collapse-item title="下载执行机">
+                    <el-button type="text" icon="el-icon-download" @click="downloadRunner">下载执行机</el-button>
+                    <el-popover placement="right" title="使用说明" width="500" trigger="click" content="  5.">
+                        <p>1. 确认电脑是否安装java环境，如果没有请先安装好java环境。</p>
+                        <p>2. 下载并解压执行机安装包。</p>
+                        <p>3. 修改目录下的setting.properties文件（执行机名称）。</p>
+                        <p>4. 双击.bat文件，开启dos窗口等待命令自动执行完毕，启动执行机。</p>
+                        <p>5. 刷新执行机查询页面，此使出现已启动的执行机。</p>
+                        <el-button type="text" style="margin-left:10px" size="small" slot="reference" icon='el-icon-info'>执行机使用说明</el-button>
+                    </el-popover>
+                </el-collapse-item>
+            </el-collapse>
+        </div>
+        <template v-slot:footer>
+            <el-button @click="linkVisible = false">关闭</el-button>
+        </template>
     </el-dialog>
 </div>
 </template>
@@ -126,7 +158,8 @@ export default {
             totalScore: '',
             urls: [],
             userPriority: 0,
-            leftCount: 0
+            leftCount: 0,
+            linkVisible: false
         };
     },
     watch: {
@@ -155,6 +188,9 @@ export default {
                 }
             });
             return menuList;
+        },
+        browLinker() {
+            return this.$store.state.browserLink
         }
     },
     methods: {
@@ -242,6 +278,19 @@ export default {
                 // localStorage.setItem('userType', 'false')
                 // this.$store.state.commit("changeFlag", 'false')
             }
+        },
+        // 下载资源
+        downResource() {
+            this.linkVisible = true
+        },
+        // 下载浏览器
+        downloadBrowser(index) {
+            window.location.href = this.browLinker[index]
+            // console.log(index, this.$store)
+        },
+        // 下载执行机
+        downloadRunner() {
+            window.location.href = this.browLinker[5]
         }
     },
     created() {
