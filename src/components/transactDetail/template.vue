@@ -1,6 +1,5 @@
 <template>
 <div class="page-outer">
-    {{templateRadio}}
     <div class="page-inner">
         <div class="ele-container">
             <el-row style="margin-bottom: 10px">
@@ -51,7 +50,7 @@
                                 <span> {{ name }}数据 </span>
                             </el-row>
                             <div>
-                                <el-row v-if="templateRadio !== ''">
+                                <el-row v-if="templateRadio !== ''" style="margin-top: 10px">
                                     <el-button size="small" type="primary" icon="el-icon-plus" @click="addItemShow = true" :disabled="showFlag">
                                         添加多项
                                     </el-button>
@@ -74,6 +73,7 @@
                                             参数化
                                         </el-button>
                                     </el-popover>
+                                    <el-switch v-model="isScriptParameterized" active-text="需要配置数据"></el-switch>
                                 </el-row>
                                 <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
                                     <el-table-column label="排序" width="55">
@@ -174,7 +174,7 @@
                              <set-datable ref="debugConfData"></set-datable>
                         </template>
                         <template v-if="item.name === 'result' && currentTab === 'result'">
-                             <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
+                             <run-script :no-need-case="isScriptParameterized" :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
                         </template>
                     </el-tab-pane>
                 </el-tabs>
@@ -1036,6 +1036,7 @@ export default {
         },
         //选择脚本
         chooseTemplate(row, column, event) {
+            this.currentTab = 'params'
             this.templateRadio = row.id;
             this.isScriptClicked = true
             this.getTemplateInfo();
@@ -1057,6 +1058,7 @@ export default {
         },
         // 添加脚本调试接口
         addScriptTemplateDebug(msg, flag) {
+            console.log(flag, this.templateRadio)
             if (flag != undefined || this.templateRadio) {
                 Request({
                     url: '/scriptTemplate/addScriptTemplateDebug',
@@ -1072,7 +1074,7 @@ export default {
                         // 这里会返回caseId
                         this.$message.success('操作成功，请配置数据')
                         if(this.currentTab != 'script') {
-                            this.currentTab = 'script'
+                            this.currentTab = 'params'
                         }else {
                             console.log(this.$refs.debugConfData)
                             this.$refs.debugConfData[0].reload()
@@ -1113,6 +1115,7 @@ export default {
             }).catch(error => {
                 console.log('debug脚本数据查询失败', error)
                 this.$message.warning('请添加脚本执行用例')
+                this.currentTab = "params"
                 this.caseNotNeedAdd = false
             })
         },

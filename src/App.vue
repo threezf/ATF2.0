@@ -290,7 +290,8 @@ export default {
         },
         // 下载执行机
         downloadRunner() {
-            window.location.href = this.browLinker[5]
+            // console.log(this.browLinker[4])
+            window.location.href = this.browLinker[4]
         }
     },
     created() {
