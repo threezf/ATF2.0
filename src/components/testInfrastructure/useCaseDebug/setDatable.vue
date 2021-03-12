@@ -51,16 +51,14 @@
               v-if="selectedTemplate !== -1"
               size="small"
               @click="dataTemplate"
-              type="primary"
-            >
+              type="primary">
               下载数据模板
             </el-button>
             <el-button
               v-if="selectedTemplate !== -1"
               size="small"
               @click="exportData"
-              type="primary"
-            >
+              type="primary">
               导入数据
             </el-button>
           </el-col>
@@ -69,8 +67,7 @@
               v-if="!fullScreen"
               size="small"
               @click="fullScreen = true"
-              type="primary"
-            >
+              type="primary">
               表格全屏
             </el-button>
             <el-button

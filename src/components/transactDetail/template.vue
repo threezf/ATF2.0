@@ -1,5 +1,6 @@
 <template>
 <div class="page-outer">
+    {{templateRadio}}
     <div class="page-inner">
         <div class="ele-container">
             <el-row style="margin-bottom: 10px">
@@ -10,7 +11,7 @@
                     删除{{ name }}
                 </el-button>
                 <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isUseDebug && isScriptClicked">
-                    <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本1</el-button>
+                    <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
                     <!-- <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button> -->
@@ -63,11 +64,13 @@
                                     <el-button icon="el-icon-arrow-down" size="small" type="primary" @click="eleDown" :disabled="showFlag">
                                         下移
                                     </el-button>
-                                    <el-button icon="el-icon-document" size="small" type="primary" @click="saveInfo" :disabled="showFlag">
-                                        保存
-                                    </el-button>
+                                    <el-popover trigger="hover" placement="top" content="直接保存表格填写的数据">
+                                        <el-button slot="reference" icon="el-icon-document" size="small" type="primary" @click="saveDebugInfo" :disabled="showFlag">
+                                            保存
+                                        </el-button>
+                                    </el-popover>
                                     <el-popover trigger="hover" placement="top" content="参数化流程，需要配置数据">
-                                        <el-button slot="refrence" icon="el-icon-printer" size="small" type="primary" @click="giveParam" :disabled="showFlag">
+                                        <el-button slot="reference" icon="el-icon-printer" size="small" type="primary" @click="giveParam" :disabled="showFlag">
                                             参数化
                                         </el-button>
                                     </el-popover>
@@ -416,7 +419,8 @@ export default {
             testPlanId: "",
             scriptable: false,
             resultable: false,
-            isUseDebug: false
+            isUseDebug: false,
+            isScriptParameterized: false
         };
     },
     watch: {
@@ -439,6 +443,31 @@ export default {
             },
             immediate: true
         },
+        isScriptParameterized: {
+           handler(newVal) {
+               if(newVal) {
+                    this.tabs = [{
+                        label: '脚本参数',
+                        name: 'params', 
+                    }, {
+                        label: '配置数据',
+                        name: 'script'
+                    }, {
+                        label: '执行结果',
+                        name: 'result'
+                    }]
+               }else {
+                    this.tabs = [{
+                        label: '脚本参数',
+                        name: 'params', 
+                    }, {
+                        label: '执行结果',
+                        name: 'result'
+                    }]
+               }
+           },
+           immediate: true
+        }
     },
     created() {},
     computed: {
@@ -588,6 +617,39 @@ export default {
                 }
             );
         },
+        // 脚本调试保存脚本
+        saveDebugInfo() {
+            if(this.isScriptParameterized) {
+                this.saveInfo()
+            }else {
+                let params = {
+                    autId: parseInt(this.autId),
+                    scriptId: this.templateRadio,
+                    content: this.generateScriptString(),
+                    userId: sessionStorage.getItem("userId"),
+                }
+                Request({
+                    url: "/scriptTemplate/scriptParameterized",
+                    method: "post",
+                    params
+                }).then(scriptRes => {
+                    Request({
+                        url: "/scriptTemplate/saveScriptTemplate",
+                        method: "post",
+                        params: {
+                            scriptId: this.templateRadio,
+                            content: this.generateScriptString(),
+                            userId: parseInt(sessionStorage.getItem("userId")),
+                            transId: parseInt(this.transId),
+                        }
+                    }).then((res) => {
+                        this.$message(res.respMsg);
+                    }).catch(error => {
+                        console.log('保存失败')
+                    })
+                })
+            }
+        },
         //遍历数据 生成保存脚本内容传参
         generateScriptString() {
             let sendDataArray = [];
@@ -648,6 +710,7 @@ export default {
             return sendDataArray.join("");
         },
         giveParam() {
+            this.isScriptParameterized = true
             Request({
                 url: "/scriptTemplate/scriptParameterized",
                 method: "post",
@@ -768,6 +831,7 @@ export default {
                 },
             }).then(
                 (res) => {
+                    this.isUseDebug = false
                     this.$message(res.respMsg);
                     this.addTemplateDialog = false;
                     let _this = this;
