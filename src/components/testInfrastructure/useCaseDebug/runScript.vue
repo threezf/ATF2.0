@@ -18,11 +18,11 @@
                     </el-form-item>
                 </el-col>
                 <el-col :lg="14" :md="15" :sm="12" :xs="12" v-if="!noNeedCase">
-                    <span style="margin-right: 0px; font-size: 14px">设置执行次数</span>
-                    <el-select v-model="selectCase" size="small" style="width: 150px" v-if="testSceneList.length > 0">
+                    <span style="margin-right: 0px; font-size: 14px">设置执行次数：</span>
+                    <!-- <el-select v-model="selectCase" size="small" style="width: 150px" v-if="testSceneList.length > 0">
                         <el-option v-for="(testCase, index) in testSceneList[0].testCaseList" :key="'case' + index" :label="testCase.caseId" :value="testCase.caseId"></el-option>
-                    </el-select>
-                    <el-input-number size="small" class="input_number" v-model="runNumber" clearable></el-input-number>
+                    </el-select> -->
+                    <el-input-number size="mini" class="input_number" v-model="runNumber" clearable></el-input-number>
                     <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
                 </el-col>
             </el-form>

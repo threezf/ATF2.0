@@ -44,10 +44,9 @@
               @click="save"
               type="primary"
               icon="el-icon-document"
-            >
-              保存
+            >保存
             </el-button>
-            <el-button
+            <!-- <el-button
               v-if="selectedTemplate !== -1"
               size="small"
               @click="dataTemplate"
@@ -77,7 +76,7 @@
               type="primary"
             >
               取消全屏
-            </el-button>
+            </el-button> -->
             <el-select
               multiple
               v-model="columnHidden"
@@ -167,6 +166,32 @@
               </template>
             </el-table-column>
 
+            <el-table-column
+              label="执行次数"
+              min-width="200">
+              <template slot-scope="scope">
+                <div
+                  v-if="
+                    scope.row.index === rowIndex &&
+                    scope.column.index === columnIndex &&
+                    dbeditFlag
+                  ">
+                <el-input
+                    class="editArea"
+                    type="textarea"
+                    @blur="loseblur(scope.row, scope.column)"
+                    @click.stop.prevent="return false;"
+                    @change="handlechange(scope.row, scope.column)"
+                    :autosize="{ minRows: 2, maxRows: 5 }"
+                    v-model="scope.row.runTotalNumber"
+                  >
+                  </el-input>
+                </div>
+                 <div v-else style="white-space: break-spaces">
+                  {{ scope.row.runTotalNumber }}
+                </div>
+              </template>
+            </el-table-column>
           </el-table>
 
         </div>
@@ -852,6 +877,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import uiEleFunTree from "@/components/transactDetail/uiEleFunTree";
@@ -1645,6 +1671,7 @@ export default {
       if (this.editedData.length === 0) {
         return;
       }
+      this.saveRunNumber()
       Request({
         url: "/dataCenter/saveTableData",
         method: "post",
@@ -1986,7 +2013,9 @@ export default {
             // this.selectCase = this.testSceneList[0].testCaseList[0].caseId
             this.sceneId = this.testSceneList[0].sceneId
             this.testSceneList[0].testCaseList.forEach((item, index) => {
-              this.tableData[index].runTotalNumber = item.runTotalNumber
+              this.$nextTick(_ => {
+                Vue.set(this.tableData[index], 'runTotalNumber', item.runTotalNumber)
+              })
             })
             console.log('run----', this.testSceneList, this.tableData)
         }).catch(error => {
@@ -1994,25 +2023,28 @@ export default {
         })
     },
     // 保存定时
-    setTimeNumber(row) {
-        Request({
+    saveRunNumber() {
+      let requestList = []
+      this.tableData.forEach(item => {
+        requestList.push(Request({
             url: '/caseExecuteInstance/setCaseRunTime',
             method: 'post',
             params: {
-                // casesRunNumberList:[{
-                //     caseId: this.copyTestCase,
-                //     runNumber: this.runNumber
-                // }],
+                casesRunNumberList:[{
+                    caseId: parseInt(item.id),
+                    runNumber: parseInt(item.runTotalNumber)
+                }],
                 flowNodesRunNumberList:[],
                 sceneId: this.sceneId
             }
-        }).then(res => {
-            if(res.respCode === '0000') {
-                this.$message.success('设置成功')
-            }
-        }).catch(_ => {
-            this.$message.warning('设置失败')
-        })
+        }))
+      })
+      Promise.all(requestList)
+      .then(res => {
+        this.$message.success('设置成功')
+      }).catch(_ => {
+        this.$message.warning('设置失败')
+      })
     },
   },
 };
