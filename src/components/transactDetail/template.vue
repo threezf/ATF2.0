@@ -9,12 +9,12 @@
                 <el-button icon="el-icon-delete" size="small" :disabled="showFlag" type="primary" @click="deleteTemplateShow">
                     删除{{ name }}
                 </el-button>
-                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isUseDebug && isScriptClicked">
+                <el-tooltip hidden content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptDebugInit && isUseDebug && isScriptClicked">
                     <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
                     <!-- <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button> -->
-                    <el-switch v-model="isUseDebug" inactive-text="配置脚本数据模式" active-text="脚本调试模式" :disabled="isScriptSelcted"></el-switch>
+                    <el-switch v-model="isUseDebug" inactive-text="配置数据模式" active-text="脚本调试模式" :disabled="isScriptSelcted"></el-switch>
                 </el-tooltip>
                 <el-button type="primary" size="small" @click="addScriptTemplateDebug" v-else>
                     <i class="fa fa-plus-circle"></i>
@@ -43,9 +43,9 @@
                         v-for="(item, index) in tabs" 
                         :key="index" :label="item.label" 
                         :name="item.name" 
-                        :disabled="index != 0 && !caseNotNeedAdd"
+                        :disabled="(index != 0 && !caseNotNeedAdd) || (index === 0 && !isScriptDebugInit)"
                         style="margin-top: -10px; max-height: 500px; overflow: scroll">
-                        <template v-if="item.name === 'params'">
+                        <template v-if="item.name === 'params' && isScriptDebugInit">
                             <el-row hidden>
                                 <span> {{ name }}数据 </span>
                             </el-row>
@@ -420,7 +420,8 @@ export default {
             scriptable: false,
             resultable: false,
             isUseDebug: false,
-            isScriptParameterized: false
+            isScriptParameterized: false,
+            isScriptDebugInit: false
         };
     },
     watch: {
@@ -432,6 +433,7 @@ export default {
         templateRadio: {
             handler(newVal) {
                 this.scriptId = newVal
+                sessionStorage.setItem("scriptId", newVal)
             },
             immediate: true
         },
@@ -590,6 +592,7 @@ export default {
         },
         // 删除脚本
         deleteTemplateInfo() {
+
             this.templateInfo = this.templateInfo.filter(
                 (templateInfo) =>
                 !this.multipleSelection.some(
@@ -798,6 +801,7 @@ export default {
                 return;
             }
             this.deleteTemplateDialog = true;
+            this.templateInfo = []
         },
         // 添加用例到场景
         insertTestcaseToScene(id) {
@@ -1073,6 +1077,7 @@ export default {
                     if (res.respCode === "0000") {
                         // 这里会返回caseId
                         this.$message.success('操作成功，请配置数据')
+                        this.isScriptDebugInit = true
                         if(this.currentTab != 'script') {
                             this.currentTab = 'params'
                         }else {
@@ -1101,6 +1106,7 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
+                    this.isScriptDebugInit = true
                     this.caseId = res.testcaseEntities[0].id
                     console.log('debugRes', {
                         scriptId: this.templateRadio,
@@ -1117,6 +1123,7 @@ export default {
                 this.$message.warning('请添加脚本执行用例')
                 this.currentTab = "params"
                 this.caseNotNeedAdd = false
+                this.isScriptDebugInit = false
             })
         },
         // 查询脚本调试测试计划

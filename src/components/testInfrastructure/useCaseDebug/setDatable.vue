@@ -9,7 +9,7 @@
     </el-row>
 
     <div class="ele-container">
-      <div :class="'ele-left ' + (saidBarShow ? '' : 'narrow-ele-left')">
+      <!-- <div :class="'ele-left ' + (saidBarShow ? '' : 'narrow-ele-left')">
         <div class="treeDiv" v-show="saidBarShow">
           <el-tree
             accordion
@@ -29,7 +29,7 @@
             ><i class="el-icon-d-arrow-right"></i
           ></el-button>
         </div>
-      </div>
+      </div> -->
       <div
         :class="
           'ele-right ' +

@@ -29,7 +29,7 @@
         </el-row>
         <el-row class="buttonRow">
             <el-button size="small" type="primary" icon="el-icon-video-play" :loading="isRunning" @click="startExecution">
-                开始调试
+                {{debugStr}}
             </el-button>
             <el-button size="small" type="primary" @click="stopExecute">
                 <i class="fa fa-stop"></i>
@@ -90,7 +90,8 @@ export default {
             selectCase: "", // 选择的case
             sceneId: '',
             copyTestCase: '',
-            operationMsg: '脚本暂未调试'
+            operationMsg: '脚本暂未调试',
+            debugStr: "开始调试"
         }
     },
     props: {
@@ -228,6 +229,7 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
+                    this.debugStr = "调试中..."
                     this.$message.success('操作成功!准备发起执行')
                     this.startQueryLog()
                     //因为查询执行信息需要最近执行的批量号因此需要查询批次
@@ -273,6 +275,7 @@ export default {
             }).finally(_ => {
                 this.isRunning = false
                 this.operationMsg = '脚本调试已终止'
+                this.debugStr = '开始调试'
             })
         },
         // 获取最近的执行批次id
@@ -411,6 +414,7 @@ export default {
                     }else {
                         this.isRunning = false
                         this.operationMsg = '脚本调试执行结束'
+                        this.debugStr = "开始调试"
                     }
                 }
             }).catch(err => {
