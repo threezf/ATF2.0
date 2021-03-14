@@ -9,7 +9,7 @@
                 <el-button icon="el-icon-delete" size="small" :disabled="showFlag" type="primary" @click="deleteTemplateShow">
                     删除{{ name }}
                 </el-button>
-                <el-tooltip hidden content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptDebugInit && isUseDebug && isScriptClicked">
+                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptDebugInit && isUseDebug && isScriptParameterized">
                     <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">

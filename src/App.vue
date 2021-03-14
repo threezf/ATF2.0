@@ -7,14 +7,17 @@
                 <span><i class="el-icon-cloudy" style="font-size: 32px;color:var(--blue);padding-right:2px;font-weight: bolder"></i></span>
                 <span style="color:var(--blue);font-size:32px ">ATF</span>
             </el-col>
-            <el-col :span="18" :offset="1">
+            <el-col :span="17" :offset="1">
                 <el-menu v-if="menuList.length!=0" :default-active="activeMenu" class="el-menu-demo" mode="horizontal" background-color="#FFF " text-color="#011425" active-text-color="#007bff">
                     <el-menu-item v-for="route in menuList" :index="route.name" :key="route.name">
                         <router-link :to="{name: route.name}">{{route.meta.name}}</router-link>
                     </el-menu-item>
                 </el-menu>
             </el-col>
-            <el-col :span="2" class="button">
+            <el-col :span="3" class="button">
+                <el-button type="text" icon="el-icon-download" @click="downResource" style="margin-right: 15px; height: 30pxnpm">
+                    下载资源
+                </el-button>
                 <el-dropdown>
                     <span class="el-dropdown-link">
                         <i class="el-icon-user-solid"></i>
@@ -25,7 +28,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
-                        <el-dropdown-item icon="el-icon-download" @click.native="downResource">下载资源</el-dropdown-item>
+                        <!-- <el-dropdown-item icon="el-icon-download" @click.native="">下载资源</el-dropdown-item> -->
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="handleReceiver" v-if="userPriority == 0">待审核<el-badge :value="leftCount"></el-badge></el-dropdown-item>
                         <el-dropdown-item icon='el-icon-circle-close' @click.native="logout">登出</el-dropdown-item>
                     </el-dropdown-menu>

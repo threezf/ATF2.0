@@ -1081,7 +1081,7 @@ export default {
   methods: {
     // 刷新组件
     reload() {
-      this.handleNodeClick(this.filterTreeData)
+      this.getFilterTree();
       this.$nextTick(_ => {
         console.log('局部刷新方法', this.filterTreeData)
       })
