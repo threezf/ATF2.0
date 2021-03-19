@@ -23,6 +23,7 @@
     "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",
     "jquery-ui": "^1.12.1",
+    "mavon-editor": "^2.9.1",
     "mini-css-extract-plugin": "^0.8.0",
     "popper.js": "^1.16.1",
     "qs": "^6.9.4",

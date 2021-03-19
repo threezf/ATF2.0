@@ -35,7 +35,7 @@ axios.defaults.paramsSerializer = (params) => {
 // 如果判断条件不通过就直接return Promise.reject(message) 不执行后边的内容
 axios.interceptors.response.use(function (response) {
     console.log(response.request.responseURL)
-    console.log(response, '响应内容')
+    console.log(response, response.status, '响应内容')
     // if(isDownload(response.request.responseURL)){
     //     console.log(response)
     //     return response
@@ -61,6 +61,9 @@ axios.interceptors.response.use(function (response) {
         // ElementUI.Message.warning('异地登录')
     }
     if(response.data.success) {
+        return response
+    }
+    if(response.status === 200) {
         return response
     }
     let message = `接口请求失败：失败码：${response.data.respCode}；失败信息：${response.data.respMsg}`
