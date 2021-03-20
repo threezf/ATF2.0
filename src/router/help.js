@@ -1,9 +1,9 @@
 import HelpIndex from '@/views/help/index'
 import HelpInfo from '@/views/help/helpInfo'
-import TestInfrastructure from '@/views/help/testInfrastructure'
 
+import TestInfrastructure from '@/views/help/testInfrastructure'
 import TestProject from '@/views/help/testProject'
-import ProjectManagement from '@/views/help/testProject/projectManagement'
+import User from '@/views/help/user'
 
 export default {
     path: '/help',
@@ -15,12 +15,21 @@ export default {
         another: 'atf/interface'
     },
     children: [{
+        path: 'helpinfo',
+        name: 'HelpInfo',
+        component: HelpInfo,
+        meta: {
+            name: '公共函数',
+            another: 'atf/interface'
+        },
+    }, {
         path: 'infrastructure',
         name: 'Infrastructure',
         component: TestInfrastructure,
         meta: {
             name: '基础设施说明',
-            another: 'atf/interface'
+            another: 'atf/interface',
+            icon: 'el-icon-document'
         }
     }, {
         path: 'project',
@@ -29,24 +38,19 @@ export default {
         meta: {
             name: '项目测试说明',
             another: 'atf/interface',
-            hide: false
-        },
-        // children: [{
-        //     path: 'projectManagement',
-        //     name: 'ProjectManagement',
-        //     component: ProjectManagement,
-        //     meta: {
-        //         name: '项目管理',
-        //         parent: 'Project'
-        //     }
-        // }]
+            hide: false,
+            icon: 'el-icon-document'
+            
+        }
     }, {
-        path: 'helpinfo',
-        name: 'HelpInfo',
-        component: HelpInfo,
+        path: 'userDesc',
+        name: 'UserDesc',
+        component: User,
         meta: {
-            name: '公共函数',
-            another: 'atf/interface'
-        },
+            name: '用户权限说明',
+            another: 'atf/interface',
+            hide: false,
+            icon: 'el-icon-document'
+        }
     }]
 }

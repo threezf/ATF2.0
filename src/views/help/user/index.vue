@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    name: 'TestProject',
+    name: 'TestInfrastructure',
     props: {
         url: {
             type: String,
@@ -39,7 +39,7 @@ export default {
     },
     methods: {
         readFile() {
-                this.$axios.get('/static/docs/project.md').then((response) => {
+                this.$axios.get('/static/docs/user.md').then((response) => {
                     console.log(response.data)
                     this.msg = response.data
                 })
