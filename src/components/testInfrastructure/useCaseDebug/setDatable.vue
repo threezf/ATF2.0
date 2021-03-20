@@ -46,7 +46,7 @@
               icon="el-icon-document"
             >保存
             </el-button>
-            <!-- <el-button
+            <el-button
               v-if="selectedTemplate !== -1"
               size="small"
               @click="dataTemplate"
@@ -76,7 +76,7 @@
               type="primary"
             >
               取消全屏
-            </el-button> -->
+            </el-button>
             <el-select
               multiple
               v-model="columnHidden"
