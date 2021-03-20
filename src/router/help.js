@@ -12,7 +12,8 @@ export default {
     redirect: '/help/helpInfo',
     meta: {
         name: '帮助',
-        another: 'atf/interface'
+        another: 'atf/interface',
+        icon:'el-icon-s-help'
     },
     children: [{
         path: 'helpinfo',
