@@ -1,0 +1,68 @@
+<template>
+    <div>
+        <el-menu
+                default-active="1"
+                class="el-menu-vertical-demo">
+            <!-- 引入组件 -->
+            <MenuTree :menuData="menuList"></MenuTree>
+        </el-menu>
+    </div>
+</template>
+ 
+<script>
+    import MenuTree from "@/components/interfaceTest/MenuTree";
+ 
+export default {
+        name: "Nav",
+        components: {
+            MenuTree: MenuTree
+        },
+        data() {
+            return {
+                menuData : [],
+                menuList : [{
+                    index: "1",
+                    name: "用户模块",
+                    icon: 'el-icon-s-order',
+                    children: [{
+                        index: "2",
+                        name: "账号相关",
+                        icon: 'el-icon-s-order',
+                        children: [{
+                            index: "3",
+                            name: "用户登录",
+                            icon: 'el-icon-s-order',
+                        }, {
+                            index: "4",
+                            name: "用户注销",
+                            icon: 'el-icon-s-order',
+                        }],
+                    }]
+                }, {
+                    index: "5",
+                    name: "企业模块",
+                    icon: 'el-icon-s-order',
+                }, {
+                    index: "6",
+                    name: "测试模块",
+                    icon: 'el-icon-s-order',
+                }, {
+                    index: "7",
+                    name: "日志模块",
+                    icon: 'el-icon-s-order',
+                }]
+            }
+        }
+};
+</script>
+
+<style lang="less" scoped>
+.el-menu-vertical-demo {
+    width: 200px;
+    min-height: 400px;
+    height: 100%;
+  }
+.el-menu-item {
+    font-size: 14px  !important;
+}
+</style>
