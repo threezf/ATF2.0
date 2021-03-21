@@ -1,6 +1,5 @@
 <template>
 <div class="page-outer">
-    {{templateRadio}}
     <div class="page-inner">
         <div class="ele-container">
             <el-row style="margin-bottom: 10px">
@@ -10,12 +9,12 @@
                 <el-button icon="el-icon-delete" size="small" :disabled="showFlag" type="primary" @click="deleteTemplateShow">
                     删除{{ name }}
                 </el-button>
-                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isUseDebug && isScriptClicked">
+                <el-tooltip content="每点击一次添加一个调试用例" effect="dark" placement="top"  v-if="isScriptDebugInit && isUseDebug && isScriptParameterized">
                     <el-button type="primary" size="small" @click="addScript" icon="el-icon-plus">添加调试脚本</el-button>
                 </el-tooltip>
                 <el-tooltip  v-if="caseNotNeedAdd" placement="top" content="进入脚本调试模式">
                     <!-- <el-button type="primary" size="small" icon="el-icon-setting" @click="debugScript">调试执行</el-button> -->
-                    <el-switch v-model="isUseDebug" inactive-text="配置脚本数据模式" active-text="脚本调试模式" :disabled="isScriptSelcted"></el-switch>
+                    <el-switch v-model="isUseDebug" inactive-text="配置数据模式" active-text="脚本调试模式" :disabled="isScriptSelcted"></el-switch>
                 </el-tooltip>
                 <el-button type="primary" size="small" @click="addScriptTemplateDebug" v-else>
                     <i class="fa fa-plus-circle"></i>
@@ -44,14 +43,14 @@
                         v-for="(item, index) in tabs" 
                         :key="index" :label="item.label" 
                         :name="item.name" 
-                        :disabled="index != 0 && !caseNotNeedAdd"
+                        :disabled="(index != 0 && !caseNotNeedAdd) || (index === 0 && !isScriptDebugInit)"
                         style="margin-top: -10px; max-height: 500px; overflow: scroll">
-                        <template v-if="item.name === 'params'">
+                        <template v-if="item.name === 'params' && isScriptDebugInit">
                             <el-row hidden>
                                 <span> {{ name }}数据 </span>
                             </el-row>
                             <div>
-                                <el-row v-if="templateRadio !== ''">
+                                <el-row v-if="templateRadio !== ''" style="margin-top: 10px">
                                     <el-button size="small" type="primary" icon="el-icon-plus" @click="addItemShow = true" :disabled="showFlag">
                                         添加多项
                                     </el-button>
@@ -74,6 +73,7 @@
                                             参数化
                                         </el-button>
                                     </el-popover>
+                                    <el-switch v-model="isScriptParameterized" active-text="需要配置数据"></el-switch>
                                 </el-row>
                                 <el-table border ref="multipleTable" v-loading="templateLoading" :data="templateInfo" tooltip-effect="dark" style="width: 100%" height="500" @selection-change="handleSelectionChange" row-key="name" class="sortable">
                                     <el-table-column label="排序" width="55">
@@ -174,7 +174,7 @@
                              <set-datable ref="debugConfData"></set-datable>
                         </template>
                         <template v-if="item.name === 'result' && currentTab === 'result'">
-                             <run-script :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
+                             <run-script :no-need-case="isScriptParameterized" :aut-id="Number(autId)" :case-id="Number(caseId)" :script-id="Number(scriptId)"></run-script>
                         </template>
                     </el-tab-pane>
                 </el-tabs>
@@ -420,7 +420,8 @@ export default {
             scriptable: false,
             resultable: false,
             isUseDebug: false,
-            isScriptParameterized: false
+            isScriptParameterized: false,
+            isScriptDebugInit: false
         };
     },
     watch: {
@@ -432,6 +433,7 @@ export default {
         templateRadio: {
             handler(newVal) {
                 this.scriptId = newVal
+                sessionStorage.setItem("scriptId", newVal)
             },
             immediate: true
         },
@@ -590,6 +592,7 @@ export default {
         },
         // 删除脚本
         deleteTemplateInfo() {
+
             this.templateInfo = this.templateInfo.filter(
                 (templateInfo) =>
                 !this.multipleSelection.some(
@@ -798,6 +801,7 @@ export default {
                 return;
             }
             this.deleteTemplateDialog = true;
+            this.templateInfo = []
         },
         // 添加用例到场景
         insertTestcaseToScene(id) {
@@ -1036,6 +1040,7 @@ export default {
         },
         //选择脚本
         chooseTemplate(row, column, event) {
+            this.currentTab = 'params'
             this.templateRadio = row.id;
             this.isScriptClicked = true
             this.getTemplateInfo();
@@ -1057,6 +1062,7 @@ export default {
         },
         // 添加脚本调试接口
         addScriptTemplateDebug(msg, flag) {
+            console.log(flag, this.templateRadio)
             if (flag != undefined || this.templateRadio) {
                 Request({
                     url: '/scriptTemplate/addScriptTemplateDebug',
@@ -1071,8 +1077,9 @@ export default {
                     if (res.respCode === "0000") {
                         // 这里会返回caseId
                         this.$message.success('操作成功，请配置数据')
+                        this.isScriptDebugInit = true
                         if(this.currentTab != 'script') {
-                            this.currentTab = 'script'
+                            this.currentTab = 'params'
                         }else {
                             console.log(this.$refs.debugConfData)
                             this.$refs.debugConfData[0].reload()
@@ -1099,6 +1106,7 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
+                    this.isScriptDebugInit = true
                     this.caseId = res.testcaseEntities[0].id
                     console.log('debugRes', {
                         scriptId: this.templateRadio,
@@ -1113,7 +1121,9 @@ export default {
             }).catch(error => {
                 console.log('debug脚本数据查询失败', error)
                 this.$message.warning('请添加脚本执行用例')
+                this.currentTab = "params"
                 this.caseNotNeedAdd = false
+                this.isScriptDebugInit = false
             })
         },
         // 查询脚本调试测试计划

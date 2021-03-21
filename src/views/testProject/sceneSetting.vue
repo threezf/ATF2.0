@@ -164,10 +164,11 @@
                           $event
                         )">{{flowItem.casecode}}
                       </el-checkbox-button>
-                      <el-input
-                        style="width: 50px; height: 40px;"
+                      <el-input-number
+                        style="width: 100px; height: 40px;"
+                        size="small"
                         v-model="flowItem.runNumber">
-                      </el-input>
+                      </el-input-number>
                       <i class="el-icon-right"
                         v-if="flowIndex < caseDtosItem.flowNodeDtos.length - 1">
                       </i>
@@ -183,10 +184,11 @@
                         $event
                       )">{{caseDtosItem.casecode}}
                     </el-checkbox-button>
-                    <el-input
-                      style="width: 50px; height: 40px; margin-left: 10px"
+                    <el-input-number
+                      style="width: 100px; height: 40px; margin-left: 10px"
+                      size="small"
                       v-model="caseDtosItem.runNumber">
-                    </el-input>
+                    </el-input-number>
                   </div>
                 </div>
               </li>
@@ -1117,10 +1119,12 @@
           if(!newVal) {
             this.addForm.caseIds = []
             console.log('dragSelect', this.$refs.dragSelect)
-            this.$refs.dragSelect.clearSelected()
-            this.$refs.dragSelect.isShow = false
+            this.$nextTick(_ => {
+              this.$refs.dragSelect.clearSelected()
+              this.$refs.dragSelect.isShow = false
+            })
           }
-        },immediate: true
+        },immediate: false
       }
     },
     computed: {
@@ -2161,14 +2165,6 @@
               flowNodesRunNumberList,
               sceneId: this.sceneId,
           },
-          // params: {
-          //   "casesRunNumberList":[],
-          //   "flowNodesRunNumberList":[
-          //     {"flowNodeId":2977,"runNumber":2, "caseId":"25317"},
-          //     {"flowNodeId":2978,"runNumber":3, "caseId":"25317"}
-          //     ],
-          //   "sceneId":"1214"
-          // },
         }).then(res => {
           if(res.respCode === '0000') {
             this.$message.success('保存成功')

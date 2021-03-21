@@ -7,7 +7,6 @@
 <template>
 <div>
     <hr>
-    <el-card>
         <el-row class="menuRow" :gutter="20">
             <el-form label-width="100px">
                 <el-col :lg="5" :md="10" :sm="12" :xs="12">
@@ -18,24 +17,19 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <!-- <el-col :lg="5" :md="10" :sm="12" :xs="12">
-                    <el-form-item label="" label-width="20px">
-                        <p style="padding-left: 0px" v-html="exeStautShow"></p>
-                    </el-form-item>
-                </el-col> -->
-                <el-col :lg="14" :md="15" :sm="12" :xs="12">
-                    <span style="margin-right: 0px; font-size: 14px">设置执行次数</span>
-                    <el-select v-model="selectCase" size="small" style="width: 350px" v-if="testSceneList.length > 0">
-                        <el-option v-for="(testCase, index) in testSceneList[0].testCaseList" :key="'case' + index" :label="testCase.caseCode" :value="testCase.caseId"></el-option>
-                    </el-select>
-                    <el-input-number size="small" class="input_number" v-model="runNumber" clearable></el-input-number>
+                <el-col :lg="14" :md="15" :sm="12" :xs="12" v-if="!noNeedCase">
+                    <span style="margin-right: 0px; font-size: 14px">设置执行次数：</span>
+                    <!-- <el-select v-model="selectCase" size="small" style="width: 150px" v-if="testSceneList.length > 0">
+                        <el-option v-for="(testCase, index) in testSceneList[0].testCaseList" :key="'case' + index" :label="testCase.caseId" :value="testCase.caseId"></el-option>
+                    </el-select> -->
+                    <el-input-number size="mini" class="input_number" v-model="runNumber" clearable></el-input-number>
                     <el-button class="save-button" size="small" type="primary" @click="setTimeNumber">保存</el-button>
                 </el-col>
             </el-form>
         </el-row>
         <el-row class="buttonRow">
             <el-button size="small" type="primary" icon="el-icon-video-play" :loading="isRunning" @click="startExecution">
-                开始调试
+                {{debugStr}}
             </el-button>
             <el-button size="small" type="primary" @click="stopExecute">
                 <i class="fa fa-stop"></i>
@@ -52,8 +46,7 @@
                 <span v-if="!isRunning">{{operationMsg}}</span>
             </div>
         </div>
-    </el-card>
-</div>
+    </div>
 </template>
 
 <script>
@@ -97,7 +90,8 @@ export default {
             selectCase: "", // 选择的case
             sceneId: '',
             copyTestCase: '',
-            operationMsg: '脚本暂未调试'
+            operationMsg: '脚本暂未调试',
+            debugStr: "开始调试"
         }
     },
     props: {
@@ -112,6 +106,10 @@ export default {
         scriptId: {
             type: Number,
             default: 0
+        },
+        noNeedCase: {
+            type: Boolean,
+            defalut: false
         }
     },
     watch: {
@@ -231,6 +229,7 @@ export default {
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
+                    this.debugStr = "调试中..."
                     this.$message.success('操作成功!准备发起执行')
                     this.startQueryLog()
                     //因为查询执行信息需要最近执行的批量号因此需要查询批次
@@ -276,6 +275,7 @@ export default {
             }).finally(_ => {
                 this.isRunning = false
                 this.operationMsg = '脚本调试已终止'
+                this.debugStr = '开始调试'
             })
         },
         // 获取最近的执行批次id
@@ -414,6 +414,7 @@ export default {
                     }else {
                         this.isRunning = false
                         this.operationMsg = '脚本调试执行结束'
+                        this.debugStr = "开始调试"
                     }
                 }
             }).catch(err => {

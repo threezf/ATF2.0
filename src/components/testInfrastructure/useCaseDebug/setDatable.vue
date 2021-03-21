@@ -9,7 +9,7 @@
     </el-row>
 
     <div class="ele-container">
-      <div :class="'ele-left ' + (saidBarShow ? '' : 'narrow-ele-left')">
+      <!-- <div :class="'ele-left ' + (saidBarShow ? '' : 'narrow-ele-left')">
         <div class="treeDiv" v-show="saidBarShow">
           <el-tree
             accordion
@@ -29,7 +29,7 @@
             ><i class="el-icon-d-arrow-right"></i
           ></el-button>
         </div>
-      </div>
+      </div> -->
       <div
         :class="
           'ele-right ' +
@@ -44,8 +44,7 @@
               @click="save"
               type="primary"
               icon="el-icon-document"
-            >
-              保存
+            >保存
             </el-button>
             <el-button
               v-if="selectedTemplate !== -1"
@@ -126,20 +125,20 @@
                 </el-button>
               </template>
             </el-table-column>
-            <el-table-column prop="caseCode" label="用例编号" width="200">
+            <el-table-column prop="caseCode" label="用例编号" min-width="200">
             </el-table-column>
             <el-table-column
               v-if="!columnHidden.includes('测试点')"
               prop="testPoint"
               label="测试点"
-              width="200"
+              min-width="200"
             >
             </el-table-column>
-          <el-table-column
+            <el-table-column
               v-for="(item, index) in tableHead"
               :key="index"
               :label="item[0] + '-' + item[1]"
-              width="350"
+              min-width="350"
             >
               <template slot-scope="scope">
                 <div
@@ -166,7 +165,35 @@
                 </div>
               </template>
             </el-table-column>
+
+            <el-table-column
+              label="执行次数"
+              min-width="200">
+              <template slot-scope="scope">
+                <div
+                  v-if="
+                    scope.row.index === rowIndex &&
+                    scope.column.index === columnIndex &&
+                    dbeditFlag
+                  ">
+                <el-input
+                    class="editArea"
+                    type="textarea"
+                    @blur="loseblur(scope.row, scope.column)"
+                    @click.stop.prevent="return false;"
+                    @change="handlechange(scope.row, scope.column)"
+                    :autosize="{ minRows: 2, maxRows: 5 }"
+                    v-model="scope.row.runTotalNumber"
+                  >
+                  </el-input>
+                </div>
+                 <div v-else style="white-space: break-spaces">
+                  {{ scope.row.runTotalNumber }}
+                </div>
+              </template>
+            </el-table-column>
           </el-table>
+
         </div>
         <div v-show="menuVisible">
           <ul id="menu" class="menu">
@@ -850,6 +877,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import uiEleFunTree from "@/components/transactDetail/uiEleFunTree";
@@ -1017,7 +1045,12 @@ export default {
       num: '',
       pageLoading: false,
       isRouterAlive: true,
-      filterTreeData: {}
+      filterTreeData: {},
+      // 控制次数
+      testPlanEntity: [],
+      testPlanId: '',
+      testSceneList: [],
+      sceneId: ""
     };
   },
   watch: {
@@ -1048,7 +1081,7 @@ export default {
   methods: {
     // 刷新组件
     reload() {
-      this.handleNodeClick(this.filterTreeData)
+      this.getFilterTree();
       this.$nextTick(_ => {
         console.log('局部刷新方法', this.filterTreeData)
       })
@@ -1638,6 +1671,7 @@ export default {
       if (this.editedData.length === 0) {
         return;
       }
+      this.saveRunNumber()
       Request({
         url: "/dataCenter/saveTableData",
         method: "post",
@@ -1734,7 +1768,7 @@ export default {
       });
     },
     handleNodeClick(data) {
-      console.log("data======================================", data);
+      console.log("data======================================", data.flag);
       this.filterTreeData = data
       if (data.flag) {
         this.selectedTemplate = data;
@@ -1784,6 +1818,11 @@ export default {
               aut.children.push(trans);
             }
             this.filterTree.push(aut);
+
+            this.selectedTemplate = this.filterTree[0].children[0].children[0]
+            this.getTestcaseInfo();
+            this.getFunction();
+            this.getCheckFunTree();
           }
         },
         (err) => {
@@ -1817,6 +1856,7 @@ export default {
           }
           this.tableData = res.tableData;
           this.tableHead = res.tableHead;
+          this.queryScriptDebugTestPlan()
         },
         (err) => {
           console.log(err);
@@ -1933,6 +1973,79 @@ export default {
           console.log(err);
         });
     },
+    // 控制循环次数逻辑
+    queryScriptDebugTestPlan() {
+        Request({
+            url: '/testPlanController/queryScriptDebugTestPlan',
+            method: 'POST',
+            params: {
+                scriptId: sessionStorage.getItem("scriptId")
+            }
+        }).then(res => {
+            if (res.respCode === '0000') {
+                this.testPlanEntity = res.testPlanEntity
+                console.log('测试计划获取成功run', this.testPlanEntity)
+                this.caselibId = this.testPlanEntity.caseLibId
+                this.testPlanId = this.testPlanEntity.id
+                this.queryCaseExecuteInstance()
+            }
+        }).catch(error => {
+            console.log('run查询测试计划失败', error)
+            this.$message.warning('该测试计划尚未发起执行')
+        })
+    },
+    // 查询测试计划下的场景用例
+    queryCaseExecuteInstance(num) {
+        Request({
+            url: '/caseExecuteInstance/queryCaseExecuteInstance',
+            method: 'post',
+            params: {
+                caselibId: this.caselibId,
+                testPlanId: this.testPlanId,
+                roundFlag: 2,
+                scopeFlag: 1
+            }
+        }).then(res => {
+            if (num === 1) {
+                this.$message.success('查询成功')
+            }
+            this.testSceneList = res.executeInstanceResult.testSceneList
+            // this.selectCase = this.testSceneList[0].testCaseList[0].caseId
+            this.sceneId = this.testSceneList[0].sceneId
+            this.testSceneList[0].testCaseList.forEach((item, index) => {
+              this.$nextTick(_ => {
+                Vue.set(this.tableData[index], 'runTotalNumber', item.runTotalNumber)
+              })
+            })
+            console.log('run----', this.testSceneList, this.tableData)
+        }).catch(error => {
+            console.log('场景用例获取失败')
+        })
+    },
+    // 保存定时
+    saveRunNumber() {
+      let requestList = []
+      this.tableData.forEach(item => {
+        requestList.push(Request({
+            url: '/caseExecuteInstance/setCaseRunTime',
+            method: 'post',
+            params: {
+                casesRunNumberList:[{
+                    caseId: parseInt(item.id),
+                    runNumber: parseInt(item.runTotalNumber)
+                }],
+                flowNodesRunNumberList:[],
+                sceneId: this.sceneId
+            }
+        }))
+      })
+      Promise.all(requestList)
+      .then(res => {
+        this.$message.success('设置成功')
+      }).catch(_ => {
+        this.$message.warning('设置失败')
+      })
+    },
   },
 };
 </script>
@@ -1955,7 +2068,7 @@ export default {
 }
 
 .ele-right {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   height: 380px;
   margin-right: 10px;

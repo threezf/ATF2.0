@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VCharts from 'v-charts'
+import {mavonEditor} from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 import $ from 'jquery'     //引入jquery
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
@@ -33,6 +35,7 @@ Vue.use(moment)
 Vue.use(VueBus)
 Vue.use(page)
 Vue.use(contentmenu);
+Vue.component('mavon-editor', mavonEditor)
 window.activeMenu;
 
 // 路由钩子
