@@ -1,0 +1,66 @@
+<template>
+    <div>
+        <el-menu
+                default-active="1"
+                class="el-menu-vertical-demo"
+                @select="handleSelect"
+                background-color="#E7E7E7">
+            <!-- 引入组件 -->
+            <MenuTree :menuData="menuList"></MenuTree>
+            
+        </el-menu>
+    </div>
+</template>
+ 
+<script>
+    import MenuTree from "@/components/interfaceTest/MenuTree";
+ 
+export default {
+        name: "Nav",
+        components: {
+            MenuTree: MenuTree,
+        },
+        data() {
+            return {
+                menuData : [],
+                menuList : [{
+                    index: "1",
+                    name: "用户模块",
+                    children: [{
+                        index: "2",
+                        name: "账号相关",
+                        children: [{
+                            index: "3",
+                            name: "用户登录",
+                        }, {
+                            index: "4",
+                            name: "用户注销",
+                        }],
+                    }]
+                }, {
+                    index: "5",
+                    name: "企业模块",
+                }, {
+                    index: "6",
+                    name: "测试模块",
+                }, {
+                    index: "7",
+                    name: "日志模块",
+                }]
+            }
+        },
+         methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+    }
+};
+</script>
+
+<style lang="less" scoped>
+.el-menu-vertical-demo {
+    width: 200px;
+    min-height: 400px;
+    height: 100%;
+  }
+</style>

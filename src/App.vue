@@ -25,7 +25,7 @@
                         <el-badge :is-dot="leftCount > 0"></el-badge>
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
-                    <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-menu slot="dropdown" style="top: 40px">
                         <el-dropdown-item icon='el-icon-setting' @click.native="changePass">修改密码</el-dropdown-item>
                         <el-dropdown-item icon='el-icon-s-custom' @click.native="changeUser">用户状态设定</el-dropdown-item>
                         <!-- <el-dropdown-item icon="el-icon-download" @click.native="">下载资源</el-dropdown-item> -->
@@ -368,9 +368,9 @@ export default {
     cursor: pointer;
 }
 
-.el-dropdown-menu {
-    top: 40px !important;
-}
+// .el-dropdown-menu {
+//     top: 40px !important;
+// }
 
 .el-input {
     width: 90%;

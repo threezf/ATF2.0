@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VCharts from 'v-charts'
-import { onMounted, onBeforeUnmount, ref, reactive } from 'vue';
 
 import $ from 'jquery'     //引入jquery
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
@@ -20,17 +19,19 @@ import moment from 'moment'
 import store from './store/index'
 import VueBus from 'vue-bus'
 import page from './components/page/index.js'
+import vueDragSelectPro from 'vue-drag-select-pro'
+import contentmenu from 'v-contextmenu'
+// 注意：一定要引入css样式
+import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
 
 Vue.config.productionTip = false
+Vue.use(vueDragSelectPro)
 Vue.use(ElementUI)
 Vue.use(VCharts)
 Vue.use(moment)
 Vue.use(VueBus)
 Vue.use(page)
-Vue.use(onMounted)
-Vue.use(onBeforeUnmount)
-Vue.use(ref)
-Vue.use(reactive)
+Vue.use(contentmenu);
 window.activeMenu;
 
 // 路由钩子

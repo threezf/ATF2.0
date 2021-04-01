@@ -22,18 +22,19 @@ import store from './store/index'
 import VueBus from 'vue-bus'
 import page from './components/page/index.js'
 import vueDragSelectPro from 'vue-drag-select-pro'
+import contentmenu from 'v-contextmenu'
+import 'v-contextmenu/dist/index.css';
 // 注意：一定要引入css样式
 import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
-import axios from 'axios'
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = axios
 Vue.use(vueDragSelectPro)
 Vue.use(ElementUI)
 Vue.use(VCharts)
 Vue.use(moment)
 Vue.use(VueBus)
 Vue.use(page)
+Vue.use(contentmenu);
 Vue.component('mavon-editor', mavonEditor)
 window.activeMenu;
 

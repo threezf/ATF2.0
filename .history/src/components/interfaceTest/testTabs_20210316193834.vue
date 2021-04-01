@@ -1,0 +1,476 @@
+<template>
+<el-tabs style="margin: 0 0 0 10px" v-model="bodyShow">
+        <el-tab-pane label="请求头部" name="first">
+            <el-table :data="apiMsgData.header"
+                        size="mini"
+                        stripe :show-header="false"
+                        class="h-b-e-a-style"
+                        :row-style="{'background-color': 'rgb(250, 250, 250)'}">
+                <el-table-column property="KEY" label="Key" header-align="center" minWidth="100">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.key" size="mini" placeholder="Key">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="VALUE" label="Value" header-align="center" minWidth="200">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.value" size="mini" placeholder="Value">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="DESCRIPTION" header-align="center" minWidth="80">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" size="mini" placeholder="Description">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="value" label="操作" header-align="center" width="80">
+                    <template slot-scope="scope">
+                        <el-button type="danger" icon="el-icon-delete" size="mini"
+                                    @click.native="delTableRow('header',scope.$index)">
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="请求体" name="second" :disabled="apiMsgData.method === 'GET'">
+            <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px">
+                <el-radio-group v-model="form.choiceType">
+                    <el-radio label="data">form-data</el-radio>
+                    <el-radio label="json">raw</el-radio>
+                    <el-radio label="text">text</el-radio>
+                </el-radio-group>
+                <el-button type="primary" size="mini"
+                            v-show="form.choiceType === 'json'"
+                            style="margin-left:20px"
+                            @click="formatData()">格式化
+
+                </el-button>
+            </el-form>
+            <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
+
+            <div v-if="form.choiceType === 'json'">
+                <div style="border:1px solid rgb(234, 234, 234) ">
+                    <el-container>
+                        <editor
+                                v-contextmenu:contextmenu
+                                style="font-size: 15px"
+                                v-model="apiMsgData.jsonVariable"
+                                @init="editorInit"
+                                lang="json"
+                                theme="chrome"
+                                width="100%"
+                                height="515px"
+                                :options="{}"
+                        >
+                        </editor>
+                    </el-container>
+                </div>
+            </div>
+
+
+            <el-table :data="apiMsgData.body"
+                        size="mini"
+                        stripe
+                        :show-header="false"
+                        style="background-color: rgb(250, 250, 250)"
+                        v-if="form.choiceType === 'data' || form.choiceType === 'text'"
+                        :row-style="{'background-color': 'rgb(250, 250, 250)'}">
+
+                <el-table-column label="KEY" header-align="center" minWidth="100">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.key" size="mini">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="TYPE" header-align="center" width="100">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.param_type" size="mini">
+                            <el-option v-for="item in paramTypes" :key="item" :value="item">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="VALUE" header-align="center" minWidth="200">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.param_type === 'file'">
+                            <el-row>
+                                <el-col :span="18">
+                                    <el-input v-model="scope.row.value" size="mini" :disabled="true">
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="2" style="padding-left:10px;">
+                                    <el-upload
+                                            class="upload-demo"
+                                            action="/api/upload"
+                                            :show-file-list='false'
+                                            :on-success="fileChange">
+                                        <el-button size="mini" type="primary"
+                                                    @click="tempNum(scope.$index)">点击上传
+                                        </el-button>
+                                    </el-upload>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <div v-else>
+                            <el-input v-model="scope.row.value"
+                                        :id="'data_input' + scope.$index "
+                                        type="textarea"
+                                        rows=1
+                                        @focus="showLine('data_input', scope.$index)"
+                                        @input="changeLine()"
+                                        @blur="resetLine()"
+                                        size="mini"
+                                        resize="none">
+                            </el-input>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="DESCRIPTION" header-align="center" minWidth="80">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" size="mini">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="value" label="操作" header-align="center" width="80">
+                    <template slot-scope="scope">
+                        <el-button type="danger" icon="el-icon-delete" size="mini"
+                                    @click.native="delTableRow('body',scope.$index)">
+                        </el-button>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="Query请求参数" name="third">
+            <el-table :data="apiMsgData.extract" size="mini" stripe :show-header="false"
+                        class="h-b-e-a-style"
+                        :row-style="{'background-color': 'rgb(250, 250, 250)'}">
+                <el-table-column property="KEY" label="Key" header-align="center" minWidth="100">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.key" size="mini" placeholder="Key">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="VALUE" label="Value" header-align="center" minWidth="200">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.value" size="mini" placeholder="Value">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="DESCRIPTION" header-align="center" minWidth="80">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" size="mini" placeholder="Description">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="value" label="操作" header-align="center" width="80">
+                    <template slot-scope="scope">
+                        <el-button type="danger" icon="el-icon-delete" size="mini"
+                                    @click.native="delTableRow('extract',scope.$index)">
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="权限校验" name="fourth">
+            <el-form-item class="bottomForm" label="Authorization Type">
+                <el-select style="width:240px" size="small" class="typeSelect" v-model="manageInfo.selectedAuthorization">
+                    <el-option v-for="(item,index) in authorizationList" :key="index" :value="item.id" :label="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+        </el-tab-pane>
+    </el-tabs>
+</template>
+
+<script>
+
+export default {
+    components: {
+        editor: require('vue2-ace-editor'),
+    },
+    name: 'testTabs',
+    props: [],
+    data() {
+        return {
+            bodyShow: 'second',
+            paramTypes: ['string', 'file'],
+            cell: Object(),
+            //上传文件时，记录数组下当前数据的下标，用于把返回文件路径地址赋值
+            temp_num: '',
+            methods: ['POST', 'GET', 'PUT', 'DELETE'],
+            form: {
+                projectId: null,
+                configName: null,
+                moduleId: null,
+                choiceUrl: '基础url1',
+                choiceType: 'data',
+            },
+            apiMsgData: {
+                id: null,
+                project: null,
+                method: 'POST',
+                status_url: null,
+                name: null,
+                num: null,
+                desc: null,
+                funcAddress: null,
+                upFunc: null,
+                downFunc: null,
+                skip: null,
+                formLabelWidth: '80px',
+                url: '',
+                param: [{key: null, value: null}],
+                header: Array(),
+                body: Array(),
+                jsonVariable: '',
+                extract: Array(),
+                validate: Array(),
+            },
+            authorizationList: [{
+                    id: 1,
+                    value: 'inherit auth from parent'
+                },
+                {
+                    id: 2,
+                    value: 'No Auth'
+                },
+                {
+                    id: 3,
+                    value: 'Bearer Token'
+                },
+                {
+                    id: 4,
+                    value: 'Basic Auth'
+                },
+                {
+                    id: 5,
+                    value: 'Digest Auth'
+                },
+                {
+                    id: 6,
+                    value: 'OAuth 1.0'
+                },
+                {
+                    id: 7,
+                    value: 'OAuth 2.0'
+                },
+                {
+                    id: 8,
+                    value: 'Hawk Authentication'
+                },
+                {
+                    id: 9,
+                    value: 'AWS Signature'
+                },
+                {
+                    id: 10,
+                    value: 'NTLM Authentication[Beta]'
+                },
+            ],
+
+        }
+    },
+    methods: {
+        editorInit() {
+            require('brace/ext/language_tools');
+            require('brace/mode/json');
+            require('brace/theme/chrome');
+            require('brace/snippets/json')
+        },
+        formatData() {
+            // 格式化json字符串
+            try {
+                this.apiMsgData.jsonVariable = JSON.parse(this.apiMsgData.jsonVariable);
+                this.apiMsgData.jsonVariable = JSON.stringify(this.apiMsgData.jsonVariable, null, 4);
+            } catch (err) {
+                this.$message({
+                    showClose: true,
+                    message: 'json格式错误',
+                    type: 'warning',
+                });
+            }
+        },
+
+        fileChange(response, file) {
+            if (response['status'] === 0) {
+                this.$confirm('服务器已存在相同名字文件，是否覆盖?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let form = new FormData();
+                    form.append("file", file.raw);
+                    form.append("skip", '1');
+                    this.$axios.post('/api/upload', form).then((response) => {
+                            this.$message({
+                                showClose: true,
+                                message: response.data['msg'],
+                                type: 'success',
+                            });
+                            this.apiMsgData.body[this.temp_num]['value'] = response.data['data'];
+                        }
+                    );
+                }).catch(() => {
+
+                });
+            } else {
+                if (response['msg']) {
+                    this.$message({
+                        showClose: true,
+                        message: response['msg'],
+                        type: 'success',
+                    });
+                }
+                this.apiMsgData.body[this.temp_num]['value'] = response['data'];
+            }
+
+        },
+        tempNum(i) {
+            this.temp_num = i;
+        },
+        resetLine() {
+            //  重置单元格高度
+            this.cell.style.height = '18px';
+        },
+        showLine(prefix, n) {
+            //  获取单元格的滚动条高度，并使单元格为该高度
+            this.cell = document.getElementById(prefix + n);
+            this.cell.style.height = this.cell.scrollHeight + 'px';
+        },
+        changeLine() {
+            //  当单元格高度和滚动条高度不一致时，改变单元格高度
+            if (this.cell.style.height !== this.cell.scrollHeight + 'px') {
+                let i = parseInt(this.cell.style.height.substring(0, this.cell.style.height.length - 2));
+                if (i - this.cell.scrollHeight === 2) {
+                    //  为true时，为减少高度操作
+                    this.cell.style.height = (i - 18) + 'px'
+                } else {
+                    this.cell.style.height = this.cell.scrollHeight + 'px';
+                }
+
+            }
+        },
+        delTableRow(type, i) {
+            if (type === 'body') {
+                this.apiMsgData.body.splice(i, 1);
+            } else if (type === 'header') {
+                this.apiMsgData.header.splice(i, 1);
+            } else if (type === 'param') {
+                this.apiMsgData.param.splice(i, 1);
+            }
+        },
+        addTableRow(type) {
+            if (type === 'body') {
+                this.apiMsgData.body.push({key: null, value: null, param_type: 'string', remark: null});
+            } else if (type === 'header') {
+                this.apiMsgData.header.push({key: null, value: null});
+            } else if (type === 'validate') {
+                this.apiMsgData.validate.push({key: null, value: null});
+            } else if (type === 'extract') {
+                this.apiMsgData.extract.push({key: null, value: null, remark: null});
+            } else if (type === 'param') {
+                this.apiMsgData.param.push({key: null, value: null});
+            }
+        },
+    }
+    ,
+    computed: {
+        monitorParam() {
+            return this.apiMsgData.param;
+        },
+        monitorMethod() {
+            return this.apiMsgData.method;
+        }
+        ,
+        monitorVariable() {
+            return this.apiMsgData.body;
+        }
+        ,
+        monitorHeader() {
+            return this.apiMsgData.header;
+        },
+        monitorExtract() {
+            return this.apiMsgData.extract;
+        },
+
+    }
+    ,
+    watch: {
+        monitorParam: {
+            handler: function () {
+                if (this.apiMsgData.param.length === 0) {
+                    this.addTableRow('param')
+                } else if (this.apiMsgData.param[this.apiMsgData.param.length - 1]['key'] || this.apiMsgData.param[this.apiMsgData.param.length - 1]['value']) {
+                    this.addTableRow('param')
+                }
+                let strParam = '';
+
+                for (let i in this.apiMsgData.param) {
+                    if (parseInt(i) + 2 === this.apiMsgData.param.length && this.apiMsgData.param[i].key) {
+                        if (this.apiMsgData.param[i].value) {
+                            strParam += this.apiMsgData.param[i].key + '=' + this.apiMsgData.param[i].value;
+                        } else {
+                            strParam += this.apiMsgData.param[i].key;
+                        }
+                    } else if (this.apiMsgData.param[i].key) {
+                        strParam += this.apiMsgData.param[i].key + '=' + this.apiMsgData.param[i].value + '&';
+                    }
+                }
+                if (strParam.substr(strParam.length - 1, 1) === '&') {
+                    strParam = strParam.substring(0, strParam.length - 1)
+                }
+                if (strParam) {
+                    this.apiMsgData.url = this.apiMsgData.url.split("?")[0] + '?' + strParam
+                } else {
+                    this.apiMsgData.url = this.apiMsgData.url.split("?")[0]
+                }
+
+            }
+            ,
+            deep: true
+        },
+        monitorMethod(newValue) {
+            if (newValue === 'GET') {
+                this.bodyShow = 'first'
+            }
+        },
+        monitorVariable: {
+            handler: function () {
+                if (this.apiMsgData.body.length === 0) {
+                    this.addTableRow('body')
+                }
+                if (this.apiMsgData.body[this.apiMsgData.body.length - 1]['key'] || this.apiMsgData.body[this.apiMsgData.body.length - 1]['value']) {
+                    this.addTableRow('body')
+                }
+            },
+            deep: true
+        },
+        monitorExtract: {
+            handler: function () {
+                if (this.apiMsgData.extract.length === 0) {
+                    this.addTableRow('extract')
+                }
+                if (this.apiMsgData.extract[this.apiMsgData.extract.length - 1]['key'] || this.apiMsgData.extract[this.apiMsgData.extract.length - 1]['value']) {
+                    this.addTableRow('extract')
+                }
+            },
+            deep: true
+        },
+        monitorHeader: {
+            handler: function () {
+                if (this.apiMsgData.header.length === 0) {
+                    this.addTableRow('header')
+                }
+                if (this.apiMsgData.header[this.apiMsgData.header.length - 1]['key'] || this.apiMsgData.header[this.apiMsgData.header.length - 1]['value']) {
+                    this.addTableRow('header')
+                }
+            },
+            deep: true
+        },
+
+    },
+
+}
+</script>
