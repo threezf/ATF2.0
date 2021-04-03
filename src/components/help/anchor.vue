@@ -46,8 +46,8 @@ export default {
                 const scrollTop = this.getScroll(window, true)
                 const elOffset = this.getOffset(item)
                 let top
-                if(elOffset.top <= 135) {
-                    top = 135
+                if(this.getStartTop() > 5) {
+                    top = elOffset.top
                 }else {
                    top = elOffset.top - this.getStartTop()
                 }
