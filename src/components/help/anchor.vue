@@ -45,13 +45,17 @@ export default {
                 let item = data[index] || {}
                 const scrollTop = this.getScroll(window, true)
                 const elOffset = this.getOffset(item)
-                let top = elOffset.top - this.getStartTop()
-                window.scrollTo({top: top < 0 ? 0 : top, behavior: 'smooth'})
+                let top
+                if(elOffset.top <= 135) {
+                    top = 135
+                }else {
+                   top = elOffset.top - this.getStartTop()
+                }
+                window.scrollTo({top: top < 0 ? 0 : top + 5, behavior: 'smooth'})
             }
         },
         handleScroll (e) {
             let menu = document.querySelector('.slider-menu')
-            console.log(e.path[1].scrollY, menu)
             if(e.path[1].scrollY > 120) {
                 menu.style.top = '5px'
             }else {
@@ -115,6 +119,13 @@ export default {
         }
     },
     mounted () {
+        if(window.pageYOffset <= 294) {
+            if(135 - window.pageYOffset >= 0) {
+                document.querySelector('.slider-menu').style.top = 140 - window.pageYOffset + 'px'
+            }else {
+                document.querySelector('.slider-menu').style.top = '5px'
+            }
+        }
         window.addEventListener('scroll', this.handleScroll, false)
         window.addEventListener('resize', this.handleScroll, false)
     },
@@ -162,9 +173,8 @@ export default {
         border-left: 2px solid #1a73e8;
     }
     .component-info {
-        // height: 700px;
-        // width: 600px;
         border: 1px solid #f0f0f0;
+        padding: 0 15px;
     }
     .slider-info {
         margin-left: 185px;
