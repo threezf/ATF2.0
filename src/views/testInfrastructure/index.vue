@@ -42,6 +42,19 @@ export default {
             isInterface: false,
         };
     },
+    provide() {
+        return {
+            setChildrenRef: (name, ref) => {
+                this[name] = ref
+            },
+            getChildrenRef: name => {
+                return this[name]
+            },
+            getRef: () => {
+                return this
+            }
+        }
+    },
     methods: {},
     created() {
         const flag = localStorage.getItem("userType")

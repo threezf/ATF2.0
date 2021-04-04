@@ -34,6 +34,7 @@
     "vue-cron": "^1.0.9",
     "vue-drag-select-pro": "^1.0.4",
     "vue-quill-editor": "^3.0.6",
+    "vue-ref": "^2.0.0",
     "vue-router": "^3.0.1",
     "vue-runtime-helpers": "^1.1.2",
     "vue-ueditor-wrap": "^2.4.4",
