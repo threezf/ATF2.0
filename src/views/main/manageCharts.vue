@@ -58,7 +58,7 @@
                         xAxis: {
                             type: 'category',
                             // boundaryGap: false,
-                            data: ['2020年4月', '2020年10月', '2020年11月', '2020年12月', '2021年1月', '2021年2月', '2021年3月']
+                            data: ['2020年9月', '2020年10月', '2020年11月', '2020年12月', '2021年1月', '2021年2月', '2021年3月']
                         },
                         yAxis: {
                             type: 'value'
@@ -70,25 +70,25 @@
                             {
                                 name: '系统数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [120, 132, 101, 134, 90, 230, 210]
                             },
                             {
                                 name: '项目数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [220, 182, 191, 234, 290, 330, 310]
                             },
                             {
                                 name: '测试用例数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [150, 232, 201, 154, 190, 330, 410]
                             },
                             {
                                 name: 'API数目',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [320, 332, 301, 334, 390, 330, 320]
                             }
                         ]
@@ -97,25 +97,25 @@
                             {
                                 name: '系统数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [120, 252, 353, 488, 578, 808, 1018]
                             },
                             {
                                 name: '项目数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [220, 402, 593, 827, 1117, 1447, 1757]
                             },
                             {
                                 name: '测试用例数',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [150, 382, 583, 737, 927, 1157, 1567]
                             },
                             {
                                 name: 'API数目',
                                 type: 'line',
-                                stack: '总量',
+                                smooth: true,
                                 data: [320, 652, 953, 1274, 1664, 1994, 2324]
                             }
                         ]
