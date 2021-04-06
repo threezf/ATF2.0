@@ -26,6 +26,7 @@ import contentmenu from 'v-contextmenu'
 import 'v-contextmenu/dist/index.css';
 // 注意：一定要引入css样式
 import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
+import ref from 'vue-ref'
 
 Vue.config.productionTip = false
 Vue.use(vueDragSelectPro)
@@ -36,6 +37,7 @@ Vue.use(VueBus)
 Vue.use(page)
 Vue.use(contentmenu);
 Vue.component('mavon-editor', mavonEditor)
+Vue.use(ref)
 window.activeMenu;
 
 // 路由钩子
