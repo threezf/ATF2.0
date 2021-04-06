@@ -23,10 +23,10 @@
         </el-tag>
       </template>
     </el-table-column>
-    <el-table-column property="interfaceName"  label="接口名称"  width="120">
-        <template slot-scope="scope">
-            <a @click="toInterfaceDetail(scope.$index,scope.row)" class="link" target="_self">{{scope.row.interfaceName}}</a>
-        </template>
+    <el-table-column
+      property="interfaceName"
+      label="接口名称"
+      width="120">
     </el-table-column>
     <el-table-column
       label="协议/方法"
@@ -61,7 +61,7 @@
       align="center">
       <template slot-scope="scope">
         <el-button type="primary" icon="el-icon-edit-outline" size="mini"
-                      @click.native="editInterface(scope.row)">编辑
+                      >编辑
           </el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini"
                       @click.native="deleteButton(scope.row)">删除
@@ -181,28 +181,8 @@ import VueMixins from '@/libs/vueMixins.js'
                 console.log(err)
             })
       },
-      toInterfaceDetail(index, row){
-        console.log("id", row.id);
-        sessionStorage.setItem("interfaceName", row.interfaceName) //把接口名称存入缓存中
-        sessionStorage.setItem("interfaceId", row.id) //把接口编号存入缓存中
-        this.$router.push({
-            path: "interfaceDetail",
-            query: {
-                interfaceData: row
-            }
-        }); //界面跳转
-      }
     }
   }
 </script>
 <style scoped>
-/*链接样式*/
-.link {
-    color: #3e61aa;
-    text-decoration: none;
-    cursor: pointer;
-}
-.link:hover {
-    color: blue;
-}
 </style>

@@ -62,8 +62,7 @@
                                 theme="chrome"
                                 width="100%"
                                 height="200px"
-                                :options="{showPrintMargin:false,   //去除编辑器里的竖线
-                                }"
+                                :options="{}"
                         >
                         </editor>
                     </el-container>
@@ -373,7 +372,7 @@ export default {
             } else if (type === 'headers') {
                 this.headers.splice(i, 1);
             } else if (type === 'params') {
-                this.params.splice(i, 1);
+                this.headers.splice(i, 1);
             } 
         },
         addTableRow(type) {

@@ -140,15 +140,19 @@ export default {
 				hide: true,
 				isDisplay: true
 			},
-		},
-		{
-			path: 'interfaceDetail',
-			name: 'InterfaceDetail',
-			component: InterfaceDetail,
-			meta: {
-				name: "接口详情",
-				hide: true
-			},
+			children: [
+				{
+					path: 'interfaceDetail',
+					name: 'InterfaceDetail',
+					component: InterfaceDetail,
+					meta: {
+						name: "接口详情",
+						parent: 'InterfacesManagement',
+						icon: 'el-icon-view',
+						hide: true
+					},
+				}
+			]
 		},
 		{
 			path: 'interfaceTest',

@@ -62,8 +62,7 @@
                                 theme="chrome"
                                 width="100%"
                                 height="200px"
-                                :options="{showPrintMargin:false,   //去除编辑器里的竖线
-                                }"
+                                :options="{}"
                         >
                         </editor>
                     </el-container>
@@ -372,8 +371,6 @@ export default {
                 this.bodys.splice(i, 1);
             } else if (type === 'headers') {
                 this.headers.splice(i, 1);
-            } else if (type === 'params') {
-                this.params.splice(i, 1);
             } 
         },
         addTableRow(type) {
@@ -418,11 +415,10 @@ export default {
     watch: {
         monitorVariable: {
             handler: function () {
-                console.log('bodys change')
                 if (this.bodys.length === 0) {
                     this.addTableRow('bodys')
                 }
-                if (this.bodys[this.bodys.length - 1]['name'] || this.bodys[this.bodys.length - 1]['val']) {
+                if (this.bodys[this.bodys.length - 1]['key'] || this.bodys[this.bodys.length - 1]['value']) {
                     this.addTableRow('bodys')
                 }
             },
@@ -433,7 +429,7 @@ export default {
                 if (this.params.length === 0) {
                     this.addTableRow('params')
                 }
-                if (this.params[this.params.length - 1]['name'] || this.params[this.params.length - 1]['val']) {
+                if (this.params[this.params.length - 1]['key'] || this.params[this.params.length - 1]['value']) {
                     this.addTableRow('params')
                 }
             },
@@ -444,7 +440,7 @@ export default {
                 if (this.headers.length === 0) {
                     this.addTableRow('headers')
                 }
-                if (this.headers[this.headers.length - 1]['name'] || this.headers[this.headers.length - 1]['val']) {
+                if (this.headers[this.headers.length - 1]['key'] || this.headers[this.headers.length - 1]['value']) {
                     this.addTableRow('headers')
                 }
             },

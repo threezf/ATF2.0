@@ -62,8 +62,7 @@
                                 theme="chrome"
                                 width="100%"
                                 height="200px"
-                                :options="{showPrintMargin:false,   //去除编辑器里的竖线
-                                }"
+                                :options="{}"
                         >
                         </editor>
                     </el-container>

@@ -202,7 +202,4 @@ import VueMixins from '@/libs/vueMixins.js'
     text-decoration: none;
     cursor: pointer;
 }
-.link:hover {
-    color: blue;
-}
 </style>

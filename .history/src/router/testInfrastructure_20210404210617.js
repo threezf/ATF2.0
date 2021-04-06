@@ -12,7 +12,6 @@ import PerformCodeManagement from '@/views/testInfrastructure/subFunction/perfor
 
 import TransactDetail from '@/views/testInfrastructure/transactDetail'
 import InterfacesManagement from '@/views/testInfrastructure/interfacesManagement/interfaceManage'
-import InterfaceDetail from '@/views/testInfrastructure/interfacesManagement/interfaceDetail'
 import ProductLine from '@/views/testInfrastructure/subFunction/productLine'
 import UseCaseDebug from '@/views/testInfrastructure/transactDetail/useCaseDebug'
 
@@ -140,15 +139,19 @@ export default {
 				hide: true,
 				isDisplay: true
 			},
-		},
-		{
-			path: 'interfaceDetail',
-			name: 'InterfaceDetail',
-			component: InterfaceDetail,
-			meta: {
-				name: "接口详情",
-				hide: true
-			},
+			children: [
+				{
+					path: 'interfaceDetail',
+					name: 'InterfaceDetail',
+					component: TestedSystemManagement,
+					meta: {
+						name: "接口详情",
+						parent: 'InterfacesManagement',
+						icon: 'el-icon-view',
+						hide: true
+					},
+				}
+			]
 		},
 		{
 			path: 'interfaceTest',
