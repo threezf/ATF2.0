@@ -35,10 +35,6 @@ export default {
         return {
            msg: '',
            originData: [{
-               name: '自动化构件维护', 
-               style: {}, 
-               component: AutomatedComponentMaintenance
-            }, {
                 name: '元素库', 
                 style: {}, 
                 component: TemplateLib
@@ -51,9 +47,13 @@ export default {
                 style: {}, 
                 component: BaseScript
             }, {
-                name: '自动化构件维护', 
+                name: '执行及管理', 
                 style: {}, 
                 component: RunnerManage
+            }, {
+               name: '自动化构件维护', 
+               style: {}, 
+               component: AutomatedComponentMaintenance
             }]
         }
     },
