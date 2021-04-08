@@ -1,6 +1,7 @@
 <template>
     <div>
         <div style="height:30px"></div>
+        {{timestampArray}}
         <page style="height:420px">
             <el-row>
                 <el-col :offset="1" :span="6">
@@ -82,7 +83,7 @@
             </el-row>
         </page>
         <page style="margin-top: 30px;height:500px">
-            <el-tabs class="activeIndex" v-model="activeNames">
+            <!-- <el-tabs class="activeIndex" v-model="activeNames">
                 <el-tab-pane label="自动化构件" name="first">
                     <el-row>
                         <el-col :span="13">
@@ -129,15 +130,60 @@
                                             </p>
                     </el-col>
                 </el-tab-pane>
-            </el-tabs>
+            </el-tabs> -->
             <div class="charts">
                 <el-divider>统计报表</el-divider>
+                <el-popover
+                    class="more-info"
+                    placement="right"
+                    width="400"
+                    trigger="hover">
+                    <el-date-picker
+                        v-model="dateRange"
+                        type="daterange"
+                        align="right"
+                        unlink-panels
+                        value-format="timestamp"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                    <i slot="reference" class="el-icon-s-unfold"></i>
+                </el-popover>
+                <el-row class="commonInfo" :gutter="20">
+                    <el-col :span="6">
+                        <el-card class="card">
+                            <h2>{{systemNumber}}</h2>
+                            <p>ATF中的被测系统数目</p>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-card class="card">
+                            <h2>{{projectNumber}}</h2>
+                            <p>ATF中的测试项目数目</p>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-card class="card">
+                            <h2>{{uiTestCaseNumber}}</h2>
+                            <p>ATF中的UI测试用例数目</p>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-card class="card">
+                            <h2>{{apiTestCaseNumber}}</h2>
+                            <p>ATF中的接口测试用例数目</p>
+                        </el-card>
+                    </el-col>
+                </el-row>
                 <ManageCharts></ManageCharts>
             </div>
         </page>
     </div>
 </template>
 <script>
+    import Request from '@/libs/request.js'
     import ManageCharts from './main/manageCharts'
     export default {
         components: {
@@ -146,12 +192,74 @@
         data() {
             return {
                 currentDate: new Date(),
-                activeNames: "first"
+                activeNames: "first",
+                systemNumber: 0,
+                projectNumber: 0,
+                uiTestCaseNumber: 0,
+                apiTestCaseNumber: 0,
+                dateRange: [Date.now() - 12 * 30 * 24 * 60 * 60 * 1000, Date.now()],
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
             }
         },
-        watch: {},
+        computed: {
+            timestampArray() {
+                let arr = []
+                let years = [2018, 2019, 2020, 2021]
+                years.forEach(year => {
+                    for(let i = 0; i < 12; i++) {
+                        arr.push((new Date(year, i, 0).getTime() + 24 * 60 * 60 * 1000))
+                    }
+                })
+                return arr
+            }
+        },
+        watch: {
+            dateRange: {
+                handler(newVal) {
+                    let startYear = new Date(newVal[0]).getFullYear()
+                    let startMonth = new Date(newVal[0]).getMonth()
+                    let endYear = new Date(newVal[1]).getFullYear()
+                    let endMonth = new Date(newVal[1]).getMonth()
+                    let startTimestamp = (new Date(startYear, startMonth, 0).getTime() + 24 * 60 * 60 * 1000)
+                    let endTimestamp = (new Date(endYear, endMonth + 1, 0).getTime() + 24 * 60 * 60 * 1000)
+                    let startIndex = this.timestampArray.findIndex(item => item === startTimestamp)
+                    let endIndex = this.timestampArray.findIndex(item => item === endTimestamp)
+                    console.log('1221', startIndex, endIndex, startTimestamp, endTimestamp)
+                    for(let index = startIndex; index < endIndex; index ++) {
+                        this.getConfData(new Date(this.timestampArray[index]), new Date(this.timestampArray[index + 1]))
+                    }
+                },
+                immediate: true
+            }
+        },
         created() {
-
+            this.getBaseInfo()
         },
         mounted() {
 
@@ -159,6 +267,34 @@
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
+            },
+            getBaseInfo() {
+                Request({
+                    url: '/statement/summarizationData',
+                    method: 'post',
+                    params: {}
+                }).then(res => {
+                    this.systemNumber = res.autCount
+                    this.projectNumber = res.testProjectCount
+                    this.uiTestCaseNumber = res.uiTestCaseCount
+                    this.apiTestCaseNumber = res.apiTestCaseCount
+                }).finally(_ => {
+                })
+            },
+            getConfData(startTime, endTime) {
+                Request({
+                    url: '/statement/summarizationData',
+                    method: 'post',
+                    params: {
+                        startTime: parseInt(startTime / 1000),
+                        endTime: parseInt(endTime / 1000),
+                        // userId: sessionStorage.getItem('userId')
+                    }
+                }).then(res => {
+                    console.log('1221', res)
+                }).finally(_ => {
+
+                })
             }
         }
     }
@@ -387,5 +523,27 @@
         margin-top: 10px;
         width: 100%;
         height: 600px;
+        position: relative;
+        .more-info {
+            position: absolute;
+            z-index: 999;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+    }
+    .commonInfo {
+        height: 140px;
+        padding: 0 10px;
+        .card {
+            height: 120px;
+            h2 {
+                font-size: 30px;
+                margin: 10px 0;
+            }
+            p {
+                font-size: 15px;
+            }
+        }
     }
 </style>

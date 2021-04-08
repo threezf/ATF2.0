@@ -1567,6 +1567,7 @@ export default {
           testPlanId: _this.testPlanId,
           identifiableRunnerName: _this.runnerExecuteType,
           appointedRunners: _this.runnerselected,
+          sendMail: true
         }),
         success: function (data) {
           if (data.respCode === "0000") {

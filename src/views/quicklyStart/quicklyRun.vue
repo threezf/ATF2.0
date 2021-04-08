@@ -204,7 +204,8 @@ export default {
             selectedExeInstances: _this.selectedExeInstances,
             testPlanId: _this.testPlanId,
             identifiableRunnerName: "appointed",
-            appointedRunners : _this.runnerselected
+            appointedRunners : _this.runnerselected,
+            sendMail: true
           }),
           success: function(data) {
             if (data.respCode === '0000') {
