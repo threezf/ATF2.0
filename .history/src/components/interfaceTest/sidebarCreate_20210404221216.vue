@@ -216,7 +216,6 @@ export default {
 
 <style lang="less" scoped>
 .side-bar {
-    border-top:1px solid  #DDD;
     width: 240px;
     flex-shrink: 0;
     min-height: calc(100vh - 90px);
@@ -249,7 +248,7 @@ export default {
     font-size: 14px;
 }
 .isCollapse-button{
-    border: 0;
+        border-top:1px solid  #CCC;
     background-color: #F2F2F2;
     float: right;
     font-size: 20px;
@@ -265,9 +264,10 @@ export default {
 }
 .itemAll {
     border-bottom:1px dashed  #CCC;
-    border-top:1px solid  #DDD;
+    border-top:1px solid  #CCC;
     text-decoration : none; 
     text-align:center;
     padding-right:40px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 </style>

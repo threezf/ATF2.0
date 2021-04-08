@@ -196,13 +196,4 @@ import VueMixins from '@/libs/vueMixins.js'
   }
 </script>
 <style scoped>
-/*链接样式*/
-.link {
-    color: #3e61aa;
-    text-decoration: none;
-    cursor: pointer;
-}
-.link:hover {
-    color: blue;
-}
 </style>

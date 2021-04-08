@@ -216,7 +216,6 @@ export default {
 
 <style lang="less" scoped>
 .side-bar {
-    border-top:1px solid  #DDD;
     width: 240px;
     flex-shrink: 0;
     min-height: calc(100vh - 90px);
@@ -264,10 +263,10 @@ export default {
     margin-bottom: -15px;
 }
 .itemAll {
-    border-bottom:1px dashed  #CCC;
-    border-top:1px solid  #DDD;
+    border-bottom:2px solid  #e7e7e7;
+    border-top:2px solid  #e7e7e7;
     text-decoration : none; 
     text-align:center;
-    padding-right:40px;
+    padding-right:40px
 }
 </style>

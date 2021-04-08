@@ -114,10 +114,6 @@
                                 :query="form.query" :jsonString="form.jsonString" :authType="form.authType"></TestTabs>
                           </el-col>
                         </el-row>
-                        <el-row class="divider-row">
-                            <el-divider class="divider-style" direction="vertical"></el-divider>
-                            <span class="divider-span">相应内容</span>
-                        </el-row>
                         <el-row>
                           <el-col :span="24">
                                 <ResponseTabs ref="responseTabs" :result="form.result" :respHeader="form.respHeader"
