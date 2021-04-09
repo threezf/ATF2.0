@@ -28,7 +28,7 @@
                   </el-col>
                 </el-row>
                 <!-- <InterfacesTable></InterfacesTable> -->
-                <InterfacesTable :tableData="tableData" @updateGroupButton="updateGroupButton"></InterfacesTable>
+                <InterfacesTable :tableData="tableData" @updateGroupButton="updateGroupButton" @getAllTableData="getAllTableData"></InterfacesTable>
                 <el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
                     <el-form :model="form" ref="form" label-width="80px" label-position='top'>
                         <el-row>
@@ -49,7 +49,7 @@
                                     <el-select
                                         size="small"
                                         class="input-new-tag"
-                                        v-model="form.tags"
+                                        v-model="tags"
                                         multiple
                                         filterable
                                         allow-create
@@ -59,7 +59,7 @@
                                         v-for="item in tagOptions"
                                         :key="item.value"
                                         :label="item.tag"
-                                        :value="item.value">
+                                        :value="item.tag">
                                         </el-option>
                                     </el-select>
                             </el-form-item>
@@ -94,8 +94,8 @@
                         <el-row>
                           <el-col :span="24">
                               <el-form-item label="分组和接口名称" prop="interfaceGroupId"  class="change-label-calss">
-                                <el-cascader size="small" :options="menuList" v-model="form.interfaceGroupId" :show-all-levels="false"
-                                :props="defaultProps" style="width:25%"> 
+                                <el-cascader size="small" :options="menuList" v-model="interfaceGroup" :show-all-levels="false"
+                                :props="defaultProps" style="width:25%">
                                 </el-cascader>
                                 <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
                                     <el-input v-model="form.interfaceName" size="small" placeholder="接口名称" style="width:74%">
@@ -110,18 +110,18 @@
                         </el-row>
                         <el-row>
                           <el-col :span="24">
-                                <TestTabs ref="testTabs" :body="form.body" :header="form.header"
-                                :query="form.query" :jsonString="form.jsonString" :authType="form.authType"></TestTabs>
+                                <TestTabs ref="testTabs" :body="form.bodyContent" :header="form.header"
+                                :param="form.params" :bodyFormat="form.bodyFormat" :authType="form.authType"></TestTabs>
                           </el-col>
                         </el-row>
                         <el-row class="divider-row">
                             <el-divider class="divider-style" direction="vertical"></el-divider>
-                            <span class="divider-span">相应内容</span>
+                            <span class="divider-span">响应内容</span>
                         </el-row>
                         <el-row>
                           <el-col :span="24">
-                                <ResponseTabs ref="responseTabs" :result="form.result" :respHeader="form.respHeader"
-                                 :respJsonString="form.respJsonString" :authType="form.authType"></ResponseTabs>
+                                <ResponseTabs ref="responseTabs" :bodyResopnse="form.bodyResopnse" :headerResopnse="form.headerResopnse"
+                                 :bodyResopnseType="form.bodyResopnseType" :authType="form.authType"></ResponseTabs>
                           </el-col>
                         </el-row>
                         <el-row class="buttons_row">
@@ -131,7 +131,7 @@
                     </el-form>
                 </el-dialog>
             </div>
-            
+
     </div>
 </template>
 <script>
@@ -183,6 +183,15 @@ export default {
                     }, {
                         value: 2,
                         status: '已废弃'
+                    }, {
+                        value: 3,
+                        status: '测试中'
+                    }, {
+                        value: 4,
+                        status: '异常'
+                    }, {
+                        value: 5,
+                        status: '维护中'
                     }],
                 tagOptions: [{
                         value: 0,
@@ -213,22 +222,27 @@ export default {
                     }],
                 inputVisible: true,
                 inputValue: '',
+                tags: [],
+                interfaceGroup:[],
                 form: {
                     status: 0,
-                    tags: [],
-                    protocol:"HTTP",
-                    method:"POST",
+                    tags: '[]',
+                    protocol:0,
+                    method:0,
                     urlPath:"/",
-                    interfaceGroupId:"",
+                    interfaceGroupId:0,
                     interfaceName: "",
-                    header: [],
-                    body: [],
-                    jsonString: '',
-                    query: [],
+                    header: '[]',
+                    bodyContent: '[]',
+                    bodyFormat: 0,
+                    params: '[]',
                     authType: 0, // Authorization
-                    result: [],
-                    respHeader: [],
-                    respJsonString: [],
+                    bodyResopnse: '[]',
+                    headerResopnse: '[]',
+                    bodyResopnseType: 0,
+                    transactId:0,
+                    rowFormat:1,
+
                 },
                 defaultProps: {
                     children: 'childNodeList',
@@ -305,7 +319,7 @@ export default {
             this.dialogVisible = true
         },
         handleClose(done) {
-            if (this.modelFlag == 1) {
+            if (this.modelFlag === 1) {
                 done()
                 return true
             }
@@ -321,34 +335,42 @@ export default {
         updateGroupButton(row) {
             this.modelFlag = 2
             console.log('row', row)
+						if(row.tags !=='[]'&& row.tags !==null) {
+							this.tags = (JSON.parse(row.tags))
+						}
+						this.interfaceGroup = row.interfaceGroupId
             const {
                 status,
-                tags,
                 protocol,
                 method,
                 urlPath,
-                interfaceGroupId,
+                id,
                 interfaceName,
-                header,
-                body,
-                jsonString,
-                query,
+                bodyContent,
+                bodyFormat,
                 authType,
+                bodyResponse,
+                bodyResponseType,
+								header,
+								headerResponse,
+								params,
             } = row
 
             this.form = {
                 status,
-                tags,
                 protocol,
                 method,
                 urlPath,
-                interfaceGroupId,
+                id,
                 interfaceName,
-                header,
-                body,
-                jsonString,
-                query,
+                bodyContent,
+                bodyFormat,
                 authType,
+								bodyResponse,
+								bodyResponseType,
+								header,
+								headerResponse,
+								params,
             }
             this.dialogVisible = true
         },
@@ -359,9 +381,9 @@ export default {
                     // 如果是修改则调用 updateGroup 方法 否则调用 addGroup
                     console.log(this.modelFlag)
                     if (this.modelFlag === 2) {
-                        this.updateGroup()
+                        this.updateInterface()
                     } else {
-                        this.addGroup()
+                        this.addInterface()
                     }
                 } else {
                     this.$message('信息格式有误，请检查')
@@ -381,13 +403,13 @@ export default {
                     orderType: "desc",
                 }
             }).then((res) => {
-                if(res.respCode == '0000'){
+                if(res.respCode === '0000'){
                     this.tableData = res.list
                     this.$message.success("查询成功！")
                 }else {
                     this.$message.error("获取接口信息失败！")
                     console.log(err)
-                } 
+                }
             }).catch((err) => {
                 console.log(err)
             })
@@ -405,12 +427,12 @@ export default {
                     orderType: "desc",
                 }
             }).then((res) => {
-                if(res.respCode == '0000'){
+                if(res.respCode === '0000'){
                     this.tableData = res.list
                 }else {
                     this.$message.error("获取接口信息失败！")
                     console.log(err)
-                } 
+                }
             }).catch((err) => {
                 console.log(err)
             })
@@ -424,22 +446,109 @@ export default {
                     transactId: id
                 }
             }).then((res) => {
-                if(res.respCode == '0000'){
+                if(res.respCode === '0000'){
                     this.menuList = []
                     var treeData = res.interfaceGroupDtoList
                     for (var i = 0; i < treeData.length; i++) {
-                        if (treeData[i].level == 0) {
+                        if (treeData[i].level === 0) {
                             this.menuList.push(treeData[i])
                         }
                     }
                     this.$message.success("查询成功！")
                 }else {
                     this.$message.error("获取接口分组失败！")
-                    console.log(err)
-                }   
+                    console.log(res.respMsg)
+                }
             }).catch((err) => {
                 console.log(err)
             })
+        },
+        updateInterface(){
+            this.form.transactId = this.transactId
+            this.form.tags = JSON.stringify(this.tags)
+					  if(typeof this.interfaceGroup ==="number"){
+							this.form.interfaceGroupId =this.interfaceGroup;
+						}else {
+							let length = this.interfaceGroup.length
+							this.form.interfaceGroupId = this.interfaceGroup[length-1]
+						}
+            this.form.bodyFormat = Number(this.$refs.testTabs.bodyType)
+            if(this.form.bodyFormat === 0){
+                this.form.bodyContent = JSON.stringify(this.$refs.testTabs.bodys)
+            }else {
+                this.form.bodyContent = this.$refs.testTabs.jsonVariable
+            }
+            this.form.header = JSON.stringify(this.$refs.testTabs.headers)
+            this.form.params = JSON.stringify(this.$refs.testTabs.params)
+						this.form.headerResponse = JSON.stringify(this.$refs.responseTabs.respheaders)
+						this.form.bodyResponseType = Number(this.$refs.responseTabs.respType)
+						if(this.form.bodyResponseType === 0){
+							this.form.bodyResponse = JSON.stringify(this.$refs.responseTabs.results)
+						}else {
+							this.form.bodyResponse = this.$refs.responseTabs.respJsonVariable
+						}
+            this.form.authType = this.$refs.testTabs.selectedAuthType
+            this.form.updateUser = sessionStorage.getItem("username")
+						console.log(JSON.stringify(this.form))
+            Request({
+                    url: '/interfaceNewController/updateSingleInterface',
+                    method: 'post',
+                    params: this.form
+                }).then((res) => {
+										if(res.respCode === '0000'){
+											this.$message.success('更新成功')
+											this.dialogVisible = false
+											this.getAllTableData()
+										}else {
+											this.$message.error("更新失败！")
+											this.dialogVisible = false
+											console.log(res.respMsg)
+										}
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+        },
+        addInterface() {
+            this.form.transactId = this.transactId
+            this.form.tags = JSON.stringify(this.tags)
+            let length = this.interfaceGroup.length
+            this.form.interfaceGroupId = this.interfaceGroup[length-1]
+            this.form.bodyFormat = Number(this.$refs.testTabs.bodyType)
+            if(this.form.bodyFormat === 0){
+                this.form.bodyContent = JSON.stringify(this.$refs.testTabs.bodys)
+            }else {
+                this.form.bodyContent = this.$refs.testTabs.jsonVariable
+            }
+            this.form.header = JSON.stringify(this.$refs.testTabs.headers)
+            this.form.params = JSON.stringify(this.$refs.testTabs.params)
+            this.form.headerResponse = JSON.stringify(this.$refs.responseTabs.respheaders)
+            this.form.bodyResponseType = Number(this.$refs.responseTabs.respType)
+            if(this.form.bodyResponseType === 0){
+                this.form.bodyResponse = JSON.stringify(this.$refs.responseTabs.results)
+            }else {
+                this.form.bodyResponse = this.$refs.responseTabs.respJsonVariable
+            }
+            this.form.authType = this.$refs.testTabs.selectedAuthType
+            this.form.createUser = sessionStorage.getItem("username")
+            console.log(this.form)
+            Request({
+                    url: '/interfaceNewController/addNewInterface',
+                    method: 'post',
+                    params: this.form
+                }).then((res) => {
+										if(res.respCode === '0000'){
+											this.$message.success('新建成功')
+											this.dialogVisible = false
+											this.getAllTableData()
+										}else {
+											this.$message.error("新建失败！")
+											this.dialogVisible = false
+											console.log(res.respMsg)
+										}
+                }).catch((err) => {
+                    console.log(err)
+                })
         },
     },
   }

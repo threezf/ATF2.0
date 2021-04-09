@@ -188,7 +188,7 @@ export default {
             // 添加分组
             addGroup() {
                 this.form.parentId = 0
-                this.form.createId = sessionStorage.getItem("userId")
+                this.form.createId = sessionStorage.getItem("username")
                 this.form.transactId = this.autId
                 Request({
                     url: '/interfaceNewController/addSingleInterfaceGroup',

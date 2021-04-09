@@ -37,12 +37,12 @@
         </el-tab-pane>
         <el-tab-pane label="请求体" name="second" >
             <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px">
-                <el-radio-group v-model="form.choiceType">
-                    <el-radio label="data">form-data</el-radio>
-                    <el-radio label="json">raw</el-radio>
+                <el-radio-group v-model="bodyType">
+                    <el-radio label= '0' >form-data</el-radio>
+                    <el-radio label= '1' >raw</el-radio>
                 </el-radio-group>
                 <el-button type="primary" size="mini"
-                            v-show="form.choiceType === 'json'"
+                            v-show="bodyType === '1'"
                             style="margin-left:20px"
                             @click="formatData()">格式化
 
@@ -50,7 +50,7 @@
             </el-form>
             <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
 
-            <div v-if="form.choiceType === 'json'">
+            <div v-if="bodyType === '1'">
                 <div style="border:1px solid rgb(234, 234, 234) ">
                     <el-container>
                         <editor
@@ -76,7 +76,7 @@
                         stripe :show-header="true"
                         border
                         style="background-color: rgb(250, 250, 250)"
-                        v-if="form.choiceType === 'data'"
+                        v-if="bodyType === '0'"
                         :row-style="{'background-color': 'rgb(250, 250, 250)'}">
                 <el-table-column label="KEY" header-align="center" minWidth="100">
                     <template slot-scope="scope">
@@ -201,20 +201,20 @@ export default {
     name: 'testTabs',
     props:{
             header: {
-                type: Array,
-                default: []
+                type: String,
+                default: '[]'
             },
             body: {
-                type: Array,
-                default: []
-            },
-            query: {
-                type: Array,
-                default: []
-            },
-            jsonString: {
                 type: String,
-                default: ''
+                default: '[]'
+            },
+            param: {
+                type: String,
+                default: '[]'
+            },
+            bodyFormat: {
+                type: Number,
+                default: 0
             },
             authType: {
                 type: Number,
@@ -228,18 +228,12 @@ export default {
             //上传文件时，记录数组下当前数据的下标，用于把返回文件路径地址赋值
             temp_num: '',
             methods: ['POST', 'GET', 'PUT', 'DELETE'],
-            form: {
-                // projectId: null,
-                // configName: null,
-                // moduleId: null,
-                // choiceUrl: '基础url1',
-                choiceType: 'data',
-            },
 
-            headers: this.header,
-            bodys: this.body,
-            jsonVariable: this.jsonString,
-            params: this.query,
+            headers: [],
+            bodys: [],
+            jsonVariable: '',
+            bodyType: String(this.bodyFormat),
+            params: [],
             selectedAuthType: this.authType, // Authorization
             authorizationList: [{
                     id: 1,
@@ -374,33 +368,64 @@ export default {
                 this.headers.splice(i, 1);
             } else if (type === 'params') {
                 this.params.splice(i, 1);
-            } 
+            }
         },
         addTableRow(type) {
             if (type === 'bodys') {
                 this.bodys.push({name: null, val: null, type: 'string', desc: null});
             } else if (type === 'headers') {
-                this.headers.push({name: null, val: null});
+                this.headers.push({name: null, val: null, desc: null});
             } else if (type === 'params') {
                 this.params.push({name: null, val: null, desc: null});
             }
         },
         initApiMsgData() {
                 console.log("测试")
-                this.form.choiceType = 'data';
-
+                this.bodyType = '0'
                 this.headers = Array();
                 this.bodys = Array();
                 this.jsonVariable = '';
                 this.params = Array();
                 this.selectedAuthType = 1
             },
+        handlerParams() {
+            if (this.bodyFormat === 1) {
+                this.bodys.push({
+                    name: '',
+                    val: '',
+                    desc: ''
+                })
+                this.jsonVariable = this.body
+            } else {
+                this.bodys.push(...JSON.parse(this.body))
+            }
+						if (this.header === '[]' || this.header === null) {
+							this.headers.push({
+								name: '',
+								val: '',
+								desc: ''
+							})
+						} else {
+							this.headers.push(...JSON.parse(this.header))
+						}
+						if (this.param === '[]' || this.param === null) {
+							this.params.push({
+								name: '',
+								val: '',
+								desc: ''
+							})
+						} else {
+							this.params.push(...JSON.parse(this.param))
+						}
+					}
     },
     created() {
-        if(this.authType == 0) {
+        if(this.authType === 0) {
             this.initApiMsgData()
+        }else {
+            this.handlerParams()
         }
-        
+
     },
     computed: {
         monitorVariable() {

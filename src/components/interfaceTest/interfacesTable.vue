@@ -39,7 +39,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      width="500"
+      width="300"
       property="urlPath"
       label="URL">
     </el-table-column>
@@ -47,6 +47,7 @@
       property="createTime"
       label="创建时间"
       width="200"
+			:formatter="transTime"
       >
     </el-table-column>
     <el-table-column
@@ -77,7 +78,7 @@ import Request from "@/libs/request.js";
 import VueMixins from '@/libs/vueMixins.js'
   let that;
   export default {
-    mixins: [VueMixins], 
+    mixins: [VueMixins],
     props:{
         tableData: {
               type: Array,
@@ -85,11 +86,11 @@ import VueMixins from '@/libs/vueMixins.js'
                   return []
               }
           },
-        
+
     },
     data() {
       return {
-    
+
         currentRow: null,
         statusOptions: [{
             value: 0,
@@ -100,7 +101,16 @@ import VueMixins from '@/libs/vueMixins.js'
         }, {
             value: 2,
             status: '已废弃'
-        }],
+        }, {
+						value: 3,
+						status: '测试中'
+				}, {
+						value: 4,
+						status: '异常'
+				}, {
+						value: 5,
+						status: '维护中'
+				}],
         methodOptions: [{
                 value: 0,
                 method: 'POST'
@@ -123,7 +133,7 @@ import VueMixins from '@/libs/vueMixins.js'
         getStatus(val) {
             for ( let item in that.statusOptions){
               let option = that.statusOptions[item]
-              if(option.value == val){
+              if(option.value === val){
                 return option.status
               }
             }
@@ -131,13 +141,13 @@ import VueMixins from '@/libs/vueMixins.js'
         getMethod(val) {
             for ( let item in that.methodOptions){
               let option = that.methodOptions[item]
-              if(option.value == val){
+              if(option.value === val){
                 return option.method
               }
             }
         },
         getType(val) {
-          return val === 0 ? 'success' : val === 1 ? 'primary' :  val === 2 ? 'danger' : 'warning' 
+          return val === 0 ? 'success' : val === 1 ? 'primary' :  val === 2 ? 'danger' : 'warning'
         }
     },
 
@@ -148,7 +158,7 @@ import VueMixins from '@/libs/vueMixins.js'
       editInterface(val){
         this.$emit('updateGroupButton',val)
       },
-      //删除留言帖按钮
+      //删除接口按钮
       deleteButton(row) {
           let id = row.id
           this.$confirm('是否确定删除此接口?', '提示', {
@@ -166,14 +176,14 @@ import VueMixins from '@/libs/vueMixins.js'
       },
       delInterface(id){
         Request({
-                url: '/interfaceNewController/deleteInterfaceGroup',
+                url: '/interfaceNewController/deleteInterface',
                 method: 'post',
                 params: {
                     id :id
                 }
             }).then((res) => {
                 this.$message.success('删除成功')
-                this.getParentChildrenRef('sidebar').getAllTableData()
+                this.$emit('getAllTableData')
             }, (err) => {
                 this.$message.error(res.respMsg)
                 console.log(err)
@@ -183,13 +193,13 @@ import VueMixins from '@/libs/vueMixins.js'
       },
       toInterfaceDetail(index, row){
         console.log("id", row.id);
-        sessionStorage.setItem("interfaceName", row.interfaceName) //把接口名称存入缓存中
+        sessionStorage.setItem("interfaceGroupId", row.interfaceGroupId) //把接口名称存入缓存中
         sessionStorage.setItem("interfaceId", row.id) //把接口编号存入缓存中
         this.$router.push({
             path: "interfaceDetail",
-            query: {
-                interfaceData: row
-            }
+            // query: {
+            //     interfaceData: row
+            // }
         }); //界面跳转
       }
     }
