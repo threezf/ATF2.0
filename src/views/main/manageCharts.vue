@@ -124,13 +124,14 @@
                 })
                 return obj
             }
-        }
+        },
     }
 </script>
 
 <style scoped lang="less">
     .chart-body {
-        width: 100%;
+        padding: 10px;
+        width: calc(100%);
         display: flex;
         justify-content: space-between;
         .chart-item {

@@ -226,6 +226,7 @@ export default {
                     testPlanId: this.testPlanId,
                     identifiableRunnerName: "appointed",
                     appointedRunners: [this.runnersSelected],
+                    sendMail: true
                 }
             }).then(res => {
                 if (res.respCode === '0000') {
