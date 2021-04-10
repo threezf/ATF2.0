@@ -17,6 +17,10 @@
             userType: {
                 type: Number,
                 default: 0
+            },
+            originData: {
+                type: Array,
+                default: () => []
             }
         },
         data() {
@@ -27,10 +31,37 @@
                 }, {
                     label: '总量统计',
                     key: 'all'
-                }]
+                }],
+                indexObj: {
+                    autCount: 0,
+                    testProjectCount: 1,
+                    uiTestCaseCount: 2,
+                    apiTestCaseCount: 3
+                }
             }
         },
         computed: {
+            sumData() {
+                let arr = []
+                let obj = {
+                    autCount: 0,
+                    testProjectCount: 0,
+                    uiTestCaseCount: 0,
+                    apiTestCaseCount: 0,
+                    time: ''
+                }
+                this.originData.forEach((item) => {
+                    for(let key in obj) {
+                        if(key === 'time') {
+                            obj[key] = item[key]
+                        }else {
+                            obj[key] = obj[key] + item[key]
+                        }
+                    }
+                    arr.push(JSON.parse(JSON.stringify(obj)))
+                })
+                return arr
+            },
             chartOptions() {
                 let obj = {}
                 this.chartType.forEach((item, index) => {
@@ -39,10 +70,13 @@
                             text: item.label
                         },
                         tooltip: {
-                            trigger: 'axis'
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            },
                         },
                         legend: {
-                            data: ['系统数', '项目数', '测试用例数', 'API数目']
+                            data: ['系统数', '项目数', 'UI用例数', '接口用例数']
                         },
                         grid: {
                             left: '3%',
@@ -58,68 +92,54 @@
                         xAxis: {
                             type: 'category',
                             // boundaryGap: false,
-                            data: ['2020年9月', '2020年10月', '2020年11月', '2020年12月', '2021年1月', '2021年2月', '2021年3月']
+                            data: []
                         },
                         yAxis: {
                             type: 'value'
                         },
-                        series: []
+                        series: [{
+                            name: '系统数',
+                            type: 'line',
+                            smooth: true,
+                            data: []
+                        },
+                        {
+                            name: '项目数',
+                            type: 'line',
+                            smooth: true,
+                            data: []
+                        },
+                        {
+                            name: 'UI用例数',
+                            type: 'line',
+                            smooth: true,
+                            data: []
+                        },
+                        {
+                            name: '接口用例数',
+                            type: 'line',
+                            smooth: true,
+                            data: []
+                        }]
                     }
-                    if(index == 0) {
-                        options.series = [
-                            {
-                                name: '系统数',
-                                type: 'line',
-                                smooth: true,
-                                data: [120, 132, 101, 134, 90, 230, 210]
-                            },
-                            {
-                                name: '项目数',
-                                type: 'line',
-                                smooth: true,
-                                data: [220, 182, 191, 234, 290, 330, 310]
-                            },
-                            {
-                                name: '测试用例数',
-                                type: 'line',
-                                smooth: true,
-                                data: [150, 232, 201, 154, 190, 330, 410]
-                            },
-                            {
-                                name: 'API数目',
-                                type: 'line',
-                                smooth: true,
-                                data: [320, 332, 301, 334, 390, 330, 320]
-                            }
-                        ]
+                    let baseData = {
+                        autCount: 0,
+                        testProjectCount: 0,
+                        uiTestCaseCount: 0,
+                        apiTestCaseCount: 0
+                    }
+                    let originList = []
+                    if(index === 0) {
+                        originList = this.originData
                     }else {
-                        options.series = [
-                            {
-                                name: '系统数',
-                                type: 'line',
-                                smooth: true,
-                                data: [120, 252, 353, 488, 578, 808, 1018]
-                            },
-                            {
-                                name: '项目数',
-                                type: 'line',
-                                smooth: true,
-                                data: [220, 402, 593, 827, 1117, 1447, 1757]
-                            },
-                            {
-                                name: '测试用例数',
-                                type: 'line',
-                                smooth: true,
-                                data: [150, 382, 583, 737, 927, 1157, 1567]
-                            },
-                            {
-                                name: 'API数目',
-                                type: 'line',
-                                smooth: true,
-                                data: [320, 652, 953, 1274, 1664, 1994, 2324]
-                            }
-                        ]
+                        originList = this.sumData
                     }
+                    originList.forEach((item, itemIndex) => {
+                        options.xAxis.data.push(item.time)
+                        for(let key in this.indexObj) {
+                                options.series[this.indexObj[key]].data.push(item[key])
+                        }
+                    })
                     obj[item.key] = options
                 })
                 return obj
