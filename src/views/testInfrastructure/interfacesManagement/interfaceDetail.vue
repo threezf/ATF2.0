@@ -50,7 +50,6 @@
                   <el-table
                       ref="singleTable"
                       highlight-current-row
-                      height="200px"
 											:data="header"
                       border
                       @current-change="handleCurrentChange"
@@ -76,11 +75,11 @@
 									<el-row class="divider-row">
 											<el-divider class="divider-vertical" direction="vertical"></el-divider>
 											<span class="divider-span">Body请求参数</span>
-											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyFormat === '1'" >Raw</el-tag>
+											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyFormat === 1" >Raw</el-tag>
 											<el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
 									</el-row>
 
-									<div v-if="interfaceData.bodyFormat === '1'" class="body-content">
+									<div v-if="interfaceData.bodyFormat === 1" class="body-content">
 											<el-row>
 												<span class="span-content">内容类型</span>
 												<el-select size="small" style="width:100px" v-model="contentType" placeholder="请选择">
@@ -92,7 +91,7 @@
 													</el-option>
 												</el-select>
 												<el-button type="primary" size="mini"
-														v-show="interfaceData.bodyFormat === '1'"
+														v-show="interfaceData.bodyFormat === 1"
 														style="margin-left:20px"
 														@click="formatData()">整理格式
 												</el-button>
@@ -119,7 +118,6 @@
 										<el-table
 												highlight-current-row
 												:data="body"
-												height="200px"
 												border
 												@current-change="handleCurrentChange"
 												style="width: 100%">
@@ -146,6 +144,34 @@
 										</el-table>
 									</div>
 								</div>
+								<div v-if="params.length>0">
+									<el-row class="divider-row">
+										<el-divider class="divider-vertical" direction="vertical"></el-divider>
+										<span class="divider-span">请求参数</span>
+									</el-row>
+									<el-table
+										highlight-current-row
+										:data="params"
+										border
+										@current-change="handleCurrentChange"
+										style="width: 100%">
+										<el-table-column
+											property="name"
+											label="参数名"
+											header-align="center">
+										</el-table-column>
+										<el-table-column
+											property="val"
+											label="参数值"
+											header-align="center">
+										</el-table-column>
+										<el-table-column
+											property="desc"
+											label="描述"
+											header-align="center">
+										</el-table-column>
+									</el-table>
+								</div>
                 <div v-if="respHeader.length>0">
                   <el-row class="divider-row">
                       <el-divider class="divider-vertical" direction="vertical"></el-divider>
@@ -153,7 +179,6 @@
                   </el-row>
                   <el-table
                       highlight-current-row
-                      height="200px"
 											:data="respHeader"
                       border
                       @current-change="handleCurrentChange"
@@ -175,14 +200,14 @@
                       </el-table-column>
                   </el-table>
                 </div>
-								<div v-if="jsonVariable!=='' || respBody.length>0">
+								<div v-if="respJsonVariable!=='' || respBody.length>0">
 									<el-row class="divider-row">
 											<el-divider class="divider-vertical" direction="vertical"></el-divider>
 											<span class="divider-span">返回参数</span>
-											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyResopnseType === '1'">Raw</el-tag>
+											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyResponseType === 1">Raw</el-tag>
 											<el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
 									</el-row>
-									<div v-if="interfaceData.bodyResopnseType === '1'" class="body-content">
+									<div v-if="interfaceData.bodyResponseType === 1" class="body-content">
 											<el-row>
 												<span class="span-content">内容类型</span>
 												<el-select size="small" style="width:100px" v-model="bodyContentType" placeholder="请选择">
@@ -194,7 +219,7 @@
 													</el-option>
 												</el-select>
 												<el-button type="primary" size="mini"
-														v-show="interfaceData.bodyResopnseType === '1'"
+														v-show="interfaceData.bodyResponseType === 1"
 														style="margin-left:20px"
 														@click="formatData()">整理格式
 												</el-button>
@@ -220,7 +245,6 @@
 									<div v-else>
 										<el-table
 												highlight-current-row
-												height="200px"
 												:data="respBody"
 												border
 												@current-change="handleCurrentChange"
@@ -343,8 +367,8 @@
                 </el-row>
                 <el-row>
                   <el-col :span="24">
-                        <ResponseTabs ref="responseTabs" :bodyResopnse="interfaceData.bodyResopnse" :headerResopnse="interfaceData.headerResopnse"
-                          :bodyResopnseType="interfaceData.bodyResopnseType" :authType="interfaceData.authType"></ResponseTabs>
+                        <ResponseTabs ref="responseTabs" :bodyResopnse="interfaceData.bodyResponse" :headerResopnse="interfaceData.headerResponse"
+                          :bodyResopnseType="interfaceData.bodyResponseType" :authType="interfaceData.authType"></ResponseTabs>
                   </el-col>
                 </el-row>
                 <el-row class="buttons_row">
@@ -503,6 +527,7 @@ export default {
 						body:[],
 						respHeader:[],
 						respBody:[],
+						params:[],
 						bodyContentType: 0,
             contentType: 0,
             menuList: [],
@@ -653,40 +678,63 @@ export default {
             }).then((res) => {
                 if(res.respCode === '0000'){
                     this.interfaceData = res.interfaceSelectDto
+										console.log('interfaceData',this.interfaceData)
 										this.updateTime = TimeUtils.timestampToTime(res.interfaceSelectDto.updateTime, 'yyyy-MM-dd hh:mm:ss')
 										this.getGroupNameById(res.interfaceSelectDto.interfaceGroupId)
 										this.interfaceGroup = this.interfaceData.interfaceGroupId
-									  if(res.interfaceSelectDto.header === '[]' || res.interfaceSelectDto.header == null){
-											this.header=[]
+										console.log('interfaceGroup',this.interfaceGroup)
+									  if(res.interfaceSelectDto.params === '[]' || res.interfaceSelectDto.params == null){
+											this.params=[]
+											console.log('params1',this.params)
 										}else {
-											this.header.push(...JSON.parse(res.interfaceSelectDto.header))
+											this.params.push(...JSON.parse(res.interfaceSelectDto.params))
+											this.params.splice(this.params.length-1,1)
+											console.log('header2',this.params)
 										}
-										if(res.interfaceSelectDto.bodyContent === '[]' || res.interfaceSelectDto.bodyContent == null){
-											this.body=[]
-										}else {
-											this.body.push(...JSON.parse(res.interfaceSelectDto.bodyContent))
+										if(res.interfaceSelectDto.bodyFormat ===0) {
+											if (res.interfaceSelectDto.bodyContent === '[]' || res.interfaceSelectDto.bodyContent == null) {
+												this.body = []
+												console.log('body1', this.body)
+											} else {
+												this.body.push(...JSON.parse(res.interfaceSelectDto.bodyContent))
+												this.body.splice(this.body.length-1,1)
+												console.log('body2', this.body)
+											}
 										}
-										if(res.interfaceSelectDto.bodyResopnse === '[]' || res.interfaceSelectDto.bodyResopnse == null){
-											this.respBody=[]
-										}else {
-											this.respBody.push(...JSON.parse(res.interfaceSelectDto.bodyResopnse))
+
+										if(res.interfaceSelectDto.bodyResponseType ===0) {
+											if(res.interfaceSelectDto.bodyResponse === '[]' || res.interfaceSelectDto.bodyResponse == null){
+												this.respBody=[]
+												console.log('respBody1',this.respBody)
+											}else {
+												this.respBody.push(...JSON.parse(res.interfaceSelectDto.bodyResponse))
+												this.respBody.splice(this.respBody.length-1,1)
+												console.log('respBody2',this.respBody)
+											}
 										}
-										if(res.interfaceSelectDto.headerResopnse === '[]' || res.interfaceSelectDto.headerResopnse == null){
-											this.respHeader=[]
-										}else {
-											this.respHeader.push(...JSON.parse(res.interfaceSelectDto.headerResopnse))
+										if (res.interfaceSelectDto.headerResponse === '[]' || res.interfaceSelectDto.headerResponse == null) {
+											this.respHeader = []
+											console.log('respHeader1', this.respHeader)
+										} else {
+											this.respHeader.push(...JSON.parse(res.interfaceSelectDto.headerResponse))
+											this.respHeader.splice(this.respHeader.length-1,1)
+											console.log('respHeader2', this.respHeader)
 										}
 										if(res.interfaceSelectDto.tags === '[]' || res.interfaceSelectDto.tags == null) {
 											this.tags = []
+											console.log('tags1',this.tags)
 										}else {
 											this.tags.push(...JSON.parse(res.interfaceSelectDto.tags))
+											console.log('tags2',this.tags)
 										}
 										console.log('tag',this.tags)
                     if(res.interfaceSelectDto.bodyFormat ===1){
                       this.jsonVariable = res.interfaceSelectDto.bodyContent
+											console.log('jsonVariable',this.jsonVariable)
                     }
-                    if(res.interfaceSelectDto.bodyResopnseType ===1){
-                      this.respJsonVariable = res.interfaceSelectDto.bodyResopnse
+                    if(res.interfaceSelectDto.bodyResponseType ===1){
+                      this.respJsonVariable = res.interfaceSelectDto.bodyResponse
+											console.log('respJsonVariable',this.respJsonVariable)
                     }
 
                     this.$message.success("查询成功！")
@@ -730,9 +778,11 @@ export default {
                   params: this.interfaceData
               }).then((res) => {
                   this.$message.success('更新成功')
+									this.dialogVisible = false
                   this.getInterfaceDetail(this.interfaceData.id)
               }, (err) => {
                   this.$message.error(res.respMsg)
+									this.dialogVisible = false
                   console.log(err)
               }).catch((err) => {
                   console.log(err)
