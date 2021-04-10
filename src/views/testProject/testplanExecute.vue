@@ -1765,7 +1765,7 @@ export default {
       logDiv.style.width = "500px";
       logDiv.style.height = "500px";
       this.fullFlag = true;
-    },
+    }, 
     startQueryResult: function () {
       var _this = this;
       Vac.ajax({
