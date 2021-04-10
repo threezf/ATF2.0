@@ -102,7 +102,7 @@
                       <label label-width=30% class="executeStatus" v-html="exeStautShow"></label>
                     </el-row>
                   </el-form>
-                <div class="test-control container" style="display: flex; margin: 15px 5px; height: 40px">
+                <div class="test-control container" style="display: flex; margin: 15px 5px; height: 30px">
                   <div style="font-size: 12px; color: #999"></div>
                   <el-button type="primary" size="mini" @click="executeAll()" v-if="notTimerFlag"
                     ><i class="icon-play" ></i> 批量执行
@@ -1540,6 +1540,16 @@ export default {
         Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行");
         return;
       }
+      let sendMail
+      this.$confirm('是否在执行完成后发送邮件', '提示', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        sendMail = true
+      }).catch(() => {
+        sendMail = false
+      })
       var selectedExeInstances = [];
       if (_this.exeScope == 1) {
       } else {
@@ -1567,7 +1577,7 @@ export default {
           testPlanId: _this.testPlanId,
           identifiableRunnerName: _this.runnerExecuteType,
           appointedRunners: _this.runnerselected,
-          sendMail: true
+          sendMail: sendMail
         }),
         success: function (data) {
           if (data.respCode === "0000") {

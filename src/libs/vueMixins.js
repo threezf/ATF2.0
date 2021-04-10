@@ -6,8 +6,8 @@ import {
 import Vac from './vac-functions.es'
 export default {
     filters: {
-        changeTime(value) {
-            return TimeUtils.timestampToTime(value, 'yyyy-MM-dd hh:mm:ss')
+        changeTime(value, format = 'yyyy-MM-dd hh:mm:ss') {
+            return TimeUtils.timestampToTime(value, format)
         }
     },
     data() {
@@ -22,6 +22,9 @@ export default {
         }
     },
     methods:{
+        getTime(value, format = 'yyyy-MM-dd hh:mm:ss') {
+            return TimeUtils.timestampToTime(value, format)
+        },
         transTime(row, column, cellValue) {
             // console.log(cellValue)
             return TimeUtils.timestampToTime(cellValue, 'yyyy-MM-dd hh:mm:ss')

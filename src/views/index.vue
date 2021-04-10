@@ -1,7 +1,6 @@
 <template>
     <div>
         <div style="height:30px"></div>
-        {{timestampArray}}
         <page style="height:420px">
             <el-row>
                 <el-col :offset="1" :span="6">
@@ -132,7 +131,7 @@
                 </el-tab-pane>
             </el-tabs> -->
             <div class="charts">
-                <el-divider>统计报表</el-divider>
+                <el-divider></el-divider>
                 <el-popover
                     class="more-info"
                     placement="right"
@@ -177,18 +176,21 @@
                         </el-card>
                     </el-col>
                 </el-row>
-                <ManageCharts></ManageCharts>
+                <el-divider style="font-size: 16px">统计报表<span style="font-size: 12px">{{dateStr}}</span></el-divider>
+                <ManageCharts v-loading="loading" :originData="originData"></ManageCharts>
             </div>
         </page>
     </div>
 </template>
 <script>
     import Request from '@/libs/request.js'
+    import VueMixins from '@/libs/vueMixins.js'
     import ManageCharts from './main/manageCharts'
     export default {
         components: {
             ManageCharts
         },
+        mixins: [VueMixins],
         data() {
             return {
                 currentDate: new Date(),
@@ -197,17 +199,11 @@
                 projectNumber: 0,
                 uiTestCaseNumber: 0,
                 apiTestCaseNumber: 0,
-                dateRange: [Date.now() - 12 * 30 * 24 * 60 * 60 * 1000, Date.now()],
+                originData: [],
+                loading: false,
+                dateRange: [Date.now() - 12 * 30 * 24 * 60 * 60 * 1000, Date.now()-  30 * 24 * 60 * 60 * 1000],
                 pickerOptions: {
                     shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
                         text: '最近一个月',
                         onClick(picker) {
                             const end = new Date();
@@ -223,8 +219,25 @@
                             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
                             picker.$emit('pick', [start, end]);
                         }
+                    }, {
+                        text: '最近半年',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 6);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一年',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
+                            picker.$emit('pick', [start, end]);
+                        }
                     }]
                 },
+                selectMonth: []
             }
         },
         computed: {
@@ -237,6 +250,13 @@
                     }
                 })
                 return arr
+            },
+            dateStr() {
+                let startTimestamp = new Date(this.dateRange[0])
+                let endTimestamp = new Date(this.dateRange[1])
+                let start = `${startTimestamp.getFullYear()}-${(startTimestamp.getMonth() + 1).toString().padStart(2, '0')}`
+                let end = `${endTimestamp.getFullYear()}-${(endTimestamp.getMonth() + 1).toString().padStart(2, '0')}`
+                return `[${start} 至 ${end}]`
             }
         },
         watch: {
@@ -251,9 +271,28 @@
                     let startIndex = this.timestampArray.findIndex(item => item === startTimestamp)
                     let endIndex = this.timestampArray.findIndex(item => item === endTimestamp)
                     console.log('1221', startIndex, endIndex, startTimestamp, endTimestamp)
-                    for(let index = startIndex; index < endIndex; index ++) {
-                        this.getConfData(new Date(this.timestampArray[index]), new Date(this.timestampArray[index + 1]))
+                    let requestList = []
+                    let self = this
+                    this.selectMonth = this.timestampArray.slice(startIndex, endIndex).map(item => self.getTime(item, 'yyyy-MM'))
+                    requestList.push(Request({
+                            url: '/statement/summarizationData',
+                            method: 'post',
+                            params: {
+                                startTime: parseInt(newVal[0]/ 1000),
+                                endTime: parseInt(this.timestampArray[startIndex + 1] / 1000),
+                            }
+                        }))
+                    for(let index = startIndex + 1; index < endIndex; index ++) {
+                        requestList.push(Request({
+                            url: '/statement/summarizationData',
+                            method: 'post',
+                            params: {
+                                startTime: parseInt(this.timestampArray[index] / 1000),
+                                endTime: parseInt(this.timestampArray[index + 1] / 1000),
+                            }
+                        }))
                     }
+                    this.getConfData(requestList)
                 },
                 immediate: true
             }
@@ -281,21 +320,17 @@
                 }).finally(_ => {
                 })
             },
-            getConfData(startTime, endTime) {
-                Request({
-                    url: '/statement/summarizationData',
-                    method: 'post',
-                    params: {
-                        startTime: parseInt(startTime / 1000),
-                        endTime: parseInt(endTime / 1000),
-                        // userId: sessionStorage.getItem('userId')
-                    }
-                }).then(res => {
-                    console.log('1221', res)
+            getConfData(requestList) {
+                this.loading = true
+                Promise.all(requestList).then(res => {
+                    this.originData = res.map((item, index) => {
+                        item.time = this.selectMonth[index]
+                        return item
+                    })
                 }).finally(_ => {
-
+                    this.loading = false
                 })
-            }
+            },
         }
     }
 </script>
@@ -527,7 +562,7 @@
         .more-info {
             position: absolute;
             z-index: 999;
-            top: 10px;
+            top: 200px;
             left: 10px;
             cursor: pointer;
         }
