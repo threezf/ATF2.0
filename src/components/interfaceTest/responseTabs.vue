@@ -31,12 +31,12 @@
         </el-tab-pane>
         <el-tab-pane label="返回结果" name="second" >
             <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px">
-                <el-radio-group v-model="form.choiceType">
-                    <el-radio label="data">form-data</el-radio>
-                    <el-radio label="json">raw</el-radio>
+                <el-radio-group v-model="respType">
+                    <el-radio label="0">form-data</el-radio>
+                    <el-radio label="1">raw</el-radio>
                 </el-radio-group>
                 <el-button type="primary" size="mini"
-                            v-show="form.choiceType === 'json'"
+                            v-show="respType === '1'"
                             style="margin-left:20px"
                             @click="formatData()">格式化
 
@@ -44,7 +44,7 @@
             </el-form>
             <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
 
-            <div v-if="form.choiceType === 'json'">
+            <div v-if="respType === '1'">
                 <div style="border:1px solid rgb(234, 234, 234) ">
                     <el-container>
                         <editor
@@ -69,7 +69,7 @@
                         stripe :show-header="true"
                         border
                         style="background-color: rgb(250, 250, 250)"
-                        v-if="form.choiceType === 'data'"
+                        v-if="respType === '0'"
                         :row-style="{'background-color': 'rgb(250, 250, 250)'}">
                 <el-table-column label="KEY" header-align="center" minWidth="120">
                     <template slot-scope="scope">
@@ -117,17 +117,17 @@ export default {
     },
     name: 'testTabs',
     props:{
-            respHeader: {
-                type: Array,
-                default: []
-            },
-            result: {
-                type: Array,
-                default: []
-            },
-            respJsonString: {
+            headerResopnse: {
                 type: String,
-                default: ''
+                default: '[]'
+            },
+            bodyResopnse: {
+                type: String,
+                default: '[]'
+            },
+            bodyResopnseType: {
+                type: Number,
+                default: 0
             },
             authType: {
                 type: Number,
@@ -141,17 +141,11 @@ export default {
             //上传文件时，记录数组下当前数据的下标，用于把返回文件路径地址赋值
             temp_num: '',
             methods: ['POST', 'GET', 'PUT', 'DELETE'],
-            form: {
-                // projectId: null,
-                // configName: null,
-                // moduleId: null,
-                // choiceUrl: '基础url1',
-                choiceType: 'data',
-            },
 
-            respheaders: this.respHeader,
-            results: this.result,
-            respJsonVariable: this.respJsonString,
+            respheaders: [],
+            results: [],
+            respType: String(this.bodyResopnseType),
+            respJsonVariable: '',
 
         }
     },
@@ -208,7 +202,7 @@ export default {
                 this.results.splice(i, 1);
             } else if (type === 'respheaders') {
                 this.respheaders.splice(i, 1);
-            } 
+            }
         },
         addTableRow(type) {
             if (type === 'results') {
@@ -219,18 +213,40 @@ export default {
         },
         initApiMsgData() {
                 console.log("测试")
-                this.form.choiceType = 'data';
+                this.respType = '0';
 
                 this.respheaders = Array();
                 this.results = Array();
                 this.respJsonVariable = '';
             },
+				handlerParams() {
+            if (this.bodyResopnseType === 1) {
+                this.results.push({
+                    name: '',
+                    val: '',
+                    desc: ''
+                })
+                this.respJsonVariable = this.bodyResopnse
+            } else {
+                this.results.push(...JSON.parse(this.bodyResopnse))
+            }
+							if (this.headerResopnse === '[]' || this.headerResopnse === null) {
+								this.respheaders.push({
+									name: '',
+									desc: ''
+								})
+							} else {
+								this.respheaders.push(...JSON.parse(this.headerResopnse))
+							}
+        }
     },
     created() {
-        if(this.authType == 0) {
+        if(this.authType === 0) {
             this.initApiMsgData()
+        }else {
+            this.handlerParams()
         }
-        
+
     },
     computed: {
         monitorVariable() {
