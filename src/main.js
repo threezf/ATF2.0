@@ -28,6 +28,8 @@ import 'v-contextmenu/dist/index.css';
 import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
 import ref from 'vue-ref'
 import SearchBar from './components/frames/searchBar'
+import TableComp from '@/components/frames/table/index'
+
 
 Vue.config.productionTip = false
 Vue.use(vueDragSelectPro)
@@ -38,6 +40,7 @@ Vue.use(VueBus)
 Vue.use(page)
 Vue.use(contentmenu);
 Vue.component('search-bar', SearchBar)
+Vue.component('table-comp', TableComp)
 Vue.component('mavon-editor', mavonEditor)
 Vue.use(ref)
 window.activeMenu;

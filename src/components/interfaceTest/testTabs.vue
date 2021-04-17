@@ -36,17 +36,18 @@
             </el-table>
         </el-tab-pane>
         <el-tab-pane label="请求体" name="second" >
-            <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px">
+            <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px; display: flex; align-items: center;">
                 <el-radio-group v-model="bodyType">
                     <el-radio label= '0' >form-data</el-radio>
                     <el-radio label= '1' >raw</el-radio>
                 </el-radio-group>
                 <el-button type="primary" size="mini"
-                            v-show="bodyType === '1'"
-                            style="margin-left:20px"
-                            @click="formatData()">格式化
+                    v-show="bodyType === '1'"
+                    style="margin-left:20px"
+                    @click="formatData()">格式化
 
                 </el-button>
+                <el-button size="mini" type="text" style="margin-top: -10px" @click="downloadTemplate">下载模板</el-button>
             </el-form>
             <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
 
@@ -69,8 +70,6 @@
                     </el-container>
                 </div>
             </div>
-
-
             <el-table :data="bodys"
                         size="mini"
                         stripe :show-header="true"
@@ -196,7 +195,7 @@
 </template>
 
 <script>
-
+import Request from '@/libs/request.js'
 export default {
     components: {
         editor: require('vue2-ace-editor'),
@@ -402,25 +401,35 @@ export default {
             } else {
                 this.bodys.push(...JSON.parse(this.body))
             }
-						if (this.header === '[]' || this.header === null) {
-							this.headers.push({
-								name: '',
-								val: '',
-								desc: ''
-							})
-						} else {
-							this.headers.push(...JSON.parse(this.header))
-						}
-						if (this.param === '[]' || this.param === null) {
-							this.params.push({
-								name: '',
-								val: '',
-								desc: ''
-							})
-						} else {
-							this.params.push(...JSON.parse(this.param))
-						}
-					}
+            if (this.header === '[]' || this.header === null) {
+                this.headers.push({
+                    name: '',
+                    val: '',
+                    desc: ''
+                })
+            } else {
+                this.headers.push(...JSON.parse(this.header))
+            }
+            if (this.param === '[]' || this.param === null) {
+                this.params.push({
+                    name: '',
+                    val: '',
+                    desc: ''
+                })
+            } else {
+                this.params.push(...JSON.parse(this.param))
+            }
+        },
+        downloadTemplate() {
+            // Request({
+            //     url: 'ßinterfaceNewController/downloadTemplate',
+            //     method: 'post',
+            //     params: {}
+            // }).then(res => {
+            //     // 
+            // })
+            window.location.href = "http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadTemplate"
+        }
     },
     created() {
         if(this.authType === 0) {
@@ -487,6 +496,10 @@ export default {
 <style lang="less" scoped>
 .tabs-body {
     position: relative;
+    /deep/ .el-tabs--border-card {
+        -webkit-box-shadow: none;
+        box-shadow: none;   
+    }
     .append {
         position: absolute;
         right: 10px;
