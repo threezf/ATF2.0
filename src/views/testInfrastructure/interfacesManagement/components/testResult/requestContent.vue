@@ -21,7 +21,7 @@
             style="font-size: 15px"
             v-model="jsonVariable"
             @init="editorInit"
-            lang="json"
+            :lang="typeSelect"
             theme="chrome"
             width="100%"
             height="200px"
@@ -36,6 +36,11 @@ export default {
     name: 'RequestContent',
     components: {
         editor: require('vue2-ace-editor'),
+    },
+    props: {
+        params: {
+            type: [Object, String, Array],
+        }
     },
     data() {
         return {
@@ -53,15 +58,28 @@ export default {
                 label: 'TEXT',
                 value: 'text'
             }],
-            jsonVariable: '{}'
+            jsonVariable: JSON.stringify({name: 'demo'}),
         }
+    },
+    watch: {
+        params: {
+            handler(newVal) {
+                console.log(newVal)
+                this.jsonVariable = typeof newVal === 'string'? JSON.stringify(JSON.parse(newVal), null, 4): JSON.stringify(newVal, null, 4)
+            },
+            immediate: true
+        },
     },
     methods: {
         editorInit() {
-            require('brace/ext/language_tools');
-            require('brace/mode/json');
-            require('brace/theme/chrome');
+            require('brace/theme/chrome')
+            require('brace/ext/language_tools') //language extension prerequsite...
+            require('brace/mode/html')
+            require('brace/mode/json')
+            require('brace/mode/xml')
             require('brace/snippets/json')
+            require('brace/snippets/html')
+            require('brace/snippets/xml')
         },
     }
 }

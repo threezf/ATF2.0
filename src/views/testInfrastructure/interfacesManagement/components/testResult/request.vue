@@ -1,6 +1,6 @@
 <template>
     <div>
-        <RequestContent></RequestContent>
+        <RequestContent :params="params"></RequestContent>
     </div>
 </template>
 
@@ -10,6 +10,11 @@ export default {
     name: 'Request',
     components: {
         RequestContent
+    },
+    props: {
+        params: {
+            type: [Object, String],
+        }
     },
     data() {
         return {

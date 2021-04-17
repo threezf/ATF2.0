@@ -12,7 +12,7 @@
                     <ResponseHeader></ResponseHeader>
                 </div>
                 <div v-else-if="currentTab === 'request'">
-                    <Request></Request>
+                    <Request :params="originData.params"></Request>
                 </div>
                 <div v-else-if="currentTab === 'requestHeader'">
                     <RequestHeader></RequestHeader>
@@ -41,6 +41,12 @@ export default {
         Request,
         RequestHeader,
         History
+    },
+    props: {
+        originData: {
+            type: Object,
+            default:() => {}
+        }
     },
     data() {
         return {

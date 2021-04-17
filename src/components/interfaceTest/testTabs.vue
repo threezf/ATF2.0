@@ -70,6 +70,8 @@
                     </el-container>
                 </div>
             </div>
+            <el-button type="primary" size="small" @click="importTemplate">导入
+            </el-button>
             <el-table :data="bodys"
                         size="mini"
                         stripe :show-header="true"
@@ -102,8 +104,17 @@
                                 <el-col :span="5" style="padding-left:10px;">
                                     <el-upload
                                             class="upload-demo"
-                                            action="/api/upload"
+                                            :action="uploadUrl"
                                             :show-file-list='false'
+                                            :auto-upload="false"
+                                            :limit="1"
+                                            accept=".xlsx" 
+                                            :before-upload="beforeUpload"
+                                            :file-list="fileList" 
+                                            :on-preview="handlePreview" 
+                                            :on-remove="handleRemove" 
+                                            :on-exceed="handleExceed" 
+                                            :on-change="handleOnChange"
                                             :on-success="fileChange">
                                         <el-button size="mini" type="primary"
                                                     @click="tempNum(scope.$index)">点击上传
@@ -202,26 +213,26 @@ export default {
     },
     name: 'testTabs',
     props:{
-            header: {
-                type: String,
-                default: '[]'
-            },
-            body: {
-                type: String,
-                default: '[]'
-            },
-            param: {
-                type: String,
-                default: '[]'
-            },
-            bodyFormat: {
-                type: Number,
-                default: 0
-            },
-            authType: {
-                type: Number,
-            },
+        header: {
+            type: String,
+            default: '[]'
         },
+        body: {
+            type: String,
+            default: '[]'
+        },
+        param: {
+            type: String,
+            default: '[]'
+        },
+        bodyFormat: {
+            type: Number,
+            default: 0
+        },
+        authType: {
+            type: Number,
+        }
+    },
     data() {
         return {
             bodyShow: 'second',
@@ -230,13 +241,15 @@ export default {
             //上传文件时，记录数组下当前数据的下标，用于把返回文件路径地址赋值
             temp_num: '',
             methods: ['POST', 'GET', 'PUT', 'DELETE'],
+            fileName: '',
+            fileList: [],
 
             headers: [],
             bodys: [],
             jsonVariable: '',
             bodyType: String(this.bodyFormat),
             params: [],
-            selectedAuthType: this.authType, // Authorization
+            selectedAuthType: '', // Authorization
             authorizationList: [{
                     id: 1,
                     value: 'inherit auth from parent'
@@ -303,7 +316,19 @@ export default {
         },
         handleClick() {
                 this.jsonVariable = ''
-            },
+        },
+        beforeUpload(file) {           
+            console.log(file)           
+            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
+            const extension2 = testmsg === 'xlsx'                     
+            if(!extension2) {                
+                this.$message({                    
+                    message: '上传文件只能是xlsx格式!',                    
+                    type: 'warning'               
+                });            
+            }                       
+            return extension2        
+        },
         fileChange(response, file) {
             if (response['status'] === 0) {
                 this.$confirm('服务器已存在相同名字文件，是否覆盖?', '提示', {
@@ -311,10 +336,11 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    console.log('本地存储')
                     let form = new FormData();
                     form.append("file", file.raw);
                     form.append("skip", '1');
-                    this.$axios.post('/api/upload', form).then((response) => {
+                    this.$axios.post('/interfaceNewController/uploadInterfaceBody', form).then((response) => {
                             this.$message({
                                 showClose: true,
                                 message: response.data['msg'],
@@ -337,6 +363,41 @@ export default {
                 this.bodys[this.temp_num]['value'] = response['data'];
             }
 
+        },
+        handleRemove(file, fileList) {
+            // console.log('file:',file,fileList)
+            this.fileName = "删除" + file.name;
+            this.fileList.splice(0, 1)
+        },
+        handlePreview(file) {
+            // console.log('file:' + file);
+            this.fileName = "点击" + file.name;
+        },
+        handleExceed(file, fileList) {
+            this.$message.warning(`只允许上传1个文件`);
+        },
+        handleOnChange(file) {
+            this.$message.success(`选择文件成功`);
+            this.fileName = file.name;
+            this.fileList.push(file)
+        },
+        importTemplate() {
+            console.log("importTemplate");
+            let formData = new FormData();
+
+            formData.append("file", this.fileList[0].raw);
+            Request({
+                url: "/interfaceNewController/uploadInterfaceBody",
+                method: "POST",
+                params: formData
+            })
+            .then((res) => {
+                console.log('倒入成功')
+                this.$message.success(res.respMsg);
+            })
+            .catch((res) => {
+                this.$message.error("上传失败");
+            });
         },
         tempNum(i) {
             this.temp_num = i;
@@ -421,13 +482,6 @@ export default {
             }
         },
         downloadTemplate() {
-            // Request({
-            //     url: 'ßinterfaceNewController/downloadTemplate',
-            //     method: 'post',
-            //     params: {}
-            // }).then(res => {
-            //     // 
-            // })
             window.location.href = "http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadTemplate"
         }
     },
@@ -449,6 +503,9 @@ export default {
         monitorExtract() {
             return this.params;
         },
+        uploadUrl() {
+            return 'http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/uploadInterfaceBody'
+        }
 
     }
     ,
@@ -487,7 +544,41 @@ export default {
             },
             deep: true
         },
-
+        header: {
+            handler(newVal) {
+                let arr = JSON.parse(newVal)
+                if(arr) {
+                    this.headers = JSON.parse(newVal).filter(item => {
+                        return item.name !== null || item.val !== null || item.desc !== null
+                    })
+                }
+            },
+            immediate: true
+        },
+        body: {
+            handler(newVal) {
+                let arr = JSON.parse(newVal)
+                if(arr) {
+                    this.bodys = JSON.parse(newVal)
+                }
+            },
+            immediate: true
+        },
+        param: {
+            handler(newVal) {
+                let arr = JSON.parse(newVal)
+                if(arr) {
+                    this.params = JSON.parse(newVal)
+                }
+            },
+            immediate: true
+        },
+        authType: {
+            handler(newVal) {
+                this.selectedAuthType = newVal
+            },
+            immediate: true
+        }
     },
 
 }

@@ -274,7 +274,7 @@
 									</div>
 								</div>
               </div>
-              <InterfaceTest v-if="activeTab === 'test'" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
+              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
@@ -568,9 +568,6 @@ export default {
 			this.getInterfaceDetail(interfaceId)
 			let transactId = localStorage.getItem('transactId')
 			this.getGroupById(transactId)
-
-
-
     },
     beforeCreate: function () {
         that = this;

@@ -7,7 +7,7 @@
             :conf="conf"
             @submit="handleSubmit">
         </search-bar>
-        <test-tabs>
+        <test-tabs :header="originData.header" :body="originData.body" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
                 <el-button type="text" size="mini" @click="cookieVisible = true">cookie管理</el-button>
                 <el-tooltip placement="top" content="根据当前语言信息生成各种测试代码">
@@ -15,7 +15,7 @@
                 </el-tooltip>
             </template>
         </test-tabs>
-        <test-result></test-result>
+        <test-result :originData="originData"></test-result>
         <el-dialog title="管理Cookie" :visible.sync="cookieVisible" width="40vw" :append-to-body="true">
             <el-row :gutter="20">
                 <el-col :span="20">
@@ -50,6 +50,14 @@ export default {
         methods: {
             type: Array,
             default: () => [] 
+        },
+        path: {
+            type: String,
+            default: ''
+        },
+        originData: {
+            type: Object,
+            default: () => {}
         }
     },
     data() {
@@ -61,10 +69,22 @@ export default {
         }
     },
     watch: {
+        originData: {
+            handler(newVal) {
+                this.conf[0].value = newVal.protocol
+                this.conf[1].value = newVal.method
+            },
+            immediate: true
+        },
+        path: {
+            handler(newVal) {
+                this.conf[2].value = newVal
+            },
+            immediate: true
+        },
         protocals: {
             handler(newVal) {
                 if(newVal.length > 0) {
-                    this.conf[0].value = newVal[0].value
                     this.conf[0].options = []
                     newVal.forEach(item => {
                         this.conf[0].options.push({
