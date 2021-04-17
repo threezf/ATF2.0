@@ -275,6 +275,8 @@
 								</div>
               </div>
               <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
+              <UseCase v-if="activeTab === 'case'"></UseCase>
+              <MockAPI v-if="activeTab === 'api'"></MockAPI>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
@@ -440,6 +442,8 @@ import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import TestTabs from '@/components/interfaceTest/testTabs'
 import ResponseTabs from '@/components/interfaceTest/responseTabs'
+import UseCase from './useCase'
+import MockAPI from './mockApi'
 import {TimeUtils} from 'wii-fe-utils'
 import InterfaceTest from './interfaceDetail/interfaceTest.vue'
 let that;
@@ -450,7 +454,9 @@ export default {
         editor: require('vue2-ace-editor'),
         TestTabs: TestTabs,
         ResponseTabs: ResponseTabs,
-        InterfaceTest
+        InterfaceTest,
+        UseCase,
+        MockAPI
     },
     data() {
         return {
@@ -460,7 +466,7 @@ export default {
             jsonVariable: '',
             respJsonVariable: '',
             currentRow: '',
-            activeTab: 'test',
+            activeTab: 'detail',
             interfaceTabs: [{
               label: '接口详情',
               name: 'detail'

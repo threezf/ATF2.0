@@ -43,7 +43,7 @@
                 </el-radio-group>
                 <el-button type="primary" size="mini"
                     v-show="bodyType === '1'"
-                    style="margin-left:20px"
+                    style="margin-left: 20px; margin-top: -9px"
                     @click="formatData()">格式化
 
                 </el-button>
@@ -425,6 +425,7 @@ export default {
             }
         },
         delTableRow(type, i) {
+            console.log(type, i, 'delete')
             if (type === 'bodys') {
                 this.bodys.splice(i, 1);
             } else if (type === 'headers') {
