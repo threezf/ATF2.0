@@ -27,6 +27,7 @@ import 'v-contextmenu/dist/index.css';
 // 注意：一定要引入css样式
 import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
 import ref from 'vue-ref'
+import SearchBar from './components/frames/searchBar'
 
 Vue.config.productionTip = false
 Vue.use(vueDragSelectPro)
@@ -36,6 +37,7 @@ Vue.use(moment)
 Vue.use(VueBus)
 Vue.use(page)
 Vue.use(contentmenu);
+Vue.component('search-bar', SearchBar)
 Vue.component('mavon-editor', mavonEditor)
 Vue.use(ref)
 window.activeMenu;

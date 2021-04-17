@@ -1,7 +1,8 @@
 <template>
     <div class="project">
-        <el-tabs type="border-card" class="tabs-card">
-            <el-tab-pane label="接口详情"></el-tab-pane>
+        <el-tabs type="border-card" class="tabs-card" v-model="activeTab">
+            <el-tab-pane v-for="(tab, index) in interfaceTabs" :key="'tab' + index" :label="tab.label" :name="tab.name">
+              <div v-if="activeTab === 'detail'">
                 <el-row>
                   <el-col :span="18">
                     <el-tag size="middle"  :type="interfaceData.protocol | getType1">
@@ -272,9 +273,9 @@
 										</el-table>
 									</div>
 								</div>
-            <el-tab-pane label="接口测试"></el-tab-pane>
-            <el-tab-pane label="测试用例"></el-tab-pane>
-            <el-tab-pane label="Mock API"></el-tab-pane>
+              </div>
+              <InterfaceTest v-if="activeTab === 'test'" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
+            </el-tab-pane>
         </el-tabs>
         <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
             <el-form :model="interfaceData" label-width="80px" label-position='top'>
@@ -440,6 +441,7 @@ import VueMixins from "@/libs/vueMixins.js";
 import TestTabs from '@/components/interfaceTest/testTabs'
 import ResponseTabs from '@/components/interfaceTest/responseTabs'
 import {TimeUtils} from 'wii-fe-utils'
+import InterfaceTest from './interfaceDetail/interfaceTest.vue'
 let that;
 export default {
     mixins: [VueMixins], // 时间格式转化
@@ -448,6 +450,7 @@ export default {
         editor: require('vue2-ace-editor'),
         TestTabs: TestTabs,
         ResponseTabs: ResponseTabs,
+        InterfaceTest
     },
     data() {
         return {
@@ -457,6 +460,20 @@ export default {
             jsonVariable: '',
             respJsonVariable: '',
             currentRow: '',
+            activeTab: 'test',
+            interfaceTabs: [{
+              label: '接口详情',
+              name: 'detail'
+            }, {
+              label: '接口测试',
+              name: 'test'
+            }, {
+              label: '测试用例',
+              name: 'case'
+            }, {
+              label: 'Mock API',
+              name: 'api'
+            }],
             protocols: [{
                 value: 0,
                 protocol: 'HTTP'
@@ -465,18 +482,18 @@ export default {
                 protocol: 'HTTPS'
             }],
             methodOptions: [{
-                    value: 0,
-                    method: 'POST'
-                }, {
-                    value: 1,
-                    method: 'GET'
-                }, {
-                    value: 2,
-                    method: 'DELETE'
-                }, {
-                    value: 3,
-                    method: 'PUT'
-                }],
+                value: 0,
+                method: 'POST'
+            }, {
+                value: 1,
+                method: 'GET'
+            }, {
+                value: 2,
+                method: 'DELETE'
+            }, {
+                value: 3,
+                method: 'PUT'
+            }],
 						statusOptions: [{
 							value: 0,
 							status: '开发中'
@@ -542,6 +559,8 @@ export default {
                 label: 'groupName',
                 value: 'id'
             },
+
+            // 接口测试数据
         }
     },
     created() {

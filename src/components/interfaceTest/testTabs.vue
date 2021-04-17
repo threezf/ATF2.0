@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="tabs-body">
     <el-tabs v-model="bodyShow" type="border-card">
         <el-tab-pane label="请求头部" name="first">
             <el-table :data="headers"
@@ -185,6 +185,9 @@
             </el-row>
         </el-tab-pane>
     </el-tabs>
+    <div class="append">
+         <slot name="append"></slot>
+    </div>
 
     <v-contextmenu ref="contextmenu">
         <v-contextmenu-item @click="handleClick">clear</v-contextmenu-item>
@@ -480,3 +483,14 @@ export default {
 
 }
 </script>
+
+<style lang="less" scoped>
+.tabs-body {
+    position: relative;
+    .append {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+}
+</style>

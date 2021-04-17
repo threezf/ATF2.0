@@ -153,25 +153,37 @@
                 <el-row class="commonInfo" :gutter="20">
                     <el-col :span="6">
                         <el-card class="card">
-                            <h2>{{systemNumber}}</h2>
+                            <h2>
+                                {{systemNumber}}
+                                <p>(<i class="el-icon-caret-top"></i>{{lastSystemNumber}})</p>
+                            </h2>
                             <p>ATF中的被测系统数目</p>
                         </el-card>
                     </el-col>
                     <el-col :span="6">
                         <el-card class="card">
-                            <h2>{{projectNumber}}</h2>
+                            <h2>
+                                {{projectNumber}}
+                                <p>(<i class="el-icon-caret-top"></i>{{lastProjectNumber}})</p>
+                            </h2>
                             <p>ATF中的测试项目数目</p>
                         </el-card>
                     </el-col>
                     <el-col :span="6">
                         <el-card class="card">
-                            <h2>{{uiTestCaseNumber}}</h2>
+                            <h2>
+                                {{uiTestCaseNumber}}
+                                <p>(<i class="el-icon-caret-top"></i>{{lastUiTestCaseNumber}})</p>
+                            </h2>
                             <p>ATF中的UI测试用例数目</p>
                         </el-card>
                     </el-col>
                     <el-col :span="6">
                         <el-card class="card">
-                            <h2>{{apiTestCaseNumber}}</h2>
+                            <h2>
+                                {{apiTestCaseNumber}}
+                                <p>(<i class="el-icon-caret-top"></i>{{lastApiTestCaseNumber}})</p>
+                            </h2>
                             <p>ATF中的接口测试用例数目</p>
                         </el-card>
                     </el-col>
@@ -199,6 +211,10 @@
                 projectNumber: 0,
                 uiTestCaseNumber: 0,
                 apiTestCaseNumber: 0,
+                lastSystemNumber: 0,
+                lastProjectNumber: 0,
+                lastUiTestCaseNumber: 0,
+                lastApiTestCaseNumber: 0,
                 originData: [],
                 loading: false,
                 dateRange: [Date.now() - 12 * 30 * 24 * 60 * 60 * 1000, Date.now()-  30 * 24 * 60 * 60 * 1000],
@@ -299,6 +315,7 @@
         },
         created() {
             this.getBaseInfo()
+            this.getLastDayInfo()
         },
         mounted() {
 
@@ -317,6 +334,23 @@
                     this.projectNumber = res.testProjectCount
                     this.uiTestCaseNumber = res.uiTestCaseCount
                     this.apiTestCaseNumber = res.apiTestCaseCount
+                }).finally(_ => {
+                })
+            },
+            getLastDayInfo() {
+                Request({
+                    url: '/statement/summarizationData',
+                    method: 'post',
+                    params: {
+                        startTime: parseInt((Date.now() - 24 * 60 * 60 * 1000) / 1000),
+                        endTime: parseInt(Date.now() / 1000)
+                    }
+                }).then(res => {
+                    console.log('lastDay', res)
+                    this.lastSystemNumber = res.autCount
+                    this.lastProjectNumber = res.testProjectCount
+                    this.lastUiTestCaseNumber = res.uiTestCaseCount
+                    this.lastApiTestCaseNumber = res.apiTestCaseCount
                 }).finally(_ => {
                 })
             },
@@ -575,6 +609,15 @@
             h2 {
                 font-size: 30px;
                 margin: 10px 0;
+                display: flex;
+                margin-bottom: -5px;
+                p {
+                    margin-top: 8px;
+                    bottom: 0;
+                    font-size: 20px;
+                    letter-spacing: 3px;
+                    display: flex;
+                }
             }
             p {
                 font-size: 15px;
