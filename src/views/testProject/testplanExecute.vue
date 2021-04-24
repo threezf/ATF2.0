@@ -137,6 +137,12 @@
                       <el-button type="text" @click="downloadMac(1)">chrome-87-mac</el-button>
                       <el-button type="text" @click="downloadMac(2)">firefox-mac</el-button>
                   </div>
+                  <el-switch
+                    style="margin: 5px 10px"
+                    v-model="sendMail"
+                    active-text="是"
+                    inactive-text="否">
+                  </el-switch>
                 </div>
                 <div id="">
                   <div class="logcontainer">
@@ -1329,7 +1335,10 @@ export default {
 
       // 下载浏览器
       isDownload: false,
-      isStop: false
+      isStop: false,
+
+      // 是否发邮件
+      sendMail: false
     };
   },
   mounted() {
@@ -1540,16 +1549,6 @@ export default {
         Vac.alert("该测试计划正在执行中，若想再次执行，请终止当前执行");
         return;
       }
-      let sendMail
-      this.$confirm('是否在执行完成后发送邮件', '提示', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning'
-      }).then(() => {
-        sendMail = true
-      }).catch(() => {
-        sendMail = false
-      })
       var selectedExeInstances = [];
       if (_this.exeScope == 1) {
       } else {
@@ -1577,7 +1576,7 @@ export default {
           testPlanId: _this.testPlanId,
           identifiableRunnerName: _this.runnerExecuteType,
           appointedRunners: _this.runnerselected,
-          sendMail: sendMail
+          sendMail: this.sendMail
         }),
         success: function (data) {
           if (data.respCode === "0000") {
