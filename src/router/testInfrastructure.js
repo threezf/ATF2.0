@@ -9,6 +9,8 @@ import Transact from '@/views/testInfrastructure/subFunction/transact';
 import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
 import AutomatedComponentMaintenance from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
 import PerformCodeManagement from '@/views/testInfrastructure/subFunction/performCodeManagement';
+import ProjectEnvironment from '@/views/testInfrastructure/interfacesManagement/projectEnvironment';
+import TestCases from '@/views/testInfrastructure/interfacesManagement/testCases';
 
 import TransactDetail from '@/views/testInfrastructure/transactDetail'
 import InterfacesManagement from '@/views/testInfrastructure/interfacesManagement/interfaceManage'
@@ -127,7 +129,7 @@ export default {
 				hide: true
 			}
 		},
-		
+
 		// 接口管理
 		{
 			path: 'interfacesManagement',
@@ -165,7 +167,7 @@ export default {
 		{
 			path: 'testCases',
 			name: 'TestCases',
-			component: AutomatedComponentMaintenance,
+			component: TestCases,
 			meta: {
 				name: "测试用例",
 				another: 'atf/interface',
@@ -175,18 +177,18 @@ export default {
 			},
 		},
 		{
-			path: 'testEnvironment',
-			name: 'TestEnvironment',
-			component: PerformCodeManagement,
+			path: 'projectEnvironment',
+			name: 'ProjectEnvironment',
+			component: ProjectEnvironment,
 			meta: {
-				name: "测试环境",
+				name: "项目环境",
 				another: 'atf/interface',
 				icon: 'el-icon-star-off',
 				hide: true,
 				isDisplay: true
 			},
 		},
-		
+
 		{
 			path: 'productLine',
 			name: 'ProductLine',

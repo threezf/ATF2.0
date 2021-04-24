@@ -15,7 +15,7 @@
                 </el-menu>
             </el-col>
             <el-col :span="3" class="button">
-                <el-button type="text" icon="el-icon-download" @click="downResource" style="margin-right: 15px; height: 30pxnpm">
+                <el-button type="text" icon="el-icon-download" @click="downResource" style="margin-right: 15px; height: 30px">
                     下载资源
                 </el-button>
                 <el-dropdown>

@@ -17,7 +17,7 @@
                   </el-col>
                   <el-col :span="8">
                         <span class="enviroment-span">项目环境</span>
-                        <el-select v-model="value" placeholder="请选择" size="small">
+                        <el-select @change="selectChanged" v-model="value" placeholder="请选择" size="small">
                             <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -28,7 +28,7 @@
                   </el-col>
                 </el-row>
                 <!-- <InterfacesTable></InterfacesTable> -->
-                <InterfacesTable :tableData="tableData" @updateGroupButton="updateGroupButton" @getAllTableData="getAllTableData"></InterfacesTable>
+                <InterfacesTable :tableData="tableData" :tableType="tableType" @updateGroupButton="updateGroupButton" @getAllTableData="getAllTableData"></InterfacesTable>
                 <el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
                     <el-form :model="form" ref="form" label-width="80px" label-position='top'>
                         <el-row>
@@ -154,13 +154,13 @@ export default {
     data () {
         return {
             options: [{
-                value: '选项1',
+                value: 1,
                 label: '管理测试环境'
                 }, {
-                value: '选项2',
+                value: 2,
                 label: '无'
                 }, {
-                value: '选项3',
+                value: 3,
                 label: '演示环境'
                 }],
                 value: '',
@@ -248,7 +248,9 @@ export default {
                     children: 'childNodeList',
                     label: 'groupName',
                     value: 'id'
-                }
+                },
+								environmentUrl:'',
+								tableType:1
 
         }
     },
@@ -314,6 +316,18 @@ export default {
         }
     },
     methods: {
+				selectChanged(val){
+					if (val ===1){
+						this.$router.push({
+							path: "projectEnvironment",
+						}); //界面跳转
+					}else if (val ===2) {
+						this.environmentUrl = ''
+						console.log(val)
+					}else {
+						console.log(val)
+					}
+				},
         newInterface(){
             this.modelFlag = 1
             this.dialogVisible = true

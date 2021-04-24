@@ -275,6 +275,7 @@
 								</div>
               </div>
               <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
+							<TestCases v-if="activeTab === 'case'" :originData="interfaceData" :path="interfaceData.urlPath" :protocols="protocols" :methods="methodOptions"></TestCases>
             </el-tab-pane>
         </el-tabs>
         <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
@@ -442,6 +443,7 @@ import TestTabs from '@/components/interfaceTest/testTabs'
 import ResponseTabs from '@/components/interfaceTest/responseTabs'
 import {TimeUtils} from 'wii-fe-utils'
 import InterfaceTest from './interfaceDetail/interfaceTest.vue'
+import TestCases from './interfaceDetail/testCases.vue'
 let that;
 export default {
     mixins: [VueMixins], // 时间格式转化
@@ -450,7 +452,8 @@ export default {
         editor: require('vue2-ace-editor'),
         TestTabs: TestTabs,
         ResponseTabs: ResponseTabs,
-        InterfaceTest
+        InterfaceTest,
+				TestCases
     },
     data() {
         return {
