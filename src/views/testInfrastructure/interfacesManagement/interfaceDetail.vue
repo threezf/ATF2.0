@@ -274,8 +274,12 @@
 									</div>
 								</div>
               </div>
-              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
-              <UseCase v-if="activeTab === 'case'"></UseCase>
+              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData"
+														 :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions">
+							</InterfaceTest>
+              <UseCase v-if="activeTab === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
+											 :protocols="protocols" :methods="methodOptions">
+							</UseCase>
               <MockAPI v-if="activeTab === 'api'"></MockAPI>
             </el-tab-pane>
         </el-tabs>
@@ -456,7 +460,7 @@ export default {
         ResponseTabs: ResponseTabs,
         InterfaceTest,
         UseCase,
-        MockAPI
+        MockAPI,
     },
     data() {
         return {

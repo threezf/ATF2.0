@@ -6,13 +6,19 @@
     highlight-current-row
     height="580px"
     border
-    @current-change="handleCurrentChange"
+    @selection-change="handleCurrentChange"
     style="width: 100%">
     <el-table-column
+			v-if="tableType ===1"
       property="id"
       label="编号"
       width="80">
     </el-table-column>
+		<el-table-column
+			v-else
+			type="selection"
+			width="80">
+		</el-table-column>
     <el-table-column
       label="状态"
       width="80"
@@ -39,7 +45,6 @@
       </template>
     </el-table-column>
     <el-table-column
-      width="300"
       property="urlPath"
       label="URL">
     </el-table-column>
@@ -57,6 +62,7 @@
       :formatter="transTime">
     </el-table-column>
     <el-table-column
+			v-if="tableType === 1"
       label="操作"
       width="200"
       align="center">
@@ -81,17 +87,20 @@ import VueMixins from '@/libs/vueMixins.js'
     mixins: [VueMixins],
     props:{
         tableData: {
-              type: Array,
-              default: function () {
-                  return []
-              }
+						type: Array,
+						default: function () {
+								return []
+						}
           },
+				tableType: {
+        		type:Number,
+						default:1
+				}
 
     },
     data() {
       return {
-
-        currentRow: null,
+				multipleSelection: [],
         statusOptions: [{
             value: 0,
             status: '开发中'
@@ -153,7 +162,10 @@ import VueMixins from '@/libs/vueMixins.js'
 
     methods: {
       handleCurrentChange(val) {
-        this.currentRow = val;
+        this.multipleSelection = val;
+        if (this.tableType !==1){
+        	this.$emit('handleSelectionChange',val)
+				}
       },
       editInterface(val){
         this.$emit('updateGroupButton',val)
