@@ -5,7 +5,7 @@
                 <template slot="title">
                         <span slot="title">{{menu.groupName}}</span>
                 </template>
-                <MenuTree :menuData="menu.childNodeList" ></MenuTree>
+                <!-- <MenuTree :menuData="menu.childNodeList" ></MenuTree> -->
             </el-submenu>
             <el-menu-item :key="menu.id" :index="String(menu.id)" style="text-align:center"  v-else>
                     <span slot="title">{{menu.groupName}}

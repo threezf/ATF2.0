@@ -700,6 +700,19 @@ export default {
             }).then((res) => {
                 if(res.respCode === '0000'){
                     this.interfaceData = res.interfaceSelectDto
+                    for(let key in res.interfaceSelectDto) {
+                      if(key in this.$store.state.interface) {
+                        if(key === 'params' || key === 'params' || key === 'bodyResponse' || key === 'headerResponse' || key === 'tags') {
+                          this.$store.commit(`interface/update${key.slice(0, 1).toUpperCase()}${key.slice(1)}`, {
+                            value: JSON.parse(res.interfaceSelectDto[key])
+                          })
+                        }else {
+                          this.$store.commit(`interface/update${key.slice(0, 1).toUpperCase()}${key.slice(1)}`, {
+                            value: res.interfaceSelectDto[key]
+                          })
+                        }
+                      }
+                    }
 										console.log('interfaceData',this.interfaceData)
 										this.updateTime = TimeUtils.timestampToTime(res.interfaceSelectDto.updateTime, 'yyyy-MM-dd hh:mm:ss')
 										this.getGroupNameById(res.interfaceSelectDto.interfaceGroupId)

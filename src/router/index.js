@@ -21,6 +21,8 @@ import Edit from '@/views/testInfrastructure/mockAPIComponents/Edit'
 import Run from '@/views/testInfrastructure/mockAPIComponents/Run'
 import MessageBoard from '@/views/messageBoard/msgboard'
 import MsgDetail from '@/views/messageBoard/msgdetail'
+import InterfaceDetail from '@/views/testInfrastructure/interfacesManagement/interfaceDetail'
+
 
 import Help from './help'
 
