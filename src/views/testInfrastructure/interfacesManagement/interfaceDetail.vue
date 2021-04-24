@@ -274,8 +274,12 @@
 									</div>
 								</div>
               </div>
-              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions"></InterfaceTest>
-              <UseCase v-if="activeTab === 'case'"></UseCase>
+              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData"
+														 :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions">
+							</InterfaceTest>
+              <UseCase v-if="activeTab === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
+											 :protocols="protocols" :methods="methodOptions">
+							</UseCase>
               <MockAPI v-if="activeTab === 'api'"></MockAPI>
             </el-tab-pane>
         </el-tabs>
@@ -446,7 +450,6 @@ import UseCase from './useCase'
 import MockAPI from './mockApi'
 import {TimeUtils} from 'wii-fe-utils'
 import InterfaceTest from './interfaceDetail/interfaceTest.vue'
-import TestCases from './interfaceDetail/testCases.vue'
 let that;
 export default {
     mixins: [VueMixins], // 时间格式转化
@@ -458,7 +461,6 @@ export default {
         InterfaceTest,
         UseCase,
         MockAPI,
-				TestCases
     },
     data() {
         return {

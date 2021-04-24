@@ -20,7 +20,7 @@
 <script>
 import SideBar from '@/components/interfaceTest/sideBar'
 import InterfacesTable from '@/components/interfaceTest/interfacesTable'
-import TestCases from './interfaceDetail/testCases.vue'
+import TestCases from './useCase'
 import Request from "@/libs/request.js";
 export default {
 	name: "testCases",
