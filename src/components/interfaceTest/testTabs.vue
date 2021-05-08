@@ -47,7 +47,7 @@
                     @click="formatData()">格式化
 
                 </el-button>
-                <el-button size="mini" type="text" style="margin-top: -10px" @click="downloadTemplate">下载模板</el-button>
+                <!-- <el-button size="mini" type="text" style="margin-top: -10px" @click="downloadTemplate">下载模板</el-button> -->
             </el-form>
             <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
 
@@ -70,8 +70,8 @@
                     </el-container>
                 </div>
             </div>
-            <el-button type="primary" size="small" @click="importTemplate">导入
-            </el-button>
+            <!-- <el-button type="primary" size="small" @click="importTemplate">导入
+            </el-button> -->
             <el-table :data="bodys"
                         size="mini"
                         stripe :show-header="true"
