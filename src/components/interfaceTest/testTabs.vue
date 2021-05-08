@@ -470,7 +470,8 @@ export default {
                     desc: ''
                 })
             } else {
-                this.headers.push(...JSON.parse(this.header))
+                console.log(this.header, JSON.parse(this.header))
+                this.headers = JSON.parse(this.header)
             }
             if (this.param === '[]' || this.param === null) {
                 this.params.push({

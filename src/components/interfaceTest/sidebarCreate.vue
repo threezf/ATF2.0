@@ -1,21 +1,22 @@
 <template>
     <div :class="isCollapse?'narrow-side-bar':'side-bar'">
         <el-menu
-                default-active="1"
-                class="el-menu-vertical-demo"
-                @select="handleSelect"
-                background-color="#F2F2F2"
-                :collapse="isCollapse">
-                <el-row>
-                    <el-button v-show="!isCollapse" class="newInterface-button"  @click="newGroup" type="primary" size="small">
-                        <i class="el-icon-plus"></i>创建分组
-                    </el-button>
-                    <el-button class="isCollapse-button" @click="isCollapse=!isCollapse" icon="el-icon-open"></el-button>
-                </el-row>
-                <el-menu-item index="0" class="itemAll">
-                    <i class="el-icon-s-operation"></i>
-                    <span slot="title">所有接口</span>
-                </el-menu-item>
+            default-active="1"
+            class="el-menu-vertical-demo"
+            @select="handleSelect"
+            background-color="#F2F2F2"
+            :collapse="isCollapse">
+            <el-row
+                v-if="needAdd">
+                <el-button v-show="!isCollapse" class="newInterface-button"  @click="newGroup" type="primary" size="small">
+                    <i class="el-icon-plus"></i>创建分组
+                </el-button>
+                <el-button class="isCollapse-button" @click="isCollapse=!isCollapse" icon="el-icon-open"></el-button>
+            </el-row>
+            <el-menu-item index="0" class="itemAll">
+                <i class="el-icon-s-operation"></i>
+                <span slot="title" v-if="needAdd">所有接口</span>
+            </el-menu-item>
             <!-- 引入组件 -->
             <MenuAndDropdown v-ref="c => setChildrenRef('menu',c)" :menuData="menuList" :isCollapse="isCollapse" @getGroup="getGroup"></MenuAndDropdown>
         </el-menu>
@@ -97,6 +98,10 @@ export default {
                 type: Array,
                 default: []
             },
+            needAdd: {
+                type: Boolean,
+                default: true
+            }
         },
         inject: {
             setChildrenRef: {
