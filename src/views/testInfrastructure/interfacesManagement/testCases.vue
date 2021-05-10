@@ -142,6 +142,7 @@ export default {
 			})
 		},
 		handleCurrentChange(val) {
+			sessionStorage.setItem('interfaceId',val.id)
 			this.currentRow = val
 			this.path = val.urlPath
 			this.originData = val

@@ -203,6 +203,7 @@ export default {
 			handler(newVal) {
 				this.caseData.urlAgreement = newVal.protocol
 				this.caseData.urlMethod = newVal.method
+				this.selectCases()
 			},
 			immediate: true
 		},
