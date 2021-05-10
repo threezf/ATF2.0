@@ -6,7 +6,7 @@ import TestInfrastructureIndex from '@/views/testInfrastructure/index';
 import TestedSystemManagementRouter from '@/views/testInfrastructure/testedSystemManagementRouter';
 import TestedSystemManagement from '@/views/testInfrastructure/testedSystemManagement';
 import Transact from '@/views/testInfrastructure/subFunction/transact';
-import ConfigureSystemData from '@/views/testInfrastructure/subFunction/configureSystemData';
+import ConfigureSystemData from '@/views/testInfrastructure/subFunction/interfaceTest';
 import AutomatedComponentMaintenance from '@/views/testInfrastructure/subFunction/automatedComponentMaintenance';
 import PerformCodeManagement from '@/views/testInfrastructure/subFunction/performCodeManagement';
 import ProjectEnvironment from '@/views/testInfrastructure/interfacesManagement/projectEnvironment';

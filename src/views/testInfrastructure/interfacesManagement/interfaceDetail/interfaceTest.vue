@@ -34,6 +34,9 @@
 import TestTabs from '@/components/interfaceTest/testTabs.vue'
 import TestResult from '../components/testResult'
 import {
+    mapState
+} from 'vuex'
+import {
     InterfaceTestConf
 } from '@/config/testInfrastructure/interfacesManagement/interfaceDetailConf'
 export default {
@@ -68,14 +71,30 @@ export default {
             codeVisible: false
         }
     },
+    computed: {
+        ...mapState('interface', {
+            authType: 'authType',
+            transactId: 'transactId',
+            id: 'id',
+            interfaceGroupId: 'interfaceGroupId',
+            interfaceName: 'interfaceName',
+            protocol: 'protocol',
+            urlPath: 'urlPath',
+            status: 'status',
+            method: 'method',
+            params: 'params',
+            header: 'header',
+            bodyFormat: 'bodyFormat',
+            bodyContent: 'bodyContent',
+            bodyResponseType: 'bodyResponseType',
+            bodyResponse: 'bodyResponse',
+            headerResponse: 'headerResponse',
+            tags: 'tags',
+            createTime: 'createTime',
+            updateTime: 'updateTime',
+        })
+    },
     watch: {
-        originData: {
-            handler(newVal) {
-                this.conf[0].value = newVal.protocol
-                this.conf[1].value = newVal.method
-            },
-            immediate: true
-        },
         path: {
             handler(newVal) {
                 this.conf[2].value = newVal
@@ -99,7 +118,6 @@ export default {
         methods: {
             handler(newVal) {
                 if(newVal.length > 0) {
-                    this.conf[1].value = newVal[0].value
                     this.conf[1].options = []
                     newVal.forEach(item => {
                         this.conf[1].options.push({
@@ -108,6 +126,18 @@ export default {
                         })
                     })
                 }
+            },
+            immediate: true
+        },
+        protocol: {
+            handler(newVal) {
+                this.conf[0].value  = newVal
+            },
+            immediate: true
+        },
+        method: {
+            handler(newVal) {
+                this.conf[1].value = newVal
             },
             immediate: true
         }

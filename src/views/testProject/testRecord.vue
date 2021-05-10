@@ -2,6 +2,24 @@
   <div class="page-inner">
     <el-container>
       <el-main>
+        <el-form
+          method="GET" 
+          :action="address4 + 'atfcloud2.0a/testRecordController/getRecordsByBatchId/' + runId">
+          <el-button
+            type="primary"
+            native-type="submit"
+            size="small"
+          >整合报告
+          </el-button>
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-view"
+            :loading="viewLoading"
+            @click="getOnlineReport"
+            >查看在线报告
+          </el-button>
+        </el-form>
         <el-form class="formTop" label-width="94px" hidden>
           <el-row :gutter="20" class="row1">
             <el-col :span="5" :offset="0">
@@ -155,6 +173,8 @@ export default {
   mixins: [VueMixins],
   data() {
     return {
+      loading: false,
+      viewLoading: false,
       queryMethods: ["按测试轮次", "按批量执行"], //查询方式
       selectedQueryMethod: "按测试轮次", //选中的查询方式
       testRounds: [], //测试轮次
@@ -201,6 +221,54 @@ export default {
     this.pagedBatchQueryTestRecordByRunId()
   },
   methods: {
+    // 获取线上报告
+    getOnlineReport() {
+      this.viewLoading = true
+      Request({
+        url: '/testRecordController/getRecordsUrlByBatchId',
+        method: 'post',
+        params: {
+          batchId: this.runId,
+        }
+      }).then(res => {
+        console.log(res)
+        if(res.respCode === '0000') {
+          window.open(res.url, '_blank')
+        }else {
+          this.$message.warning('查看失败，批次记录为空或者是批次尚未结束执行')
+        }
+      }).finally(_ => {
+        this.viewLoading = false
+      })
+    },
+    downloadRecord() {
+      this.loading = true
+      // http://140.143.16.21:9090/atfcloud2.0a/testRecordController/getRecordsByBatchId/9141
+      Request({
+        url: `/testRecordController/getRecordsByBatchId/${this.runId}`,
+        method: 'get',
+        responseType: 'blob',
+        headers: {
+            Authentication: localStorage.getItem('token'),
+            Accept: 'application/vnd.openxmlformats-officedocument'
+        },
+      }).then(res => {
+        console.log(res)
+           const blob = new Blob([res], {type: 'application/zip'});
+            const filename = 'name=执行报告';
+            const downloadElement = document.createElement('a');
+            const href = window.URL.createObjectURL(blob); //创建下载的链接
+            
+            downloadElement.href = href;
+            [downloadElement.download] = [filename.split('=')[1]];
+            document.body.appendChild(downloadElement);
+            downloadElement.click(); //点击下载
+            document.body.removeChild(downloadElement); //下载完成移除元素
+            window.URL.revokeObjectURL(href); //释放blob对象
+      }).finally(_ => {
+        this.loading = false
+      })
+    },
     checkTableData() {
       this.dialogVisible = this.tableData.length === 0;
     },
