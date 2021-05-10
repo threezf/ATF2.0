@@ -31,14 +31,54 @@ export default {
 		RespCodeOptions,
 		CheckRulesTable
 	},
+	// props: {
+	// 	selectedCodeType: {
+	// 		type: Number,
+	// 		default:0
+	// 	},
+	// 	customCode: {
+	// 		type: String,
+	// 		default:''
+	// 	},
+	// 	matchText: {
+	// 		type: String,
+	// 		default:''
+	// 	},
+	// },
 	data() {
 		return {
-			selectedCodeType: 0,
-			customCode: '',
 			respCodeList: RespCodeOptions,
-			matchText:''
 		}
-	}
+	},
+	computed:{
+		selectedCodeType: {
+			set(value){
+				console.log('selectedCodeType changed')
+				this.$store.commit('setAssertionCheckType',value)
+			},
+			get(){
+				return this.$store.state.assertionCheckType
+			}
+		},
+		customCode: {
+			set(value){
+				console.log('customCode changed')
+				this.$store.commit('setCustomCode',value)
+			},
+			get(){
+				return this.$store.state.customCode
+			}
+		},
+		matchText: {
+			set(value){
+				console.log('matchText changed')
+				this.$store.commit('setAssertionBody',value)
+			},
+			get(){
+				return this.$store.state.assertionBody
+			}
+		},
+	},
 }
 </script>
 

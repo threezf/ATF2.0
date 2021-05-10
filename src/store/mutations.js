@@ -28,5 +28,38 @@ export default {
     console.log('设置url', payload)
     state.urlList = payload.urlList
     localStorage.setItem('urls', state.urlList)
-  }
+  },
+  setAssertionCheckType(state, payload){
+		console.log('保存选择返回值类型', payload)
+		state.assertionCheckType = payload
+	},
+	setAssertionRootType(state, payload){
+		console.log('保存选择JSON根类型', payload)
+		state.assertionRootType = payload
+	},
+	setAssertionBody(state, payload){
+		console.log('保存校验规则', payload)
+		state.assertionBody = payload
+	},
+	setCustomCode(state, payload){
+		console.log('保存自定义返回码', payload)
+		state.customCode = payload
+	},
+	setSelectedArrayType(state, payload){
+		console.log('保存Array类型', payload)
+		state.selectedArrayType = payload
+	},
+	setAssertionType(state, payload){
+		console.log('保存选项类型', payload)
+		state.assertionType = payload
+	},
+	setAllParams(state, payload){
+		console.log('编辑时更新所有数据', payload)
+		state.assertionType = payload.assertionType
+		state.selectedArrayType = payload.assertionArrayBody
+		state.customCode = payload.customCode
+		state.assertionRootType = payload.assertionRootType
+		state.assertionCheckType = payload.assertionCheckType
+		state.assertionBody = payload.assertionBody
+	},
 }

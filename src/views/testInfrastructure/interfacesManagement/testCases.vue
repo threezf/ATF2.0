@@ -3,14 +3,14 @@
 	<SideBar :menuList="menuList" @getAllTableData="getAllTableData"
 	@getTableDataByIndex="getTableDataByIndex"></SideBar>
 	<div class="main-page">
-		<InterfacesTable :tableData="tableData" :tableType="tableType" @handleSelectionChange="handleSelectionChange"></InterfacesTable>
+		<InterfacesTable :tableData="tableData" :tableType="tableType"  @handleCurrentChange="handleCurrentChange"></InterfacesTable>
 		<el-drawer
 			title="测试用例"
 			:visible.sync="drawer"
 			direction="btt"
 			:modal="false"
 			size="50%">
-			<TestCases></TestCases>
+			<TestCases :protocols="protocols" :methods="methodOptions" :path="path" :origin-data="originData"></TestCases>
 		</el-drawer>
 	</div>
 
@@ -37,8 +37,30 @@ export default {
 			tableType:2,
 			pageSize:10,
 			currentPage:1,
-			multipleSelection:[],
-			drawer:false
+			currentRow:[],
+			drawer:false,
+			protocols: [{
+				value: 0,
+				protocol: 'HTTP'
+			}, {
+				value: 1,
+				protocol: 'HTTPS'
+			}],
+			methodOptions: [{
+				value: 0,
+				method: 'POST'
+			}, {
+				value: 1,
+				method: 'GET'
+			}, {
+				value: 2,
+				method: 'DELETE'
+			}, {
+				value: 3,
+				method: 'PUT'
+			}],
+			path:'',
+			originData:{},
 		}
 	},
 	created() {
@@ -119,8 +141,10 @@ export default {
 				console.log(err)
 			})
 		},
-		handleSelectionChange(val){
-			this.multipleSelection = val;
+		handleCurrentChange(val) {
+			this.currentRow = val
+			this.path = val.urlPath
+			this.originData = val
 			this.drawer = true
 		},
 		handleClose(done) {

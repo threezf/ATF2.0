@@ -13,7 +13,12 @@
 			:table-data="tableObj"
 			:needPagination="false">
 			<template v-slot:resultSlot="scope">
-				<el-button :disabled="scope.row.resultFlag===0" type="text" size="small" @click="scanResult(scope.row)">{{scope.row.resultFlag | getResult}}</el-button>
+				<el-tag size="small"  :type="scope.row.resultFlag | getType">
+					{{scope.row.resultFlag | getStatus}}
+				</el-tag>
+			</template>
+			<template v-slot:reportSlot="scoped">
+				<el-button type="text" size="small" @click="getReportButton(scoped.row)">点击查看</el-button>
 			</template>
 			<template v-slot:operationSlot="scoped">
 				<el-button type="text" size="small" @click="testCaseButton(scoped.row)">测试</el-button>
@@ -27,14 +32,14 @@
 				<el-row>
 					<el-col :span="24">
 						<el-form-item label="用例名称" prop="interfaceGroupId"  class="change-label-calss">
-							<el-input v-model="caseData.name" size="small" placeholder="用例名称" style="width:100%">
+							<el-input v-model="caseData.projectName" size="small" placeholder="用例名称" style="width:100%">
 							</el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row>
 						<el-form-item label="URL Path" prop="urlPath" class="change-label-calss">
-							<el-select size="small" v-model="caseData.protocol" placeholder="请选择" style="width:12%">
+							<el-select size="small" v-model="caseData.urlAgreement" placeholder="请选择" style="width:12%">
 								<el-option
 									v-for="item in protocolOptions"
 									:key="item.value"
@@ -42,7 +47,7 @@
 									:value="item.value">
 								</el-option>
 							</el-select>
-							<el-select size="small" v-model="caseData.method" placeholder="请选择" style="width:12%">
+							<el-select size="small" v-model="caseData.urlMethod" placeholder="请选择" style="width:12%">
 								<el-option
 									v-for="item in methodOptions"
 									:key="item.value"
@@ -61,7 +66,7 @@
 					<span class="divider-span">请求参数</span>
 				</el-row>
 				<el-row>
-					<TestTabs ref="testTabs" :body="caseData.bodyContent" :header="caseData.header"
+					<TestTabs ref="testTabs" :body="caseData.bodyContent" :header="caseData.requestHeader"
 										:param="caseData.params" :bodyFormat="caseData.bodyFormat" :authType="caseData.authType"></TestTabs>
 				</el-row>
 				<el-row class="divider-row">
@@ -69,7 +74,7 @@
 					<span class="divider-span">断言规则</span>
 				</el-row>
 				<el-row>
-					<CheckResult ref="checkResult" :origin-data="caseData.originData"></CheckResult>
+					<CheckResult ref="checkResult"></CheckResult>
 				</el-row>
 				<el-row class="buttons_row">
 					<el-button type="primary" size="small" @click="submitForm('caseData')">{{buttonName}}</el-button>
@@ -81,7 +86,7 @@
 			<el-form :model="copyCaseData" label-position='top'>
 				<el-row>
 					<el-form-item label="环境名称" prop="interfaceName" class="change-label-calss">
-						<el-input v-model="copyCaseData.name" size="small" placeholder="环境名称" style="width:100%">
+						<el-input v-model="copyCaseData.projectName" size="small" placeholder="环境名称" style="width:100%">
 						</el-input>
 					</el-form-item>
 				</el-row>
@@ -98,8 +103,11 @@
 import {CaseConf} from '@/config/testInfrastructure/testCases/testCaseConf'
 import TestTabs from '@/components/interfaceTest/testTabs'
 import CheckResult from '../components/checkResult'
+import Request from "@/libs/request.js";
+import VueMixins from "@/libs/vueMixins.js";
 let that
 export default {
+	mixins: [VueMixins], // 时间格式转化
 	name: "testCases",
 	components:{
 		TestTabs,
@@ -125,41 +133,45 @@ export default {
 	},
 	data(){
 		return {
-			resultData:[
-				{
-					name:'情況1：正常登录',
-					resultFlag:0,
-					time:'2021-04-19 21:41:42',
-					createUser:'zhx'
-				},
-				{
-					name:'情況2：正常登录',
-					resultFlag:1,
-					time:'2021-04-19 21:41:42',
-					createUser:'zhx'
-				},
-				{
-					name:'情況3：正常登录',
-					resultFlag:2,
-					time:'2021-04-19 21:41:42',
-					createUser:'zhx'
-				},
-			],
+			resultData:[],
+		// {
+		// 	projectName:'情況1：正常登录',
+		// 		resultFlag:0,
+		// 	timeStamp:'2021-04-19 21:41:42',
+		// 	createUser:'zhx'
+		// },
+		// {
+		// 	projectName:'情況2：正常登录',
+		// 		resultFlag:1,
+		// 	timeStamp:'2021-04-19 21:41:42',
+		// 	createUser:'zhx'
+		// },
+		// {
+		// 	projectName:'情況3：正常登录',
+		// 		resultFlag:2,
+		// 	timeStamp:'2021-04-19 21:41:42',
+		// 	createUser:'zhx'
+		// },
 			TableHeader:CaseConf,
 			caseVisible:false,
 			copyDialog:false,
 			modelFlag:1,
 			caseData:{
-				name: '',
-				protocol:0,
-				method:0,
+				projectName: '',
+				urlAgreement:0,
+				urlMethod:0,
 				urlPath:"/",
-				header: '[]',
+				requestHeader: '[]',
 				bodyContent: '[]',
 				bodyFormat: 0,
 				params: '[]',
 				authType: 0, // Authorization
-				originData: this.originData,
+				assertionType:0,
+				assertionCheckType:0,
+				assertionRootType:0,
+				assertionBody:'',
+				customCode:'',
+				assertionArrayBody:0
 			},
 			protocolOptions: [],
 			methodOptions: [],
@@ -167,15 +179,15 @@ export default {
 			resultsOption:[
 				{
 					value:0,
-					result:'尚无测试结果'
+					result:'未测试'
 				},
 				{
 					value:1,
-					result:'通过，查看详情'
+					result:'通过'
 				},
 				{
 					value:2,
-					result:'未通过，查看详情'
+					result:'未通过'
 				},
 			]
 		}
@@ -183,11 +195,14 @@ export default {
 	beforeCreate: function () {
 		that = this;
 	},
+	created() {
+		this.selectCases()
+	},
 	watch: {
 		originData: {
 			handler(newVal) {
-				this.caseData.protocol = newVal.protocol
-				this.caseData.method = newVal.method
+				this.caseData.urlAgreement = newVal.protocol
+				this.caseData.urlMethod = newVal.method
 			},
 			immediate: true
 		},
@@ -214,7 +229,7 @@ export default {
 		methods: {
 			handler(newVal) {
 				if (newVal.length > 0) {
-					this.caseData.method = newVal[0].value
+					this.caseData.urlMethod = newVal[0].value
 					this.methodOptions = []
 					newVal.forEach(item => {
 						this.methodOptions.push({
@@ -228,14 +243,17 @@ export default {
 		},
 	},
 	filters: {
-		getResult(val) {
-			for (let item in that.resultsOption) {
+		getStatus(val) {
+			for ( let item in that.resultsOption){
 				let option = that.resultsOption[item]
-				if (option.value === val) {
+				if(option.value === val){
 					return option.result
 				}
 			}
 		},
+		getType(val) {
+			return val === 0 ? 'success' : val === 1 ? 'primary' :  val === 2 ? 'danger' : 'warning'
+		}
 	},
 	computed: {
 		tableObj() {
@@ -246,8 +264,8 @@ export default {
 		//根据modelFlag 展示弹窗的名字
 		getTitle() {
 			const obj = {
-				1: '新建接口',
-				2: '修改接口'
+				1: '新建用例',
+				2: '修改用例'
 			}
 			return obj[this.modelFlag]
 		},
@@ -291,25 +309,201 @@ export default {
 		testCaseButton(row){
 
 		},
-		editCaseButton(row){
+		getReportButton(){
 
+		},
+		editCaseButton(row){
+			this.modelFlag = 2
+			console.log('row', row)
+			const {
+				id,
+				projectName,
+				urlAgreement,
+				urlMethod,
+				urlPath,
+				requestHeader,
+				bodyContent,
+				bodyFormat,
+				params,
+				authType, // Authorization
+				assertionType,
+				assertionCheckType,
+				assertionRootType,
+				assertionBody,
+				customCode,
+				assertionArrayBody
+			} = row
+
+			this.caseData = {
+				id,
+				projectName,
+				urlAgreement,
+				urlMethod,
+				urlPath,
+				requestHeader,
+				bodyContent,
+				bodyFormat,
+				params,
+				authType, // Authorization
+				assertionType,
+				assertionCheckType,
+				assertionRootType,
+				assertionBody,
+				customCode,
+				assertionArrayBody
+			}
+			this.$store.commit('setAllParams',this.caseData)
+			this.caseVisible = true
 		},
 		copyCaseButton(row){
 			this.copyCaseData = row
-			this.copyCaseData.name = '副本-'+row.name
+			this.copyCaseData.projectName = '副本-'+row.projectName
 			this.copyDialog = true
 		},
 		delCaseButton(row){
-
+			this.$confirm('是否确定删除此测试用例?', '提示', {
+				cancelButtonText: '取消',
+				confirmButtonText: '确定',
+				type: 'warning'
+			}).then(() => {
+				this.delCase(row.id)
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				});
+			});
 		},
 		updateCase(){
-
+			this.caseData.updateUser = sessionStorage.getItem('username')
+			this.caseData.bodyFormat = Number(this.$refs.testTabs.bodyType)
+			if(this.caseData.bodyFormat === 0){
+				this.caseData.bodyContent = JSON.stringify(this.$refs.testTabs.bodys)
+			}else {
+				this.caseData.bodyContent = this.$refs.testTabs.jsonVariable
+			}
+			this.caseData.requestHeader = JSON.stringify(this.$refs.testTabs.headers)
+			this.caseData.params = JSON.stringify(this.$refs.testTabs.params)
+			this.caseData.authType = this.$refs.testTabs.selectedAuthType
+			this.caseData.assertionType =  this.$store.state.assertionType
+			this.caseData.assertionCheckType =  this.$store.state.assertionCheckType
+			this.caseData.assertionRootType =  this.$store.state.assertionRootType
+			this.caseData.assertionBody =  this.$store.state.assertionBody
+			this.caseData.customCode =  this.$store.state.customCode
+			this.caseData.assertionArrayBody =  this.$store.state.selectedArrayType
+			console.log("入参",this.caseData)
+			Request({
+				url: '/interfaceNewController/interfaceTestProjectUpdate',
+				method: 'post',
+				params: this.caseData
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.$message.success("更新成功！")
+					this.caseVisible = false
+					this.selectCases()
+				}else {
+					this.$message.error("更新失败！")
+					this.caseVisible = false
+					console.log(err)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
 		},
 		addCase(){
-
+			this.caseData.interfaceId = sessionStorage.getItem('interfaceId')
+			this.caseData.createUser = sessionStorage.getItem('username')
+			this.caseData.bodyFormat = Number(this.$refs.testTabs.bodyType)
+			if(this.caseData.bodyFormat === 0){
+				this.caseData.bodyContent = JSON.stringify(this.$refs.testTabs.bodys)
+			}else {
+				this.caseData.bodyContent = this.$refs.testTabs.jsonVariable
+			}
+			this.caseData.requestHeader = JSON.stringify(this.$refs.testTabs.headers)
+			this.caseData.params = JSON.stringify(this.$refs.testTabs.params)
+			this.caseData.authType = this.$refs.testTabs.selectedAuthType
+			this.caseData.assertionType =  this.$store.state.assertionType
+			this.caseData.assertionCheckType =  this.$store.state.assertionCheckType
+			this.caseData.assertionRootType =  this.$store.state.assertionRootType
+			this.caseData.assertionBody =  this.$store.state.assertionBody
+			this.caseData.customCode =  this.$store.state.customCode
+			this.caseData.assertionArrayBody =  this.$store.state.selectedArrayType
+			console.log("入参",this.caseData)
+			Request({
+				url: '/interfaceNewController/addSingleInterfaceTestProject',
+				method: 'post',
+				params: this.caseData
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.$message.success("新增成功！")
+					this.caseVisible = false
+					this.selectCases()
+				}else {
+					this.$message.error("新增失败！")
+					this.caseVisible = false
+					console.log(err)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
 		},
 		copyCase(){
-
+			Request({
+				url: '/interfaceNewController/addSingleInterfaceTestProject',
+				method: 'post',
+				params: this.copyCaseData
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.$message.success("复制成功！")
+					this.copyDialog = false
+					this.selectCases()
+				}else {
+					this.$message.error("复制失败！")
+					this.copyDialog = false
+					console.log(err)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
+		},
+		selectCases(){
+			Request({
+				url: '/interfaceNewController/interfaceTestProjectSelect',
+				method: 'post',
+				params: {
+					interfaceId:sessionStorage.getItem('interfaceId')
+				}
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.resultData = res.list
+					console.log(res.list)
+					this.$message.success("查询成功！")
+				}else {
+					this.$message.error("查询失败！")
+					console.log(err)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
+		},
+		delCase(id){
+			Request({
+				url: '/interfaceNewController/deleteInterfaceTestProject',
+				method: 'post',
+				params: {
+					id :id
+				}
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.$message.success('删除成功')
+					this.selectCases()
+				}else {
+					this.$message.error('删除失败')
+					console.log(res.respMsg)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
 		},
 		//取消按钮
 		cancelButtonClicked() {

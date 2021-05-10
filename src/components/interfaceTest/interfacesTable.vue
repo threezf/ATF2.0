@@ -6,7 +6,7 @@
     highlight-current-row
     height="580px"
     border
-    @selection-change="handleCurrentChange"
+		@current-change="handleCurrentChange"
     style="width: 100%">
     <el-table-column
 			v-if="tableType ===1"
@@ -16,7 +16,7 @@
     </el-table-column>
 		<el-table-column
 			v-else
-			type="selection"
+			type="index"
 			width="80">
 		</el-table-column>
     <el-table-column
@@ -164,7 +164,7 @@ import VueMixins from '@/libs/vueMixins.js'
       handleCurrentChange(val) {
         this.multipleSelection = val;
         if (this.tableType !==1){
-        	this.$emit('handleSelectionChange',val)
+        	this.$emit('handleCurrentChange',val)
 				}
       },
       editInterface(val){

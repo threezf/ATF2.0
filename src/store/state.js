@@ -10,5 +10,11 @@ export default {
     'http://140.143.16.21:9090/atf-data/browser_mac/Firefox-install.zip',
     'http://140.143.16.21:9090/atf-data/atf-runner.zip'
   ],
+	assertionCheckType: 0,
+	assertionRootType: 0,
+	assertionBody: "",
+	customCode:'',
+	selectedArrayType:0,
+	assertionType:1
 
 }

@@ -13,7 +13,7 @@
 		<el-row>
 			<span>返回结果校验规则</span>
 		</el-row>
-		<CheckRulesTable :table-type="1"></CheckRulesTable>
+		<CheckRulesTable :table-type="1" ref="checkRules"></CheckRulesTable>
 	</div>
 </template>
 
@@ -26,13 +26,45 @@ export default {
 		RespCodeOptions,
 		CheckRulesTable
 	},
+	// props: {
+	// 	selectedCodeType: {
+	// 		type: Number,
+	// 		default:0
+	// 	},
+	// 	customCode: {
+	// 		type: String,
+	// 		default:''
+	// 	},
+	// 	assertionBody: {
+	// 		type: String,
+	// 		default:'[]'
+	// 	},
+	// },
 	data() {
 		return {
-			selectedCodeType: 0,
-			customCode: '',
 			respCodeList: RespCodeOptions,
 		}
-	}
+	},
+	computed:{
+		selectedCodeType: {
+			set(value){
+				console.log('selectedCodeType changed')
+				this.$store.commit('setAssertionCheckType',value)
+			},
+			get(){
+				return this.$store.state.assertionCheckType
+			}
+		},
+		customCode: {
+			set(value){
+				console.log('customCode changed')
+				this.$store.commit('setCustomCode',value)
+			},
+			get(){
+				return this.$store.state.customCode
+			}
+		},
+	},
 }
 </script>
 

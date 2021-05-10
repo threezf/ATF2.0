@@ -64,11 +64,14 @@ export default {
 		tableType: {
 			type: Number,
 			default:0
-		}
+		},
+		// assertionBody: {
+		// 	type: String,
+		// 	default:'[]'
+		// },
 	},
 	data() {
 		return {
-			tableData: [],
 			paramTypeList:ParamTypeOptions,
 			paramTypeXML:[
 				{
@@ -147,16 +150,44 @@ export default {
 			return arr
 		}
 	},
-	created() {
-		if (this.tableData.length===0){
-			this.newId=0
-			this.tableData = Array();
-		}
-	},
+	// created() {
+	// 	if (this.$store.state.assertionType ===3 || this.$store.state.assertionType ===4){
+	// 		console.log('更新JSON')
+	// 		this.tableData.push(...JSON.parse(this.assertionBody))
+	// 		this.newId=0
+	// 	}else {
+	// 		this.newId=0
+	// 		this.tableData = Array();
+	// 	}
+	// },
 	computed: {
 		monitorParams() {
 			return this.tableData;
 		},
+		assertionBody: {
+			set(value){
+				console.log('assertionBody changed')
+				this.$store.commit('setAssertionBody',value)
+			},
+			get(){
+				return this.$store.state.assertionBody
+			}
+		},
+		tableData: {
+			get() {
+				if (this.$store.state.assertionType ===3 || this.$store.state.assertionType ===4){
+					console.log('更新JSON')
+					this.newId=0
+					return [...JSON.parse(this.assertionBody)];
+				}else {
+					this.newId=0
+					return []
+				}
+			},
+			set(value) {
+				this.assertionBody = JSON.stringify(value)
+			}
+		}
 	},
 	watch: {
 		monitorParams: {
@@ -171,6 +202,13 @@ export default {
 			},
 			deep: true
 		},
+		// tableData:{
+		// 	handler(newVal) {
+		// 		console.log('tableData changed')
+		// 		this.assertionBody = JSON.stringify(newVal)
+		// 	},
+		// 	deep:true
+		// },
 	}
 }
 </script>

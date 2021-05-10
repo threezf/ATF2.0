@@ -26,7 +26,7 @@
 		<el-row>
 			<span>返回结果校验规则</span>
 		</el-row>
-		<CheckRulesTable :table-type="0"></CheckRulesTable>
+		<CheckRulesTable :table-type="0" ref="checkRules" ></CheckRulesTable>
 	</div>
 </template>
 
@@ -41,15 +41,76 @@ export default {
 		ArrayTypeOptions,
 		CheckRulesTable
 	},
+	// props: {
+	// 	selectedCodeType: {
+	// 		type: Number,
+	// 		default:0
+	// 	},
+	// 	selectedJSONType: {
+	// 		type: Number,
+	// 		default:0
+	// 	},
+	// 	selectedArrayType: {
+	// 		type: Number,
+	// 		default:0
+	// 	},
+	// 	customCode: {
+	// 		type: String,
+	// 		default:''
+	// 	},
+	// 	assertionBody: {
+	// 		type: String,
+	// 		default:'[]'
+	// 	},
+	// },
 	data() {
 		return {
-			selectedCodeType: 0,
-			selectedJSONType:0,
-			selectedArrayType:0,
-			customCode: '',
 			respCodeList: RespCodeOptions,
 			JSONTypeList:JSONTypeOptions,
 			ArrayTypeList:ArrayTypeOptions,
+		}
+	},
+	computed:{
+		selectedCodeType: {
+			set(value){
+				console.log('selectedCodeType changed')
+				this.$store.commit('setAssertionCheckType',value)
+			},
+			get(){
+				return this.$store.state.assertionCheckType
+			}
+		},
+		selectedJSONType: {
+			set(value){
+				console.log('selectedJSONType changed')
+				this.$store.commit('setAssertionRootType',value)
+			},
+			get(){
+				return this.$store.state.assertionRootType
+			}
+		},
+		customCode: {
+			set(value){
+				console.log('customCode changed')
+				this.$store.commit('setCustomCode',value)
+			},
+			get(){
+				return this.$store.state.customCode
+			}
+		},
+		selectedArrayType: {
+			set(value){
+				console.log('selectedArrayType changed')
+				this.$store.commit('setSelectedArrayType',value)
+			},
+			get(){
+				return this.$store.state.selectedArrayType
+			}
+		},
+	},
+	methods:{
+		getSelectedCodeType(){
+			console.log(this.selectedCodeType)
 		}
 	}
 }

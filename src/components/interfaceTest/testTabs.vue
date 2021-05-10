@@ -50,7 +50,8 @@
                 <el-button size="mini" type="text" style="margin-top: -10px" @click="downloadTemplate">下载模板</el-button>
             </el-form>
             <hr style="height:1px;border:none;border-top:1px solid rgb(241, 215, 215);"/>
-
+					<el-button type="primary" size="small" @click="importTemplate">导入
+					</el-button>
             <div v-if="bodyType === '1'">
                 <div style="border:1px solid rgb(234, 234, 234) ">
                     <el-container>
@@ -70,8 +71,6 @@
                     </el-container>
                 </div>
             </div>
-            <el-button type="primary" size="small" @click="importTemplate">导入
-            </el-button>
             <el-table :data="bodys"
                         size="mini"
                         stripe :show-header="true"
@@ -108,12 +107,12 @@
                                             :show-file-list='false'
                                             :auto-upload="false"
                                             :limit="1"
-                                            accept=".xlsx" 
+                                            accept=".xlsx"
                                             :before-upload="beforeUpload"
-                                            :file-list="fileList" 
-                                            :on-preview="handlePreview" 
-                                            :on-remove="handleRemove" 
-                                            :on-exceed="handleExceed" 
+                                            :file-list="fileList"
+                                            :on-preview="handlePreview"
+                                            :on-remove="handleRemove"
+                                            :on-exceed="handleExceed"
                                             :on-change="handleOnChange"
                                             :on-success="fileChange">
                                         <el-button size="mini" type="primary"
@@ -317,17 +316,17 @@ export default {
         handleClick() {
                 this.jsonVariable = ''
         },
-        beforeUpload(file) {           
-            console.log(file)           
-            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                                
-            const extension2 = testmsg === 'xlsx'                     
-            if(!extension2) {                
-                this.$message({                    
-                    message: '上传文件只能是xlsx格式!',                    
-                    type: 'warning'               
-                });            
-            }                       
-            return extension2        
+        beforeUpload(file) {
+            console.log(file)
+            var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+            const extension2 = testmsg === 'xlsx'
+            if(!extension2) {
+                this.$message({
+                    message: '上传文件只能是xlsx格式!',
+                    type: 'warning'
+                });
+            }
+            return extension2
         },
         fileChange(response, file) {
             if (response['status'] === 0) {
@@ -453,6 +452,9 @@ export default {
                 this.selectedAuthType = 1
             },
         handlerParams() {
+						this.bodys = []
+						this.headers = []
+						this.params = []
             if (this.bodyFormat === 1) {
                 this.bodys.push({
                     name: '',
@@ -590,7 +592,7 @@ export default {
     position: relative;
     /deep/ .el-tabs--border-card {
         -webkit-box-shadow: none;
-        box-shadow: none;   
+        box-shadow: none;
     }
     .append {
         position: absolute;

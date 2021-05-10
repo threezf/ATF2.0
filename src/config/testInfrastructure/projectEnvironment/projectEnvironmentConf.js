@@ -6,15 +6,15 @@ const EnvironmentConf = [
 	},
 	{
 		label: '环境名称',
-		prop: 'name',
+		prop: 'environmentName',
 	},
 	{
 		label: '备注',
-		prop: 'remark',
+		prop: 'remarks',
 	},
 	{
 		label: '前置URL',
-		prop: 'url',
+		prop: 'host',
 	},
 	{
 		label: '操作',
