@@ -1048,7 +1048,7 @@ export default {
         },
         // 调试脚本
         debugScript() {
-            this.isUseDebug = true
+            // this.isUseDebug = true
             if (this.templateRadio) {
                 this.queryScriptTemplateDebugTestCaseByScriptId()
             } else {
@@ -1116,11 +1116,13 @@ export default {
                     this.queryScriptDebugTestPlan(this.caseId)
                     sessionStorage.setItem('scriptId', this.scriptId)
                 } else {
+                    this.addScriptTemplateDebug()
                     return console.log('数据获取失败')
                 }
             }).catch(error => {
                 console.log('debug脚本数据查询失败', error)
                 this.$message.warning('请添加脚本执行用例')
+                
                 this.currentTab = "params"
                 this.caseNotNeedAdd = false
                 this.isScriptDebugInit = false

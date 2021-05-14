@@ -22,10 +22,10 @@
 			<template v-slot:operationSlot="scoped">
 				<el-button type="text" size="small" @click="editEnvironment(scoped.row)">编辑</el-button>
 				<el-button type="text" size="small" @click="copyEnvironmentButton(scoped.row)">复制</el-button>
-				<el-button type="text" size="small" @click="delEnvironmentButton(scoped.row)">删除</el-button>
+				<el-button type="text" size="small" @click="delEnvironmentButton(scoped.row, scoped.index)">删除</el-button>
 			</template>
 		</table-comp>
-		<el-dialog :title="getTitle" :visible.sync="environmentVisible" width="50vw" :append-to-body="true">
+		<el-dialog :title="getTitle" top="60px" :visible.sync="environmentVisible" width="50vw" :append-to-body="true">
 			<el-form :model="newEnvironmentData" ref="newEnvironmentData" label-width="80px" label-position='top' :before-close="handleClose">
 				<el-row>
 					<el-col :span="24">
@@ -193,7 +193,8 @@ export default {
 				this.copyEnvironmentData.environmentName = '副本-'+row.environmentName
 				this.copyDialog = true
 		},
-		delEnvironmentButton(row){
+		delEnvironmentButton(row, index){
+			console.log(row, index, this.resultData);
 			this.$confirm('是否确定删除此环境?', '提示', {
 				cancelButtonText: '取消',
 				confirmButtonText: '确定',
