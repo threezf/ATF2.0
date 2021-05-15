@@ -21,6 +21,14 @@ const InterfaceTestConf = [{
     value: '/user/points.php',
     width: 700,
     right: 0
+}, {
+    type: 'select',
+    label: '',
+    key: 'usecase',
+    value: '',
+    width: 150,
+    placeholder: '请选择测试用例',
+    options: []
 }]
 
 const ResultHeader = [{

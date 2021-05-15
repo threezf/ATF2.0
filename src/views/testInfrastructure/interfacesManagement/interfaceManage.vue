@@ -1,137 +1,136 @@
 <template>
     <div class="project">
-            <SideBarCreate v-ref="c => setChildrenRef('sidebar',c)" :menuList="menuList"  @getTableDataByIndex="getTableDataByIndex"
-            @getAllTableData="getAllTableData" @getGroupById="getGroupById"></SideBarCreate>
-            <!-- <SideBarCreate ></SideBarCreate> -->
-            <div class="main-page">
-                <el-row class="rightPage-topRow">
-                  <el-col :span="2">
-                      <el-button class="new-interface" @click="newInterface" type="primary" size="small">
-                        <i class="el-icon-plus"></i>新建接口
-                    </el-button>
-                  </el-col>
-                  <el-col :span="14">
-                      <el-button class="new-interface" @click="newInterface" type="primary" size="small">
-                        批量导入
-                    </el-button>
-                  </el-col>
-                  <el-col :span="8">
-                        <span class="enviroment-span">项目环境</span>
-                        <el-select @change="selectChanged" v-model="value" placeholder="请选择" size="small">
-                            <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                  </el-col>
-                </el-row>
-                <!-- <InterfacesTable></InterfacesTable> -->
-                <InterfacesTable :tableData="tableData" :tableType="tableType" @updateGroupButton="updateGroupButton" @getAllTableData="getAllTableData"></InterfacesTable>
-                <el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
-                    <el-form :model="form" ref="form" label-width="80px" label-position='top'>
-                        <el-row>
-                          <el-col :span="6">
-                              <el-form-item label="开发状态" prop="status" class="change-label-calss">
-                                <el-select class="select-status" size="small" v-model="form.status" filterable placeholder="请选择">
+        <SideBarCreate v-ref="c => setChildrenRef('sidebar',c)" :menuList="menuList"  @getTableDataByIndex="getTableDataByIndex"
+        @getAllTableData="getAllTableData" @getGroupById="getGroupById"></SideBarCreate>
+        <!-- <SideBarCreate ></SideBarCreate> -->
+        <div class="main-page">
+            <el-row class="rightPage-topRow">
+                <el-col :span="2">
+                    <el-button class="new-interface" @click="newInterface" type="primary" size="small">
+                    <i class="el-icon-plus"></i>新建接口
+                </el-button>
+                </el-col>
+                <el-col :span="14">
+                    <el-button class="new-interface" @click="newInterface" type="primary" size="small">
+                    批量导入
+                </el-button>
+                </el-col>
+                <el-col :span="8">
+                    <span class="enviroment-span">项目环境</span>
+                    <el-select @change="selectChanged" v-model="value" placeholder="请选择" size="small">
+                        <el-option
+                        v-for="item in originEnviormentList"
+                        :key="item.id"
+                        :label="item.environmentName"
+                        :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-col>
+            </el-row>
+            <!-- <InterfacesTable></InterfacesTable> -->
+            <InterfacesTable :tableData="tableData" :tableType="tableType" @updateGroupButton="updateGroupButton" @getAllTableData="getAllTableData"></InterfacesTable>
+            <el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
+                <el-form :model="form" ref="form" label-width="80px" label-position='top'>
+                    <el-row>
+                        <el-col :span="6">
+                            <el-form-item label="开发状态" prop="status" class="change-label-calss">
+                            <el-select class="select-status" size="small" v-model="form.status" filterable placeholder="请选择">
+                                <el-option
+                                    v-for="item in statusOptions"
+                                    :key="item.value"
+                                    :label="item.status"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="18">
+                            <el-form-item label="标签" class="change-label-calss">
+                                <el-select
+                                    size="small"
+                                    class="input-new-tag"
+                                    v-model="tags"
+                                    multiple
+                                    filterable
+                                    allow-create
+                                    default-first-option
+                                    placeholder="请选择或输入标签">
                                     <el-option
-                                        v-for="item in statusOptions"
-                                        :key="item.value"
-                                        :label="item.status"
-                                        :value="item.value">
+                                    v-for="item in tagOptions"
+                                    :key="item.value"
+                                    :label="item.tag"
+                                    :value="item.tag">
                                     </el-option>
                                 </el-select>
-                            </el-form-item>
-                          </el-col>
-                          <el-col :span="18">
-                              <el-form-item label="标签" class="change-label-calss">
-                                    <el-select
-                                        size="small"
-                                        class="input-new-tag"
-                                        v-model="tags"
-                                        multiple
-                                        filterable
-                                        allow-create
-                                        default-first-option
-                                        placeholder="请选择或输入标签">
-                                        <el-option
-                                        v-for="item in tagOptions"
-                                        :key="item.value"
-                                        :label="item.tag"
-                                        :value="item.tag">
-                                        </el-option>
-                                    </el-select>
-                            </el-form-item>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="24">
-                              <el-form-item label="URL Path" prop="urlPath" class="change-label-calss">
-                                <el-select size="small" v-model="form.protocol" placeholder="请选择" style="width:12.5%">
-                                    <el-option
-                                        v-for="item in protocolOptions"
-                                        :key="item.value"
-                                        :label="item.protocol"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                                <el-select size="small" v-model="form.method" placeholder="请选择" style="width:12.5%">
-                                    <el-option
-                                        v-for="item in methodOptions"
-                                        :key="item.value"
-                                        :label="item.method"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                                <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
-                                    <el-input v-model="form.urlPath" size="small" placeholder="接口路径" style="width:74%">
-                                    </el-input>
-                                </el-tooltip>
-                            </el-form-item>
-                          </el-col>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="24">
-                              <el-form-item label="分组和接口名称" prop="interfaceGroupId"  class="change-label-calss">
-                                <el-cascader size="small" :options="menuList" v-model="interfaceGroup" :show-all-levels="false"
-                                :props="defaultProps" style="width:25%">
-                                </el-cascader>
-                                <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
-                                    <el-input v-model="form.interfaceName" size="small" placeholder="接口名称" style="width:74%">
-                                    </el-input>
-                                </el-tooltip>
-                            </el-form-item>
-                          </el-col>
-                        </el-row>
-                        <el-row class="divider-row">
-                            <el-divider class="divider-style" direction="vertical"></el-divider>
-                            <span class="divider-span">请求参数</span>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="24">
-                                <TestTabs ref="testTabs" :body="form.bodyContent" :header="form.header"
-                                :param="form.params" :bodyFormat="form.bodyFormat" :authType="form.authType"></TestTabs>
-                          </el-col>
-                        </el-row>
-                        <el-row class="divider-row">
-                            <el-divider class="divider-style" direction="vertical"></el-divider>
-                            <span class="divider-span">响应内容</span>
-                        </el-row>
-                        <el-row>
-                          <el-col :span="24">
-                                <ResponseTabs ref="responseTabs" :bodyResopnse="form.bodyResopnse" :headerResopnse="form.headerResopnse"
-                                 :bodyResopnseType="form.bodyResopnseType" :authType="form.authType"></ResponseTabs>
-                          </el-col>
-                        </el-row>
-                        <el-row class="buttons_row">
-                            <el-button type="primary" size="small" @click="submitForm('form')">{{buttonName}}</el-button>
-                            <el-button size="small" @click="cancelButtonClicked">取消</el-button>
-                        </el-row>
-                    </el-form>
-                </el-dialog>
-            </div>
-
+                        </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="URL Path" prop="urlPath" class="change-label-calss">
+                            <el-select size="small" v-model="form.protocol" placeholder="请选择" style="width:12.5%">
+                                <el-option
+                                    v-for="item in protocolOptions"
+                                    :key="item.value"
+                                    :label="item.protocol"
+                                    :value="item.value">测试
+                                </el-option>
+                            </el-select>
+                            <el-select size="small" v-model="form.method" placeholder="请选择" style="width:12.5%">
+                                <el-option
+                                    v-for="item in methodOptions"
+                                    :key="item.value"
+                                    :label="item.method"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
+                                <el-input v-model="form.urlPath" size="small" placeholder="接口路径" style="width:74%">
+                                </el-input>
+                            </el-tooltip>
+                        </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="分组和接口名称" prop="interfaceGroupId"  class="change-label-calss">
+                            <el-cascader size="small" :options="menuList" v-model="interfaceGroup" :show-all-levels="false"
+                            :props="defaultProps" style="width:25%">
+                            </el-cascader>
+                            <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
+                                <el-input v-model="form.interfaceName" size="small" placeholder="接口名称" style="width:74%">
+                                </el-input>
+                            </el-tooltip>
+                        </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row class="divider-row">
+                        <el-divider class="divider-style" direction="vertical"></el-divider>
+                        <span class="divider-span">请求参数</span>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <TestTabs ref="testTabs" :body="form.bodyContent" :header="form.header"
+                            :param="form.params" :bodyFormat="form.bodyFormat" :authType="form.authType"></TestTabs>
+                        </el-col>
+                    </el-row>
+                    <el-row class="divider-row">
+                        <el-divider class="divider-style" direction="vertical"></el-divider>
+                        <span class="divider-span">响应内容</span>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <ResponseTabs ref="responseTabs" :bodyResopnse="form.bodyResopnse" :headerResopnse="form.headerResopnse"
+                                :bodyResopnseType="form.bodyResopnseType" :authType="form.authType"></ResponseTabs>
+                        </el-col>
+                    </el-row>
+                    <el-row class="buttons_row">
+                        <el-button type="primary" size="small" @click="submitForm('form')">{{buttonName}}</el-button>
+                        <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+                    </el-row>
+                </el-form>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
@@ -141,6 +140,7 @@ import TestTabs from '@/components/interfaceTest/testTabs'
 import ResponseTabs from '@/components/interfaceTest/responseTabs'
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
+import { mapState } from 'vuex';
 
 export default {
     mixins: [VueMixins], // 时间格式转化
@@ -153,104 +153,96 @@ export default {
     },
     data () {
         return {
-            options: [{
-                value: 1,
-                label: '管理测试环境'
+            originEnviormentList: [],
+            value: '',
+            tableData: [],
+            options: [],
+            //被测系统编号
+            autId: '',
+            menuList: [],
+            transactId: '' ,// 获取接口管理传递的id数据
+            currentPage: 1,
+            totalCount: 30,
+            pageSize: 10,
+            modelFlag: 1,
+            dialogVisible: false,
+            statusOptions: [{
+                    value: 0,
+                    status: '开发中'
                 }, {
-                value: 2,
-                label: '无'
+                    value: 1,
+                    status: '已完成'
                 }, {
-                value: 3,
-                label: '演示环境'
+                    value: 2,
+                    status: '已废弃'
+                }, {
+                    value: 3,
+                    status: '测试中'
+                }, {
+                    value: 4,
+                    status: '异常'
+                }, {
+                    value: 5,
+                    status: '维护中'
                 }],
-                value: '',
-                tableData: [],
-                //被测系统编号
-                autId: '',
-                menuList: [],
-                transactId: '' ,// 获取接口管理传递的id数据
-                currentPage: 1,
-                totalCount: 30,
-                pageSize: 10,
-                modelFlag: 1,
-                dialogVisible: false,
-                statusOptions: [{
-                        value: 0,
-                        status: '开发中'
-                    }, {
-                        value: 1,
-                        status: '已完成'
-                    }, {
-                        value: 2,
-                        status: '已废弃'
-                    }, {
-                        value: 3,
-                        status: '测试中'
-                    }, {
-                        value: 4,
-                        status: '异常'
-                    }, {
-                        value: 5,
-                        status: '维护中'
-                    }],
-                tagOptions: [{
-                        value: 0,
-                        tag: '可以添加多个标签'
-                    }, {
-                        value: 1,
-                        tag: '测试'
-                    }],
-                protocolOptions: [{
-                        value: 0,
-                        protocol: 'HTTP'
-                    }, {
-                        value: 1,
-                        protocol: 'HTTPS'
-                    }],
-                methodOptions: [{
-                        value: 0,
-                        method: 'POST'
-                    }, {
-                        value: 1,
-                        method: 'GET'
-                    }, {
-                        value: 2,
-                        method: 'DELETE'
-                    }, {
-                        value: 3,
-                        method: 'PUT'
-                    }],
-                inputVisible: true,
-                inputValue: '',
-                tags: [],
-                interfaceGroup:[],
-                form: {
-                    status: 0,
-                    tags: '[]',
-                    protocol:0,
-                    method:0,
-                    urlPath:"/",
-                    interfaceGroupId:0,
-                    interfaceName: "",
-                    header: '[]',
-                    bodyContent: '[]',
-                    bodyFormat: 0,
-                    params: '[]',
-                    authType: 0, // Authorization
-                    bodyResopnse: '[]',
-                    headerResopnse: '[]',
-                    bodyResopnseType: 0,
-                    transactId:0,
-                    rowFormat:1,
+            tagOptions: [{
+                    value: 0,
+                    tag: '可以添加多个标签'
+                }, {
+                    value: 1,
+                    tag: '测试'
+                }],
+            protocolOptions: [{
+                    value: 0,
+                    protocol: 'HTTP'
+                }, {
+                    value: 1,
+                    protocol: 'HTTPS'
+                }],
+            methodOptions: [{
+                    value: 0,
+                    method: 'POST'
+                }, {
+                    value: 1,
+                    method: 'GET'
+                }, {
+                    value: 2,
+                    method: 'DELETE'
+                }, {
+                    value: 3,
+                    method: 'PUT'
+                }],
+            inputVisible: true,
+            inputValue: '',
+            tags: [],
+            interfaceGroup:[],
+            form: {
+                status: 0,
+                tags: '[]',
+                protocol:0,
+                method:0,
+                urlPath:"/",
+                interfaceGroupId:0,
+                interfaceName: "",
+                header: '[]',
+                bodyContent: '[]',
+                bodyFormat: 0,
+                params: '[]',
+                authType: 0, // Authorization
+                bodyResopnse: '[]',
+                headerResopnse: '[]',
+                bodyResopnseType: 0,
+                transactId:0,
+                rowFormat:1,
 
-                },
-                defaultProps: {
-                    children: 'childNodeList',
-                    label: 'groupName',
-                    value: 'id'
-                },
-								environmentUrl:'',
-								tableType:1
+            },
+            defaultProps: {
+                children: 'childNodeList',
+                label: 'groupName',
+                value: 'id'
+            },
+            environmentUrl:'',
+            tableType:1
 
         }
     },
@@ -276,27 +268,33 @@ export default {
             }
             return obj[this.modelFlag]
         },
+        ...mapState('interface', {
+            interfaceEvironmentList: 'interfaceEvironmentList',
+        })
     },
     created() {
-            let data
-            if (this.$route.query.data.hasOwnProperty('id')) {
-                data = this.$route.query.data
-                console.log(data)
-                localStorage.setItem('transactId', this.$route.query.data.id)
-                localStorage.setItem('transactAutId', this.$route.query.data.autId)
-                this.autId = Number(data.autId)
-                this.transactId = data.id
-            } else {
-                this.autId = Number(localStorage.getItem('transactAutId'))
-                this.transactId = localStorage.getItem('transactId')
-            }
-            this.getGroupById(this.transactId)
-            this.getAllTableData()
+        let data
+        if (this.$route.query.data && this.$route.query.data.hasOwnProperty('id')) {
+            data = this.$route.query.data
+            console.log(data)
+            localStorage.setItem('transactId', this.$route.query.data.id)
+            localStorage.setItem('transactAutId', this.$route.query.data.autId)
+            this.autId = Number(data.autId)
+            this.transactId = data.id
+        } else {
+            this.autId = Number(localStorage.getItem('transactAutId'))
+            this.transactId = localStorage.getItem('transactId')
+        }
+        this.getGroupById(this.transactId)
+        this.getAllTableData()
+        this.getEnvironmentList()
     },
     beforeRouteEnter (to, from, next) {
         // ...
         console.log('进入接口页面', to, from)
-        next()
+        next(vm => {
+            vm.getAllTableData()
+        })
     },
     beforeRouteUpdate (to, from, next) {
         // ...
@@ -316,18 +314,39 @@ export default {
         }
     },
     methods: {
-				selectChanged(val){
-					if (val ===1){
-						this.$router.push({
-							path: "projectEnvironment",
-						}); //界面跳转
-					}else if (val ===2) {
-						this.environmentUrl = ''
-						console.log(val)
-					}else {
-						console.log(val)
-					}
-				},
+        getEnvironmentList() {
+            Request({
+                url: '/interfaceNewController/interfaceEnvironmentSelect',
+                method: 'post',
+                params: {
+                    transactId: this.transactId
+                }
+            }).then(res => {
+                console.log('查询成功列表', res)
+                this.originEnviormentList = res.list
+                this.options = this.originEnviormentList.map(item => ({
+                    label: item.environmentName,
+                    value: item.id
+                }))
+                this.value = this.options[0].value
+                this.$store.commit('interface/updateEvironmentList', {
+                    value: this.options
+                })
+                localStorage.setItem('environmentList', JSON.stringify(this.originEnviormentList));
+            })
+        },
+        selectChanged(val){
+            if (val ===1){
+                this.$router.push({
+                    path: "projectEnvironment",
+                }); //界面跳转
+            }else if (val ===2) {
+                this.environmentUrl = ''
+                console.log(val)
+            }else {
+                console.log(val)
+            }
+        },
         newInterface(){
             this.modelFlag = 1
             this.dialogVisible = true
@@ -349,10 +368,10 @@ export default {
         updateGroupButton(row) {
             this.modelFlag = 2
             console.log('row', row)
-						if(row.tags !=='[]'&& row.tags !==null) {
-							this.tags = (JSON.parse(row.tags))
-						}
-						this.interfaceGroup = row.interfaceGroupId
+            if(row.tags !=='[]'&& row.tags !==null) {
+                this.tags = (JSON.parse(row.tags))
+            }
+            this.interfaceGroup = row.interfaceGroupId
             const {
                 status,
                 protocol,
@@ -365,9 +384,9 @@ export default {
                 authType,
                 bodyResponse,
                 bodyResponseType,
-								header,
-								headerResponse,
-								params,
+                header,
+                headerResponse,
+                params,
             } = row
 
             this.form = {
@@ -380,11 +399,11 @@ export default {
                 bodyContent,
                 bodyFormat,
                 authType,
-								bodyResponse,
-								bodyResponseType,
-								header,
-								headerResponse,
-								params,
+                bodyResponse,
+                bodyResponseType,
+                header,
+                headerResponse,
+                params,
             }
             this.dialogVisible = true
         },
@@ -419,7 +438,7 @@ export default {
             }).then((res) => {
                 if(res.respCode === '0000'){
                     this.tableData = res.list
-                    this.$message.success("查询成功！")
+                    // this.$message.success("查询成功！")
                 }else {
                     this.$message.error("获取接口信息失败！")
                     console.log(err)
@@ -468,7 +487,7 @@ export default {
                             this.menuList.push(treeData[i])
                         }
                     }
-                    this.$message.success("查询成功！")
+                    // this.$message.success("查询成功！")
                 }else {
                     this.$message.error("获取接口分组失败！")
                     console.log(res.respMsg)

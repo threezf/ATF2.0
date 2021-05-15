@@ -142,11 +142,132 @@ const CheckContentOptionsShort = [
 		value: '值-不等于[value !=]'
 	},
 ]
+const LabelOptions = [{
+	id: 0,
+	value: 'Accept'
+}, {
+	id: 1,
+	value: 'Accept-Charset'
+}, {
+	id: 2,
+	value: 'Accept-Encoding'
+}, {
+	id: 3,
+	value: 'Accept-Language'
+}, {
+	id: 4,
+	value: 'Accept-Ranges'
+}, {
+	id: 5,
+	value: 'Accept-Authorization'
+}, {
+	id: 6,
+	value: 'Cache-Control'
+}, {
+	id: 7,
+	value: 'Connection'
+}, {
+	id: 8,
+	value: 'Cookie'
+}, {
+	id: 9,
+	value: 'Content-Length'
+}, {
+	id: 10,
+	value: 'Content-Type'
+}, {
+	id: 11,
+	value: 'Content-MD5'
+}, {
+	id: 12,
+	value: 'Date'
+}, {
+	id: 13,
+	value: 'Expect'
+}, {
+	id: 14,
+	value: 'From'
+}, {
+	id: 15,
+	value: 'Host'
+}, {
+	id: 16,
+	value: 'If-Match'
+}, {
+	id: 17,
+	value: 'If-Modified-Since'
+}, {
+	id: 18,
+	value: 'If-None-Match'
+}, {
+	id: 19,
+	value: 'If-Range'
+}, {
+	id: 20,
+	value: 'If-Unmodified-Since'
+}, {
+	id: 21,
+	value: 'Max-Forwards'
+}, {
+	id: 22,
+	value: 'Origin'
+}, {
+	id: 23,
+	value: 'Pragma'
+}, {
+	id: 24,
+	value: 'Proxy-Authorization'
+}, {
+	id: 25,
+	value: 'Range'
+}, {
+	id: 26,
+	value: 'Referer'
+}, {
+	id: 27,
+	value: 'TE'
+}, {
+	id: 28,
+	value: 'Upgrade'
+}, {
+	id: 29,
+	value: 'User-Agent'
+}, {
+	id: 30,
+	value: 'Via'
+}, {
+	id: 31,
+	value: 'Warning'
+}]
+const ResponseTableHeader = [{
+	label: '标签',
+	type: 'slot',
+	slot: 'labelSlot',
+// }, {
+// 	label: '内容校验',
+// 	type: 'slot',
+// 	slot: 'contentSlot'
+}, {
+	label: '预期结果',
+	type: 'slot',
+	slot: 'resultSlot'
+}, {
+	label: '说明',
+	type: 'slot',
+	slot: 'desctSlot'
+}, {
+	label: '操作',
+	type: 'slot',
+	slot: 'operationSlot',
+}]
+
 export {
 	RespCodeOptions,
 	JSONTypeOptions,
 	ArrayTypeOptions,
 	ParamTypeOptions,
 	CheckContentOptions,
-	CheckContentOptionsShort
+	CheckContentOptionsShort,
+	ResponseTableHeader,
+	LabelOptions
 }

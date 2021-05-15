@@ -189,9 +189,9 @@ export default {
 			this.environmentVisible = true
 		},
 		copyEnvironmentButton(row){
-				this.copyEnvironmentData = row
-				this.copyEnvironmentData.environmentName = '副本-'+row.environmentName
-				this.copyDialog = true
+			this.copyEnvironmentData = row
+			this.copyEnvironmentData.environmentName = '副本-'+row.environmentName
+			this.copyDialog = true
 		},
 		delEnvironmentButton(row, index){
 			console.log(row, index, this.resultData);
@@ -248,8 +248,8 @@ export default {
 				if(res.respCode === '0000'){
 					this.resultData = []
 					this.resultData = res.list
-					console.log(res.list)
-					this.$message.success("查询成功！")
+					console.log("查询成功！", res.list)
+					// this.$message.success("查询成功！")
 				}else {
 					this.$message.error("查询失败！")
 					console.log(err)

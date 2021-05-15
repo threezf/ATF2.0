@@ -1,443 +1,447 @@
 <template>
     <div class="project">
-        <el-tabs type="border-card" class="tabs-card" v-model="activeTab">
-            <el-tab-pane v-for="(tab, index) in interfaceTabs" :key="'tab' + index" :label="tab.label" :name="tab.name">
-              <div v-if="activeTab === 'detail'">
-                <el-row>
-                  <el-col :span="18">
-                    <el-tag size="middle"  :type="interfaceData.protocol | getType1">
-                        {{interfaceData.protocol | getProtocol}}
-                    </el-tag>
-                    <el-tag class="method-tag" size="middle"  :type="interfaceData.method | getType2">
-                        {{interfaceData.method | getMethod}}
-                    </el-tag>
-                    <el-tag size="middle"  :type="interfaceData.status | getType3">
-                        {{interfaceData.status | getStatus}}
-                    </el-tag>
-                  </el-col>
-                  <el-col :span="2">
-                    <el-button type="primary" size="small"  @click.native="editButton">
-                        <i class="el-icon-edit-outline"></i>编辑
-                    </el-button>
-                  </el-col>
-                  <el-col :span="2">
-                    <el-button type="success"  size="small" @click.native="copyButton">
-                        <i class="el-icon-copy-document"></i>复制
-                    </el-button>
-                  </el-col>
-                  <el-col :span="2">
-                    <el-button type="danger"  size="small" @click.native="deleteButton">
-                        <i class="el-icon-delete"></i>删除
-                    </el-button>
-                  </el-col>
+      <el-select size="mini" v-model="selectedEviorment" class="selector" @change="handleEnviormentChange">
+        <el-option v-for="(option, index) in interfaceEvironmentList" :key="index" :value="option.id" :label="option.environmentName">
+        </el-option>
+      </el-select>
+      <el-tabs type="border-card" class="tabs-card" v-model="activeTab">
+          <el-tab-pane v-for="(tab, index) in interfaceTabs" :key="'tab' + index" :label="tab.label" :name="tab.name">
+            <div v-if="activeTab === 'detail' && tab.name === 'detail'">
+              <el-row>
+                <el-col :span="18">
+                  <el-tag size="middle"  :type="interfaceData.protocol | getType1">
+                      {{interfaceData.protocol | getProtocol}}
+                  </el-tag>
+                  <el-tag class="method-tag" size="middle"  :type="interfaceData.method | getType2">
+                      {{interfaceData.method | getMethod}}
+                  </el-tag>
+                  <el-tag size="middle"  :type="interfaceData.status | getType3">
+                      {{interfaceData.status | getStatus}}
+                  </el-tag>
+                </el-col>
+                <el-col :span="2">
+                  <el-button type="primary" size="small"  @click.native="editButton">
+                      <i class="el-icon-edit-outline"></i>编辑
+                  </el-button>
+                </el-col>
+                <el-col :span="2">
+                  <el-button type="success"  size="small" @click.native="copyButton">
+                      <i class="el-icon-copy-document"></i>复制
+                  </el-button>
+                </el-col>
+                <el-col :span="2">
+                  <el-button type="danger"  size="small" @click.native="deleteButton">
+                      <i class="el-icon-delete"></i>删除
+                  </el-button>
+                </el-col>
+              </el-row>
+              <el-row class="url-style">
+                <el-col :span="12">{{interfaceData.urlPath}}</el-col>
+              </el-row>
+              <el-row class="name-style">
+                <el-col :span="12">{{interfaceData.interfaceName}}</el-col>
+              </el-row>
+              <el-row class="remark-style">
+                <el-col :span="4">分组：{{groupName}}</el-col>
+                <el-col :span="4">创建者：{{interfaceData.createUser}}</el-col>
+                <el-col :span="4">更新时间：{{updateTime}}</el-col>
+              </el-row>
+              <el-divider class="divider-style"></el-divider>
+              <div v-if="header.length>0">
+                <el-row class="divider-row">
+                    <el-divider class="divider-vertical" direction="vertical"></el-divider>
+                    <span class="divider-span">请求头部</span>
                 </el-row>
-                <el-row class="url-style">
-                  <el-col :span="12">{{interfaceData.urlPath}}</el-col>
-                </el-row>
-                <el-row class="name-style">
-                  <el-col :span="12">{{interfaceData.interfaceName}}</el-col>
-                </el-row>
-                <el-row class="remark-style">
-                  <el-col :span="4">分组：{{groupName}}</el-col>
-                  <el-col :span="4">创建者：{{interfaceData.createUser}}</el-col>
-                  <el-col :span="4">更新时间：{{updateTime}}</el-col>
-                </el-row>
-                <el-divider class="divider-style"></el-divider>
-                <div v-if="header.length>0">
-                  <el-row class="divider-row">
-                      <el-divider class="divider-vertical" direction="vertical"></el-divider>
-                      <span class="divider-span">请求头部</span>
-                  </el-row>
-                  <el-table
-                      ref="singleTable"
-                      highlight-current-row
-											:data="header"
-                      border
-                      @current-change="handleCurrentChange"
-                      style="width: 100%">
-                      <el-table-column
-                        property="name"
-                        label="参数名"
-                        header-align="center">
-                      </el-table-column>
-                      <el-table-column
-                        property="val"
-                        label="参数值"
-                        header-align="center">
-                      </el-table-column>
-                      <el-table-column
-                        property="desc"
-                        label="描述"
-                        header-align="center">
-                      </el-table-column>
-                  </el-table>
-                </div>
-								<div v-if="body.length>0 || jsonVariable !==''">
-									<el-row class="divider-row">
-											<el-divider class="divider-vertical" direction="vertical"></el-divider>
-											<span class="divider-span">Body请求参数</span>
-											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyFormat === 1" >Raw</el-tag>
-											<el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
-									</el-row>
-
-									<div v-if="interfaceData.bodyFormat === 1" class="body-content">
-											<el-row>
-												<span class="span-content">内容类型</span>
-												<el-select size="small" style="width:100px" v-model="contentType" placeholder="请选择">
-													<el-option
-														v-for="item in options"
-														:key="item.value"
-														:label="item.type"
-														:value="item.value">
-													</el-option>
-												</el-select>
-												<el-button type="primary" size="mini"
-														v-show="interfaceData.bodyFormat === 1"
-														style="margin-left:20px"
-														@click="formatData()">整理格式
-												</el-button>
-											</el-row>
-											<div style="border:1px solid rgb(234, 234, 234) ">
-													<el-container>
-															<editor
-																			v-contextmenu:contextmenu
-																			style="font-size: 15px"
-																			v-model="jsonVariable"
-																			@init="editorInit"
-																			lang="json"
-																			theme="chrome"
-																			width="100%"
-																			height="100px"
-																			:options="{showPrintMargin:false,   //去除编辑器里的竖线
-																			}"
-															>
-															</editor>
-													</el-container>
-											</div>
-									</div>
-									<div v-else>
-										<el-table
-												highlight-current-row
-												:data="body"
-												border
-												@current-change="handleCurrentChange"
-												style="width: 100%">
-												<el-table-column
-													property="name"
-													label="参数名"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="type"
-													label="参数类型"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="val"
-													label="参数值"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="desc"
-													label="描述"
-													header-align="center">
-												</el-table-column>
-										</el-table>
-									</div>
-								</div>
-								<div v-if="params.length>0">
-									<el-row class="divider-row">
-										<el-divider class="divider-vertical" direction="vertical"></el-divider>
-										<span class="divider-span">请求参数</span>
-									</el-row>
-									<el-table
-										highlight-current-row
-										:data="params"
-										border
-										@current-change="handleCurrentChange"
-										style="width: 100%">
-										<el-table-column
-											property="name"
-											label="参数名"
-											header-align="center">
-										</el-table-column>
-										<el-table-column
-											property="val"
-											label="参数值"
-											header-align="center">
-										</el-table-column>
-										<el-table-column
-											property="desc"
-											label="描述"
-											header-align="center">
-										</el-table-column>
-									</el-table>
-								</div>
-                <div v-if="respHeader.length>0">
-                  <el-row class="divider-row">
-                      <el-divider class="divider-vertical" direction="vertical"></el-divider>
-                      <span class="divider-span">返回头部</span>
-                  </el-row>
-                  <el-table
-                      highlight-current-row
-											:data="respHeader"
-                      border
-                      @current-change="handleCurrentChange"
-                      style="width: 100%">
-                      <el-table-column
-                        property="name"
-                        label="参数名"
-                        header-align="center">
-                      </el-table-column>
-                      <el-table-column
-                        property="val"
-                        label="参数值"
-                        header-align="center">
-                      </el-table-column>
-                      <el-table-column
-                        property="desc"
-                        label="描述"
-                        header-align="center">
-                      </el-table-column>
-                  </el-table>
-                </div>
-								<div v-if="respJsonVariable!=='' || respBody.length>0">
-									<el-row class="divider-row">
-											<el-divider class="divider-vertical" direction="vertical"></el-divider>
-											<span class="divider-span">返回参数</span>
-											<el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyResponseType === 1">Raw</el-tag>
-											<el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
-									</el-row>
-									<div v-if="interfaceData.bodyResponseType === 1" class="body-content">
-											<el-row>
-												<span class="span-content">内容类型</span>
-												<el-select size="small" style="width:100px" v-model="bodyContentType" placeholder="请选择">
-													<el-option
-														v-for="item in options"
-														:key="item.value"
-														:label="item.type"
-														:value="item.value">
-													</el-option>
-												</el-select>
-												<el-button type="primary" size="mini"
-														v-show="interfaceData.bodyResponseType === 1"
-														style="margin-left:20px"
-														@click="formatData()">整理格式
-												</el-button>
-											</el-row>
-											<div style="border:1px solid rgb(234, 234, 234) ">
-													<el-container>
-															<editor
-																			v-contextmenu:contextmenu
-																			style="font-size: 15px"
-																			v-model="respJsonVariable"
-																			@init="editorInit"
-																			lang="json"
-																			theme="chrome"
-																			width="100%"
-																			height="100px"
-																			:options="{showPrintMargin:false,   //去除编辑器里的竖线
-																			}"
-															>
-															</editor>
-													</el-container>
-											</div>
-									</div>
-									<div v-else>
-										<el-table
-												highlight-current-row
-												:data="respBody"
-												border
-												@current-change="handleCurrentChange"
-												style="width: 100%">
-												<el-table-column
-													property="name"
-													label="参数名"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="type"
-													label="参数类型"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="val"
-													label="参数值"
-													header-align="center">
-												</el-table-column>
-												<el-table-column
-													property="desc"
-													label="描述"
-													header-align="center">
-												</el-table-column>
-										</el-table>
-									</div>
-								</div>
+                <el-table
+                    ref="singleTable"
+                    highlight-current-row
+                    :data="header"
+                    border
+                    @current-change="handleCurrentChange"
+                    style="width: 100%">
+                    <el-table-column
+                      property="name"
+                      label="参数名"
+                      header-align="center">
+                    </el-table-column>
+                    <el-table-column
+                      property="val"
+                      label="参数值"
+                      header-align="center">
+                    </el-table-column>
+                    <el-table-column
+                      property="desc"
+                      label="描述"
+                      header-align="center">
+                    </el-table-column>
+                </el-table>
               </div>
-              <InterfaceTest v-if="activeTab === 'test'" :originData="interfaceData"
-														 :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions">
-							</InterfaceTest>
-              <UseCase v-if="activeTab === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
-											 :protocols="protocols" :methods="methodOptions">
-							</UseCase>
-              <MockAPI v-if="activeTab === 'api'"></MockAPI>
-            </el-tab-pane>
-        </el-tabs>
-        <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
-            <el-form :model="interfaceData" label-width="80px" label-position='top'>
-                <el-row>
-                  <el-col :span="6">
-                      <el-form-item label="开发状态" prop="status" class="change-label-calss">
-                        <el-select class="select-status" size="small" v-model="interfaceData.status" filterable placeholder="请选择">
-                            <el-option
-                                v-for="item in statusOptions"
-                                :key="item.value"
-                                :label="item.status"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="18">
-                      <el-form-item label="标签" class="change-label-calss">
-                            <el-select
-                                size="small"
-                                class="input-new-tag"
-                                v-model="tags"
-                                multiple
-                                filterable
-                                allow-create
-                                default-first-option
-                                placeholder="请选择或输入标签">
-                                <el-option
-                                v-for="item in tagOptions"
-                                :key="item.value"
-                                :label="item.tag"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                      <el-form-item label="URL Path" prop="urlPath" class="change-label-calss">
-                        <el-select size="small" v-model="interfaceData.protocol" placeholder="请选择" style="width:12.5%">
-                            <el-option
-                                v-for="item in protocolOptions"
-                                :key="item.value"
-                                :label="item.protocol"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-select size="small" v-model="interfaceData.method" placeholder="请选择" style="width:12.5%">
-                            <el-option
-                                v-for="item in methodOptions"
-                                :key="item.value"
-                                :label="item.method"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                        <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
-                            <el-input v-model="interfaceData.urlPath" size="small" placeholder="接口路径" style="width:74%">
-                            </el-input>
-                        </el-tooltip>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                      <el-form-item label="分组和接口名称" prop="interfaceGroupId"  class="change-label-calss">
-                        <el-cascader size="small" :options="menuList" v-model="interfaceGroup" :show-all-levels="false"
-                        :props="defaultProps" style="width:25%">
-                        </el-cascader>
-                        <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
-                            <el-input v-model="interfaceData.interfaceName" size="small" placeholder="接口名称" style="width:74%">
-                            </el-input>
-                        </el-tooltip>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
+              <div v-if="body.length>0 || jsonVariable !==''">
                 <el-row class="divider-row">
-                    <el-divider class="divider-dialog" direction="vertical"></el-divider>
-                    <span class="divider-span">请求参数</span>
+                    <el-divider class="divider-vertical" direction="vertical"></el-divider>
+                    <span class="divider-span">Body请求参数</span>
+                    <el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyFormat === 1" >Raw</el-tag>
+                    <el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
                 </el-row>
-                <el-row>
-                  <el-col :span="24">
-                        <TestTabs ref="testTabs" :body="interfaceData.bodyContent" :header="interfaceData.header"
-                        :param="interfaceData.params" :bodyFormat="interfaceData.bodyFormat" :authType="interfaceData.authType"></TestTabs>
-                  </el-col>
-                </el-row>
+
+                <div v-if="interfaceData.bodyFormat === 1" class="body-content">
+                    <el-row>
+                      <span class="span-content">内容类型</span>
+                      <el-select size="small" style="width:100px" v-model="contentType" placeholder="请选择">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.type"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                      <el-button type="primary" size="mini"
+                          v-show="interfaceData.bodyFormat === 1"
+                          style="margin-left:20px"
+                          @click="formatData()">整理格式
+                      </el-button>
+                    </el-row>
+                    <div style="border:1px solid rgb(234, 234, 234) ">
+                        <el-container>
+                            <editor
+                                    v-contextmenu:contextmenu
+                                    style="font-size: 15px"
+                                    v-model="jsonVariable"
+                                    @init="editorInit"
+                                    lang="json"
+                                    theme="chrome"
+                                    width="100%"
+                                    height="100px"
+                                    :options="{showPrintMargin:false,   //去除编辑器里的竖线
+                                    }"
+                            >
+                            </editor>
+                        </el-container>
+                    </div>
+                </div>
+                <div v-else>
+                  <el-table
+                      highlight-current-row
+                      :data="body"
+                      border
+                      @current-change="handleCurrentChange"
+                      style="width: 100%">
+                      <el-table-column
+                        property="name"
+                        label="参数名"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="type"
+                        label="参数类型"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="val"
+                        label="参数值"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="desc"
+                        label="描述"
+                        header-align="center">
+                      </el-table-column>
+                  </el-table>
+                </div>
+              </div>
+              <div v-if="params.length>0">
                 <el-row class="divider-row">
-                    <el-divider class="divider-style" direction="vertical"></el-divider>
-                    <span class="divider-span">响应内容</span>
+                  <el-divider class="divider-vertical" direction="vertical"></el-divider>
+                  <span class="divider-span">请求参数</span>
                 </el-row>
-                <el-row>
-                  <el-col :span="24">
-                        <ResponseTabs ref="responseTabs" :bodyResopnse="interfaceData.bodyResponse" :headerResopnse="interfaceData.headerResponse"
-                          :bodyResopnseType="interfaceData.bodyResponseType" :authType="interfaceData.authType"></ResponseTabs>
-                  </el-col>
+                <el-table
+                  highlight-current-row
+                  :data="params"
+                  border
+                  @current-change="handleCurrentChange"
+                  style="width: 100%">
+                  <el-table-column
+                    property="name"
+                    label="参数名"
+                    header-align="center">
+                  </el-table-column>
+                  <el-table-column
+                    property="val"
+                    label="参数值"
+                    header-align="center">
+                  </el-table-column>
+                  <el-table-column
+                    property="desc"
+                    label="描述"
+                    header-align="center">
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div v-if="respHeader.length>0">
+                <el-row class="divider-row">
+                    <el-divider class="divider-vertical" direction="vertical"></el-divider>
+                    <span class="divider-span">返回头部</span>
                 </el-row>
-                <el-row class="buttons_row">
-                    <el-button type="primary" size="small" @click="updateInterface">确定</el-button>
-                    <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+                <el-table
+                    highlight-current-row
+                    :data="respHeader"
+                    border
+                    @current-change="handleCurrentChange"
+                    style="width: 100%">
+                    <el-table-column
+                      property="name"
+                      label="参数名"
+                      header-align="center">
+                    </el-table-column>
+                    <el-table-column
+                      property="val"
+                      label="参数值"
+                      header-align="center">
+                    </el-table-column>
+                    <el-table-column
+                      property="desc"
+                      label="描述"
+                      header-align="center">
+                    </el-table-column>
+                </el-table>
+              </div>
+              <div v-if="respJsonVariable!=='' || respBody.length>0">
+                <el-row class="divider-row">
+                    <el-divider class="divider-vertical" direction="vertical"></el-divider>
+                    <span class="divider-span">返回参数</span>
+                    <el-tag class="tag-style" type="info" size="small" v-if="interfaceData.bodyResponseType === 1">Raw</el-tag>
+                    <el-tag class="tag-style" type="info" size="small" v-else>From-data</el-tag>
                 </el-row>
-            </el-form>
-        </el-dialog>
-        <el-dialog title="复制接口" :visible.sync="copyDialog" :before-close="handleClose" width="40%">
-            <el-form :model="copyInterfaceData" label-width="80px" label-position='top'>
-                <el-row>
-                  <el-col :span="23">
-                      <el-form-item label="目标分组" prop="group" class="change-label-calss">
-                        <el-cascader size="small" :options="menuList" v-model="copyInterfaceGroup" :show-all-levels="false"
-                        :props="defaultProps" style="width:100%">
-                        </el-cascader>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="23">
-                      <el-form-item label="接口名称" prop="interfaceName" class="change-label-calss">
-                        <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
-                            <el-input v-model="copyInterfaceData.interfaceName" size="small" placeholder="接口名称" style="width:100%">
-                            </el-input>
-                        </el-tooltip>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="23">
-                      <el-form-item label="请求方式" class="change-label-calss">
-                            <el-select size="small" v-model="copyInterfaceData.method" placeholder="请选择" style="width:100%">
-                                <el-option
-                                    v-for="item in methodOptions"
-                                    :key="item.value"
-                                    :label="item.method"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="23">
-                      <el-form-item label="接口路径" prop="urlPath" class="change-label-calss">
-                        <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
-                            <el-input v-model="copyInterfaceData.urlPath" size="small" placeholder="接口路径" style="width:100%">
-                            </el-input>
-                        </el-tooltip>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row class="buttons_row">
-                    <el-button type="primary" size="small" @click="copyInterface">确定</el-button>
-                    <el-button size="small" @click="cancelButtonClicked">取消</el-button>
-                </el-row>
-            </el-form>
-            </el-dialog>
-            <v-contextmenu ref="contextmenu">
-                <v-contextmenu-item @click="handleClick">clear</v-contextmenu-item>
-            </v-contextmenu>
+                <div v-if="interfaceData.bodyResponseType === 1" class="body-content">
+                    <el-row>
+                      <span class="span-content">内容类型</span>
+                      <el-select size="small" style="width:100px" v-model="bodyContentType" placeholder="请选择">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.type"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                      <el-button type="primary" size="mini"
+                          v-show="interfaceData.bodyResponseType === 1"
+                          style="margin-left:20px"
+                          @click="formatData()">整理格式
+                      </el-button>
+                    </el-row>
+                    <div style="border:1px solid rgb(234, 234, 234) ">
+                        <el-container>
+                            <editor
+                                    v-contextmenu:contextmenu
+                                    style="font-size: 15px"
+                                    v-model="respJsonVariable"
+                                    @init="editorInit"
+                                    lang="json"
+                                    theme="chrome"
+                                    width="100%"
+                                    height="100px"
+                                    :options="{showPrintMargin:false,   //去除编辑器里的竖线
+                                    }"
+                            >
+                            </editor>
+                        </el-container>
+                    </div>
+                </div>
+                <div v-else>
+                  <el-table
+                      highlight-current-row
+                      :data="respBody"
+                      border
+                      @current-change="handleCurrentChange"
+                      style="width: 100%">
+                      <el-table-column
+                        property="name"
+                        label="参数名"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="type"
+                        label="参数类型"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="val"
+                        label="参数值"
+                        header-align="center">
+                      </el-table-column>
+                      <el-table-column
+                        property="desc"
+                        label="描述"
+                        header-align="center">
+                      </el-table-column>
+                  </el-table>
+                </div>
+              </div>
+            </div>
+            <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :originData="interfaceData"
+                            :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
+            </InterfaceTest>
+            <UseCase v-if="activeTab === 'case' && tab.name === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
+                      :protocols="protocols" :methods="methodOptions">
+            </UseCase>
+            <MockAPI v-if="activeTab === 'api' && tab.name === 'api'"></MockAPI>
+          </el-tab-pane>
+      </el-tabs>
+      <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
+          <el-form :model="interfaceData" label-width="80px" label-position='top'>
+              <el-row>
+                <el-col :span="6">
+                    <el-form-item label="开发状态" prop="status" class="change-label-calss">
+                      <el-select class="select-status" size="small" v-model="interfaceData.status" filterable placeholder="请选择">
+                          <el-option
+                              v-for="item in statusOptions"
+                              :key="item.value"
+                              :label="item.status"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="18">
+                    <el-form-item label="标签" class="change-label-calss">
+                          <el-select
+                              size="small"
+                              class="input-new-tag"
+                              v-model="tags"
+                              multiple
+                              filterable
+                              allow-create
+                              default-first-option
+                              placeholder="请选择或输入标签">
+                              <el-option
+                              v-for="item in tagOptions"
+                              :key="item.value"
+                              :label="item.tag"
+                              :value="item.value">
+                              </el-option>
+                          </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                    <el-form-item label="URL Path" prop="urlPath" class="change-label-calss">
+                      <el-select size="small" v-model="interfaceData.protocol" placeholder="请选择" style="width:12.5%">
+                          <el-option
+                              v-for="item in protocolOptions"
+                              :key="item.value"
+                              :label="item.protocol"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                      <el-select size="small" v-model="interfaceData.method" placeholder="请选择" style="width:12.5%">
+                          <el-option
+                              v-for="item in methodOptions"
+                              :key="item.value"
+                              :label="item.method"
+                              :value="item.value">
+                          </el-option>
+                      </el-select>
+                      <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
+                          <el-input v-model="interfaceData.urlPath" size="small" placeholder="接口路径" style="width:74%">
+                          </el-input>
+                      </el-tooltip>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                    <el-form-item label="分组和接口名称" prop="interfaceGroupId"  class="change-label-calss">
+                      <el-cascader size="small" :options="menuList" v-model="interfaceGroup" :show-all-levels="false"
+                      :props="defaultProps" style="width:25%">
+                      </el-cascader>
+                      <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
+                          <el-input v-model="interfaceData.interfaceName" size="small" placeholder="接口名称" style="width:74%">
+                          </el-input>
+                      </el-tooltip>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row class="divider-row">
+                  <el-divider class="divider-dialog" direction="vertical"></el-divider>
+                  <span class="divider-span">请求参数</span>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                      <TestTabs ref="testTabs" :body="interfaceData.bodyContent" :header="interfaceData.header"
+                      :param="interfaceData.params" :bodyFormat="interfaceData.bodyFormat" :authType="interfaceData.authType"></TestTabs>
+                </el-col>
+              </el-row>
+              <el-row class="divider-row">
+                  <el-divider class="divider-style" direction="vertical"></el-divider>
+                  <span class="divider-span">响应内容</span>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                      <ResponseTabs ref="responseTabs" :bodyResopnse="interfaceData.bodyResponse" :headerResopnse="interfaceData.headerResponse"
+                        :bodyResopnseType="interfaceData.bodyResponseType" :authType="interfaceData.authType"></ResponseTabs>
+                </el-col>
+              </el-row>
+              <el-row class="buttons_row">
+                  <el-button type="primary" size="small" @click="updateInterface">确定</el-button>
+                  <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+              </el-row>
+          </el-form>
+      </el-dialog>
+      <el-dialog title="复制接口" :visible.sync="copyDialog" :before-close="handleClose" width="40%">
+          <el-form :model="copyInterfaceData" label-width="80px" label-position='top'>
+              <el-row>
+                <el-col :span="23">
+                    <el-form-item label="目标分组" prop="group" class="change-label-calss">
+                      <el-cascader size="small" :options="menuList" v-model="copyInterfaceGroup" :show-all-levels="false"
+                      :props="defaultProps" style="width:100%">
+                      </el-cascader>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="23">
+                    <el-form-item label="接口名称" prop="interfaceName" class="change-label-calss">
+                      <el-tooltip class="item" effect="dark" content="接口名称" placement="top-start">
+                          <el-input v-model="copyInterfaceData.interfaceName" size="small" placeholder="接口名称" style="width:100%">
+                          </el-input>
+                      </el-tooltip>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="23">
+                    <el-form-item label="请求方式" class="change-label-calss">
+                          <el-select size="small" v-model="copyInterfaceData.method" placeholder="请选择" style="width:100%">
+                              <el-option
+                                  v-for="item in methodOptions"
+                                  :key="item.value"
+                                  :label="item.method"
+                                  :value="item.value">
+                              </el-option>
+                          </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="23">
+                    <el-form-item label="接口路径" prop="urlPath" class="change-label-calss">
+                      <el-tooltip class="item" effect="dark" content="接口路径，建议将环境信息写到项目环境中" placement="top-start">
+                          <el-input v-model="copyInterfaceData.urlPath" size="small" placeholder="接口路径" style="width:100%">
+                          </el-input>
+                      </el-tooltip>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row class="buttons_row">
+                  <el-button type="primary" size="small" @click="copyInterface">确定</el-button>
+                  <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+              </el-row>
+          </el-form>
+      </el-dialog>
+      <v-contextmenu ref="contextmenu">
+          <v-contextmenu-item @click="handleClick">clear</v-contextmenu-item>
+      </v-contextmenu>
     </div>
 </template>
 
@@ -450,6 +454,7 @@ import UseCase from './useCase'
 import MockAPI from './mockApi'
 import {TimeUtils} from 'wii-fe-utils'
 import InterfaceTest from './interfaceDetail/interfaceTest.vue'
+import { mapState } from 'vuex';
 let that;
 export default {
     mixins: [VueMixins], // 时间格式转化
@@ -465,6 +470,7 @@ export default {
     data() {
         return {
             interfaceData: {},
+            selectedEviorment: '0',
             copyInterfaceData: {},
             updateTime:'',
             jsonVariable: '',
@@ -569,6 +575,7 @@ export default {
                 label: 'groupName',
                 value: 'id'
             },
+            enviromentPre: ''
 
             // 接口测试数据
         }
@@ -578,6 +585,21 @@ export default {
 			this.getInterfaceDetail(interfaceId)
 			let transactId = localStorage.getItem('transactId')
 			this.getGroupById(transactId)
+      if(this.interfaceEvironmentList && this.interfaceEvironmentList.length > 0) {
+        console.log('ceshi', this.interfaceEvironmentList)
+        this.selectedEviorment = this.interfaceEvironmentList[1].id
+        this.enviromentPre = this.interfaceEvironmentList[1] ? this.interfaceEvironmentList[1].host: ''
+      }
+    },
+    computed: {
+      interfaceEvironmentList() {
+        const arr = JSON.parse(localStorage.getItem('environmentList'))
+        arr.unshift({
+          id: 'manage',
+          environmentName: '管理项目环境'
+        })
+        return arr;
+      }
     },
     beforeCreate: function () {
         that = this;
@@ -776,7 +798,7 @@ export default {
 											console.log('respJsonVariable',this.respJsonVariable)
                     }
 
-                    this.$message.success("查询成功！")
+                    // this.$message.success("查询成功！")
                 }else {
                     this.$message.error("查询失败！")
                     console.log(res.respMsg)
@@ -891,7 +913,7 @@ export default {
 									this.menuList.push(treeData[i])
 								}
 							}
-							this.$message.success("查询成功！")
+							// this.$message.success("查询成功！")
 						}else {
 							this.$message.error("获取接口分组失败！")
 							console.log(res.respMsg)
@@ -900,13 +922,32 @@ export default {
 						console.log(err)
 					})
 				},
+        handleEnviormentChange(val) {
+          const item = this.interfaceEvironmentList.find(item => item.id == val)
+          console.log('更改环境', val, this.interfaceEvironmentList, item)
+          this.enviromentPre = item ? item.host: ''
+          if(val === 'manage') {
+            this.$router.push({
+              name: 'ProjectEnvironment'
+            })
+          }
+        },
+        handleCaseChange() {
+          this.activeTab = 'case'
+        }
     }
 }
 </script>
 <style lang="less" scoped>
 .project {
-    padding: 10px;
-
+  padding: 10px;
+  position: relative;
+  .selector {
+    position: absolute;
+    z-index: 10;
+    right: 15px;
+    top: 15px;
+  }
 }
 .tabs-card {
     min-height: calc(100vh - 90px);

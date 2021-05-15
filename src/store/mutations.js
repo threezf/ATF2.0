@@ -62,4 +62,7 @@ export default {
 		state.assertionCheckType = payload.assertionCheckType
 		state.assertionBody = payload.assertionBody
 	},
+	setCheckResHeader(state, payload) {
+		state.checkResHeader = payload.value
+	}
 }

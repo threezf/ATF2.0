@@ -18,6 +18,7 @@ const state = {
     tags: [],
     createTime: 0,
     updateTime: 0,
+    interfaceEvironmentList: []
 }
 
 const getters = {
@@ -82,6 +83,11 @@ const mutations = {
     updateUpdateTime(state, payload) {
         state.updateTime = payload.value
     },
+    updateEvironmentList(state, payload) {
+        console.log('存储数据', payload)
+        state.interfaceEvironmentList = payload.value
+    }
+
 }
 
 const actions = {

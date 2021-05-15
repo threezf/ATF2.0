@@ -1,13 +1,13 @@
 <template>
 	<div class="class-checkXML">
-		<el-row>
+		<!-- <el-row>
 			<span>HTTP Status Code： 校验</span>
-		</el-row>
+		</el-row> -->
 		<el-row>
-			<el-select size="small" v-model="selectedCodeType">
+			<!-- <el-select size="small" v-model="selectedCodeType">
 				<el-option v-for="(item,index) in respCodeList" :key="index" :value="item.id" :label="item.value">
 				</el-option>
-			</el-select>
+			</el-select> -->
 			<el-input v-if="selectedCodeType ===5" size="small" v-model="customCode"></el-input>
 		</el-row>
 		<el-row>

@@ -1,10 +1,13 @@
 <template>
 	<div class="class-testCase">
 		<el-row>
-			<el-button class="new-Cases" type="primary" size="middle" @click="newCaseButton">
+			<el-button class="new-Cases" type="primary" size="small" @click="newCaseButton">
 				<i class="el-icon-plus"></i>添加用例
 			</el-button>
-			<el-button type="text" class="import-Cases" @click="importCase">
+			<el-button class="new-Cases" type="primary" size="small">
+				<i class="el-icon-finished"></i>批量测试
+			</el-button>
+			<el-button type="text" class="import-Cases" size="small" @click="importCase">
 				<i class="el-icon-upload"></i>导入
 			</el-button>
 		</el-row>
@@ -27,7 +30,7 @@
 				<el-button type="text" size="small" @click="delCaseButton(scoped.row)">删除</el-button>
 			</template>
 		</table-comp>
-		<el-dialog :title="getTitle" :visible.sync="caseVisible" width="60vw" :append-to-body="true">
+		<el-dialog top="60px" :title="getTitle" :visible.sync="caseVisible" width="60vw" :append-to-body="true">
 			<el-form :model="caseData" ref="caseData" label-width="80px" label-position='top'>
 				<el-row>
 					<el-col :span="24">
@@ -74,7 +77,8 @@
 					<span class="divider-span">断言规则</span>
 				</el-row>
 				<el-row>
-					<CheckResult ref="checkResult"></CheckResult>
+					<!-- <CheckResult ref="checkResult"></CheckResult> -->
+					<AssertionRule></AssertionRule>
 				</el-row>
 				<el-row class="buttons_row">
 					<el-button type="primary" size="small" @click="submitForm('caseData')">{{buttonName}}</el-button>
@@ -82,7 +86,7 @@
 				</el-row>
 			</el-form>
 		</el-dialog>
-		<el-dialog title="复制用例" :visible.sync="copyDialog"  width="40vw" :append-to-body="true">
+		<el-dialog top="60px" title="复制用例" :visible.sync="copyDialog"  width="40vw" :append-to-body="true">
 			<el-form :model="copyCaseData" label-position='top'>
 				<el-row>
 					<el-form-item label="环境名称" prop="interfaceName" class="change-label-calss">
@@ -103,6 +107,7 @@
 import {CaseConf} from '@/config/testInfrastructure/testCases/testCaseConf'
 import TestTabs from '@/components/interfaceTest/testTabs'
 import CheckResult from '../components/checkResult'
+import AssertionRule from '../components/assertionRule';
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 let that
@@ -111,7 +116,8 @@ export default {
 	name: "testCases",
 	components:{
 		TestTabs,
-		CheckResult
+		CheckResult,
+		AssertionRule
 	},
 	props: {
 		protocols: {
@@ -171,7 +177,10 @@ export default {
 				assertionRootType:0,
 				assertionBody:'',
 				customCode:'',
-				assertionArrayBody:0
+				assertionArrayBody:0,
+				checkResHeader: '',
+				rawFormat: null,
+				
 			},
 			protocolOptions: [],
 			methodOptions: [],
@@ -196,14 +205,14 @@ export default {
 		that = this;
 	},
 	created() {
-		this.selectCases()
+		this.selectCases(true)
 	},
 	watch: {
 		originData: {
 			handler(newVal) {
 				this.caseData.urlAgreement = newVal.protocol
 				this.caseData.urlMethod = newVal.method
-				this.selectCases()
+				this.selectCases(false)
 			},
 			immediate: true
 		},
@@ -292,7 +301,7 @@ export default {
 						this.addCase()
 					}
 				} else {
-					this.$message('信息格式有误，请检查')
+					// this.$message('信息格式有误，请检查')
 					return false;
 				}
 			});
@@ -392,6 +401,8 @@ export default {
 			this.caseData.assertionBody =  this.$store.state.assertionBody
 			this.caseData.customCode =  this.$store.state.customCode
 			this.caseData.assertionArrayBody =  this.$store.state.selectedArrayType
+			this.caseData.checkResHeader = JSON.stringify(this.$store.state.checkResHeader)
+
 			console.log("入参",this.caseData)
 			Request({
 				url: '/interfaceNewController/interfaceTestProjectUpdate',
@@ -401,7 +412,7 @@ export default {
 				if(res.respCode === '0000'){
 					this.$message.success("更新成功！")
 					this.caseVisible = false
-					this.selectCases()
+					this.selectCases(false)
 				}else {
 					this.$message.error("更新失败！")
 					this.caseVisible = false
@@ -429,6 +440,7 @@ export default {
 			this.caseData.assertionBody =  this.$store.state.assertionBody
 			this.caseData.customCode =  this.$store.state.customCode
 			this.caseData.assertionArrayBody =  this.$store.state.selectedArrayType
+			this.caseData.checkResHeader = JSON.stringify(this.$store.state.checkResHeader)
 			console.log("入参",this.caseData)
 			Request({
 				url: '/interfaceNewController/addSingleInterfaceTestProject',
@@ -438,7 +450,7 @@ export default {
 				if(res.respCode === '0000'){
 					this.$message.success("新增成功！")
 					this.caseVisible = false
-					this.selectCases()
+					this.selectCases(false)
 				}else {
 					this.$message.error("新增失败！")
 					this.caseVisible = false
@@ -457,7 +469,7 @@ export default {
 				if(res.respCode === '0000'){
 					this.$message.success("复制成功！")
 					this.copyDialog = false
-					this.selectCases()
+					this.selectCases(false)
 				}else {
 					this.$message.error("复制失败！")
 					this.copyDialog = false
@@ -467,7 +479,7 @@ export default {
 				console.log(err)
 			})
 		},
-		selectCases(){
+		selectCases(flag){
 			Request({
 				url: '/interfaceNewController/interfaceTestProjectSelect',
 				method: 'post',
@@ -478,9 +490,11 @@ export default {
 				if(res.respCode === '0000'){
 					this.resultData = res.list
 					console.log(res.list)
-					this.$message.success("查询成功！")
+					if(flag) {
+						// this.$message.success("查询成功！")
+					}
 				}else {
-					this.$message.error("查询失败！")
+					// this.$message.error("查询失败！")
 					console.log(err)
 				}
 			}).catch((err) => {
@@ -497,7 +511,7 @@ export default {
 			}).then((res) => {
 				if(res.respCode === '0000'){
 					this.$message.success('删除成功')
-					this.selectCases()
+					this.selectCases(false)
 				}else {
 					this.$message.error('删除失败')
 					console.log(res.respMsg)

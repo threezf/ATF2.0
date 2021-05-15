@@ -1,5 +1,10 @@
 const CaseConf = [
 	{
+		label: '',
+		tableType: 'selection',
+		width: 100
+	},
+	{
 		label: '用例名称',
 		prop: 'projectName',
 	},

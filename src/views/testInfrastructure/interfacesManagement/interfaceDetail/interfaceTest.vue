@@ -39,6 +39,7 @@ import {
 import {
     InterfaceTestConf
 } from '@/config/testInfrastructure/interfacesManagement/interfaceDetailConf'
+import Request from '../../../../libs/request'
 export default {
     name: 'InterfaceTest',
     components: {
@@ -61,6 +62,10 @@ export default {
         originData: {
             type: Object,
             default: () => {}
+        },
+        enviromentPre: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -140,11 +145,63 @@ export default {
                 this.conf[1].value = newVal
             },
             immediate: true
+        },
+        enviromentPre: {
+            handler(newVal) {
+                this.conf[2].value = newVal.slice(0, newVal.length - 1) + this.conf[2].value
+            },
+            immediate: true
         }
+    },
+    created() {
+        this.initUsecaseList();
     },
     methods: {
         handleSubmit(event) {
             console.log(event)
+        },
+        initUsecaseList() {
+            Request({
+                url: '/interfaceNewController/interfaceTestProjectSelect',
+                method: 'post',
+                params: {
+                    interfaceId: sessionStorage.getItem('interfaceId')
+                }
+            }).then(res => {
+                console.log('获取用例列表', res)
+                this.conf[3].options = res.list.map(item => {
+                    return {
+                        label: item.projectName,
+                        value: item.id,
+                        ...item
+                    };
+                });
+                this.conf[3].value = res.list[0].id;
+                this.conf[3].options.unshift({
+                    label: '管理用例',
+                    value: 'manage',
+                })
+                this.$watch(
+                    () => this.conf[3].value,
+                    (newVal) => {
+                        if(newVal === 'manage') {
+                            this.$emit('caseChange')
+                        }else {
+                            const item = this.conf[3].options.find(item => item.id === newVal)
+                            console.log('用例改变', newVal, item)
+                            if(item) {
+                                this.originData.header = item.requestHeader
+                                this.originData.body = item.bodyContent
+                                this.originData.params = item.params
+                                this.originData.bodyFormat = item.bodyFormat
+                                this.originData.authType = item.authType
+                            }
+                        }
+                    }, {
+                        immediate: true
+                    }
+                )
+            })
         }
     }
 }

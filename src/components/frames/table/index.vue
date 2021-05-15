@@ -2,12 +2,11 @@
 <script>
     import Request from '@/libs/request.js'
     import VueMixins from '@/libs/vueMixins.js'
-    // import DownloadData from './downData'
     import SingleTableColumn from './singleTableColumn'
 
     export default {
         components: {
-            SingleTableColumn
+            SingleTableColumn,
         },
         name: 'TableComp', 
         render:function(createElement ){
@@ -20,7 +19,8 @@
                     return [
                         _this.$scopedSlots[thead['slot']]({
                             row: scope.row,
-                            index: scope.$index
+                            index: scope.$index,
+                            data: scope.row[thead.prop]
                         })
                     ]
                 }
@@ -36,33 +36,53 @@
             }
             //单独一列的生成 <el-table-column :porps='values' :keys='values'>{{getSlot(params)}</el-table-column>
             let getsingleColumn = function(thead,index){
-                return createElement(
-                    'el-table-column',{
-                        key: index,
-                        props:{
-                            label: thead.label,
-                            type: thead.tableType,
-                            width: thead.width,
-                            fixed: thead.position,
-                            sortable: thead.sortable,
-                            prop: thead.prop,
-                            headerAlign:"center",
-                            align:"center"
-                        },
-                        scopedSlots: {
-                            default: function(scope) {
-                                return createElement('div', [
-                                    createElement('single-table-column',{
-                                        props:{
-                                            rowdata:scope,
-                                            thead:thead
-                                        }
-                                    },getSlot(thead,scope))
-                                ])
+                if(thead.tableType == 'selection') {
+                    return createElement(
+                        'el-table-column',{
+                            key: index,
+                            props: _this.getRowConf(thead)
+                        }
+                    )
+                }else if (thead.tableType == 'expand') {
+                    return createElement(
+                        'el-table-column', {
+                            props: {
+                                type: 'expand'
+                            },
+                            scopedSlots: {
+                                default: function(scope) {
+                                    return createElement('div', [
+                                        createElement('single-table-column',{
+                                            props:{
+                                                rowdata:scope,
+                                                thead:thead
+                                            }
+                                        },getSlot(thead,scope))
+                                    ])
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }else {
+                    return createElement(
+                        'el-table-column',{
+                            key: index,
+                            props: _this.getRowConf(thead),
+                            scopedSlots: {
+                                default: function(scope) {
+                                    return createElement('div', [
+                                        createElement('single-table-column',{
+                                            props:{
+                                                rowdata:scope,
+                                                thead:thead
+                                            }
+                                        },getSlot(thead,scope))
+                                    ])
+                                }
+                            }
+                        }
+                    )
+                }
             }
             //一列的生成 如果有children则再次调用该函数，生成多级表头
             let getColumn = function(thead,index){
@@ -92,23 +112,33 @@
                 },
                 [
                     createElement(
+                        // 功能按钮组
                         'div', {
                             class: 'button-row',
-                            style: {display: this.tableData.data.length > 0 && !this.loading? 'flex': 'none'}
+                            style: {display: this.tableData.data && this.tableData.data.length > 0 && !this.loading? 'flex': 'none'}
                         },
-                        // [
-                        //     this.needDownloadData && createElement(
-                        //         'download-data', {
-                        //             class: 'table-comp',
-                        //             props: {
-                        //                 'content': this.downloadStr,
-                        //                 'fileName': this.fileName
-                        //             }
-                        //         }
-                        //     ),
-                        // ]
+                        [
+                            this.needMiniCode&&createElement(
+                                'mini-programe-code' , {
+                                    class: 'table-comp',
+                                    props:{
+                                        'table-data': this.autoPagination ? this.autoTableData.data : this.tableData.data
+                                    }
+                                }
+                            ),
+                            this.needDownloadData && createElement(
+                                'download-data', {
+                                    class: 'table-comp',
+                                    props: {
+                                        'content': this.downloadStr,
+                                        'fileName': this.fileName
+                                    }
+                                }
+                            ),
+                        ]
                     ),
                     createElement(
+                        // 表格核心
                         'el-table' , {
                             class: 'table',
                             ref: 'table',
@@ -116,23 +146,25 @@
                                 'highlight-current-row': this.singleChoose,
                                 spanMethod: this.spanMethod,
                                 border: true,
-                                height: this.height,
                                 data: this.autoPagination ? this.autoTableData.data : this.tableData.data,
-                                'row-key': row=> {
-                                    if(row.action_time) return row.id + row.action_time
+                                'row-key': row => {
+                                    if(row.action_time) return row.id? row.id + row.action_time: "" + row.action_time
+                                    if(row.fid) return row.fid
                                     return row.id
                                 },
                                 'expand-row-keys': [...this.expandRowKeys],
+                                'max-height': _this.maxHeight
                             },
                             directives: [
                                 {
-                                name: 'loading',
-                                value: this.loading,
+                                    name: 'loading',
+                                    value: this.loading,
                                 }
                             ],
                             on: {
                                 'sort-change': this.sortChange,
-                                'current-change': this.chooseSingle
+                                'current-change': this.chooseSingle,
+                                'selection-change': this.selectionChange
                             },
                         },
                         this.tableHeader.map((item,index) => {return getColumn(item,index)})
@@ -147,7 +179,7 @@
                             disabled: this.loading,
                             total: this.pageTotal,
                             background: true,
-                            layout: "prev, sizes, total, pager, next"
+                            layout: this.layouts
                         },
                         on: {
                             'size-change': this.handleSizeChange,
@@ -226,8 +258,18 @@
                 type: String,
                 default: ''
             },
-            height: {
-                type: [String, Number]
+            pageid: {
+                type: Number,
+                default: 0
+            },
+            maxHeight: {
+                type: String,
+                default: "100%"
+            },
+            // 传递需要的layouts
+            layouts: {
+                type: String,
+                default: "prev, sizes, total, pager, next"
             }
         },
         filters: {},
@@ -253,40 +295,29 @@
                     this.$refs.table.clearSort()
                 }
             },
-            tableHeader(newVal) {
-                this.downloadStr = ''
-                newVal.forEach((item, index) => {
-                    if(index < this.downloadRows.length) {
-                        this.downloadStr += ',' + item.label
-                    }else {
-                        return
-                    }
-                })
-                if(this.needDownloadData) {
-                    this.downloadStr += '\n'
-                    this.tableData.data.forEach(item => {
-                        let str = ''
-                        this.downloadRows.forEach(prop => {
-                            str += ',\t' + item[prop]
-                        })
-                        this.downloadStr += str + '\n'
-                    })
-                }
-            },
             tableData: {
                 handler(newVal) {
+                    // 如果放在if后面会由于autoPagination而无法执行
+                    this.generateCsvData()
                     if(this.autoPagination){
                         this.pageId = 1
                         return
                     }
                     this.pageTotal =  newVal.pageTotal
-                    
+                    console.log(newVal.pageTotal)
                 },
-                immediate: true
+                immediate: true,
+                deep: true
             },
             pagesize: {
                 handler(newVal) {
                     this.pageSize = this.pagesize
+                },
+                immediate: true
+            },
+            pageid: {
+                handler(newVal) {
+                    this.pageId = newVal + 1
                 },
                 immediate: true
             }
@@ -312,9 +343,6 @@
                 if(this.pageTotal !== data.length){
                     this.pageTotal = data.length
                 }
-                console.log(data)
-                console.log(this.pageSize * (this.pageId - 1))
-                console.log(this.pageSize * this.pageId)
                 return {
                     data: data.slice(this.pageSize * (this.pageId - 1) , this.pageSize * this.pageId ),
                     pageTotal: data.length 
@@ -332,6 +360,20 @@
         },
         mounted() {},
         methods: {
+            // 获取行的配置
+            getRowConf(thead) {
+                return {
+                    label: thead.label,
+                    type: thead.tableType,
+                    width: thead.width,
+                    fixed: thead.position,
+                    sortable: thead.sortable,
+                    sortMethod: thead.sortMethod, // 自定义排序规则支持
+                    prop: thead.prop,
+                    headerAlign:"center",
+                    align:"center",
+                }
+            },
             sortChange(e) {
                 this.sortConfig.col = e.prop
                 if (e.order === null) {
@@ -392,6 +434,47 @@
             // 单选
             chooseSingle(val) {
                 this.$emit('singlechoosehandler', val)
+            },
+            selectionChange(val) {
+                this.$emit('selectionChange', val)
+            },
+            // 生成csv原数据
+            generateCsvData() {
+                let transalteRow = {}
+                let translateDic = {}
+                this.downloadStr = ''
+                if(this.needDownloadData) {
+                    console.log('header',this.tableHeader)
+                    this.tableHeader.forEach((item, index) => {
+                        if(item.transList) {
+                            transalteRow[item.prop] = item.transList
+                        }
+                        if(index < this.downloadRows.length) {
+                            this.downloadStr += ',' + item.label
+                        }else {
+                            return
+                        }
+                    })
+                    this.downloadStr += '\n'
+                    this.tableData.data.forEach(item => {
+                        let str = ''
+                        this.downloadRows.forEach(prop => {
+                            let tempStr
+                            if(transalteRow[prop]) {
+                                transalteRow[prop].forEach(p => {
+                                    translateDic[p.value] = p.label
+                                })
+                                tempStr = translateDic[item[prop]] != undefined? translateDic[item[prop]]: "0"
+                                str += ',\t' + tempStr
+                            }else {
+                                tempStr = item[prop] != undefined? item[prop]: "0"
+                                str += ',\t' + tempStr
+                            }
+                        })
+                        this.downloadStr += str + '\n'
+                    })
+                    // console.log(this.tableData.data, this.downloadRows)
+                }
             }
         }
     };

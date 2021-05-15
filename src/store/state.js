@@ -12,9 +12,9 @@ export default {
   ],
 	assertionCheckType: 0,
 	assertionRootType: 0,
-	assertionBody: "",
+	assertionBody: '[{"id":0,"parentId":0,"paramName":"respMsg","type":0,"checkContentType":1,"expectResult":"success","children":[]}]',
 	customCode:'',
 	selectedArrayType:0,
-	assertionType:1
-
+	assertionType:1,
+  checkResHeader:  [{"name":"Content-Type","val":"application/json","desc":null}]
 }

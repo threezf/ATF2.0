@@ -106,7 +106,7 @@ export default {
 			}).then((res) => {
 				if(res.respCode === '0000'){
 					this.tableData = res.list
-					this.$message.success("查询成功！")
+					// this.$message.success("查询成功！")
 				}else {
 					this.$message.error("获取接口信息失败！")
 					console.log(err)
@@ -132,7 +132,7 @@ export default {
 							this.menuList.push(treeData[i])
 						}
 					}
-					this.$message.success("查询成功！")
+					// this.$message.success("查询成功！")
 				}else {
 					this.$message.error("获取接口分组失败！")
 					console.log(res.respMsg)
