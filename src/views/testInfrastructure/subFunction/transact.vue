@@ -664,7 +664,6 @@ export default {
                                             nameMedium: _this.ruleForm.nameMedium,
                                             transType: _this.isInterface ? 2 : 1,
                                             creatorId: sessionStorage.getItem("userId"),
-                                            userId: sessionStorage.getItem('userId')
                                         },
                                     })
                                     .then((res) => {

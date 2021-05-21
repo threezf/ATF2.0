@@ -62,17 +62,20 @@
                     <el-table-column
                       property="name"
                       label="参数名"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                     <el-table-column
                       property="val"
                       label="参数值"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                     <el-table-column
                       property="desc"
                       label="描述"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                 </el-table>
               </div>
@@ -129,22 +132,26 @@
                       <el-table-column
                         property="name"
                         label="参数名"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="type"
                         label="参数类型"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="val"
                         label="参数值"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="desc"
                         label="描述"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                   </el-table>
                 </div>
@@ -163,17 +170,20 @@
                   <el-table-column
                     property="name"
                     label="参数名"
-                    header-align="center">
+                    header-align="center"
+                    align="center">
                   </el-table-column>
                   <el-table-column
                     property="val"
                     label="参数值"
-                    header-align="center">
+                    header-align="center"
+                    align="center">
                   </el-table-column>
                   <el-table-column
                     property="desc"
                     label="描述"
-                    header-align="center">
+                    header-align="center"
+                    align="center">
                   </el-table-column>
                 </el-table>
               </div>
@@ -191,17 +201,20 @@
                     <el-table-column
                       property="name"
                       label="参数名"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                     <el-table-column
                       property="val"
                       label="参数值"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                     <el-table-column
                       property="desc"
                       label="描述"
-                      header-align="center">
+                      header-align="center"
+                      align="center">
                     </el-table-column>
                 </el-table>
               </div>
@@ -257,34 +270,44 @@
                       <el-table-column
                         property="name"
                         label="参数名"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="type"
                         label="参数类型"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="val"
                         label="参数值"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                       <el-table-column
                         property="desc"
                         label="描述"
-                        header-align="center">
+                        header-align="center"
+                        align="center">
                       </el-table-column>
                   </el-table>
                 </div>
               </div>
             </div>
-            <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :originData="interfaceData"
-                            :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
-            </InterfaceTest>
-            <UseCase v-if="activeTab === 'case' && tab.name === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
-                      :protocols="protocols" :methods="methodOptions">
-            </UseCase>
-            <MockAPI v-if="activeTab === 'api' && tab.name === 'api'"></MockAPI>
+            <keep-alive>
+              <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :originData="interfaceData"
+                              :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
+              </InterfaceTest>
+            </keep-alive>
+            <keep-alive>
+              <UseCase v-if="activeTab === 'case' && tab.name === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
+                        :protocols="protocols" :methods="methodOptions">
+              </UseCase>
+            </keep-alive>
+            <keep-alive>
+              <MockAPI v-if="activeTab === 'api' && tab.name === 'api'"></MockAPI>
+            </keep-alive>
           </el-tab-pane>
       </el-tabs>
       <el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
@@ -728,7 +751,7 @@ export default {
                     this.interfaceData = res.interfaceSelectDto
                     for(let key in res.interfaceSelectDto) {
                       if(key in this.$store.state.interface) {
-                        if(key === 'params' || key === 'params' || key === 'bodyResponse' || key === 'headerResponse' || key === 'tags') {
+                        if(key === 'header' || key === 'params' || key === 'bodyContent' || key === 'bodyResponse' || key === 'headerResponse' || key === 'tags') {
                           this.$store.commit(`interface/update${key.slice(0, 1).toUpperCase()}${key.slice(1)}`, {
                             value: JSON.parse(res.interfaceSelectDto[key])
                           })
@@ -750,7 +773,15 @@ export default {
 										}else {
 											this.params.push(...JSON.parse(res.interfaceSelectDto.params))
 											this.params.splice(this.params.length-1,1)
-											console.log('header2',this.params)
+											console.log('params2',this.params)
+										}
+                    if(res.interfaceSelectDto.header === '[]' || res.interfaceSelectDto.header == null){
+											this.header=[]
+											console.log('header1',this.header)
+										}else {
+											this.header.push(...JSON.parse(res.interfaceSelectDto.header))
+											this.header.splice(this.header.length-1,1)
+											console.log('header2',this.header)
 										}
 										if(res.interfaceSelectDto.bodyFormat ===0) {
 											if (res.interfaceSelectDto.bodyContent === '[]' || res.interfaceSelectDto.bodyContent == null) {
