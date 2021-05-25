@@ -31,7 +31,7 @@ export default {
 	},
 	data() {
 		return{
-			transactId:'',
+			menuId:'',
 			menuList:[],
 			tableData:[],
 			tableType:2,
@@ -64,18 +64,18 @@ export default {
 		}
 	},
 	created() {
-		this.transactId = localStorage.getItem('transactId')
-		this.getGroupById(this.transactId)
+		this.menuId = localStorage.getItem('menuId')
+		this.getGroupById(this.menuId)
 		this.getAllTableData()
 	},
 	methods:{
 		getAllTableData(){
-			console.log(this.transactId)
+			console.log(this.menuId)
 			Request({
-				url: '/interfaceNewController/selectAllInterfaceByTransactId',
+				url: '/interfaceNewController/selectAllInterfaceByMenuId',
 				method: 'post',
 				params: {
-					transactId: this.transactId,
+					menuId: this.menuId,
 					pageSize: this.pageSize,
 					currentPage: this.currentPage,
 					orderColumns: "update_time",
@@ -121,7 +121,7 @@ export default {
 				url: '/interfaceNewController/selectAllInterfaceGroup',
 				method: 'post',
 				params: {
-					transactId: id
+					menuId: id
 				}
 			}).then((res) => {
 				if(res.respCode === '0000'){

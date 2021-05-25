@@ -457,7 +457,7 @@ export default {
         url: "/interfaceNewController/interfaceEnvironmentSelect",
         method: "post",
         params: {
-          transactId: localStorage.getItem("transactId"),
+          menuId: localStorage.getItem("menuId"),
         },
       })
         .then((res) => {
@@ -492,7 +492,7 @@ export default {
       );
       this.newEnvironmentData.authType = this.$refs.testTabs.selectedAuthType;
       this.newEnvironmentData.createUser = sessionStorage.getItem("username");
-      this.newEnvironmentData.transactId = localStorage.getItem("transactId");
+      this.newEnvironmentData.menuId = localStorage.getItem("menuId");
       Request({
         url: "/interfaceNewController/addInterfaceEnvironment",
         method: "post",

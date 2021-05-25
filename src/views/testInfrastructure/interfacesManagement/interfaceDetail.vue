@@ -606,8 +606,8 @@ export default {
     created() {
 			let interfaceId = sessionStorage.getItem('interfaceId')
 			this.getInterfaceDetail(interfaceId)
-			let transactId = localStorage.getItem('transactId')
-			this.getGroupById(transactId)
+			let menuId = localStorage.getItem('menuId')
+			this.getGroupById(menuId)
       if(this.interfaceEvironmentList && this.interfaceEvironmentList.length > 0) {
         console.log('ceshi', this.interfaceEvironmentList)
         this.selectedEviorment = this.interfaceEvironmentList[1].id
@@ -933,7 +933,7 @@ export default {
 						url: '/interfaceNewController/selectAllInterfaceGroup',
 						method: 'post',
 						params: {
-							transactId: id
+							menuId: id
 						}
 					}).then((res) => {
 						if(res.respCode === '0000'){

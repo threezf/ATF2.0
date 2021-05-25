@@ -13,8 +13,8 @@ import ProjectEnvironment from '@/views/testInfrastructure/interfacesManagement/
 import TestCases from '@/views/testInfrastructure/interfacesManagement/testCases';
 
 import TransactDetail from '@/views/testInfrastructure/transactDetail'
-// import InterfacesManagement from '@/views/testInfrastructure/interfacesManagement/interfaceManage'
-import InterfacesManagement from '@/views/testInfrastructure/subFunction/interfacesManagement'
+import InterfacesManagement from '@/views/testInfrastructure/interfacesManagement/interfaceManage'
+// import InterfacesManagement from '@/views/testInfrastructure/subFunction/interfacesManagement'
 import InterfaceDetail from '@/views/testInfrastructure/interfacesManagement/interfaceDetail'
 import ProductLine from '@/views/testInfrastructure/subFunction/productLine'
 import UseCaseDebug from '@/views/testInfrastructure/transactDetail/useCaseDebug'

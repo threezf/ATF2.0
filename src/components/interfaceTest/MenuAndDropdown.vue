@@ -17,7 +17,7 @@
                     </el-dropdown>
                 </span>
                 </template>
-                
+
                 <MenuAndDropdown v-ref="c => setChildrenRef('menuchild',c)" :menuData="menu.childNodeList" ></MenuAndDropdown>
             </el-submenu>
             <el-menu-item :key="menu.id" :index="String(menu.id)" style="text-align:center" v-else>
@@ -48,7 +48,7 @@
         </el-dialog>
     </div>
 </template>
- 
+
 <script>
 import MenuAndDropdown from './MenuTree.vue'
 import Request from "@/libs/request.js";
@@ -74,13 +74,13 @@ import VueMixins from "@/libs/vueMixins.js";
                 groupForm: {
                     parentId: 0,
                     groupName:"",
-                    transactId:"",
+										menuId:"",
                     createUser:"",
                 },
                 updateGroupForm: {
                     id:0,
                     groupName:"",
-                    transactId:"",
+										menuId:"",
                     modifiedUser:"",
                 },
                 rules: {
@@ -90,7 +90,7 @@ import VueMixins from "@/libs/vueMixins.js";
                         trigger: "blur"
                     }]
                 },
-                autId: localStorage.getItem('transactId')
+                autId: localStorage.getItem('menuId')
             }
         },
         components:{
@@ -179,9 +179,9 @@ import VueMixins from "@/libs/vueMixins.js";
             // 添加分组
             addGroup() {
                 this.groupForm.createUser = sessionStorage.getItem("username")
-                this.groupForm.transactId = this.autId
+                this.groupForm.menuId = this.autId
                 console.log('parentId：'+this.groupForm.parentId+',createUser:'+this.groupForm.createUser+
-                ',transactId:'+this.groupForm.transactId)
+                ',menuId:'+this.groupForm.menuId)
                 Request({
                     url: '/interfaceNewController/addSingleInterfaceGroup',
                     method: 'post',
@@ -203,7 +203,7 @@ import VueMixins from "@/libs/vueMixins.js";
             // 修改分组
             updateGroup() {
                 this.updateGroupForm.modifiedUser = sessionStorage.getItem("username")
-                this.updateGroupForm.transactId = this.autId
+                this.updateGroupForm.menuId = this.autId
                 this.updateGroupForm.groupName = this.groupForm.groupName
                 console.log(this.updateGroupForm)
                 Request({
@@ -244,11 +244,11 @@ import VueMixins from "@/libs/vueMixins.js";
                     console.log(err)
                 })
             },
-            
+
         }
     }
 </script>
- 
+
 <style lang="less" scoped>
     .el-menu-item {
         font-size: 14px  !important;
@@ -280,6 +280,5 @@ import VueMixins from "@/libs/vueMixins.js";
         text-align: center;
         margin-bottom: -15px;
     }
- 
+
 </style>
- 

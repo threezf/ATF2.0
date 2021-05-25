@@ -243,43 +243,48 @@
           </el-row>
         </el-form>
       </el-dialog>
-      <el-dialog title="导入" :visible.sync="importDialog" width="30%">
-        <!-- ElementUI上传 -->
-        <el-upload
-            class="upload-demo in-file"
-            :action="importURL"
-            :show-file-list='false'
-            :auto-upload="false"
-            :limit="1"
-            accept=".xlsx"
-            :before-upload="beforeUpload"
-            :file-list="fileList"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :on-exceed="handleExceed"
-            :on-change="handleOnChange"
-            :on-success="fileChange">
-          <el-button size="small" type="primary">选择文件</el-button>
-          <i slot="tip" class="el-upload__tip text">&nbsp;&nbsp;只能选择一个xlsx文件</i>
-        </el-upload>
-        <el-divider></el-divider>
-        <div class="in-file">
-          <el-button size="small" type="success" @click="downloadTemplate">模板下载</el-button
-          >
-        </div>
-        <el-divider></el-divider>
-        <div class="in-file">
-          <el-button size="small" type="primary" @click="importTemplate"
-            >导入</el-button
-          >
-          <el-button
-            size="small"
-            type="primary"
-            @click="importDialog = !importDialog"
-            >取消</el-button
-          >
-        </div>
-      </el-dialog>
+			<el-dialog width="24%" title="新建接口" :visible.sync="interfaceDialog" :before-close="handleClose">
+				<el-form ref="ruleForm" label-width="40px" :model="ruleForm" :rules="rules" status-icon>
+					<el-form-item label="名称" prop="nameMedium">
+						<el-input size="small" placeholder="必输项" v-model.lazy="ruleForm.nameMedium">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="描述" prop="descShort">
+						<el-input style="width:90%" size="small" cols="5" rows="5" type="textarea" v-model="ruleForm.descShort">
+						</el-input>
+					</el-form-item>
+					<hr color="#F5F5F5" />
+					<el-form-item>
+						<div class="dialogBottom">
+							<el-button id="buttonName" type="primary" size="small" @click="addInterfaceNew()">添加
+							</el-button>
+							<el-button type="danger" size="small" plain @click="cancelButtonClicked">取消
+							</el-button>
+						</div>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
+			<!--导入对话框-->
+			<el-dialog width="27%" title="导入" :before-close="handleClose" :visible.sync="dialogImportVisible">
+				<el-form :action="importURL" enctype="multipart/form-data" method="post" id="uploadForm">
+					<el-upload ref="upload" :action="importURL" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
+						<el-button size="small" class="btnSelectFile" type="success" slot="trigger" plain>上传文件
+						</el-button>
+						<el-input style="margin-left:10px;width: 75%" size="small" class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
+					</el-upload>
+					<hr color="#F5F5F5" />
+					<el-form-item>
+						<el-col class="buttonDownload" :span="12">
+							<el-button type="primary" icon="el-icon-download" size="small" @click="downloadTemplate">模板下载</el-button>
+						</el-col>
+						<el-col class="buttonGroup" :span="12">
+							<el-button type="primary" size="small" @click="importTemplate">导入
+							</el-button>
+							<el-button size="small" @click="cancelButtonClicked">取消 </el-button>
+						</el-col>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
     </div>
   </div>
 </template>
@@ -302,6 +307,13 @@ export default {
     ResponseTabs: ResponseTabs,
   },
   data() {
+		let checkNameMedium = (rule, value, callback) => {
+			if (value === "") {
+				return callback(new Error("接口名称不能为空"));
+			} else {
+				return callback();
+			}
+		};
     return {
       originEnviormentList: [],
       value: "",
@@ -310,7 +322,7 @@ export default {
       //被测系统编号
       autId: "",
       menuList: [],
-      transactId: "", // 获取接口管理传递的id数据
+      menuId: "", // 获取接口管理传递的id数据
       currentPage: 1,
       totalCount: 30,
       pageSize: 10,
@@ -410,9 +422,24 @@ export default {
       },
       environmentUrl: "",
       tableType: 1,
-      importDialog: false,
-      fileName: '',
-      fileList: [],
+			//表单数据
+			ruleForm: {
+				nameMedium: "",
+				functionType: "接口",
+				code: "",
+				descShort: "",
+			}, //表单信息数据
+			rules: {
+				nameMedium: [{
+					validator: checkNameMedium,
+					trigger: "blur",
+				}, ],
+			}, //表单验证数据
+			interfaceDialog: false,
+			dialogImportVisible: false,
+			//文件上传
+			fileList: [],
+			fileName:"",
     };
   },
   inject: {
@@ -449,15 +476,15 @@ export default {
     if (this.$route.query.data && this.$route.query.data.hasOwnProperty("id")) {
       data = this.$route.query.data;
       console.log(data);
-      localStorage.setItem("transactId", this.$route.query.data.id);
+      localStorage.setItem("menuId", this.$route.query.data.id);
       localStorage.setItem("transactAutId", this.$route.query.data.autId);
       this.autId = Number(data.autId);
-      this.transactId = data.id;
+      this.menuId = data.id;
     } else {
       this.autId = Number(localStorage.getItem("transactAutId"));
-      this.transactId = localStorage.getItem("transactId");
+      this.menuId = localStorage.getItem("menuId");
     }
-    this.getGroupById(this.transactId);
+    this.getGroupById(this.menuId);
     this.getAllTableData();
     this.getEnvironmentList();
   },
@@ -487,100 +514,59 @@ export default {
   },
   methods: {
     importButton() {
-      this.importDialog = true;
+      this.dialogImportVisible = true;
     },
-    //下载模板
-    downloadTemplate() {
-      let url =
-        "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImport/file/template/simple";
-      window.location.href = url;
-    },
-    beforeUpload(file) {
-        console.log(file)
-        var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
-        const extension2 = testmsg === 'xlsx'
-        if(!extension2) {
-            this.$message({
-                message: '上传文件只能是xlsx格式!',
-                type: 'warning'
-            });
-        }
-        return extension2
-    },
-    fileChange(response, file) {
-        if (response['status'] === 0) {
-            this.$confirm('服务器已存在相同名字文件，是否覆盖?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                console.log('本地存储')
-                let form = new FormData();
-                form.append("file", file.raw);
-                form.append("skip", '1');
-                this.$axios.post('/interfaceNewController/uploadInterfaceBody', form).then((response) => {
-                        this.$message({
-                            showClose: true,
-                            message: response.data['msg'],
-                            type: 'success',
-                        });
-                    }
-                );
-            }).catch(() => {
-
-            });
-        } else {
-            if (response['msg']) {
-                this.$message({
-                    showClose: true,
-                    message: response['msg'],
-                    type: 'success',
-                });
-            }
-        }
-
-    },
-    handleRemove(file, fileList) {
-        // console.log('file:',file,fileList)
-        this.fileName = "删除" + file.name;
-        this.fileList.splice(0, 1)
-    },
-    handlePreview(file) {
-        // console.log('file:' + file);
-        this.fileName = "点击" + file.name;
-    },
-    handleExceed(file, fileList) {
-        this.$message.warning(`只允许上传1个文件`);
-    },
-    handleOnChange(file) {
-        this.$message.success(`选择文件成功`);
-        this.fileName = file.name;
-        this.fileList.push(file)
-    },
-    importTemplate() {
-        console.log("importTemplate");
-        let formData = new FormData();
-
-        formData.append("file", this.fileList[0].raw);
-        Request({
-            url: "/interfaceNewController/uploadInterfaceBody",
-            method: "POST",
-            params: formData
-        })
-        .then((res) => {
-            console.log('导入成功')
-            this.$message.success(res.respMsg);
-        })
-        .catch((res) => {
-            this.$message.error("上传失败");
-        });
-    },
+		//导入文件相关
+		downloadTemplate() {
+			window.location.href =
+				this.address4 + "atfcloud2.0a/transactController/downloadTemplate";
+		},
+		handleRemove(file, fileList) {
+			// console.log('file:',file,fileList)
+			this.fileName = "删除" + file.name;
+			this.fileList.splice(0, 1)
+		},
+		handlePreview(file) {
+			// console.log('file:' + file);
+			this.fileName = "点击" + file.name;
+		},
+		handleExceed(file, fileList) {
+			this.$message.warning(`只允许上传1个文件`);
+		},
+		handleOnChange(file) {
+			this.$message.success(`选择文件成功`);
+			this.fileName = file.name;
+			this.fileList.push(file)
+		},
+		// 导入模板
+		importTemplate() {
+			console.log("importTemplate", this.autId);
+			let formData = new FormData();
+			formData.append("autId", this.autId);
+			formData.append("creatorId", this.creatorId);
+			formData.append("file", this.fileList[0].raw);
+			Request({
+				url: "/transactController/batchImportTransact",
+				method: "POST",
+				params: formData
+			})
+				.then((res) => {
+					this.$message.success(res.respMsg);
+					this.dialogImportVisible = false;
+					this.getAllTableData();
+					this.fileList = [];
+					this.fileName = "";
+				})
+				.catch((res) => {
+					this.$message.error("上传失败");
+				});
+		},
     getEnvironmentList() {
       Request({
         url: "/interfaceNewController/interfaceEnvironmentSelect",
         method: "post",
         params: {
-          transactId: this.transactId,
+          menuId: this.menuId,
         },
       }).then((res) => {
         console.log("查询成功列表", res);
@@ -612,8 +598,9 @@ export default {
       }
     },
     newInterface() {
-      this.modelFlag = 1;
-      this.dialogVisible = true;
+      // this.modelFlag = 1;
+      // this.dialogVisible = true;
+			this.interfaceDialog = true;
     },
     handleClose(done) {
       if (this.modelFlag === 1) {
@@ -627,6 +614,8 @@ export default {
     //取消按钮
     cancelButtonClicked() {
       this.dialogVisible = false;
+      this.interfaceDialog = false
+			this.dialogImportVisible = false;
     },
     //修改分组表单
     updateGroupButton(row) {
@@ -688,6 +677,30 @@ export default {
         }
       });
     },
+		addInterfaceNew(){
+    	this.ruleForm.code = "接口"+ Date.now();
+			Request({
+				url: "/interface/addSingleInterface",
+				method: "POST",
+				params: {
+					creatorId: sessionStorage.getItem('userId'),
+					description: this.ruleForm.descShort,
+					interfaceCode: this.ruleForm.code,
+					name: this.ruleForm.nameMedium,
+					systemId: this.autId,
+					menuId: this.menuId,
+					userId: sessionStorage.getItem('userId')
+				},
+			})
+				.then((res) => {
+					this.$message(res.respMsg)
+					this.interfaceDialog = false;
+					this.getAllTableData();
+				})
+				.catch((err) => {
+					console.log("接口添加失败", err);
+				});
+		},
     getTableDataByIndex(index) {
       Request({
         url: "/interfaceNewController/selectAllInterface",
@@ -705,21 +718,23 @@ export default {
             this.tableData = res.list;
             // this.$message.success("查询成功！")
           } else {
-            this.$message.error("获取接口信息失败！");
             console.log(err);
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("查询失败",err);
+          if (res.respCode === "10011111"){
+						this.$message.info("暂无数据！")
+					}
         });
     },
     getAllTableData() {
-      console.log(this.transactId);
+      console.log(this.menuId);
       Request({
-        url: "/interfaceNewController/selectAllInterfaceByTransactId",
+        url: "/interfaceNewController/selectAllInterfaceByMenuId",
         method: "post",
         params: {
-          transactId: this.transactId,
+          menuId: this.menuId,
           pageSize: this.pageSize,
           currentPage: this.currentPage,
           orderColumns: "update_time",
@@ -730,8 +745,10 @@ export default {
           if (res.respCode === "0000") {
             this.tableData = res.list;
           } else {
-            this.$message.error("获取接口信息失败！");
-            console.log(err);
+						console.log("查询失败",err);
+						if (res.respCode === "10011111"){
+							this.$message.info("暂无数据！")
+						}
           }
         })
         .catch((err) => {
@@ -744,7 +761,7 @@ export default {
         url: "/interfaceNewController/selectAllInterfaceGroup",
         method: "post",
         params: {
-          transactId: id,
+          menuId: id,
         },
       })
         .then((res) => {
@@ -758,7 +775,6 @@ export default {
             }
             // this.$message.success("查询成功！")
           } else {
-            this.$message.error("获取接口分组失败！");
             console.log(res.respMsg);
           }
         })
@@ -767,7 +783,7 @@ export default {
         });
     },
     updateInterface() {
-      this.form.transactId = this.transactId;
+      this.form.menuId = this.menuId;
       this.form.tags = JSON.stringify(this.tags);
       if (typeof this.interfaceGroup === "number") {
         this.form.interfaceGroupId = this.interfaceGroup;
@@ -818,7 +834,8 @@ export default {
         });
     },
     addInterface() {
-      this.form.transactId = this.transactId;
+      this.form.transactId = 1;
+			this.form.menuId = this.menuId;
       this.form.tags = JSON.stringify(this.tags);
       let length = this.interfaceGroup.length;
       this.form.interfaceGroupId = this.interfaceGroup[length - 1];
@@ -923,5 +940,17 @@ export default {
 }
 .in-file {
   text-align: center;
+}
+.btnSelectFile {
+	margin: -10px -5px 10px 0px;
+}
+.buttonDownload,
+.buttonGroup {
+	margin: 15px 0px -35px 0px;
+	display: flex;
+}
+
+.buttonGroup {
+	justify-content: flex-end;
 }
 </style>
