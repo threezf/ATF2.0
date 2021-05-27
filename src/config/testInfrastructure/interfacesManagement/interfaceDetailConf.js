@@ -19,7 +19,7 @@ const InterfaceTestConf = [{
     label: '',
     key: 'detail',
     value: '/user/points.php',
-    width: 600,
+    width: 640,
     right: 0
 }, {
     type: 'select',

@@ -12,7 +12,7 @@ const state = {
     header: {},
     bodyFormat: 1,
     bodyContent: {},
-    bodyResponseType: {},
+    bodyResponseType: 1,
     bodyResponse: {},
     headerResponse: {},
     tags: [],

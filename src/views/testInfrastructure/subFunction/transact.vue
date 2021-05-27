@@ -254,8 +254,9 @@ export default {
                 orderColumns: "modified_time",
                 orderType: "desc",
                 pageSize: this.pageSize,
-                transType: this.$route.query.hasOwnProperty('isInterface') ?
-                    this.isInterface ? 2 : 1 : ""
+								transType:1,
+                // transType: this.$route.query.hasOwnProperty('isInterface') ?
+                //     this.isInterface ? 2 : 1 : ""
             };
             return obj;
         },
@@ -599,10 +600,10 @@ export default {
                     (res) => {
                         console.log("获取res", res, this.isInterface, res);
                         if (res.list.length === 0) {
-                            this.isInterface ?
-                                (this.dialogModelFlag = 5) :
-                                (this.dialogModelFlag = 4);
-                            this.dialogVisible = true;
+                            // this.isInterface ?
+                            //     (this.dialogModelFlag = 5) :
+                            //     (this.dialogModelFlag = 4);
+                            // this.dialogVisible = true;
                             this.tableData = [];
                         } else {
                             for (let i = 0; i < res.list.length; i++) {
@@ -617,8 +618,8 @@ export default {
                             if (_this.addId) {
                                 _this.addRow = res.list.find((item) => item.id === _this.addId);
                             }
-                            console.log("tableData", this.tableData);
                         }
+											this.getInterfaceProjects()
                     },
                     (err) => {
                         console.log("pagination查询出错" + err);
@@ -628,6 +629,39 @@ export default {
                     console.log("pagination查询出错" + err);
                 });
         },
+				getInterfaceProjects(){
+					Request({
+						url: "/interfaceNewController/interfaceMenuSelect",
+						method: "POST",
+						params: {
+							autId: this.autId,
+						},
+					})
+						.then((res) => {
+							if (res.respCode === "0000") {
+								console.log("获取成功：", res);
+								for (let i = 0; i < res.list.length; i++){
+									if (res.list[i].transType == 1) {
+										res.list[i].transType = "UI";
+									} else {
+										res.list[i].transType = "接口";
+									}
+									this.tableData.push(res.list[i])
+								}
+								this.totalCount += res.totalCount;
+								console.log("tableData", this.tableData);
+								if (this.tableData.length ===0){
+									this.dialogModelFlag = 5
+									this.dialogVisible = true;
+								}
+							}else {
+								console.log(res.respMsg)
+							}
+						})
+						.catch((err) => {
+							console.log("接口添加失败", err);
+						});
+				},
         submitForm(formName) {
             let _this = this;
             let status = _this.ruleForm.nameMedium === "";
@@ -647,7 +681,7 @@ export default {
                     _this.ruleForm.code =
                         _this.ruleForm.code !== "" ?
                         _this.ruleForm.code :
-                        "接口" + Date.now();
+                        "接口项目" + Date.now();
                 }
                 console.log("submitForm", this.ruleForm);
                 _this.$refs[formName].validate((valid) => {
@@ -665,7 +699,6 @@ export default {
                                             nameMedium: _this.ruleForm.nameMedium,
                                             transType: _this.isInterface ? 2 : 1,
                                             creatorId: sessionStorage.getItem("userId"),
-                                            userId: sessionStorage.getItem('userId')
                                         },
                                     })
                                     .then((res) => {
@@ -682,33 +715,56 @@ export default {
                                         }
                                     });
                             } else {
-                                Request({
-                                        url: "/interface/addSingleInterface",
-                                        method: "POST",
-                                        params: {
-                                            creatorId: sessionStorage.getItem('userId'),
-                                            description: _this.ruleForm.descShort,
-                                            interfaceCode: _this.ruleForm.code,
-                                            name: _this.ruleForm.nameMedium,
-                                            systemId: _this.autId,
-                                            userId: sessionStorage.getItem('userId')
-                                        },
-                                    })
-                                    .then((res) => {
-                                        this.$message(res.respMsg)
-                                        _this.dialogVisible = false;
-                                        _this.getAllFunction();
-                                    })
-                                    .catch((err) => {
-                                        console.log("接口添加失败", err);
-                                        if (err.respCode == "10011000") {
-                                            _this.$message.error(err.respMsg);
-                                        }
-                                    });
+                                // Request({
+                                //         url: "/interface/addSingleInterface",
+                                //         method: "POST",
+                                //         params: {
+                                //             creatorId: sessionStorage.getItem('userId'),
+                                //             description: _this.ruleForm.descShort,
+                                //             interfaceCode: _this.ruleForm.code,
+                                //             name: _this.ruleForm.nameMedium,
+                                //             systemId: _this.autId,
+                                //             userId: sessionStorage.getItem('userId')
+                                //         },
+                                //     })
+                                //     .then((res) => {
+                                //         this.$message(res.respMsg)
+                                //         _this.dialogVisible = false;
+                                //         _this.getAllFunction();
+                                //     })
+                                //     .catch((err) => {
+                                //         console.log("接口添加失败", err);
+                                //         if (err.respCode == "10011000") {
+                                //             _this.$message.error(err.respMsg);
+                                //         }
+                                //     });
+																Request({
+																	url: "/interfaceNewController/addInterfaceMenu",
+																	method: "POST",
+																	params: {
+																		createUser: sessionStorage.getItem('username'),
+																		descShort: _this.ruleForm.descShort,
+																		code: _this.ruleForm.code,
+																		nameMedium: _this.ruleForm.nameMedium,
+																		autId: _this.autId,
+																	},
+																})
+																	.then((res) => {
+																		this.$message(res.respMsg)
+																		_this.dialogVisible = false;
+																		_this.getAllFunction();
+																	})
+																	.catch((err) => {
+																		console.log("接口添加失败", err);
+																		if (err.respCode === "10011000") {
+																			_this.$message.error(err.respMsg);
+																		}
+																	});
                             }
                         } else if (
                             document.getElementById("buttonName").innerText == "修改"
                         ) {
+                        	if (_this.ruleForm.functionType === "UI"){
                             Request({
                                     url: "/transactController/modifySingleTransact",
                                     method: "POST",
@@ -732,6 +788,29 @@ export default {
                                     this.$message.warning(err.respMsg);
 
                                 });
+													}else {
+														Request({
+															url: "/interfaceNewController/interfaceMenuUpdate",
+															method: "POST",
+															params: {
+																code: _this.ruleForm.code,
+																descShort: _this.ruleForm.descShort,
+																id: _this.updateId,
+																nameMedium: _this.ruleForm.nameMedium,
+																createUser: sessionStorage.getItem('username'),
+															},
+														})
+															.then((res) => {
+																this.$message.success('修改成功')
+																_this.dialogVisible = false;
+																_this.getAllFunction();
+															})
+															.catch((err) => {
+																console.log("添加失败", err);
+																this.$message.warning(err.respMsg);
+
+															});
+													}
                         }
                     } else {
                         console.log("验证失败");
@@ -752,7 +831,7 @@ export default {
             formData.append("creatorId", this.creatorId);
             formData.append("file", this.fileList[0].raw);
             Request({
-                    url: "/transactController/batchImportTransact",
+                    url: "/interfaceNewController/batchImportInterfaceEnvironment",
                     method: "POST",
                     params: formData
                 })

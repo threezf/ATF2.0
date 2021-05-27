@@ -33,13 +33,13 @@
     </el-dialog>
     </div>
 </template>
- 
+
 <script>
 import MenuTree from "@/components/interfaceTest/MenuTree";
 import MenuAndDropdown from "@/components/interfaceTest/MenuAndDropdown";
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
- 
+
 export default {
         name: "SideBarCreate",
         mixins: [VueMixins], // 时间格式转化
@@ -79,7 +79,7 @@ export default {
                 form: {
                     parentId: 0,
                     groupName:"",
-                    transactId:"",
+                    menuId:"",
                     createId:""
                 },
                 modelFlag: 1,
@@ -90,7 +90,7 @@ export default {
                         trigger: "blur"
                     }]
                 },
-                autId: localStorage.getItem('transactId')
+                autId: localStorage.getItem('menuId')
             }
         },
         props:{
@@ -194,7 +194,7 @@ export default {
             addGroup() {
                 this.form.parentId = 0
                 this.form.createId = sessionStorage.getItem("username")
-                this.form.transactId = this.autId
+                this.form.menuId = this.autId
                 Request({
                     url: '/interfaceNewController/addSingleInterfaceGroup',
                     method: 'post',
@@ -213,8 +213,8 @@ export default {
                     console.log(err)
                 })
             },
-            
-        
+
+
     }
 };
 </script>
@@ -271,7 +271,7 @@ export default {
 .itemAll {
     border-bottom:1px dashed  #CCC;
     border-top:1px solid  #DDD;
-    text-decoration : none; 
+    text-decoration : none;
     text-align:center;
     padding-right:40px;
 }
