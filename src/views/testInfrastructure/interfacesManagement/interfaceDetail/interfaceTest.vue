@@ -2,10 +2,27 @@
     <div class="interface-test">
         <search-bar 
             size="small" 
-            searchBtnIcon="el-icon-caret-right" 
+            searchBtnIcon="el-icon-caret-right"
+            :loading="isRunning"
             searchBtnText="执行"
             :conf="conf"
             @submit="handleSubmit">
+            <template v-slot:presearch>
+                <el-select
+                    size="small"
+                    v-model="runnerselected"
+                    :disabled="isRunning"
+                    placeholder="选择执行机"
+                    style="width: 200px"
+                    multiple>
+                    <el-option
+                        v-for="(item,index) in runners"
+                        :key="index"
+                        :label="item.runnerName"
+                        :value="item.identifiableName">
+                    </el-option>
+                </el-select>
+            </template>
         </search-bar>
         <test-tabs :header="originData.header" :body="originData.body" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
@@ -39,6 +56,8 @@ import {
 import {
     InterfaceTestConf
 } from '@/config/testInfrastructure/interfacesManagement/interfaceDetailConf'
+import Vac from '@/libs/vac-functions.es'
+
 import Request from '../../../../libs/request'
 export default {
     name: 'InterfaceTest',
@@ -73,7 +92,19 @@ export default {
             conf: InterfaceTestConf,
             cookieVisible: false,
             domainName: '',
-            codeVisible: false
+            codeVisible: false,
+            runners: [], // 执行机
+            runnerselected: '选择的执行机',
+            testPlanId: '', // 测试计划id
+            userId: '',
+            batchId: '', // 批次id
+            runId: '', // 执行id
+            interruptExe: '',
+            interruptTime: '',
+            selectedExeInstances: '',
+            interruptData: null, // 中断数据
+            isRunning: false,
+
         }
     },
     computed: {
@@ -155,10 +186,52 @@ export default {
     },
     created() {
         this.initUsecaseList();
+        this.queryRunner()
     },
     methods: {
         handleSubmit(event) {
+            Request({
+                url: '/scriptTemplate/addScriptTemplateDebug',
+                method: 'POST',
+                params: {
+                    autId: sessionStorage.getItem('autId'),
+                    transId: sessionStorage.getItem('transId'),
+                    scriptId: sessionStorage.getItem('transId'),
+                    creatorId: sessionStorage.getItem("userId")
+                }
+            }).then(res => {
+                if (res.respCode === "0000") {
+                    // 这里会返回caseId
+                    this.queryScriptDebugTestPlan(res.caseId)
+                } else {
+                    return console.log('获取失败')
+                }
+            }).catch(error => {
+                this.$message.warning(error)
+            })
+            
             console.log(event)
+        },
+        // 查询脚本调试测试计划
+        queryScriptDebugTestPlan(caseId) {
+            Request({
+                url: '/testPlanController/queryScriptDebugTestPlan',
+                method: 'POST',
+                params: {
+                    caseId,
+                    scriptId: sessionStorage.getItem('transId')
+                }
+            }).then(res => {
+                if(res.respCode === '0000') {
+                    // this.caselibId = res.testPlanEntity.caseLibId
+                    // this.testPlanId = res.testPlanEntity.id
+                    // sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
+                    console.log(res, '---------')
+                    this.executeAll(res.testPlanEntity.id)
+                }
+            }).catch(error => {
+                this.$message.warning('该测试计划尚未发起执行')
+            })
         },
         initUsecaseList() {
             Request({
@@ -202,7 +275,202 @@ export default {
                     }
                 )
             })
-        }
+        },
+        // 查询执行机
+        queryRunner() {
+            let _this = this
+            Request({
+                url: '/executeController/queryRunners',
+                method: 'POST',
+                params: {
+                    serviceName: "web.ui",
+                    userId: sessionStorage.getItem('userId')
+                }
+            }).then(res => {
+                if(res.respCode !== "0000") {
+                    return console.log('获取执行机失败')
+                }
+                _this.runners = res.runners
+                this.runnerselected = [res.runners[0].identifiableName]
+                console.log('runners', _this.runners)
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+        // 用例执行
+        executeAll(testPlanId) {
+            let _this = this
+            if(_this.runnerselected.length === 0) {
+                return this.$message.warning('请选择执行机')
+            }
+            _this.isRunning = true
+            Vac.ajax({
+                url: '/executeController/t1',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    userId: sessionStorage.getItem('userId'),
+                    exeScope: 1,
+                    selectState: "",
+                    selectedExeInstances: [],
+                    testPlanId,
+                    identifiableRunnerName: "appointed",
+                    appointedRunners : _this.runnerselected,
+                    sendMail: true
+                }),
+                success: function(data) {
+                    if (data.respCode === '0000') {
+                    Vac.ajax({//因为查询执行信息需要最近执行的批量号因此需要查询批次
+                        url:  '/batchRunCtrlController/queryLatestBatchIdForTestPlan',
+                        type: 'post',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            "testPlanId": 1595,
+                        }),
+                        success: function(data) {
+                        _this.batchId = data.batchId;
+                        _this.startQueryResult();
+                        /**
+                         * 执行完成
+                         */
+                        // this.isFinished = true
+                        this.isRunning = true
+                        },
+                        error: function(){
+                            Vac.alert('网络错误，执行失败！');
+                        }
+                    })
+                } else {
+                    Vac.alert(data.respMsg);
+                }},
+                error: function(){
+                    Vac.alert('网络错误，执行失败！');
+                }
+            })
+        },
+        startQueryResult: function() {
+            var _this = this;
+            Vac.ajax({
+                url: '/batchRunCtrlController/syncQueryIncInsStatus',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    batchId: _this.batchId,
+                    reqSyncNo: null,
+                    sessionId:null,
+                }),
+                success: function(data) {
+                    console.log('startQueryResult', data)
+                    if(data.respCode == "0000"){
+                        if(data.respSyncNo == -1){
+                            _this.runId = data.batchId
+                            _this.$alert(data.respMsg)
+                            // _this.isFinished = true
+                            _this.isRunning = false
+                        }
+                        else{
+                        _this.syncQueryIncInsStatus(data)
+                        }
+                    }
+                    else{
+                        Vac.alert(data.respMsg);
+                    }
+                },
+                error: function() {
+                    Vac.alert('网络错误！请点击重新查询！');
+                }
+            });
+        },
+        syncQueryIncInsStatus(values) {
+            var _this = this;
+            Vac.ajax({
+                url: '/batchRunCtrlController/syncQueryIncInsStatus',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    batchId: values.batchId,
+                    reqSyncNo: values.respSyncNo,
+                    sessionId: values.sessionId,
+                }),
+                success: function(data) {
+                if(data.respSyncNo==-1){
+                }
+                else if(data.respSyncNo==-2){
+                    _this.syncQueryIncInsStatus(values)
+                }
+                else{
+                    //若出错  则弹框询问
+                    if(data.insStatuses[0].manualChooseErrExecuting == true && data.insStatuses[0].status==3){
+                        _this.interruptData = data;
+                        _this.runInterrupt();
+                    }
+                    else{
+                    _this.syncQueryIncInsStatus(data)
+                    }
+                }
+                },
+                error: function() {
+                    Vac.alert('网络错误！请点击重新查询！');
+                }
+            });
+        },
+        runInterrupt(){
+            var _this = this;
+            var name = setInterval(
+                function(){
+                    if(_this.interruptExe == 2){
+                        clearInterval(name);
+                        _this.interruptTime = 5;
+                        _this.interruptExe = 0;
+                        _this.instanceErrorChoice(2);
+                        return false;
+                    }
+                    //如果秒数大于0
+                    if(_this.interruptTime < 1 || _this.interruptExe == 1){
+                        //清除定时任务
+                        _this.interruptExe=0;
+                        clearInterval(name);
+                        _this.interruptTime = 5;
+                        _this.instanceErrorChoice(1);
+                        //跳转
+                        return true
+                    }else{
+                        //将秒数写入到页面并将秒数减一
+                        _this.interruptTime-- ;
+                    }
+                },
+                //每秒执行一次
+                1000
+            );
+        },
+        instanceErrorChoice(status){
+            var _this = this;
+            let errorContinuing = status == 2 ? false : true;
+            Vac.ajax({
+                url:  '/batchRunCtrlController/instanceErrorChoice',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    batchId: _this.interruptData.batchId,
+                    sceneId: _this.interruptData.insStatuses[0].sceneId,
+                    caseId: _this.interruptData.insStatuses[0].testcaseId,
+                    errorContinuing: errorContinuing,
+                }),
+                success: function(data) {
+                    if(data.respCode=="0000"){
+                        if(errorContinuing){
+                        _this.syncQueryIncInsStatus(_this.interruptData)
+                        }
+                    }
+                    else{
+                        Vac.alert(data.respMsg);
+                    }
+                },
+                error: function() {
+                    Vac.alert('网络错误！请点击重新查询！');
+                }
+            });
+        },
     }
 }
 </script>

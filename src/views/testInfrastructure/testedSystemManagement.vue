@@ -366,6 +366,7 @@ export default {
             // sessionStorage.setItem('case')
             let _this = this;
             _this.id = row.id;
+            sessionStorage.setItem('autId', row.id);
             console.log("id", _this.id);
             sessionStorage.setItem("testSysNameStorage", "(" + row.nameMedium + ")") //把项目名称存入缓存中
             sessionStorage.setItem('toTransact', JSON.stringify({

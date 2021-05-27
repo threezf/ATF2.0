@@ -19,7 +19,7 @@ const InterfaceTestConf = [{
     label: '',
     key: 'detail',
     value: '/user/points.php',
-    width: 700,
+    width: 600,
     right: 0
 }, {
     type: 'select',
@@ -29,6 +29,9 @@ const InterfaceTestConf = [{
     width: 150,
     placeholder: '请选择测试用例',
     options: []
+}, {
+    type: 'slot',
+    slot: 'runnerSlot'
 }]
 
 const ResultHeader = [{

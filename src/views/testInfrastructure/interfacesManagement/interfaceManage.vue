@@ -4,18 +4,18 @@
         @getAllTableData="getAllTableData" @getGroupById="getGroupById"></SideBarCreate>
         <!-- <SideBarCreate ></SideBarCreate> -->
         <div class="main-page">
-            <el-row class="rightPage-topRow">
-                <el-col :span="2">
-                    <el-button class="new-interface" @click="newInterface" type="primary" size="small">
-                    <i class="el-icon-plus"></i>新建接口
-                </el-button>
+            <el-row class="rightPage-topRow" :gutter="20">
+                <el-col :span="18">
+                    <el-button class="new-interface" icon="el-icon-plus" @click="newInterface" type="primary" size="small">
+                        新建接口
+                    </el-button>
+                    <el-button class="new-interface" @click="newInterface" icon="el-icon-upload" type="primary" size="small">
+                        批量导入
+                    </el-button>
+                    <el-button class="new-interface" type="primary" size="small" icon="el-icon-link" @click="swaggerVisible = true" >绑定swagger
+                    </el-button>
                 </el-col>
-                <el-col :span="14">
-                    <el-button class="new-interface" @click="newInterface" type="primary" size="small">
-                    批量导入
-                </el-button>
-                </el-col>
-                <el-col :span="8">
+                <el-col :span="6">
                     <span class="enviroment-span">项目环境</span>
                     <el-select @change="selectChanged" v-model="value" placeholder="请选择" size="small">
                         <el-option
@@ -127,6 +127,20 @@
                     <el-row class="buttons_row">
                         <el-button type="primary" size="small" @click="submitForm('form')">{{buttonName}}</el-button>
                         <el-button size="small" @click="cancelButtonClicked">取消</el-button>
+                    </el-row>
+                </el-form>
+            </el-dialog>
+            <el-dialog title="绑定swagger" width="31%" :visible.sync="swaggerVisible">
+                <el-form>
+                    <el-form-item label-width="50px" label="URL: ">
+                        <el-input size="small" style="width: 300px" placeholder="请输入绑定swagger的url" v-model="swaggerUrl" clearable>
+                        </el-input>
+                    </el-form-item>
+                    <el-row type="flex" justify="center">
+                        <el-button type="primary" size="small" @click="insertSwaggerAPI">确定
+                        </el-button>
+                        <el-button type="warning" size="small" @click="swaggerVisible = false" plain>取消
+                        </el-button>
                     </el-row>
                 </el-form>
             </el-dialog>
@@ -242,7 +256,11 @@ export default {
                 value: 'id'
             },
             environmentUrl:'',
-            tableType:1
+            tableType:1,
+
+            // swagger 绑定
+            swaggerVisible: false,
+            swaggerUrl: ''
 
         }
     },
@@ -314,6 +332,36 @@ export default {
         }
     },
     methods: {
+        // 绑定swagger
+        insertSwaggerAPI() {
+            console.log()
+            if (this.swaggerUrl != "") {
+                Request({
+                    url: "/swaggerController/insertSwaggerAPI",
+                    method: "POST",
+                    params: {
+                        url: this.swaggerUrl,
+                        systemId: sessionStorage.getItem('autId'),
+                        creatorId: sessionStorage.getItem('userId'),
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                    if(res.respCode === '0000') {
+                        this.$message.success("绑定成功");
+                    }else {
+                        this.$message.warning('绑定失败')
+                    }
+                    this.swaggerVisible = false;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$message.error("请求swagger接口失败");
+                });
+            } else {
+                this.$message.warning("请输入url");
+            }
+        },
         getEnvironmentList() {
             Request({
                 url: '/interfaceNewController/interfaceEnvironmentSelect',
@@ -596,7 +644,7 @@ export default {
     min-width: calc(100vh - 480px);
 }
 .new-interface{
-    margin: 0 0 0 20px;
+    margin: 0 0 0 10px;
 }
 .enviroment-span{
     margin-right: 20px;
