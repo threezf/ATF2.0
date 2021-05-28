@@ -49,6 +49,9 @@
         <el-button type="text" size="small" @click="delCaseButton(scoped.row)"
           >删除</el-button
         >
+        <el-button type="text" size="small" @click="manageRules(scoped.row)">
+          管理断言
+        </el-button>
       </template>
     </table-comp>
     <el-dialog
@@ -236,6 +239,12 @@
         >
       </div>
     </el-dialog>
+    <el-dialog
+      :visible.sync="ruleVisible"
+      width="80%"
+      title="管理断言">
+      <Assert></Assert>
+    </el-dialog>
   </div>
 </template>
 
@@ -246,6 +255,7 @@ import CheckResult from "../components/checkResult";
 import AssertionRule from "../components/assertionRule";
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
+import Assert from './assert.vue';
 let that;
 export default {
   mixins: [VueMixins], // 时间格式转化
@@ -254,6 +264,7 @@ export default {
     TestTabs,
     CheckResult,
     AssertionRule,
+    Assert
   },
   props: {
     protocols: {
@@ -275,6 +286,7 @@ export default {
   },
   data() {
     return {
+      ruleVisible: true,
       resultData: [],
       // {
       // 	projectName:'情況1：正常登录',
@@ -768,6 +780,59 @@ export default {
       this.caseVisible = false;
       this.copyDialog = false;
     },
+    // 管理断言规则
+    manageRules(row) {
+      console.log(row);
+      Request({
+        url: '/interfaceNewController/queryInterfaceAssert',
+        method: 'post',
+        params: {
+          caseId: '25905',
+          caseType: '1'
+        }
+      }).then(res => {
+        console.log('管理断言', res)
+      })
+    },
+    // 新增断言
+    putInterfaceAssert() {
+      Request({
+        url: '/interfaceNewController/putInterfaceAssert',
+        method: 'post',
+        params: {
+          ruleName: '',
+          caseType: '1',
+          assertNode: ''
+        }
+      }).then(res => {
+        console.log('管理断言', res)
+      })
+    },
+    deleteAllInterfaceAssert() {
+      Request({
+        url: '/interfaceNewController/deleteAllInterfaceAssert',
+        method: 'post',
+        params: {
+          caseId: '',
+          caseType: '1',
+        }
+      }).then(res => {
+        console.log('管理断言', res)
+      })
+    },
+    deleteInterfaceAssert(row) {
+      Request({
+        url: '/interfaceNewController/deleteInterfaceAssert',
+        method: 'post',
+        params: {
+          caseId: '',
+          caseType: '1',
+          ruleName: ''
+        }
+      }).then(res => {
+        console.log('管理断言', res)
+      })
+    }
   },
 };
 </script>

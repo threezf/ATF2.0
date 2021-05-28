@@ -561,7 +561,7 @@ export default {
         // 编码跳转
         toTransact(row) {
             console.log("toTransact", row);
-            sessionStorage.setItem('transId', row.id)
+            sessionStorage.setItem('transId', row.autId)
             if (row.transType === "UI") {
                 this.$router.push({
                     name: "TransactDetail",

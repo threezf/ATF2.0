@@ -24,7 +24,7 @@
                 </el-select>
             </template>
         </search-bar>
-        <test-tabs :header="originData.header" :body="originData.body" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
+        <test-tabs :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
                 <el-button type="text" size="mini" @click="cookieVisible = true">cookie管理</el-button>
                 <el-tooltip placement="top" content="根据当前语言信息生成各种测试代码">
@@ -78,9 +78,9 @@ export default {
             type: String,
             default: ''
         },
-        originData: {
-            type: Object,
-            default: () => {}
+        id: {
+            type: String,
+            default: ''
         },
         enviromentPre: {
             type: String,
@@ -104,7 +104,7 @@ export default {
             selectedExeInstances: '',
             interruptData: null, // 中断数据
             isRunning: false,
-
+            originData: {}
         }
     },
     computed: {
@@ -179,58 +179,64 @@ export default {
         },
         enviromentPre: {
             handler(newVal) {
-                this.conf[2].value = newVal.slice(0, newVal.length - 1) + this.conf[2].value
+                this.conf[2].value = newVal.slice(0, newVal.length) + this.path
             },
             immediate: true
         }
     },
     created() {
+        this.getOriginData();
         this.initUsecaseList();
         this.queryRunner()
     },
     methods: {
+        getOriginData() {
+            Request({
+                url: '/interfaceNewController/selectInterfaceById',
+                method: 'post',
+                params: {
+                    id: this.id
+                }
+            }).then((res) => {
+                this.originData = res.interfaceSelectDto
+            })
+        },
         handleSubmit(event) {
             Request({
-                url: '/scriptTemplate/addScriptTemplateDebug',
+                url: '/interfaceNewController/AddScriptTemplateDebug',
                 method: 'POST',
                 params: {
                     autId: sessionStorage.getItem('autId'),
                     transId: sessionStorage.getItem('transId'),
-                    scriptId: sessionStorage.getItem('transId'),
+                    // scriptId: sessionStorage.getItem('transId'),
                     creatorId: sessionStorage.getItem("userId")
                 }
             }).then(res => {
                 if (res.respCode === "0000") {
                     // 这里会返回caseId
-                    this.queryScriptDebugTestPlan(res.caseId)
+                    this.queryInterfaceScriptDebugTestPlan(res.caseId)
                 } else {
                     return console.log('获取失败')
                 }
             }).catch(error => {
                 this.$message.warning(error)
             })
-            
-            console.log(event)
         },
-        // 查询脚本调试测试计划
-        queryScriptDebugTestPlan(caseId) {
+        // 获取接口调试的测试计划
+        queryInterfaceScriptDebugTestPlan() {
             Request({
-                url: '/testPlanController/queryScriptDebugTestPlan',
-                method: 'POST',
+                url: '/testPlanController/queryInterfaceScriptDebugTestPlan',
+                method: 'post',
                 params: {
-                    caseId,
-                    scriptId: sessionStorage.getItem('transId')
+                      "scriptId": sessionStorage.getItem('transId')
                 }
             }).then(res => {
-                if(res.respCode === '0000') {
-                    // this.caselibId = res.testPlanEntity.caseLibId
-                    // this.testPlanId = res.testPlanEntity.id
-                    // sessionStorage.setItem("caselibId", res.testPlanEntity.caseLibId)
-                    console.log(res, '---------')
+                console.log(res)
+                if(res.testPlanEntity) {
                     this.executeAll(res.testPlanEntity.id)
+                }else {
+                    this.$message.warning('无测试计划生成')
                 }
-            }).catch(error => {
-                this.$message.warning('该测试计划尚未发起执行')
             })
         },
         initUsecaseList() {

@@ -295,11 +295,9 @@
                 </div>
               </div>
             </div>
-            <keep-alive>
-              <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :originData="interfaceData"
-                              :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
-              </InterfaceTest>
-            </keep-alive>
+            <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :id="interfaceData.id"
+                            :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
+            </InterfaceTest>
             <keep-alive>
               <UseCase v-if="activeTab === 'case' && tab.name === 'case'" :originData="interfaceData" :path="interfaceData.urlPath"
                         :protocols="protocols" :methods="methodOptions">
@@ -780,23 +778,21 @@ export default {
 											console.log('header1',this.header)
 										}else {
 											this.header.push(...JSON.parse(res.interfaceSelectDto.header))
-											this.header.splice(this.header.length-1,1)
 											console.log('header2',this.header)
 										}
 										if(res.interfaceSelectDto.bodyFormat ===0) {
+                      this.body = []
 											if (res.interfaceSelectDto.bodyContent === '[]' || res.interfaceSelectDto.bodyContent == null) {
-												this.body = []
 												console.log('body1', this.body)
 											} else {
 												this.body.push(...JSON.parse(res.interfaceSelectDto.bodyContent))
-												this.body.splice(this.body.length-1,1)
 												console.log('body2', this.body)
 											}
 										}
 
 										if(res.interfaceSelectDto.bodyResponseType ===0) {
+                      this.respBody=[]
 											if(res.interfaceSelectDto.bodyResponse === '[]' || res.interfaceSelectDto.bodyResponse == null){
-												this.respBody=[]
 												console.log('respBody1',this.respBody)
 											}else {
 												this.respBody.push(...JSON.parse(res.interfaceSelectDto.bodyResponse))
@@ -849,22 +845,33 @@ export default {
 						}
             this.interfaceData.bodyFormat = Number(this.$refs.testTabs.bodyType)
             if(this.interfaceData.bodyFormat === 0){
-                this.interfaceData.bodyContent = JSON.stringify(this.$refs.testTabs.bodys)
+                this.interfaceData.bodyContent = JSON.stringify(this.$refs.testTabs.bodys.filter(item => {
+              return Boolean(item.desc) || Boolean(item.name) || Boolean(item.val)
+            }))
             }else {
                 this.interfaceData.bodyContent = this.$refs.testTabs.jsonVariable
             }
-            this.interfaceData.header = JSON.stringify(this.$refs.testTabs.headers)
-            this.interfaceData.params = JSON.stringify(this.$refs.testTabs.params)
-            this.interfaceData.headerResopnse = JSON.stringify(this.$refs.responseTabs.respheaders)
+            this.interfaceData.header = JSON.stringify(this.$refs.testTabs.headers.filter(item => {
+              return Boolean(item.desc) || Boolean(item.name) || Boolean(item.val)
+            }))
+            this.interfaceData.params = JSON.stringify(this.$refs.testTabs.params.filter(item => {
+              return Boolean(item.desc) || Boolean(item.name) || Boolean(item.val)
+            }))
+            this.interfaceData.headerResopnse = JSON.stringify(this.$refs.responseTabs.respheaders.filter(item => {
+              console.log('updateheader',item)
+              return Boolean(item.desc) || Boolean(item.name)
+            }))
             this.interfaceData.bodyResopnseType = Number(this.$refs.responseTabs.respType)
             if(this.interfaceData.bodyResopnseType === 0){
-                this.interfaceData.bodyResopnse = JSON.stringify(this.$refs.responseTabs.results)
+                this.interfaceData.bodyResopnse = JSON.stringify(this.$refs.responseTabs.results.filter(item => {
+                return Boolean(item.desc) || Boolean(item.name)
+              }))
             }else {
                 this.interfaceData.bodyResopnse = this.$refs.responseTabs.respJsonVariable
             }
             this.interfaceData.authType = this.$refs.testTabs.selectedAuthType
             this.interfaceData.updateUser = sessionStorage.getItem("username")
-          Request({
+            Request({
                   url: '/interfaceNewController/updateSingleInterface',
                   method: 'post',
                   params: this.interfaceData

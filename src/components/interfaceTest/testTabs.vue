@@ -26,8 +26,11 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="value" label="操作" header-align="center" width="80" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
+                        <el-button type="success" icon="el-icon-plus" size="mini"
+                                    @click.native="addTableRow('headers',scope.$index)">
+                        </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
                                     @click.native="delTableRow('headers',scope.$index)">
                         </el-button>
@@ -142,8 +145,11 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="value" label="操作" header-align="center" width="80" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
+                        <el-button type="success" icon="el-icon-plus" size="mini"
+                                    @click.native="addTableRow('bodys',scope.$index)">
+                        </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
                                     @click.native="delTableRow('bodys',scope.$index)">
                         </el-button>
@@ -175,8 +181,11 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="value" label="操作" header-align="center" width="80" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
+                        <el-button type="success" icon="el-icon-plus" size="mini"
+                                    @click.native="addTableRow('params',scope.$index)">
+                        </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
                                     @click.native="delTableRow('params',scope.$index)">
                         </el-button>
@@ -443,18 +452,19 @@ export default {
             }
         },
         initApiMsgData() {
-                console.log("测试")
-                this.bodyType = '0'
-                this.headers = Array();
-                this.bodys = Array();
-                this.jsonVariable = '';
-                this.params = Array();
-                this.selectedAuthType = 1
-            },
+            console.log("测试")
+            this.bodyType = '0'
+            this.headers = Array();
+            this.bodys = Array();
+            this.jsonVariable = '';
+            this.params = Array();
+            this.selectedAuthType = 1
+        },
         handlerParams() {
-						this.bodys = []
-						this.headers = []
-						this.params = []
+            console.log('handlerParams', this.param, this.header, this.bodys)
+            this.bodys = []
+            this.headers = []
+            this.params = []
             if (this.bodyFormat === 1) {
                 this.bodys.push({
                     name: '',
@@ -513,40 +523,6 @@ export default {
     }
     ,
     watch: {
-        monitorVariable: {
-            handler: function () {
-                console.log('bodys change')
-                if (this.bodys.length === 0) {
-                    this.addTableRow('bodys')
-                }
-                if (this.bodys[this.bodys.length - 1]['name'] || this.bodys[this.bodys.length - 1]['val']) {
-                    this.addTableRow('bodys')
-                }
-            },
-            deep: true
-        },
-        monitorExtract: {
-            handler: function () {
-                if (this.params.length === 0) {
-                    this.addTableRow('params')
-                }
-                if (this.params[this.params.length - 1]['name'] || this.params[this.params.length - 1]['val']) {
-                    this.addTableRow('params')
-                }
-            },
-            deep: true
-        },
-        monitorHeader: {
-            handler: function () {
-                if (this.headers.length === 0) {
-                    this.addTableRow('headers')
-                }
-                if (this.headers[this.headers.length - 1]['name'] || this.headers[this.headers.length - 1]['val']) {
-                    this.addTableRow('headers')
-                }
-            },
-            deep: true
-        },
         header: {
             handler(newVal) {
                 let arr = JSON.parse(newVal)
