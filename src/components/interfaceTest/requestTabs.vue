@@ -78,19 +78,19 @@ export default {
 		},
     computed: {
         tabs() {
-                return [{
-                    label: '请求头部',
-                    name: 'header'
-                }, {
-                    label: '请求体',
-                    name: 'body'
-                }, {
-                    label: '请求参数',
-                    name: 'params'
-                }, {
-                    label: '权限验证',
-                    name: 'auth'
-                }]
+			return [{
+				label: '请求头部',
+				name: 'header'
+			}, {
+				label: '请求体',
+				name: 'body'
+			}, {
+				label: '请求参数',
+				name: 'params'
+			}, {
+				label: '权限验证',
+				name: 'auth'
+			}]
         }
     },
     methods: {

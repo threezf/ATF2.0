@@ -24,7 +24,7 @@
                 </el-select>
             </template>
         </search-bar>
-        <test-tabs :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
+        <test-tabs isRunModel :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
                 <el-button type="text" size="mini" @click="cookieVisible = true">cookie管理</el-button>
                 <el-tooltip placement="top" content="根据当前语言信息生成各种测试代码">
@@ -32,7 +32,7 @@
                 </el-tooltip>
             </template>
         </test-tabs>
-        <test-result :originData="originData"></test-result>
+        <test-result :originData="originData" :runResult="runResult"></test-result>
         <el-dialog title="管理Cookie" :visible.sync="cookieVisible" width="40vw" :append-to-body="true">
             <el-row :gutter="20">
                 <el-col :span="20">
@@ -104,7 +104,8 @@ export default {
             selectedExeInstances: '',
             interruptData: null, // 中断数据
             isRunning: false,
-            originData: {}
+            originData: {},
+            runResult: {}
         }
     },
     computed: {
@@ -373,6 +374,11 @@ export default {
                             _this.$alert(data.respMsg)
                             // _this.isFinished = true
                             _this.isRunning = false
+                            _this.runResult = data.insStatuses[0]?data.insStatuses[0]: {}
+                            delete _this.runResult.id
+                            delete _this.runResult.sceneId
+                            delete _this.runResult.testcaseId
+                            delete _this.runResult.flowNodeId
                         }
                         else{
                         _this.syncQueryIncInsStatus(data)
