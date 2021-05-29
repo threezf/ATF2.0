@@ -1,5 +1,6 @@
 <template>
   <div class="class-testCase">
+    {{nameToNodeMap}}
     <el-row>
       <el-button
         class="new-Cases"
@@ -248,10 +249,14 @@
     </el-dialog>
     <el-dialog
       :visible.sync="ruleVisible"
-      width="40%"
+      width="60%"
       top="60px"
       title="管理断言">
-      <AssertTree @cancel="ruleVisible = false" mode="edit" :caseId="selectRow.id"></AssertTree>
+      <div style="display: flex">
+        <el-tree style="border: 1px solid #eee; width: 200px;">
+        </el-tree>
+        <AssertTree @cancel="ruleVisible = false" mode="edit" :caseId="selectRow.id"></AssertTree>
+      </div>
     </el-dialog>
     <el-dialog
       :visible.sync="addRuleVisible"
@@ -305,6 +310,7 @@ export default {
       ruleVisible: false,
       selectRow: {},
       selectIds: [],
+      nameToNodeMap: {},
       resultData: [],
       caseId: '',
       addRuleVisible: false,
@@ -481,6 +487,7 @@ export default {
           caseType: '1'
         }
       }).then(res => {
+        this.nameToNodeMap = res.nameToNodeMap
       })
     },
     handleSelectionChange(val) {
