@@ -1,12 +1,20 @@
 <template>
     <div>
+        <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-plus"
+            circle
+            @click="addRule"
+            >
+        </el-button>
         <el-table
-            :data="copyData"
+            :data="tableData"
             row-key="selfId"
             border
             size="mini"
+            default-expand-all
             :tree-props="{children: 'childs', hasChildren: 'hasChildren'}">
-            
             <el-table-column
                 label="关键字"
                 prop="key">
@@ -110,12 +118,12 @@
                     </el-button>
                 </template>
             </el-table-column>
-
         </el-table>
     </div>
 </template>
 
 <script>
+import lodash from 'lodash';
 export default {
     name: 'Assert',
     props: {
@@ -124,10 +132,9 @@ export default {
             default: () => {}
         }
     },
-    computed: {
-        copyData() {
-            return this.addKey(this.tableData)
-        }
+    model: {
+        mode: 'data',
+        event: 'onchange'
     },
     data() {
         return {
@@ -270,9 +277,56 @@ export default {
             ]
         }
     },
+    computed: {
+        copyData() {
+            return this.addKey(this.tableData)
+        }
+    },
+    watch: {
+        tableData: {
+            handler(newVal) {
+                if(newVal) {
+                    console.log(newVal, 'new')
+                    const deepCloneTable = lodash.cloneDeep(newVal);
+                    this.deleteKey(deepCloneTable)
+                    console.log(deepCloneTable, 'new')
+                }
+            },
+            immediate: true,
+            deep: true
+        }
+    },
+    created() {
+        this.addKey(this.tableData)
+    },
     methods: {
+        addRule() {
+            this.tableData.push({
+                selfId: parseInt(Math.random() * 100000000000),
+                key: "",
+                assertValue: "",
+                rule: "",
+                isArray: false,
+                isFirst: true,
+                assertType: 0,
+                childs: []
+            })
+        },
         addSubRule(row, index) {
-           console.log(row, index) 
+           console.log(row, index)
+           if(row.childs === null || row.childs.length === 0) {
+               row.childs = []
+            }
+            row.childs.push({
+                selfId: parseInt(Math.random() * 100000000000),
+                key: "",
+                assertValue: "",
+                rule: "",
+                isArray: false,
+                isFirst: true,
+                assertType: 0,
+                childs: []
+            })
         },
         addKey(data) {
             let time = Date.now();
@@ -285,8 +339,38 @@ export default {
             })
             return data
         },
+        deleteKey(data) {
+            data.forEach(item => {
+                delete item.selfId
+                if(item.childs) {
+                    this.deleteKey(item.childs)
+                }
+            })
+        },
         removeRule(row) {
             console.log(row)
+            this.filterSub(this.tableData, row.selfId)
+        },
+        filterSub(data, id) {
+            data.filter(item => {
+                if(item.childs) {
+                    console.log('filter', item, item.selfId, id)
+                    this.filterSub(item.childs, id);
+                }else {
+                    return item.selfId != id
+                }
+            })
+        },
+        getParentArr(id) {
+            this.tableData.forEach(item => {
+                if(item.childs && item.childs.length > 0) {
+
+                }else {
+                    if(item.selfId === id) {
+
+                    }
+                }
+            })
         }
     }
 }

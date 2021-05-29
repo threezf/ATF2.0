@@ -34,7 +34,7 @@ const CaseConf = [
 		label: '操作',
 		type: 'slot',
 		slot: 'operationSlot',
-		width: 250
+		width: 300
 	},
 ]
 export {

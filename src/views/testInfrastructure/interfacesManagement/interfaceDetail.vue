@@ -497,7 +497,7 @@ export default {
             jsonVariable: '',
             respJsonVariable: '',
             currentRow: '',
-            activeTab: 'detail',
+            activeTab: 'case',
             interfaceTabs: [{
               label: '接口详情',
               name: 'detail'
