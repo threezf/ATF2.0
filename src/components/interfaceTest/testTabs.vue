@@ -40,7 +40,7 @@
         </el-tab-pane>
         <el-tab-pane label="请求体" name="second" >
             <el-form :inline="true" class="demo-form-inline" style="margin-top: 10px; display: flex; align-items: center;">
-                <el-radio-group v-model="bodyType"  :disabled="isRunModel">
+                <el-radio-group v-model="bodyType">
                     <el-radio label= '0' >form-data</el-radio>
                     <el-radio label= '1' >raw</el-radio>
                 </el-radio-group>

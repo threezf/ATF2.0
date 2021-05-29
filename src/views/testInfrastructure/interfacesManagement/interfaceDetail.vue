@@ -295,7 +295,7 @@
                 </div>
               </div>
             </div>
-            <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :id="interfaceData.id"
+            <InterfaceTest v-if="activeTab === 'test' && tab.name === 'test'" :enviromentPre="enviromentPre" :getId="interfaceData.id"
                             :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" @caseChange="handleCaseChange">
             </InterfaceTest>
             <keep-alive>

@@ -24,15 +24,17 @@
                 </el-select>
             </template>
         </search-bar>
-        <test-tabs isRunModel :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
+        <!-- <test-tabs isRunModel :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
                 <el-button type="text" size="mini" @click="cookieVisible = true">cookie管理</el-button>
                 <el-tooltip placement="top" content="根据当前语言信息生成各种测试代码">
                     <el-button type="text" size="mini" style="margin-left: -10px" @click="codeVisible = true">生成测试代码</el-button>
                 </el-tooltip>
             </template>
-        </test-tabs>
-        <test-result :originData="originData" :runResult="runResult"></test-result>
+        </test-tabs> -->
+        <el-divider>返回结果</el-divider>
+        <json-editor style="height: 60vh" :readOnly="true" v-model="runResult"></json-editor>
+        <!-- <test-result :runResult="runResult"></test-result> -->
         <el-dialog title="管理Cookie" :visible.sync="cookieVisible" width="40vw" :append-to-body="true">
             <el-row :gutter="20">
                 <el-col :span="20">
@@ -50,6 +52,8 @@
 <script>
 import TestTabs from '@/components/interfaceTest/testTabs.vue'
 import TestResult from '../components/testResult'
+import JsonEditor from '@/components/common/json-editor.vue'
+
 import {
     mapState
 } from 'vuex'
@@ -63,7 +67,8 @@ export default {
     name: 'InterfaceTest',
     components: {
         TestTabs,
-        TestResult
+        TestResult,
+        JsonEditor
     },
     props: {
         protocals: {
@@ -78,9 +83,8 @@ export default {
             type: String,
             default: ''
         },
-        id: {
-            type: String,
-            default: ''
+        getId: {
+            type: [String, Number],
         },
         enviromentPre: {
             type: String,
@@ -196,7 +200,7 @@ export default {
                 url: '/interfaceNewController/selectInterfaceById',
                 method: 'post',
                 params: {
-                    id: this.id
+                    id: this.getId
                 }
             }).then((res) => {
                 this.originData = res.interfaceSelectDto

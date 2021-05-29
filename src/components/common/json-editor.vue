@@ -101,10 +101,10 @@ export default {
 		document.addEventListener('paste', (event) => {
 			this.jsonEditor.refresh();
 		})
-		this.$EventBus.$on('jsonRefresh', (json) => {
-			// console.log(this.valueStr)
-			this.isCopy = true
-		})
+		// this.$EventBus.$on('jsonRefresh', (json) => {
+		// 	// console.log(this.valueStr)
+		// 	this.isCopy = true
+		// })
 	},
 	destroyed() {
 		document.removeEventListener('paste',(event) => {

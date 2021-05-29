@@ -477,7 +477,7 @@ export default {
         url: '/interfaceNewController/queryInterfaceAssert',
         method: 'post',
         params: {
-          caseId: '25905',
+          caseId: this.selectRow.id,
           caseType: '1'
         }
       }).then(res => {
