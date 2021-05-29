@@ -473,7 +473,7 @@ export default {
       interfaceEvironmentList: "interfaceEvironmentList",
     }),
     importURL() {
-        return "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
+        return "http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/batchImportInterfaceTransact"; // 上传的URL
     },
   },
   created() {
@@ -524,7 +524,7 @@ export default {
 		//导入文件相关
 		downloadTemplate() {
 			window.location.href =
-				this.address4 + "atfcloud2.0a/transactController/downloadTemplate";
+				"http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadInterfaceTemplate";
 		},
 		handleRemove(file, fileList) {
 			// console.log('file:',file,fileList)
@@ -545,25 +545,30 @@ export default {
 		},
 		// 导入模板
 		importTemplate() {
-			console.log("importTemplate", this.autId);
+			console.log("importTemplate", this.menuId);
 			let formData = new FormData();
 			formData.append("autId", this.autId);
-			formData.append("creatorId", this.creatorId);
+			formData.append("creatorId", sessionStorage.getItem('userId'));
+			formData.append("menuId", this.menuId);
 			formData.append("file", this.fileList[0].raw);
 			Request({
-				url: "/transactController/batchImportTransact",
+				url: "/interfaceNewController/batchImportInterfaceTransact",
 				method: "POST",
 				params: formData
 			})
 				.then((res) => {
-					this.$message.success(res.respMsg);
-					this.dialogImportVisible = false;
-					this.getAllTableData();
-					this.fileList = [];
-					this.fileName = "";
+					if (res.respCode === "0000") {
+						this.$message.success(res.respMsg);
+						this.dialogImportVisible = false;
+						this.getAllTableData();
+						this.fileList = [];
+						this.fileName = "";
+					}
 				})
-				.catch((res) => {
+				.catch((err) => {
 					this.$message.error("上传失败");
+					this.dialogImportVisible = false;
+					console.log(err)
 				});
 		},
     getEnvironmentList() {

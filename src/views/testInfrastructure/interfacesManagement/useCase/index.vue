@@ -211,7 +211,7 @@
       <el-upload
         class="upload-demo in-file"
         :action="importURL"
-        :show-file-list="false"
+        :show-file-list="true"
         :auto-upload="false"
         :limit="1"
         accept=".xlsx"
@@ -470,7 +470,7 @@ export default {
       return obj[this.modelFlag];
     },
 		importURL() {
-			return "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImportTestcase"; // 上传的URL
+			return "http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/batchImportInterfaceProject"; // 上传的URL
 		},
   },
   methods: {
@@ -501,7 +501,7 @@ export default {
     //下载模板
     downloadTemplate() {
       let url =
-        "http://140.143.16.21:9090/atfcloud2.0a/testcase/batchImport/file/template/simple";
+        "http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadInterfaceCaseTemplate";
       window.location.href = url;
     },
     beforeUpload(file) {
@@ -569,10 +569,10 @@ export default {
     importTemplate() {
       console.log("importTemplate");
       let formData = new FormData();
-
+			formData.append("interfaceId", sessionStorage.getItem("interfaceId"));
       formData.append("file", this.fileList[0].raw);
       Request({
-        url: "/interfaceNewController/uploadInterfaceBody",
+        url: "/interfaceNewController/batchImportInterfaceProject",
         method: "POST",
         params: formData,
       })
