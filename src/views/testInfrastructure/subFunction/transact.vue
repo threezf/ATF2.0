@@ -648,7 +648,6 @@ export default {
 									this.tableData.push(res.list[i])
 								}
 								this.totalCount += res.totalCount;
-								console.log("tableData", this.tableData);
 								if (this.tableData.length ===0){
 									this.dialogModelFlag = 5
 									this.dialogVisible = true;
@@ -830,7 +829,7 @@ export default {
             formData.append("creatorId", this.creatorId);
             formData.append("file", this.fileList[0].raw);
             Request({
-                    url: "/interfaceNewController/batchImportInterfaceEnvironment",
+                    url: "/transactController/batchImportTransact",
                     method: "POST",
                     params: formData
                 })
