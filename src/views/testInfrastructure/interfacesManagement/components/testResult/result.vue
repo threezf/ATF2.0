@@ -30,8 +30,8 @@ export default {
             type: Boolean,
             default: false
         }
-    },
-    data() {
+    }, 
+    data() { 
         return {
             size: 0,
             time: '0.00ms',

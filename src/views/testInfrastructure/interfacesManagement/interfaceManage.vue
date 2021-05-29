@@ -29,6 +29,8 @@
           >
             批量导入
           </el-button>
+          <el-button class="new-interface" type="primary" size="small" icon="el-icon-link" @click="swaggerVisible = true" >绑定swagger
+          </el-button>
         </el-col>
         <el-col :span="8">
           <span class="enviroment-span">项目环境</span>
@@ -440,6 +442,9 @@ export default {
 			//文件上传
 			fileList: [],
 			fileName:"",
+      // swagger 绑定
+      swaggerVisible: false,
+      swaggerUrl: ''
     };
   },
   inject: {
@@ -574,20 +579,22 @@ export default {
           menuId: this.menuId,
         },
       }).then((res) => {
-        console.log("查询成功列表", res);
+        console.log("查询成功列表", res);　
         this.originEnviormentList = res.list;
-        this.options = this.originEnviormentList.map((item) => ({
-          label: item.environmentName,
-          value: item.id,
-        }));
-        this.value = this.options[0].value;
-        this.$store.commit("interface/updateEvironmentList", {
-          value: this.options,
-        });
-        localStorage.setItem(
-          "environmentList",
-          JSON.stringify(this.originEnviormentList)
-        );
+        if(this.originEnviormentList) {
+          this.options = this.originEnviormentList.map((item) => ({
+            label: item.environmentName,
+            value: item.id,
+          }));
+          this.value = this.options[0].value;
+          this.$store.commit("interface/updateEvironmentList", {
+            value: this.options,
+          });
+          localStorage.setItem(
+            "environmentList",
+            JSON.stringify(this.originEnviormentList)
+          );
+        }
       });
     },
     selectChanged(val) {

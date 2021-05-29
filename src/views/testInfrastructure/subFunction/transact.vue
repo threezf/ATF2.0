@@ -8,7 +8,7 @@
         </el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton" :disabled="disableFunc">修改
         </el-button>
-        <el-button type="primary" size="small" icon="el-icon-link" @click="linkSwagger" v-show="!$route.query.hasOwnProperty('isInterface') || isInterface" :disabled="disableFunc">绑定swagger
+        <el-button type="primary" size="small" icon="el-icon-link" @click="linkSwagger" v-show="!$route.query.hasOwnProperty('isInterface') || isInterface" :disabled="disableFunc" hidden>绑定swagger
         </el-button>
     </el-row>
     <el-row>
@@ -313,23 +313,23 @@ export default {
         insertSwaggerAPI() {
             if (this.swaggerUrl != "") {
                 Request({
-                        url: "/swaggerController/insertSwaggerAPI",
-                        method: "POST",
-                        params: {
-                            url: this.swaggerUrl,
-                            systemId: this.autId,
-                            creatorId: this.creatorId,
-                        },
-                    })
-                    .then((res) => {
-                        console.log(res);
-                        this.$message.success("绑定成功");
-                        this.swaggerVisible = false;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        this.$message.error("请求swagger接口失败");
-                    });
+                    url: "/swaggerController/insertSwaggerAPI",
+                    method: "POST",
+                    params: {
+                        url: this.swaggerUrl,
+                        systemId: this.autId,
+                        creatorId: this.creatorId,
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.$message.success("绑定成功");
+                    this.swaggerVisible = false;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$message.error("请求swagger接口失败");
+                });
             } else {
                 this.$message.warning("请输入url");
             }
@@ -561,6 +561,7 @@ export default {
         // 编码跳转
         toTransact(row) {
             console.log("toTransact", row);
+            sessionStorage.setItem('transId', row.autId)
             if (row.transType === "UI") {
                 this.$router.push({
                     name: "TransactDetail",

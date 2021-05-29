@@ -29,6 +29,9 @@ const InterfaceTestConf = [{
     width: 150,
     placeholder: '请选择测试用例',
     options: []
+}, {
+    type: 'slot',
+    slot: 'runnerSlot'
 }]
 
 const ResultHeader = [{

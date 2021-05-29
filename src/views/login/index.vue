@@ -173,6 +173,10 @@
                 .catch((e) => {
                     this.$message.warning(e.split('；')[1].split('：')[1])
                   console.log("登录出错", e);
+                }).finally(() => {
+                   this.$router.push({
+                      path: "/index",
+                    });
                 });
             })
             .catch((e) => {

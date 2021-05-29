@@ -20,8 +20,11 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="value" label="操作" header-align="center" width="100" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
+                        <el-button type="success" icon="el-icon-plus" size="mini"
+                                    @click.native="addTableRow('respheaders',scope.$index)">
+                        </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
                                     @click.native="delTableRow('respheaders',scope.$index)">
                         </el-button>
@@ -91,8 +94,11 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="value" label="操作" header-align="center" width="100" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
+                        <el-button type="success" icon="el-icon-plus" size="mini"
+                                    @click.native="addTableRow('results',scope.$index)">
+                        </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
                                     @click.native="delTableRow('results',scope.$index)">
                         </el-button>
@@ -257,33 +263,5 @@ export default {
         },
 
     }
-    ,
-    watch: {
-        monitorVariable: {
-            handler: function () {
-                console.log('results change')
-                if (this.results.length === 0) {
-                    this.addTableRow('results')
-                }
-                if (this.results[this.results.length - 1]['name']) {
-                    this.addTableRow('results')
-                }
-            },
-            deep: true
-        },
-        monitorHeader: {
-            handler: function () {
-                if (this.respheaders.length === 0) {
-                    this.addTableRow('respheaders')
-                }
-                if (this.respheaders[this.respheaders.length - 1]['name']) {
-                    this.addTableRow('respheaders')
-                }
-            },
-            deep: true
-        },
-
-    },
-
 }
 </script>

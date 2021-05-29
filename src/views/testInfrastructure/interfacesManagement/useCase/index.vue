@@ -20,11 +20,18 @@
       >
         <i class="el-icon-upload"></i>导入
       </el-button>
+      <el-button class="new-Cases" type="primary" size="small" :disabled="selectIds.length != 1" @click="addAssert">
+        新增断言
+      </el-button>
+      <el-button class="new-Cases" type="primary" size="small" :disabled="selectIds.length != 1" @click="manageAsset">
+        管理断言
+      </el-button>
     </el-row>
     <table-comp
       :tableHeader="TableHeader"
       :table-data="tableObj"
       :needPagination="false"
+      @selectionChange="handleSelectionChange"
     >
       <template v-slot:resultSlot="scope">
         <el-tag size="small" :type="scope.row.resultFlag | getType">
@@ -49,6 +56,9 @@
         <el-button type="text" size="small" @click="delCaseButton(scoped.row)"
           >删除</el-button
         >
+        <el-button type="text" size="small" @click="deleteRules(scoped.row)">
+          删除断言
+        </el-button>
       </template>
     </table-comp>
     <el-dialog
@@ -236,6 +246,20 @@
         >
       </div>
     </el-dialog>
+    <el-dialog
+      :visible.sync="ruleVisible"
+      width="40%"
+      top="60px"
+      title="管理断言">
+      <AssertTree @cancel="ruleVisible = false" mode="edit" :caseId="selectRow.id"></AssertTree>
+    </el-dialog>
+    <el-dialog
+      :visible.sync="addRuleVisible"
+      width="40%"
+      top="60px"
+      title="新增断言">
+      <AssertTree @cancel="addRuleVisible = false" mode="add" :caseId="selectRow.id"></AssertTree>
+    </el-dialog>
   </div>
 </template>
 
@@ -246,6 +270,7 @@ import CheckResult from "../components/checkResult";
 import AssertionRule from "../components/assertionRule";
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
+import AssertTree from './assertTree.vue';
 let that;
 export default {
   mixins: [VueMixins], // 时间格式转化
@@ -254,6 +279,8 @@ export default {
     TestTabs,
     CheckResult,
     AssertionRule,
+    // Assert,
+    AssertTree
   },
   props: {
     protocols: {
@@ -275,7 +302,12 @@ export default {
   },
   data() {
     return {
+      ruleVisible: false,
+      selectRow: {},
+      selectIds: [],
       resultData: [],
+      caseId: '',
+      addRuleVisible: false,
       // {
       // 	projectName:'情況1：正常登录',
       // 		resultFlag:0,
@@ -436,6 +468,29 @@ export default {
 		},
   },
   methods: {
+    addAssert() {
+      this.addRuleVisible = true
+    },
+    manageAsset() {
+      this.ruleVisible = true
+      Request({
+        url: '/interfaceNewController/queryInterfaceAssert',
+        method: 'post',
+        params: {
+          caseId: this.selectRow.id,
+          caseType: '1'
+        }
+      }).then(res => {
+      })
+    },
+    handleSelectionChange(val) {
+      if(val.length >= 0) {
+        this.selectRow = val[0];
+        this.selectIds = val.map(item => item.id);
+      }else {
+        this.selectIds = []
+      }
+    },
     //下载模板
     downloadTemplate() {
       let url =
@@ -767,6 +822,35 @@ export default {
     cancelButtonClicked() {
       this.caseVisible = false;
       this.copyDialog = false;
+    },
+    // 新增断言
+    putInterfaceAssert() {
+      Request({
+        url: '/interfaceNewController/putInterfaceAssert',
+        method: 'post',
+        params: {
+          ruleName: '',
+          caseType: '1',
+          assertNode: ''
+        }
+      }).then(res => {
+        console.log('管理断言', res)
+      })
+    },
+    deleteRules(row) {
+      console.log(row)
+      Request({
+        url: '/interfaceNewController/deleteAllInterfaceAssert',
+        method: 'post',
+        params: {
+          caseId: row.id,
+          caseType: '1',
+        }
+      }).then(res => {
+        if(res.respCode === '0000') {
+          this.$message.success('删除成功')
+        }
+      })
     },
   },
 };
