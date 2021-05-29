@@ -1,6 +1,5 @@
 <template>
   <div class="class-testCase">
-    {{nameToNodeMap}}
     <el-row>
       <el-button
         class="new-Cases"
@@ -253,9 +252,11 @@
       top="60px"
       title="管理断言">
       <div style="display: flex">
-        <el-tree style="border: 1px solid #eee; width: 200px;">
-        </el-tree>
-        <AssertTree @cancel="ruleVisible = false" mode="edit" :caseId="selectRow.id"></AssertTree>
+        <div 
+          style="border: 1px solid #eee; width: 200px;">
+          <RuleList @choose="handleChoose" @delete="hancleDelete" :caseId="selectRow? selectRow.id: ''" :list="treeData"></RuleList>
+        </div>
+        <AssertTree @cancel="ruleVisible = false" mode="edit" :caseId="selectRow? selectRow.id: ''" :baseData="baseData" :ruleLabel="ruleLabel"></AssertTree>
       </div>
     </el-dialog>
     <el-dialog
@@ -263,7 +264,7 @@
       width="40%"
       top="60px"
       title="新增断言">
-      <AssertTree @cancel="addRuleVisible = false" mode="add" :caseId="selectRow.id"></AssertTree>
+      <AssertTree @cancel="addRuleVisible = false" mode="add" :caseId="selectRow? selectRow.id: ''"></AssertTree>
     </el-dialog>
   </div>
 </template>
@@ -276,6 +277,7 @@ import AssertionRule from "../components/assertionRule";
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import AssertTree from './assertTree.vue';
+import RuleList from './ruleList.vue'
 let that;
 export default {
   mixins: [VueMixins], // 时间格式转化
@@ -285,7 +287,8 @@ export default {
     CheckResult,
     AssertionRule,
     // Assert,
-    AssertTree
+    AssertTree,
+    RuleList
   },
   props: {
     protocols: {
@@ -305,12 +308,15 @@ export default {
       default: () => {},
     },
   },
+
   data() {
     return {
       ruleVisible: false,
+      baseData: {},
       selectRow: {},
       selectIds: [],
       nameToNodeMap: {},
+      ruleLabel: '',
       resultData: [],
       caseId: '',
       addRuleVisible: false,
@@ -448,6 +454,12 @@ export default {
     },
   },
   computed: {
+    treeData() {
+      return Object.keys(this.nameToNodeMap).map((item, index) => ({
+        id: index,
+        label: item
+      }))
+    },
     tableObj() {
       return {
         data: this.resultData,
@@ -474,6 +486,13 @@ export default {
 		},
   },
   methods: {
+    handleChoose(label) {
+      this.baseData = this.nameToNodeMap[label];
+      this.ruleLabel = label
+    },
+    hancleDelete(label) {
+      delete this.nameToNodeMap[label]
+    },
     addAssert() {
       this.addRuleVisible = true
     },
