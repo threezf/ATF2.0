@@ -281,9 +281,9 @@ export default {
     },
     //下载模板
     downloadTemplate() {
-      let url =
-				"http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadEnvirmentTemplate";
-      window.location.href = url;
+      let downloadUrl =
+				"http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadEnvirmentTemplate";
+      window.location.href = downloadUrl;
     },
     beforeUpload(file) {
     //   console.log(file);

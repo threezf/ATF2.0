@@ -524,7 +524,7 @@ export default {
 		//导入文件相关
 		downloadTemplate() {
 			window.location.href =
-				"http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadInterfaceTemplate";
+				"http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadInterfaceTemplate";
 		},
 		handleRemove(file, fileList) {
 			// console.log('file:',file,fileList)
