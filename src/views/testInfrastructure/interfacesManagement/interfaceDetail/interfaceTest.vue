@@ -212,7 +212,7 @@ export default {
                 method: 'POST',
                 params: {
                     autId: sessionStorage.getItem('autId'),
-                    transId: sessionStorage.getItem('transId'),
+                    transId: '2433',
                     // scriptId: sessionStorage.getItem('transId'),
                     creatorId: sessionStorage.getItem("userId")
                 }
@@ -233,7 +233,7 @@ export default {
                 url: '/testPlanController/queryInterfaceScriptDebugTestPlan',
                 method: 'post',
                 params: {
-                      "scriptId": sessionStorage.getItem('transId')
+                      "scriptId": '2433'
                 }
             }).then(res => {
                 console.log(res)
@@ -321,13 +321,13 @@ export default {
                 contentType: 'application/json',
                 data: JSON.stringify({
                     userId: sessionStorage.getItem('userId'),
-                    exeScope: 1,
+                    exeScope: "1",
                     selectState: "",
                     selectedExeInstances: [],
-                    testPlanId,
+                    testPlanId: `${testPlanId}`,
                     identifiableRunnerName: "appointed",
                     appointedRunners : _this.runnerselected,
-                    sendMail: true
+                    sendMail: false
                 }),
                 success: function(data) {
                     if (data.respCode === '0000') {

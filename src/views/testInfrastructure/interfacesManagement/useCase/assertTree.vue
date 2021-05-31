@@ -1,13 +1,12 @@
 <template>
-    <div>
+    <div style="border: 1px solid #eee; margin-left: -1px">
         <div class="func-top">
-            <template v-if="mode === 'add'" style="display: flex;">
-                <span>断言名称：</span>
-                <el-input style="width: 200px" v-model="name" size="mini" placeholder="请输入断言名称"></el-input>
+            <template style="display: flex;">
+                <span style=" margin-left: 10px">断言名称：</span>
+                <el-input :disabled="mode !== 'add'" style="width: 200px" v-model="name" size="mini" placeholder="请输入断言名称"></el-input>
             </template>
-            <el-button v-if="mode ==='edit'" type="text" size="small" @click="deleteInterfaceAssert">删除规则</el-button>
         </div>
-        <div class="assert-tree-content">
+        <div class="assert-tree-content" style="margin: -1px">
             <div class="tree-part">
                 <el-tree
                     :data="originData"
@@ -272,7 +271,7 @@ export default {
             type: String,
             default: 'add'
         },
-        data: {
+        baseData: {
             type: Object,
             default: () => {}
         },
@@ -283,6 +282,25 @@ export default {
         caseId: {
             type: Number,
             default: 0
+        },
+        ruleLabel: {
+            type: String
+        }
+    },
+    watch: {
+        ruleLabel: {
+            handler(newVal) {
+                this.name = newVal
+            }
+        },
+        baseData: {
+            handler(newVal) {
+                if(newVal) {
+                    this.originData = [newVal]
+                }
+            },
+            immediate: true,
+            deep: true
         }
     },
     created() {
@@ -361,22 +379,8 @@ export default {
                 childs: []
             })
         },
-        deleteInterfaceAssert() {
-            Request({
-                url: '/interfaceNewController/deleteInterfaceAssert',
-                method: 'post',
-                params: {
-                    caseId: this.caseId,
-                    caseType: '1',
-                    ruleName: this.ruleName
-                }
-            }).then(res => {
-                console.log('管理断言', res)
-                if(res.respCode === '0000') {
-                    this.$message.success('删除成功')
-                    this.$emit('cancel')
-                }
-            })
+        modetifyRule() {
+
         }
     },
 }
@@ -384,7 +388,7 @@ export default {
 
 <style lang="less" scoped>
     .func-top {
-        
+        margin-top: 10px;
     }
     .assert-tree-content {
         border: 1px solid #eee;
