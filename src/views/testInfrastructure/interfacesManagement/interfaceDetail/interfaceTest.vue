@@ -1,7 +1,7 @@
 <template>
     <div class="interface-test">
-        <search-bar 
-            size="small" 
+        <search-bar
+            size="small"
             searchBtnIcon="el-icon-caret-right"
             :loading="isRunning"
             searchBtnText="执行"
@@ -77,7 +77,7 @@ export default {
         },
         methods: {
             type: Array,
-            default: () => [] 
+            default: () => []
         },
         path: {
             type: String,
@@ -200,7 +200,7 @@ export default {
                 url: '/interfaceNewController/selectInterfaceById',
                 method: 'post',
                 params: {
-                    id: this.getId
+                    id: this.getId || sessionStorage.getItem('interfaceId')
                 }
             }).then((res) => {
                 this.originData = res.interfaceSelectDto

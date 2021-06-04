@@ -24,7 +24,7 @@ export default {
     data () {
         return {
             menuList: [],
-            interfaceData: { "id": 377, "transactId": 2317, "interfaceGroupId": 57, "interfaceName": "用户登录", "protocol": 0, "urlPath": "/login", "status": 1, "method": 0, "authType": 1, "params": "[{\"name\":\"name\",\"val\":\"zhx\",\"desc\":null},{\"name\":null,\"val\":null,\"desc\":null}]", "header": "[{\"name\":\"Content-Type\",\"val\":\"application/json\",\"desc\":\"类型\"},{\"name\":null,\"val\":null,\"desc\":null}]", "bodyFormat": 0, "rawFormat": null, "bodyContent": "[{\"name\":\"zhx\",\"val\":\"123456\",\"type\":\"string\",\"desc\":\"用户名\"},{\"name\":null,\"val\":null,\"type\":\"string\",\"desc\":null}]", "bodyResponseType": 0, "bodyResponse": "[{\"name\":null,\"type\":\"string\",\"desc\":null}]", "headerResponse": "[{\"name\":\"\",\"desc\":\"\"}]", "tags": "[\"测试\"]", "createUser": "zhx", "createTime": 1620393595000, "updateUser": null, "updateTime": 1620393595000 },
+            interfaceData: { "id": 377, "menuId": 2317, "interfaceGroupId": 57, "interfaceName": "用户登录", "protocol": 0, "urlPath": "/login", "status": 1, "method": 0, "authType": 1, "params": "[{\"name\":\"name\",\"val\":\"zhx\",\"desc\":null},{\"name\":null,\"val\":null,\"desc\":null}]", "header": "[{\"name\":\"Content-Type\",\"val\":\"application/json\",\"desc\":\"类型\"},{\"name\":null,\"val\":null,\"desc\":null}]", "bodyFormat": 0, "rawFormat": null, "bodyContent": "[{\"name\":\"zhx\",\"val\":\"123456\",\"type\":\"string\",\"desc\":\"用户名\"},{\"name\":null,\"val\":null,\"type\":\"string\",\"desc\":null}]", "bodyResponseType": 0, "bodyResponse": "[{\"name\":null,\"type\":\"string\",\"desc\":null}]", "headerResponse": "[{\"name\":\"\",\"desc\":\"\"}]", "tags": "[\"测试\"]", "createUser": "zhx", "createTime": 1620393595000, "updateUser": null, "updateTime": 1620393595000 },
             protocols: [{
                 value: 0,
                 protocol: 'HTTP'
@@ -45,6 +45,7 @@ export default {
                 value: 3,
                 method: 'PUT'
             }],
+					menuId: null
         }
     },
     inject: {
@@ -52,10 +53,10 @@ export default {
             default:()=>{}
         }
     },
-    
+
     created() {
-        this.transactId = localStorage.getItem('transactId')
-        this.getGroupById(this.transactId)
+        this.menuId = localStorage.getItem('menuId')
+        this.getGroupById(this.menuId)
     },
     beforeRouteEnter (to, from, next) {
         // ...
@@ -84,7 +85,7 @@ export default {
                 url: '/interfaceNewController/selectAllInterfaceGroup',
                 method: 'post',
                 params: {
-                    transactId: id
+									menuId: id
                 }
             }).then((res) => {
                 if(res.respCode === '0000'){
