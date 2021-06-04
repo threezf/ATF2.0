@@ -1,17 +1,19 @@
 <template>
     <div class="project">
-        <SideBarCreate :needAdd="false" v-ref="c => setChildrenRef('sidebar',c)" :menuList="menuList"  @getGroupById="getGroupById"></SideBarCreate>
+        <SideBarCreate :menuType="1" v-ref="c => setChildrenRef('sidebar',c)" :menuList="menuList"  @getGroupById="getGroupById" @getInterfaceDetail="getInterfaceDetail"></SideBarCreate>
         <div class="main-page">
-            <InterfaceTest :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" >
+            <InterfaceTest :originData="interfaceData" :path="interfaceData.urlPath" :protocals="protocols" :methods="methodOptions" :getId="getId"
+													 @caseChange="handleCaseChange">
             </InterfaceTest>
         </div>
     </div>
 </template>
 <script>
-import SideBarCreate from '@/components/interfaceTest/sidebarCreate'
+import SideBarCreate from '@/components/interfaceTest/sideBar'
 import Request from "@/libs/request.js";
 import VueMixins from "@/libs/vueMixins.js";
 import InterfaceTest from '../interfacesManagement/interfaceDetail/interfaceTest'
+import {TimeUtils} from "wii-fe-utils";
 
 
 export default {
@@ -24,7 +26,7 @@ export default {
     data () {
         return {
             menuList: [],
-            interfaceData: { "id": 377, "menuId": 2317, "interfaceGroupId": 57, "interfaceName": "用户登录", "protocol": 0, "urlPath": "/login", "status": 1, "method": 0, "authType": 1, "params": "[{\"name\":\"name\",\"val\":\"zhx\",\"desc\":null},{\"name\":null,\"val\":null,\"desc\":null}]", "header": "[{\"name\":\"Content-Type\",\"val\":\"application/json\",\"desc\":\"类型\"},{\"name\":null,\"val\":null,\"desc\":null}]", "bodyFormat": 0, "rawFormat": null, "bodyContent": "[{\"name\":\"zhx\",\"val\":\"123456\",\"type\":\"string\",\"desc\":\"用户名\"},{\"name\":null,\"val\":null,\"type\":\"string\",\"desc\":null}]", "bodyResponseType": 0, "bodyResponse": "[{\"name\":null,\"type\":\"string\",\"desc\":null}]", "headerResponse": "[{\"name\":\"\",\"desc\":\"\"}]", "tags": "[\"测试\"]", "createUser": "zhx", "createTime": 1620393595000, "updateUser": null, "updateTime": 1620393595000 },
+            interfaceData: {},
             protocols: [{
                 value: 0,
                 protocol: 'HTTP'
@@ -45,7 +47,8 @@ export default {
                 value: 3,
                 method: 'PUT'
             }],
-					menuId: null
+					menuId: null,
+					getId:null
         }
     },
     inject: {
@@ -80,32 +83,116 @@ export default {
         }
     },
     methods: {
-        getGroupById(id){
-            Request({
-                url: '/interfaceNewController/selectAllInterfaceGroup',
-                method: 'post',
-                params: {
-									menuId: id
-                }
-            }).then((res) => {
-                if(res.respCode === '0000'){
-                    this.menuList = []
-                    var treeData = res.interfaceGroupDtoList
-                    for (var i = 0; i < treeData.length; i++) {
-                        if (treeData[i].level === 0) {
-                            this.menuList.push(treeData[i])
-                        }
-                    }
-                    // this.$message.success("查询成功！")
-                }else {
-                    this.$message.error("获取接口分组失败！")
-                    console.log(res.respMsg)
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
-        },
-    }
+			getGroupById(id) {
+				Request({
+					url: '/interfaceNewController/selectAllInterfaceGroup',
+					method: 'post',
+					params: {
+						menuId: id
+					}
+				}).then((res) => {
+					if (res.respCode === '0000') {
+						this.menuList = []
+						var treeData = res.interfaceGroupDtoList
+						for (var i = 0; i < treeData.length; i++) {
+							if (treeData[i].level === 0) {
+								this.menuList.push(treeData[i])
+							}
+						}
+						console.log("menuList", this.menuList)
+						this.addMenu(this.menuList)
+						// this.$message.success("查询成功！")
+					} else {
+						this.$message.error("获取接口分组失败！")
+						console.log(res.respMsg)
+					}
+				}).catch((err) => {
+					console.log(err)
+				})
+			},
+			addMenu(menuList) {
+				menuList.forEach((item) => {
+					if (item.childNodeList == null) {
+						this.$set(item, 'childNodeList', []);
+						Request({
+							url: "/interfaceNewController/selectAllInterface",
+							method: "post",
+							params: {
+								interfaceGroupId: item.id,
+								pageSize: 10,
+								currentPage: 1,
+								orderColumns: "update_time",
+								orderType: "desc",
+							},
+						})
+							.then((res) => {
+								if (res.respCode === "0000") {
+									let list = res.list.map((item) => ({
+										id: item.id,
+										groupName: item.interfaceName,
+										method: item.method
+									}))
+									list.forEach((i) =>{
+										item.childNodeList.push(i)
+									})
+									console.log('MapList',list)
+								} else {
+									console.log(res.respMsg);
+								}
+							})
+							.catch((err) => {
+								console.log("查询失败", err);
+							})
+					} else {
+						this.addMenu(item.childNodeList)
+					}
+				})
+			},
+			getInterfaceDetail(id){
+				this.getId = id
+				console.log("getId",this.getId)
+				Request({
+					url: '/interfaceNewController/selectInterfaceById',
+					method: 'post',
+					params: {
+						id: id
+					}
+				}).then((res) => {
+					if(res.respCode === '0000'){
+						this.interfaceData = res.interfaceSelectDto
+						for(let key in res.interfaceSelectDto) {
+							if(key in this.$store.state.interface) {
+								if(key === 'header' || key === 'params' || key === 'bodyContent' || key === 'bodyResponse' || key === 'headerResponse' || key === 'tags') {
+									this.$store.commit(`interface/update${key.slice(0, 1).toUpperCase()}${key.slice(1)}`, {
+										value: JSON.parse(res.interfaceSelectDto[key])
+									})
+								}else {
+									this.$store.commit(`interface/update${key.slice(0, 1).toUpperCase()}${key.slice(1)}`, {
+										value: res.interfaceSelectDto[key]
+									})
+								}
+							}
+						}
+						console.log('interfaceData',this.interfaceData)
+
+						// this.$message.success("查询成功！")
+					}else {
+						this.$message.error("查询失败！")
+						console.log(res.respMsg)
+					}
+				}).catch((err) => {
+					console.log(err)
+				})
+			},
+			handleCaseChange(){
+					this.$router.push({
+						path: "interfaceDetail",
+						// query: {
+						//     interfaceData: row
+						// }
+					}); //界面跳转
+				}
+		}
   }
 </script>
 <style lang="less" scoped>

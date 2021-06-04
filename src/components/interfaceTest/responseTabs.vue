@@ -220,10 +220,18 @@ export default {
         initApiMsgData() {
                 console.log("测试")
                 this.respType = '0';
-
-                this.respheaders = Array();
-                this.results = Array();
+                this.respheaders = [];
+                this.results = [];
                 this.respJsonVariable = '';
+								this.results.push({
+									name: '',
+									val: '',
+									desc: ''
+								})
+								this.respheaders.push({
+									name: '',
+									desc: ''
+								})
             },
 				handlerParams() {
             if (this.bodyResopnseType === 1) {
@@ -247,7 +255,7 @@ export default {
         }
     },
     created() {
-        if(this.authType === 0) {
+        if(this.authType === 0 || this.authType == null) {
             this.initApiMsgData()
         }else {
             this.handlerParams()

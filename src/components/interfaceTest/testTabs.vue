@@ -28,7 +28,7 @@
                 </el-table-column>
                 <el-table-column v-if="!isRunModel" property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
-                        <el-button type="success" icon="el-icon-plus" size="mini" 
+                        <el-button type="success" icon="el-icon-plus" size="mini"
                                     @click.native="addTableRow('headers',scope.$index)">
                         </el-button>
                         <el-button type="danger" icon="el-icon-delete" size="mini"
@@ -126,7 +126,7 @@
                             </el-row>
                         </div>
                         <div v-else>
-                            <el-input 
+                            <el-input
                                 v-model="scope.row.val"
                                 :disabled="isRunModel"
                                 :id="'data_input' + scope.$index "
@@ -183,7 +183,7 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="isRunModel" property="value" label="操作" header-align="center" width="120" align="center">
+                <el-table-column property="value" label="操作" header-align="center" width="120" align="center">
                     <template slot-scope="scope">
                         <el-button type="success" icon="el-icon-plus" size="mini"
                                     @click.native="addTableRow('params',scope.$index)">
@@ -460,11 +460,27 @@ export default {
         initApiMsgData() {
             console.log("测试")
             this.bodyType = '0'
-            this.headers = Array();
-            this.bodys = Array();
+            this.headers = [];
+            this.bodys = [];
+						this.bodyFormat = 0;
             this.jsonVariable = '';
-            this.params = Array();
-            this.selectedAuthType = 1
+            this.params = [];
+            this.selectedAuthType = 1;
+						this.bodys.push({
+							name: '',
+							val: '',
+							desc: ''
+						})
+						this.headers.push({
+							name: '',
+							val: '',
+							desc: ''
+						})
+						this.params.push({
+							name: '',
+							val: '',
+							desc: ''
+						})
         },
         handlerParams() {
             console.log('handlerParams', this.param, this.header, this.bodys)
@@ -505,7 +521,7 @@ export default {
         }
     },
     created() {
-        if(this.authType === 0) {
+        if(this.authType === 0 || this.authType == null ) {
             this.initApiMsgData()
         }else {
             this.handlerParams()
