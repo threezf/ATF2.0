@@ -492,6 +492,7 @@ export default {
     },
     hancleDelete(label) {
       delete this.nameToNodeMap[label]
+      this.ruleVisible = false
     },
     addAssert() {
       this.addRuleVisible = true

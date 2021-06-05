@@ -324,7 +324,7 @@ export default {
                     exeScope: "1",
                     selectState: "",
                     selectedExeInstances: [],
-                    testPlanId: `${testPlanId}`,
+                    testPlanId: '1602',
                     identifiableRunnerName: "appointed",
                     appointedRunners : _this.runnerselected,
                     sendMail: false
