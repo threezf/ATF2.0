@@ -521,7 +521,7 @@ export default {
     //下载模板
     downloadTemplate() {
       let url =
-        "http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadInterfaceCaseTemplate";
+        "http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadInterfaceCaseTemplate";
       window.location.href = url;
     },
     beforeUpload(file) {

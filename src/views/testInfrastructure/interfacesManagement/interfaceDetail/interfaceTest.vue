@@ -1,7 +1,7 @@
 <template>
     <div class="interface-test">
-        <search-bar 
-            size="small" 
+        <search-bar
+            size="small"
             searchBtnIcon="el-icon-caret-right"
             :loading="isRunning"
             searchBtnText="执行"
@@ -77,7 +77,7 @@ export default {
         },
         methods: {
             type: Array,
-            default: () => [] 
+            default: () => []
         },
         path: {
             type: String,
@@ -187,7 +187,13 @@ export default {
                 this.conf[2].value = newVal.slice(0, newVal.length) + this.path
             },
             immediate: true
-        }
+        },
+        getId:{
+					handler(newVal) {
+						this.initUsecaseList(newVal)
+					},
+					immediate: true
+				}
     },
     created() {
         this.getOriginData();
@@ -200,7 +206,7 @@ export default {
                 url: '/interfaceNewController/selectInterfaceById',
                 method: 'post',
                 params: {
-                    id: this.getId
+                    id: this.getId || sessionStorage.getItem('interfaceId')
                 }
             }).then((res) => {
                 this.originData = res.interfaceSelectDto
@@ -249,43 +255,60 @@ export default {
                 url: '/interfaceNewController/interfaceTestProjectSelect',
                 method: 'post',
                 params: {
-                    interfaceId: sessionStorage.getItem('interfaceId')
+                    interfaceId: this.getId || sessionStorage.getItem('interfaceId')
                 }
             }).then(res => {
-                console.log('获取用例列表', res)
-                this.conf[3].options = res.list.map(item => {
-                    return {
-                        label: item.projectName,
-                        value: item.id,
-                        ...item
-                    };
-                });
-                this.conf[3].value = res.list[0].id;
-                this.conf[3].options.unshift({
-                    label: '管理用例',
-                    value: 'manage',
-                })
-                this.$watch(
-                    () => this.conf[3].value,
-                    (newVal) => {
-                        if(newVal === 'manage') {
-                            this.$emit('caseChange')
-                        }else {
-                            const item = this.conf[3].options.find(item => item.id === newVal)
-                            console.log('用例改变', newVal, item)
-                            if(item) {
-                                this.originData.header = item.requestHeader
-                                this.originData.body = item.bodyContent
-                                this.originData.params = item.params
-                                this.originData.bodyFormat = item.bodyFormat
-                                this.originData.authType = item.authType
-                            }
-                        }
-                    }, {
-                        immediate: true
-                    }
-                )
-            })
+							console.log('获取用例列表', res)
+            	if (res.list.length > 0){
+								this.conf[3].options = res.list.map(item => {
+									return {
+										label: item.projectName,
+										value: item.id,
+										...item
+									};
+								});
+								this.conf[3].value = res.list[0].id;
+								this.conf[3].options.unshift({
+									label: '管理用例',
+									value: 'manage',
+								})
+								this.$watch(
+									() => this.conf[3].value,
+									(newVal) => {
+										if(newVal === 'manage') {
+											this.$emit('caseChange')
+										}else {
+											const item = this.conf[3].options.find(item => item.id === newVal)
+											console.log('用例改变', newVal, item)
+											if(item) {
+												this.originData.header = item.requestHeader
+												this.originData.body = item.bodyContent
+												this.originData.params = item.params
+												this.originData.bodyFormat = item.bodyFormat
+												this.originData.authType = item.authType
+											}
+										}
+									}, {
+										immediate: true
+									}
+								)
+							}else {
+								this.conf[3].options = []
+								this.conf[3].options.unshift({
+									label: '管理用例',
+									value: 'manage',
+								})
+								this.conf[3].value = '无'
+								this.$watch(
+									() => this.conf[3].value,
+									(newVal) => {
+										if (newVal === 'manage') {
+											this.$emit('caseChange')
+										}
+									}
+								)
+							}
+						})
         },
         // 查询执行机
         queryRunner() {

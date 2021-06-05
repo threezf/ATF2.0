@@ -287,6 +287,20 @@
 					</el-form-item>
 				</el-form>
 			</el-dialog>
+			<el-dialog title="绑定swagger" width="31%" :visible.sync="swaggerVisible">
+				<el-form>
+					<el-form-item label-width="50px" label="URL: ">
+						<el-input size="small" style="width: 300px" placeholder="请输入绑定swagger的url" v-model="swaggerUrl" clearable>
+						</el-input>
+					</el-form-item>
+					<el-row type="flex" justify="center">
+						<el-button type="primary" size="small" @click="insertSwaggerAPI">确定
+						</el-button>
+						<el-button type="warning" size="small" @click="swaggerVisible = false" plain>取消
+						</el-button>
+					</el-row>
+				</el-form>
+			</el-dialog>
     </div>
   </div>
 </template>
@@ -518,13 +532,43 @@ export default {
     }
   },
   methods: {
+		// 绑定swagger
+		insertSwaggerAPI() {
+			console.log()
+			if (this.swaggerUrl !== "") {
+				Request({
+					url: "/swaggerController/insertSwaggerAPI",
+					method: "POST",
+					params: {
+						url: this.swaggerUrl,
+						systemId: sessionStorage.getItem('autId'),
+						creatorId: sessionStorage.getItem('userId'),
+					},
+				})
+					.then((res) => {
+						console.log(res);
+						if(res.respCode === '0000') {
+							this.$message.success("绑定成功");
+						}else {
+							this.$message.warning('绑定失败')
+						}
+						this.swaggerVisible = false;
+					})
+					.catch((error) => {
+						console.log(error);
+						this.$message.error("请求swagger接口失败");
+					});
+			} else {
+				this.$message.warning("请输入url");
+			}
+		},
     importButton() {
       this.dialogImportVisible = true;
     },
 		//导入文件相关
 		downloadTemplate() {
 			window.location.href =
-				"http://140.143.16.21:9090/atfcloud2.0a/transactController/downloadInterfaceTemplate";
+				"http://140.143.16.21:9090/atfcloud2.0a/interfaceNewController/downloadInterfaceTemplate";
 		},
 		handleRemove(file, fileList) {
 			// console.log('file:',file,fileList)

@@ -1,7 +1,7 @@
 <template>
     <div :class="isCollapse?'narrow-side-bar':'side-bar'">
         <el-menu
-                default-active="1"
+                default-active="0"
                 class="el-menu-vertical-demo"
                 @select="handleSelect"
                 background-color="#F2F2F2">
@@ -10,13 +10,12 @@
 						</span>
 						<el-button class="isCollapse-button" @click="isCollapse=!isCollapse" icon="el-icon-open"></el-button>
 					</el-row>
-						<el-menu-item index="0" class="itemAll">
-							<i class="el-icon-s-operation"></i>
-							<span slot="title">所有接口</span>
-						</el-menu-item>
+					<el-menu-item index="0" class="itemAll" v-if="menuType === 0">
+						<i class="el-icon-s-operation"></i>
+						<span slot="title" >所有接口</span>
+					</el-menu-item>
             <!-- 引入组件 -->
             <MenuTree :menuData="menuList" :isCollapse="isCollapse"></MenuTree>
-
         </el-menu>
     </div>
 </template>
@@ -25,57 +24,44 @@
     import MenuTree from "@/components/interfaceTest/MenuTree";
 
 export default {
-        name: "Nav",
-        components: {
-            MenuTree: MenuTree,
-        },
-				props:{
-					menuList: {
-						type: Array,
-						default: []
-					},
-				},
-        data() {
-            return {
-                menuData : [],
-                // menuList : [{
-                //     id: "1",
-                //     groupName: "用户模块",
-								// 		childNodeList: [{
-								// 			id: "2",
-								// 			groupName: "账号相关",
-								// 			childNodeList: [{
-								// 					id: "3",
-								// 					groupName: "用户登录",
-                //         }, {
-								// 					id: "4",
-								// 					groupName: "用户注销",
-                //         }],
-                //     }]
-                // }, {
-								// 	id: "5",
-								// 	groupName: "企业模块",
-                // }, {
-								// 	id: "6",
-								// 	groupName: "测试模块",
-                // }, {
-								// 	id: "7",
-								// 	groupName: "日志模块",
-                // }],
-							isCollapse: false,
-            }
-        },
-         methods: {
-            handleSelect(key, keyPath) {
-							var length = keyPath.length;
-							console.log(key, keyPath[length-1]);
-							if(key === '0'){
-								this.$emit('getAllTableData')
-							}else {
-								this.$emit('getTableDataByIndex',keyPath[length-1])
-							}
-            },
-    }
+	name: "Nav",
+	components: {
+			MenuTree: MenuTree,
+	},
+	props:{
+		menuList: {
+			type: Array,
+			default: []
+		},
+		menuType: {
+			type: Number,
+			default: 0
+		},
+	},
+	data() {
+			return {
+					menuData : [],
+					isCollapse: false,
+			}
+	},
+	methods: {
+		handleSelect(key, keyPath) {
+			sessionStorage.setItem("interfaceId",key)
+			var length = keyPath.length;
+			console.log(key, keyPath);
+			if (this.menuType !== 0){
+				this.$emit('getInterfaceDetail',key)
+			}else {
+				if(key === '0'){
+					this.$emit('getAllTableData')
+				}else {
+					this.$emit('getTableDataByIndex',keyPath[length-1])
+				}
+			}
+
+		},
+
+	}
 };
 </script>
 
