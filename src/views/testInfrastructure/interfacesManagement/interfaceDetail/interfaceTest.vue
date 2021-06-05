@@ -23,6 +23,10 @@
                     </el-option>
                 </el-select>
             </template>
+            <template v-slot:append>
+                <el-button icon="el-icon-video-pause" size="small" type="primary" @click="stopExe"> 终止执行
+                </el-button>
+            </template>
         </search-bar>
         <!-- <test-tabs isRunModel :header="originData.header" :body="originData.bodyContent" :params="originData.params" :bodyFormat="originData.bodyFormat" :authType="originData.authType">
             <template v-slot:append>
@@ -33,7 +37,13 @@
             </template>
         </test-tabs> -->
         <el-divider>返回结果</el-divider>
-        <json-editor style="height: 60vh" :readOnly="true" v-model="runResult"></json-editor>
+        <div v-loading="isRunning"
+            element-loading-text="接口执行中..."
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.8)">
+            <json-editor style="height: 60vh" :readOnly="true" v-model="runResult"></json-editor>
+
+        </div>
         <!-- <test-result :runResult="runResult"></test-result> -->
         <el-dialog title="管理Cookie" :visible.sync="cookieVisible" width="40vw" :append-to-body="true">
             <el-row :gutter="20">
@@ -347,7 +357,7 @@ export default {
                     exeScope: "1",
                     selectState: "",
                     selectedExeInstances: [],
-                    testPlanId: '1602',
+                    testPlanId: '1603',
                     identifiableRunnerName: "appointed",
                     appointedRunners : _this.runnerselected,
                     sendMail: false
@@ -359,16 +369,16 @@ export default {
                         type: 'post',
                         contentType: 'application/json',
                         data: JSON.stringify({
-                            "testPlanId": 1595,
+                            "testPlanId": 1603,
                         }),
                         success: function(data) {
-                        _this.batchId = data.batchId;
-                        _this.startQueryResult();
-                        /**
-                         * 执行完成
-                         */
-                        // this.isFinished = true
-                        this.isRunning = true
+                            _this.batchId = data.batchId;
+                            _this.startQueryResult();
+                            /**
+                             * 执行完成
+                             */
+                            // this.isFinished = true
+                            this.isRunning = true
                         },
                         error: function(){
                             Vac.alert('网络错误，执行失败！');
@@ -397,15 +407,7 @@ export default {
                     console.log('startQueryResult', data)
                     if(data.respCode == "0000"){
                         if(data.respSyncNo == -1){
-                            _this.runId = data.batchId
-                            _this.$alert(data.respMsg)
-                            // _this.isFinished = true
-                            _this.isRunning = false
-                            _this.runResult = data.insStatuses[0]?data.insStatuses[0]: {}
-                            delete _this.runResult.id
-                            delete _this.runResult.sceneId
-                            delete _this.runResult.testcaseId
-                            delete _this.runResult.flowNodeId
+                            
                         }
                         else{
                         _this.syncQueryIncInsStatus(data)
@@ -432,25 +434,73 @@ export default {
                     sessionId: values.sessionId,
                 }),
                 success: function(data) {
-                if(data.respSyncNo==-1){
-                }
-                else if(data.respSyncNo==-2){
-                    _this.syncQueryIncInsStatus(values)
-                }
-                else{
-                    //若出错  则弹框询问
-                    if(data.insStatuses[0].manualChooseErrExecuting == true && data.insStatuses[0].status==3){
-                        _this.interruptData = data;
-                        _this.runInterrupt();
+                    console.log('执行', data)
+                    if(data.respSyncNo==-1){
+                        console.log('执行完毕')
+                        _this.runId = data.batchId
+                        _this.$alert(data.respMsg)
+                        // _this.isFinished = true
+                        _this.isRunning = false
+                        _this.runResult = data.insStatuses[0]? data.insStatuses[0]: {}
+                        delete _this.runResult.id
+                        delete _this.runResult.sceneId
+                        delete _this.runResult.testcaseId
+                        delete _this.runResult.flowNodeId
+                    }
+                    else if(data.respSyncNo==-2){
+                        console.log('继续加载', data, data.respCode === '10019990', data.respCode)
+                        if(data.respCode == '10019990') {
+                            _this.isRunning = false
+                            _this.runResult = data
+                            delete _this.runResult.batchId
+                            delete _this.runResult.respCode
+                            delete _this.runResult.respSyncNo
+                            delete _this.runResult.sessionId
+                        }else {
+                            _this.syncQueryIncInsStatus(values)
+                        }
                     }
                     else{
-                    _this.syncQueryIncInsStatus(data)
+                        console.log('出错')
+                        //若出错  则弹框询问
+                        if(data.insStatuses[0].manualChooseErrExecuting == true && data.insStatuses[0].status==3){
+                            _this.interruptData = data;
+                            _this.runInterrupt();
+                        }
+                        else{
+                        _this.syncQueryIncInsStatus(data)
+                        }
                     }
-                }
                 },
                 error: function() {
+                    console.log('补货')
                     Vac.alert('网络错误！请点击重新查询！');
                 }
+            });
+        },
+        stopExe: function () {
+            var _this = this;
+            // if(_this.exeStauts) {
+            // 	Vac.alert('该测试计划尚未执行或执行完毕。');return;
+            // }
+            Vac.ajax({
+                url: "batchRunCtrlController/terminateBatch",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    batchId: _this.interruptData,
+                }),
+                success: function (data) {
+                    if (data.respCode == "0000") {
+                        _this.isRunning = false
+                        Vac.alert(data.respMsg);
+                    } else {
+                        Vac.alert(data.respMsg);
+                    }
+                },
+                error: function () {
+                    Vac.alert("网络错误！请点击重新查询！");
+                },
             });
         },
         runInterrupt(){

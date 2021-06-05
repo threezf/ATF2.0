@@ -4,6 +4,8 @@
         <el-button type="primary" icon="el-icon-plus" size="small" @click="addFunctionButton" :disabled="disableFunc">添加</el-button>
         <el-button type="primary" icon="el-icon-folder-add" size="small" @click="importFunctionButton" :disabled="disableFunc">批量导入
         </el-button>
+        <el-button type="primary" icon="el-icon-upload" size="small" @click="importInterFace" :disabled="disableFunc">接口导入
+        </el-button>
         <el-button type="primary" icon="el-icon-document-copy" size="small" @click="copyFunction" :disabled="disableFunc">复制功能点
         </el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton" :disabled="disableFunc">修改
@@ -104,6 +106,26 @@
             </el-form-item>
         </el-form>
     </el-dialog>
+    <el-dialog width="27%" title="导入接口" :visible.sync="dialogImportInterfaceVisible">
+        <el-form :action="interfaceImportUrl" enctype="multipart/form-data" method="post" id="uploadForm">
+            <el-upload ref="upload" :action="interfaceImportUrl" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
+                <el-button size="small" class="btnSelectFile" type="success" slot="trigger" plain>上传文件
+                </el-button>
+                <el-input style="margin-left:10px" size="small" class="formInput" placeholder="请选择导入的文件" :disabled="true" v-model="fileName"></el-input>
+            </el-upload>
+            <hr color="#F5F5F5" />
+            <el-form-item>
+                <el-col class="buttonDownload" :span="12">
+                    <el-button type="primary" icon="el-icon-download" size="small" @click="downloadTemplate('interface')">模板下载</el-button>
+                </el-col>
+                <el-col class="buttonGroup" :span="12">
+                    <el-button type="primary" size="small" @click="importTemplateInterface">导入
+                    </el-button>
+                    <el-button size="small" @click="cancelButton">取消 </el-button>
+                </el-col>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
     <!--添加成功对话框-->
     <el-dialog width="25%" title="提示" :visible.sync="successDialogVisible" :before-close="handleBeforeClose">
         <el-form>
@@ -174,6 +196,7 @@ export default {
             dialogModelFlag: 0,
             dialogVisible: false,
             dialogImportVisible: false,
+            dialogImportInterfaceVisible: false,
             dialogFailVisible: false,
             successDialogVisible: false,
             creatorName: "",
@@ -278,6 +301,9 @@ export default {
         importURL() {
             return this.address4 + "atfcloud2.0a/transactController/batchImportTransact"; // 上传的URL
         },
+        interfaceImportUrl() {
+            return this.address4 + "atfcloud2.0a/interfaceNewController/batchImportInterfaceMenu"; // 上传的URL
+        }
     },
     methods: {
         queryAccess(id) {
@@ -363,6 +389,9 @@ export default {
             // }else{
             //     this.$alert("该被测项目由"+this.creatorName+"创建，你没有权限导入功能点")
             // }
+        },
+        importInterFace() {
+            this.dialogImportInterfaceVisible = true;
         },
         updateFunctionButton() {
             // if(this.creatorId==sessionStorage.getItem("userId")) {
@@ -504,9 +533,14 @@ export default {
             return true;
         },
         //导入文件相关
-        downloadTemplate() {
-            window.location.href =
-                this.address4 + "atfcloud2.0a/transactController/downloadTemplate";
+        downloadTemplate(str) {
+            if(str === undefined) {
+                window.location.href =
+                    this.address4 + "atfcloud2.0a/transactController/downloadTemplate";
+            }else {
+                window.location.href = 
+                    ''
+            }
         },
         handleRemove(file, fileList) {
             // console.log('file:',file,fileList)
@@ -830,21 +864,41 @@ export default {
             formData.append("creatorId", this.creatorId);
             formData.append("file", this.fileList[0].raw);
             Request({
-                    url: "/transactController/batchImportTransact",
-                    method: "POST",
-                    params: formData
-                })
-                .then((res) => {
-                    this.$message.success(res.respMsg);
-                    this.dialogImportVisible = false;
-                    this.getAllFunction();
-                    this.fileList = [];
-                    this.fileName = "";
-                })
-                .catch((res) => {
-                    this.$message.error("上传失败");
-                });
+                url: "/transactController/batchImportTransact",
+                method: "POST",
+                params: formData
+            })
+            .then((res) => {
+                this.$message.success(res.respMsg);
+                this.dialogImportVisible = false;
+                this.getAllFunction();
+                this.fileList = [];
+                this.fileName = "";
+            })
+            .catch((res) => {
+                this.$message.error("上传失败");
+            });
         },
+        importTemplateInterface() {
+            let formData = new FormData();
+            formData.append("autId", this.autId);
+            formData.append("creatorId", this.creatorId);
+            formData.append("file", this.fileList[0].raw);
+            Request({
+                url: "/interfaceNewController/batchImportInterfaceMenu",
+                method: "POST",
+                params: formData
+            })
+            .then((res) => {
+                this.$message.success(res.respMsg);
+                this.dialogImportVisible = false;
+                this.fileList = [];
+                this.fileName = "";
+            })
+            .catch((res) => {
+                this.$message.error("上传失败");
+            });
+        }
     },
 };
 </script>
