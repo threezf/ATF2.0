@@ -47,7 +47,8 @@ export default {
                 value: 3,
                 method: 'PUT'
             }],
-					menuId: null,
+					// menuId: null,
+					autId: undefined,
 					getId:null
         }
     },
@@ -58,8 +59,8 @@ export default {
     },
 
     created() {
-        this.menuId = localStorage.getItem('menuId')
-        this.getGroupById(this.menuId)
+        this.autId = sessionStorage.getItem('autId')
+        this.getGroupById(this.autId)
     },
     beforeRouteEnter (to, from, next) {
         // ...
@@ -88,7 +89,7 @@ export default {
 					url: '/interfaceNewController/selectAllInterfaceGroup',
 					method: 'post',
 					params: {
-						menuId: id
+						autId: id
 					}
 				}).then((res) => {
 					if (res.respCode === '0000') {

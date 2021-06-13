@@ -130,14 +130,16 @@ export default {
             console.log('tab-click	', tab.index);
             if (tab.index == 0) {
                 this.$router.push({
-                    path: '/testInfrastructure/transactDetail',
+                    // path: '/testInfrastructure/transactDetail',
+                    path: '/ui/transactDetail',
                     query: {
                         steps: 0
                     }
                 })
             } else {
                 this.$router.push({
-                    path: '/testInfrastructure/transactDetail',
+                    // path: '/testInfrastructure/transactDetail',
+                    path: '/ui/transactDetail',
                     query: {
                         steps: 1
                     }

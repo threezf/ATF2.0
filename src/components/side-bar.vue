@@ -19,7 +19,8 @@
                     <el-menu-item :index="fullPath + '/' + menu.path + '/' + submenu.path" :key="subindex" v-if="!submenu.meta.hide">{{submenu.meta.name}}</el-menu-item>
                 </template>
             </el-submenu>
-            <el-menu-item :index="fullPath + '/' + menu.path" :key="index" v-if="((!menu.children || needHideAllChildren(menu)) && !menu.meta.hide) || (isDisplay && menu.meta.isDisplay)">
+            <el-menu-item :index="fullPath + '/' + menu.path" :key="index" v-if="((!menu.children || needHideAllChildren(menu)) && !menu.meta.hide)&& (!isDisplay) || (isDisplay && menu.meta.display && !isShow)
+						|| (isDisplay && menu.meta.show && isShow)">
                 <i v-if="menu.meta.icon" :class="menu.meta.icon"></i>
                 <span slot="title">{{menu.meta.name}}</span>
             </el-menu-item>
@@ -43,27 +44,64 @@ export default {
         return {
             fullPath: '',
             isCollapse: false,
-            activedPath: this.$route.path,
+            activedPath: this.$route.name,
             flag: true,
             urls: [],
-            isDisplay: false
+            isDisplay: false,
+            isShow: false,
+						routesName: [
+							'InterfacesManagement',
+							'testCase',
+							'datatable',
+							'scene',
+							'TestplanExecute',
+							'BatchExecutionQuery',
+							'InterfaceTest',
+							'InterfaceDetail',
+							'TestCases',
+							'ProjectEnvironment',
+						]
         }
     },
     watch: {
-        '$route'(newVal, oldVal) {
-            this.activedPath = this.$route.path
-            if(this.activedPath === '/testInfrastructure/interfacesManagement'){
-                this.isDisplay = true
-            }
-        },
+        // '$route'(newVal, oldVal) {
+        //     this.activedPath = this.$route.path
+        //     if(this.activedPath === '/testInfrastructure/interfacesManagement'){
+        //         this.isDisplay = true
+        //     }
+        // },
+				'$route': {
+					handler(to, from) {
+						if (from.name === 'testProject' || from.name === 'transact'|| to.name === 'InterfacesManagement') {
+								this.isDisplay = true
+							}
+						if (to.name === 'TestedSystemManagement'|| to.name === 'testProject'){
+								this.isDisplay = false
+						}
+						if (to.name === 'ProcessTestCase'){
+							this.isShow = true
+						}
+					}
+				},
         isDisplay: {
             handler(newVal,oldVal){
-                if(this.activedPath === '/testInfrastructure/interfacesManagement'){
-                    this.isDisplay = true
-                }
+            		this.routesName.forEach(item =>{
+            			if (this.activedPath === item){
+										this.isDisplay = true
+									}
+								})
             },
             immediate: true
-        }
+        },
+        isShow: {
+					handler(newVal,oldVal){
+						if (this.activedPath === 'ProcessTestCase'){
+							this.isDisplay = true
+							this.isShow = true
+						}
+					},
+					immediate: true
+				}
     },
     computed: {
         menuList() {
@@ -123,10 +161,12 @@ export default {
         this.urls = localStorage.getItem('urls').split(',')
     },
     updated() {
-        console.log("开始更新"+this.$route.pathName)
-        if(this.$route.pathName =='/testInfrastructure/interfacesManagement'){
-            this.isDisplay = true
-        }
+        console.log("路由更新")
+				this.routesName.forEach(item =>{
+					if (this.activedPath === item){
+						this.isDisplay = true
+					}
+				})
     },
 };
 </script>

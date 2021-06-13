@@ -18,7 +18,7 @@
                 </span>
                 </template>
 
-                <MenuAndDropdown v-ref="c => setChildrenRef('menuchild',c)" :menuData="menu.childNodeList" ></MenuAndDropdown>
+                <MenuAndDropdown v-ref="c => setChildrenRef('menuchild',c)" :menuData="menu.childNodeList" :case-need="caseNeed"></MenuAndDropdown>
             </el-submenu>
             <el-menu-item :key="menu.id" :index="String(menu.id)" style="text-align:center" v-else>
                     <span slot="title">{{menu.groupName}}
@@ -66,6 +66,10 @@ import VueMixins from "@/libs/vueMixins.js";
                 type: Boolean,
                 default: false
             },
+						caseNeed: {
+							type: Boolean,
+							default: false
+						}
         },
         data() {
             return {
@@ -74,13 +78,13 @@ import VueMixins from "@/libs/vueMixins.js";
                 groupForm: {
                     parentId: 0,
                     groupName:"",
-										menuId:"",
+										autId:"",
                     createUser:"",
                 },
                 updateGroupForm: {
                     id:0,
                     groupName:"",
-										menuId:"",
+										autId:"",
                     modifiedUser:"",
                 },
                 rules: {
@@ -90,7 +94,8 @@ import VueMixins from "@/libs/vueMixins.js";
                         trigger: "blur"
                     }]
                 },
-                autId: localStorage.getItem('menuId')
+                autId: sessionStorage.getItem('autId'),
+								caseLibId: sessionStorage.getItem('caselibId')
             }
         },
         components:{
@@ -168,7 +173,11 @@ import VueMixins from "@/libs/vueMixins.js";
                         if (this.dialogFlag === 2) {
                             this.updateGroup()
                         } else {
-                            this.addGroup()
+													if(this.caseNeed){
+														this.addGroupInCase()
+													}else {
+														this.addGroup()
+													}
                         }
                     } else {
                         this.$message('信息格式有误，请检查')
@@ -179,9 +188,10 @@ import VueMixins from "@/libs/vueMixins.js";
             // 添加分组
             addGroup() {
                 this.groupForm.createUser = sessionStorage.getItem("username")
-                this.groupForm.menuId = this.autId
+								this.groupForm.autId = this.autId
+								this.groupForm.caseId = undefined
                 console.log('parentId：'+this.groupForm.parentId+',createUser:'+this.groupForm.createUser+
-                ',menuId:'+this.groupForm.menuId)
+                ',autId:'+this.groupForm.autId)
                 Request({
                     url: '/interfaceNewController/addSingleInterfaceGroup',
                     method: 'post',
@@ -200,10 +210,39 @@ import VueMixins from "@/libs/vueMixins.js";
                     console.log(err)
                 })
             },
+						addGroupInCase(){
+							this.groupForm.createUser = sessionStorage.getItem("username")
+							this.groupForm.autId = undefined
+							this.groupForm.caseId = this.caseLibId
+							console.log('groupForm',this.groupForm)
+							Request({
+								url: '/interfaceNewController/addSingleInterfaceGroupByCaseId',
+								method: 'post',
+								params: this.groupForm
+							}).then((res) => {
+								if(res.respCode === "0000"){
+									this.isDialogVisible = false
+									this.$message.success('添加成功')
+									this.getParentChildrenRef('sidebar').getGroup()
+								} else {
+									this.dialogVisible = false
+									console.log(res.respMsg)
+								}
+							}).catch((err) => {
+								this.$alert(err.respMsg)
+								console.log(err)
+							})
+						},
             // 修改分组
             updateGroup() {
                 this.updateGroupForm.modifiedUser = sessionStorage.getItem("username")
-                this.updateGroupForm.menuId = this.autId
+								if(this.caseNeed){
+									this.updateGroupForm.autId = undefined
+									this.updateGroupForm.caseLibId = this.caseLibId
+								}else {
+									this.updateGroupForm.autId = this.autId
+									this.updateGroupForm.caseLibId = undefined
+								}
                 this.updateGroupForm.groupName = this.groupForm.groupName
                 console.log(this.updateGroupForm)
                 Request({

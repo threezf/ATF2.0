@@ -377,14 +377,28 @@ export default {
                 companyId: JSON.parse(localStorage.getItem("loginInfo")).companyId,
                 creatorId: row.creatorId
             }))
-            this.$router.push({
-                path: "transact",
-                query: {
-                    id: _this.id,
-                    code: row.code,
-                    nameMedium: row.nameMedium
-                }
-            }); //界面跳转
+						if (this.$route.path === '/ui/testedSystemManagement'){
+								this.$router.push({
+									path: "transact",
+									query: {
+										id: _this.id,
+										code: row.code,
+										nameMedium: row.nameMedium,
+										isInterface: false
+									}
+								}); //界面跳转
+							}else {
+								this.$router.push({
+									path: "interfacesManagement",
+									query: {
+										data: row,
+										creatorId: JSON.parse(sessionStorage.getItem("toTransact")).creatorId,
+										creatorName: JSON.parse(sessionStorage.getItem("toTransact")).creatorName,
+										isInterface: true
+									}
+								}); //界面跳转
+						}
+
             console.log("code", row.code);
         },
         //对话框处理事件，非区域隐藏
@@ -585,7 +599,7 @@ export default {
 
 <style scoped>
 .el-radio__label {
-    display: none important;
+    display: none !important;
 }
 
 .spanTextColor {

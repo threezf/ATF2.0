@@ -338,7 +338,7 @@ export default {
       //被测系统编号
       autId: "",
       menuList: [],
-      menuId: "", // 获取接口管理传递的id数据
+      // menuId: "", // 获取接口管理传递的id数据
       currentPage: 1,
       totalCount: 30,
       pageSize: 10,
@@ -495,15 +495,12 @@ export default {
     if (this.$route.query.data && this.$route.query.data.hasOwnProperty("id")) {
       data = this.$route.query.data;
       console.log(data);
-      localStorage.setItem("menuId", this.$route.query.data.id);
-      localStorage.setItem("transactAutId", this.$route.query.data.autId);
-      this.autId = Number(data.autId);
-      this.menuId = data.id;
+      this.autId = Number(data.id);
     } else {
-      this.autId = Number(localStorage.getItem("transactAutId"));
-      this.menuId = localStorage.getItem("menuId");
+			this.autId = sessionStorage.getItem("autId");
+      // this.menuId = localStorage.getItem("menuId");
     }
-    this.getGroupById(this.menuId);
+    this.getGroupById(this.autId);
     this.getAllTableData();
     this.getEnvironmentList();
   },
@@ -589,11 +586,11 @@ export default {
 		},
 		// 导入模板
 		importTemplate() {
-			console.log("importTemplate", this.menuId);
+			console.log("importTemplate", this.autId);
 			let formData = new FormData();
 			formData.append("autId", this.autId);
 			formData.append("creatorId", sessionStorage.getItem('userId'));
-			formData.append("menuId", this.menuId);
+			// formData.append("menuId", this.menuId);
 			formData.append("file", this.fileList[0].raw);
 			Request({
 				url: "/interfaceNewController/batchImportInterfaceTransact",
@@ -620,7 +617,7 @@ export default {
         url: "/interfaceNewController/interfaceEnvironmentSelect",
         method: "post",
         params: {
-          menuId: this.menuId,
+          autId: this.autId,
         },
       }).then((res) => {
         console.log("查询成功列表", res);　
@@ -744,7 +741,7 @@ export default {
 					interfaceCode: this.ruleForm.code,
 					name: this.ruleForm.nameMedium,
 					systemId: this.autId,
-					menuId: this.menuId,
+					// menuId: this.menuId,
 					userId: sessionStorage.getItem('userId')
 				},
 			})
@@ -785,12 +782,12 @@ export default {
         });
     },
     getAllTableData() {
-      console.log(this.menuId);
+      // console.log(this.menuId);
       Request({
         url: "/interfaceNewController/selectAllInterfaceByMenuId",
         method: "post",
         params: {
-          menuId: this.menuId,
+          autId: this.autId,
           pageSize: this.pageSize,
           currentPage: this.currentPage,
           orderColumns: "update_time",
@@ -817,7 +814,7 @@ export default {
         url: "/interfaceNewController/selectAllInterfaceGroup",
         method: "post",
         params: {
-          menuId: id,
+          autId: id,
         },
       })
         .then((res) => {
@@ -839,7 +836,7 @@ export default {
         });
     },
     updateInterface() {
-      this.form.menuId = this.menuId;
+      this.form.autId = this.autId;
       this.form.tags = JSON.stringify(this.tags);
       if (typeof this.interfaceGroup === "number") {
         this.form.interfaceGroupId = this.interfaceGroup;
@@ -891,7 +888,7 @@ export default {
     },
     addInterface() {
       this.form.transactId = 1;
-			this.form.menuId = this.menuId;
+			this.form.autId = this.autId;
       this.form.tags = JSON.stringify(this.tags);
       let length = this.interfaceGroup.length;
       this.form.interfaceGroupId = this.interfaceGroup[length - 1];

@@ -15,10 +15,10 @@
             </el-row>
             <el-menu-item index="0" class="itemAll">
                 <i class="el-icon-s-operation"></i>
-                <span slot="title" v-if="needAdd">所有接口</span>
+                <span slot="title" v-if="needAdd">{{getName}}</span>
             </el-menu-item>
             <!-- 引入组件 -->
-            <MenuAndDropdown v-ref="c => setChildrenRef('menu',c)" :menuData="menuList" :isCollapse="isCollapse" @getGroup="getGroup"></MenuAndDropdown>
+            <MenuAndDropdown v-ref="c => setChildrenRef('menu',c)" :menuData="menuList" :isCollapse="isCollapse" :caseNeed="caseNeed" @getGroup="getGroup"></MenuAndDropdown>
         </el-menu>
          <el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="30%">
         <el-form :rules="rules" :model="form" ref="form" label-width="80px" status-icon>
@@ -76,12 +76,7 @@ export default {
                 //     groupName: "日志模块",
                 // }],
                 dialogVisible: false,
-                form: {
-                    parentId: 0,
-                    groupName:"",
-                    menuId:"",
-                    createId:""
-                },
+                form: {},
                 modelFlag: 1,
                 rules: {
                     groupName: [{
@@ -90,7 +85,8 @@ export default {
                         trigger: "blur"
                     }]
                 },
-                autId: localStorage.getItem('menuId')
+                autId: sessionStorage.getItem('autId'),
+							  caseLibId: sessionStorage.getItem('caselibId')
             }
         },
         props:{
@@ -101,7 +97,11 @@ export default {
             needAdd: {
                 type: Boolean,
                 default: true
-            }
+            },
+						caseNeed: {
+							type: Boolean,
+							default: false
+						}
         },
         inject: {
             setChildrenRef: {
@@ -125,6 +125,13 @@ export default {
                 }
                 return obj[this.modelFlag]
             },
+						getName(){
+            		if (this.caseNeed){
+            			return '所有用例'
+								}else {
+									return '所有接口'
+								}
+						}
         },
         methods: {
             handleSelect(key, keyPath) {
@@ -175,7 +182,12 @@ export default {
                         if (this.modelFlag === 2) {
                             this.updateGroup()
                         } else {
-                            this.addGroup()
+														if(this.caseNeed){
+															this.addGroupInCase()
+														}else {
+															this.addGroup()
+														}
+
                         }
                     } else {
                         this.$message('信息格式有误，请检查')
@@ -185,7 +197,11 @@ export default {
             },
             getGroup() {
                 console.log('测试2')
-                this.$emit('getGroupById',this.autId)
+								if (this.caseNeed){
+									this.$emit('getGroupById',this.caseLibId)
+								}else {
+									this.$emit('getGroupById',this.autId)
+								}
             },
             getTableData() {
                 this.$emit('getAllTableData')
@@ -193,19 +209,23 @@ export default {
             // 添加分组
             addGroup() {
                 this.form.parentId = 0
-                this.form.createId = sessionStorage.getItem("username")
-                this.form.menuId = this.autId
+                this.form.createUser = sessionStorage.getItem("username")
+								this.form.autId = this.autId
+								this.form.caseId = undefined
                 Request({
                     url: '/interfaceNewController/addSingleInterfaceGroup',
                     method: 'post',
                     params: this.form
                 }).then((res) => {
-                    if(res.respCode == "0000"){
+                    if(res.respCode === "0000"){
                         this.dialogVisible = false
-                        this.$emit('getGroupById',this.autId)
+											if (this.caseNeed){
+												this.$emit('getGroupById',this.caseLibId)
+											}else {
+												this.$emit('getGroupById',this.autId)
+											}
                     } else {
                         this.dialogVisible = false
-                        this.$alert("该分组名称已存在")
                         console.log(res.respMsg)
                     }
                 }).catch((err) => {
@@ -213,6 +233,32 @@ export default {
                     console.log(err)
                 })
             },
+					addGroupInCase(){
+						this.form.parentId = 0
+						this.form.createUser = sessionStorage.getItem("username")
+						this.form.autId = undefined
+						this.form.caseId = this.caseLibId
+						Request({
+							url: '/interfaceNewController/addSingleInterfaceGroupByCaseId',
+							method: 'post',
+							params: this.form
+						}).then((res) => {
+							if(res.respCode === "0000"){
+								this.dialogVisible = false
+								if (this.caseNeed){
+									this.$emit('getGroupById',this.caseLibId)
+								}else {
+									this.$emit('getGroupById',this.autId)
+								}
+							} else {
+								this.dialogVisible = false
+								console.log(res.respMsg)
+							}
+						}).catch((err) => {
+							this.$alert(err.respMsg)
+							console.log(err)
+						})
+					}
 
 
     }

@@ -335,9 +335,21 @@ export default {
             console.log('cccc', row)
             sessionStorage.setItem('executorId', row.creatorId)
             console.log('toCase', id, caseLibId)
-            this.$router.push({
-                path: 'testCase'
-            })
+						if (this.$route.path ==='/ui/testProject'){
+							this.$router.push({
+								path: 'testCase'
+							})
+						}else {
+							this.$router.push(
+								{
+									path: 'processTestCase',
+									query: {
+										data: row,
+									}
+								}
+							)
+						}
+
         },
         // 页码大小变化
         handleSizeChange(val) {

@@ -12,8 +12,9 @@ import TestProject from './testProject.js'
 import RecordFunction from './recordFunction'
 import Test from '@/views/test'
 import QuicklyStart from './quicklyStart'
-import UI from '@/views/UIorCGI/ui'
-import CGI from '@/views/UIorCGI/CGI'
+// import UI from '@/views/UIorCGI/ui'
+import UI from './ui.js'
+import CGI from './cgi.js'
 import Addition from './addition'
 import MockApi from '@/views/testInfrastructure/mockApi';
 import Preview from '@/views/testInfrastructure/mockAPIComponents/PreView'
@@ -84,26 +85,28 @@ export default new Router({
             }
         },
 
-		TestInfrastructure,
-        {
-            path: '/testInfrastructure/ui',
-            name: 'UI',
-            component: UI,
-            meta: {
-                name: 'UI测试',
-                another: 'atf/ui'
-            }
-        },
-        {
-            path: '/testInfrastructure/cgi',
-            component: CGI,
-            name: 'CGI',
-            meta: {
-                name: '接口测试',
-                another: 'atf/interface'
-            }
-        },
-        TestProject,
+		// TestInfrastructure,
+        // {
+        //     path: '/testInfrastructure/ui',
+        //     name: 'UI',
+        //     component: UI,
+        //     meta: {
+        //         name: 'UI测试',
+        //         another: 'atf/ui'
+        //     }
+        // },
+			UI,
+			CGI,
+        // {
+        //     path: '/testInfrastructure/cgi',
+        //     component: CGI,
+        //     name: 'CGI',
+        //     meta: {
+        //         name: '接口测试',
+        //         another: 'atf/interface'
+        //     }
+        // },
+        // TestProject,
 			SystemManagement,
 			QuicklyStart,
         Addition,

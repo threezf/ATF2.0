@@ -31,7 +31,8 @@ export default {
 	},
 	data() {
 		return{
-			menuId:'',
+			// menuId:'',
+			autId:'',
 			menuList:[],
 			tableData:[],
 			tableType:2,
@@ -64,18 +65,19 @@ export default {
 		}
 	},
 	created() {
-		this.menuId = localStorage.getItem('menuId')
-		this.getGroupById(this.menuId)
+		// this.menuId = localStorage.getItem('menuId')
+		this.autId = sessionStorage.getItem('autId')
+		this.getGroupById(this.autId)
 		this.getAllTableData()
 	},
 	methods:{
 		getAllTableData(){
-			console.log(this.menuId)
+			console.log(this.autId)
 			Request({
 				url: '/interfaceNewController/selectAllInterfaceByMenuId',
 				method: 'post',
 				params: {
-					menuId: this.menuId,
+					autId: Number(this.autId),
 					pageSize: this.pageSize,
 					currentPage: this.currentPage,
 					orderColumns: "update_time",
@@ -84,9 +86,9 @@ export default {
 			}).then((res) => {
 				if(res.respCode === '0000'){
 					this.tableData = res.list
-				}else {
-					this.$message.error("获取接口信息失败！")
-					console.log(err)
+				}else if (res.respCode === '10011111'){
+					this.$message.error("数据为空")
+					console.log(res)
 				}
 			}).catch((err) => {
 				console.log(err)
@@ -121,7 +123,7 @@ export default {
 				url: '/interfaceNewController/selectAllInterfaceGroup',
 				method: 'post',
 				params: {
-					menuId: id
+					autId: id
 				}
 			}).then((res) => {
 				if(res.respCode === '0000'){

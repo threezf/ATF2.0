@@ -11,7 +11,7 @@
  **/
 <template>
 <div class="page-outer">
-    <side-bar v-if='pathShow' path-name="TestInfrastructure" :first-path-name='projectName'></side-bar>
+<!--    <side-bar v-if='pathShow' path-name="TestInfrastructure" :first-path-name='projectName'></side-bar>-->
     <div class="right-content">
         <div v-show="$store.state.flag">
             <progress-bar v-show="!isInterface"></progress-bar>

@@ -350,7 +350,8 @@ export default {
     importTemplate() {
       console.log(this.fileList[0].raw);
       let formData = new FormData();
-			formData.append('menuId',localStorage.getItem('menuId'))
+			// formData.append('menuId',localStorage.getItem('menuId'))
+			formData.append('autId',localStorage.getItem('autId'))
       formData.append("file", this.fileList[0].raw);
       Request({
         url: "/interfaceNewController/batchImportInterfaceEnvironment",
@@ -463,7 +464,7 @@ export default {
         url: "/interfaceNewController/interfaceEnvironmentSelect",
         method: "post",
         params: {
-          menuId: localStorage.getItem("menuId"),
+          autId: sessionStorage.getItem("autId"),
         },
       })
         .then((res) => {
@@ -498,7 +499,8 @@ export default {
       );
       this.newEnvironmentData.authType = this.$refs.testTabs.selectedAuthType;
       this.newEnvironmentData.createUser = sessionStorage.getItem("username");
-      this.newEnvironmentData.menuId = localStorage.getItem("menuId");
+      // this.newEnvironmentData.menuId = localStorage.getItem("menuId");
+      this.newEnvironmentData.autId = sessionStorage.getItem("autId");
       Request({
         url: "/interfaceNewController/addInterfaceEnvironment",
         method: "post",

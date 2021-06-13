@@ -4,8 +4,8 @@
         <el-button type="primary" icon="el-icon-plus" size="small" @click="addFunctionButton" :disabled="disableFunc">添加</el-button>
         <el-button type="primary" icon="el-icon-folder-add" size="small" @click="importFunctionButton" :disabled="disableFunc">批量导入
         </el-button>
-        <el-button type="primary" icon="el-icon-upload" size="small" @click="importInterFace" :disabled="disableFunc">接口导入
-        </el-button>
+<!--        <el-button type="primary" icon="el-icon-upload" size="small" @click="importInterFace" :disabled="disableFunc">接口导入-->
+<!--        </el-button>-->
         <el-button type="primary" icon="el-icon-document-copy" size="small" @click="copyFunction" :disabled="disableFunc">复制功能点
         </el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="updateFunctionButton" :disabled="disableFunc">修改
@@ -538,7 +538,7 @@ export default {
                 window.location.href =
                     this.address4 + "atfcloud2.0a/transactController/downloadTemplate";
             }else {
-                window.location.href = 
+                window.location.href =
                     ''
             }
         },
@@ -652,8 +652,11 @@ export default {
                             if (_this.addId) {
                                 _this.addRow = res.list.find((item) => item.id === _this.addId);
                             }
+														if (this.tableData.length ===0){
+															this.dialogModelFlag = 5
+															this.dialogVisible = true;
+														}
                         }
-											this.getInterfaceProjects()
                     },
                     (err) => {
                         console.log("pagination查询出错" + err);
@@ -663,38 +666,39 @@ export default {
                     console.log("pagination查询出错" + err);
                 });
         },
-				getInterfaceProjects(){
-					Request({
-						url: "/interfaceNewController/interfaceMenuSelect",
-						method: "POST",
-						params: {
-							autId: this.autId,
-						},
-					})
-						.then((res) => {
-							if (res.respCode === "0000") {
-								console.log("获取成功：", res);
-								for (let i = 0; i < res.list.length; i++){
-									if (res.list[i].transType == 1) {
-										res.list[i].transType = "UI";
-									} else {
-										res.list[i].transType = "接口";
-									}
-									this.tableData.push(res.list[i])
-								}
-								this.totalCount += res.totalCount;
-								if (this.tableData.length ===0){
-									this.dialogModelFlag = 5
-									this.dialogVisible = true;
-								}
-							}else {
-								console.log(res.respMsg)
-							}
-						})
-						.catch((err) => {
-							console.log("接口添加失败", err);
-						});
-				},
+				// 废弃
+				// getInterfaceProjects(){
+				// 	Request({
+				// 		url: "/interfaceNewController/interfaceMenuSelect",
+				// 		method: "POST",
+				// 		params: {
+				// 			autId: this.autId,
+				// 		},
+				// 	})
+				// 		.then((res) => {
+				// 			if (res.respCode === "0000") {
+				// 				console.log("获取成功：", res);
+				// 				for (let i = 0; i < res.list.length; i++){
+				// 					if (res.list[i].transType == 1) {
+				// 						res.list[i].transType = "UI";
+				// 					} else {
+				// 						res.list[i].transType = "接口";
+				// 					}
+				// 					this.tableData.push(res.list[i])
+				// 				}
+				// 				this.totalCount += res.totalCount;
+				// 				if (this.tableData.length ===0){
+				// 					this.dialogModelFlag = 5
+				// 					this.dialogVisible = true;
+				// 				}
+				// 			}else {
+				// 				console.log(res.respMsg)
+				// 			}
+				// 		})
+				// 		.catch((err) => {
+				// 			console.log("接口添加失败", err);
+				// 		});
+				// },
         submitForm(formName) {
             let _this = this;
             let status = _this.ruleForm.nameMedium === "";

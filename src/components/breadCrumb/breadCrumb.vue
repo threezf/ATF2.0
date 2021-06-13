@@ -55,7 +55,9 @@
 					'quicklyTemplate':'配置用例',
 					'quicklyRun':'执行用例',
 					'quicklyResult':'查看结果',
-					'mobile':'移动端测试'
+					'mobile':'移动端测试',
+					'ui':'UI测试',
+					'interface':'接口测试',
 				},
 				breadList: [],
 				showFlag:true,
