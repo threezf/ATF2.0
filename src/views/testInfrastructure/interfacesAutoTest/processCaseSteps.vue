@@ -6,7 +6,7 @@
       </el-select>
       <el-tabs type="border-card" class="tabs-card" v-model="activeTab">
           <el-tab-pane v-for="(tab, index) in interfaceTabs" :key="'tab' + index" :label="tab.label" :name="tab.name">
-            <TestProcess v-if="activeTab === 'testProcess' && tab.name === 'testProcess'" :case-data="caseData">
+            <TestProcess v-if="activeTab === 'testProcess' && tab.name === 'testProcess'">
 
             </TestProcess>
             <TestData v-if="activeTab === 'testData' && tab.name === 'testData'">

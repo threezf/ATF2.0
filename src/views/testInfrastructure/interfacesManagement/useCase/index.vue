@@ -252,7 +252,7 @@
       top="60px"
       title="管理断言">
       <div style="display: flex">
-        <div 
+        <div
           style="border: 1px solid #eee; width: 200px;">
           <RuleList @choose="handleChoose" @delete="hancleDelete" :caseId="selectRow? selectRow.id: ''" :list="treeData"></RuleList>
         </div>
@@ -675,9 +675,9 @@ export default {
       this.caseVisible = true;
     },
     copyCaseButton(row) {
-      this.copyCaseData = row;
-      this.copyCaseData.projectName = "副本-" + row.projectName;
-      this.copyDialog = true;
+      this.copyCaseData = {...row}
+      this.copyCaseData.projectName = "副本-" + row.projectName
+      this.copyDialog = true
     },
     delCaseButton(row) {
       this.$confirm("是否确定删除此测试用例?", "提示", {

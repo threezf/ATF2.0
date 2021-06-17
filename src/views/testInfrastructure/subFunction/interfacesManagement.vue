@@ -539,7 +539,6 @@ export default {
                     bodyFormat: isNaN(Number(this.manageInfo.bodyFormat)) ?this.manageInfo.bodyFormat == "JSON"? 1: 2 : this.manageInfo.bodyFormat,
                     bodyParseContent: "",
                     createTime: this.manageInfo.createTime,
-                    creatorId: this.manageInfo.creatorId,
                     dataDictList: "",
                     description: this.manageInfo.description,
                     groupName: "",
@@ -591,16 +590,16 @@ export default {
         decode() {
             try{
                 console.log('参数化', JSON.parse(this.manageInfo.bodyContent))
-                let obj = JSON.parse(this.manageInfo.bodyContent)
-                for(let key in obj) {
-                    obj[key] = '${' + `${key}` + "}"
+                let obj = JSON.parse(this.manageInfo.bodyContent)
+                for(let key in obj) {
+                    obj[key] = '${' + `${key}` + "}"
                 }
-                obj.statusCheck = "${statusCheck}"
-                let str = JSON.stringify(obj);
-                this.manageInfo.bodyContent = str
-            }catch(e) {
+                obj.statusCheck = "${statusCheck}"
+                let str = JSON.stringify(obj);
+                this.manageInfo.bodyContent = str
+            	}catch(e) {
                 this.$message.warning('JSON格式错误')
-            }
+  						}
         },
         // 数据编辑时添加一行
         addRow(index) {

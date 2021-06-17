@@ -74,22 +74,22 @@
 					</el-tag>
 				</template>
 				<template v-slot:operationSlot="scoped">
-					<el-button type="text" size="small" @click="testCaseButton(scoped.row)"
+					<el-button type="text" size="small" @click.native.stop="testCaseButton(scoped.row)"
 					>测试</el-button
 					>
-					<el-button type="text" size="small" @click="editCaseButton(scoped.row)"
+					<el-button type="text" size="small" @click.native.stop="editCaseButton(scoped.row)"
 					>编辑</el-button
 					>
 					<el-button
 						type="text"
 						size="small"
-						@click="copyCaseButton(scoped.row)"
+						@click.native.stop="copyCaseButton(scoped.row)"
 					>复制</el-button
 					>
 					<el-button
 						type="text"
 						size="small"
-						@click="deleteCaseButton(scoped.row,scoped.$index)"
+						@click.native.stop="deleteCaseButton(scoped.row,scoped.$index)"
 					>删除</el-button
 					>
 				</template>
@@ -142,7 +142,6 @@
 					</el-form-item>
 				</el-form>
 			</el-dialog>
-			<!--导入对话框-->
 			<el-dialog width="27%" title="导入" :before-close="handleClose" :visible.sync="dialogImportVisible">
 				<el-form :action="importURL" enctype="multipart/form-data" method="post" id="uploadForm">
 					<el-upload ref="upload" :action="importURL" :limit="1" :auto-upload="false" :file-list="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-exceed="handleExceed" :on-change="handleOnChange">
@@ -164,9 +163,9 @@
 				</el-form>
 			</el-dialog>
 			<el-dialog
-				title="复制环境"
+				title="复制流程用例"
 				:visible.sync="copyDialog"
-				width="40vw"
+				width="24vw"
 				:append-to-body="true"
 			>
 				<el-form :model="copyCaseData" label-position="top">
@@ -391,7 +390,7 @@ export default {
 
 		},
 		copyCaseButton(row) {
-			this.copyCaseData = row;
+			this.copyCaseData = {...row};
 			this.nameMedium = "副本-" + row.nameMedium;
 			this.tags = []
 			this.tags = this.copyCaseData.descShort.map((item)=>{

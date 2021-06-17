@@ -695,7 +695,7 @@ export default {
             this.dialogVisible = true
         },
         copyButton(){
-            this.copyInterfaceData = this.interfaceData
+            this.copyInterfaceData = {...this.interfaceData}
             this.copyInterfaceData.interfaceName = '副本-'+this.interfaceData.interfaceName
 						this.copyInterfaceGroup = this.interfaceGroup
             this.copyDialog = true

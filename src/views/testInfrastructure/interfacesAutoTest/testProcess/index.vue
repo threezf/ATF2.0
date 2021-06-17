@@ -30,14 +30,52 @@
 			<el-col :span="4">更新时间：{{caseData.modifiedTime }}</el-col>
 		</el-row>
 		<el-divider class="divider-style"></el-divider>
-		<el-dialog title="编辑接口" :visible.sync="dialogVisible" :before-close="handleClose" width="60%">
-			<el-form :model="interfaceData" label-width="80px" label-position='top'>
-
-			</el-form>
-		</el-dialog>
-		<el-dialog title="复制接口" :visible.sync="copyDialog" :before-close="handleClose" width="40%">
-			<el-form :model="copyInterfaceData" label-width="80px" label-position='top'>
-
+		<el-dialog :title="getTitle" :visible.sync="dialogVisible" :before-close="handleClose" width="24%">
+			<el-form ref="form" :model="copyData" label-width="80px" label-position='top'>
+				<el-form-item label="用例名称" prop="caseName" class="change-label-class">
+					<el-input size="small" placeholder="用例名称" v-model.lazy="copyData.nameMedium">
+					</el-input>
+				</el-form-item>
+				<el-form-item label="分组" prop="descShort" class="change-label-class">
+					<el-cascader
+						size="small"
+						:options="menuList"
+						v-model="copyData.groupId"
+						:show-all-levels="false"
+						:props="defaultProps"
+						style="width: 100%"
+					>
+					</el-cascader>
+				</el-form-item>
+				<el-form-item label="标签" class="change-label-class">
+					<el-select
+						size="small"
+						class="input-new-tag"
+						v-model="copyData.descShort"
+						multiple
+						filterable
+						allow-create
+						default-first-option
+						placeholder="请选择或输入标签"
+						style="width:100%"
+					>
+						<el-option
+							v-for="item in tagOptions"
+							:key="item.value"
+							:label="item.tag"
+							:value="item.tag"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item>
+					<div class="dialogBottom">
+						<el-button id="buttonName" type="primary" size="small" @click="submitForm('form')">确定
+						</el-button>
+						<el-button type="danger" size="small" plain @click="cancelButtonClicked">取消
+						</el-button>
+					</div>
+				</el-form-item>
 			</el-form>
 		</el-dialog>
 	</div>
@@ -50,18 +88,12 @@ import VueMixins from "@/libs/vueMixins.js";
 export default {
 	mixins: [VueMixins], // 时间格式转化
 	name: "index",
-	props:{
-		caseData:{
-			type:Object,
-			default:{}
-		}
-	},
 	data(){
 		return {
 			groupName:'',
 			tags: [],
-			interfaceData: {},
-			copyInterfaceData: {},
+			caseData: {},
+			copyData: {},
 			dialogVisible: false,
 			copyDialog: false,
 			interfaceGroup:[],
@@ -72,18 +104,37 @@ export default {
 				value: 'id'
 			},
 			menuList:[],
-
+			tagOptions: [
+				{
+					value: 0,
+					tag: "可以添加多个标签",
+				},
+				{
+					value: 1,
+					tag: "测试",
+				},
+			],
+			currentUserId : sessionStorage.getItem('userId') || '3',
+			modelFlag:0,
 		}
 	},
 	created() {
 		console.log('caseData',this.caseData)
 		let caseLibId = sessionStorage.getItem('caselibId')
 		this.getGroupById(caseLibId)
-		this.getGroupNameById(this.caseData.groupId)
+		let caseId = sessionStorage.getItem('caseId')
+		this.getCaseDetail(caseId)
 	},
 	computed:{
 		updateTime(){
 			return TimeUtils.timestampToTime(this.caseData.modifiedTime, 'yyyy-MM-dd hh:mm:ss')
+		},
+		getTitle(){
+			let obj = {
+				1: '复制用例',
+				2: '编辑用例'
+			}
+			return obj[this.modelFlag]
 		}
 	},
 	methods:{
@@ -92,21 +143,23 @@ export default {
 			return true
 		},
 		editButton(){
+			this.modelFlag = 2
+			this.copyData = {...this.caseData}
 			this.dialogVisible = true
 		},
 		copyButton(){
-			this.copyInterfaceData = this.interfaceData
-			this.copyInterfaceData.interfaceName = '副本-'+this.interfaceData.interfaceName
-			this.copyInterfaceGroup = this.interfaceGroup
-			this.copyDialog = true
+			this.modelFlag = 1
+			this.copyData = {...this.caseData}
+			this.copyData.nameMedium = '副本-'+this.caseData.nameMedium
+			this.dialogVisible = true
 		},
 		deleteButton(){
-			this.$confirm('是否确定删除此接口?', '提示', {
+			this.$confirm('是否确定删除此用例?', '提示', {
 				cancelButtonText: '取消',
 				confirmButtonText: '确定',
 				type: 'warning'
 			}).then(() => {
-				this.delInterface(this.interfaceData.id)
+				this.delCase(this.caseData.id)
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -118,6 +171,44 @@ export default {
 		cancelButtonClicked() {
 			this.dialogVisible = false
 			this.copyDialog = false
+		},
+		submitForm(formName) {
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					// 如果是修改则调用 updateGroup 方法 否则调用 addGroup
+					console.log(this.modelFlag);
+					if (this.modelFlag === 2) {
+						this.updateCase();
+					} else {
+						this.copyCase();
+					}
+				} else {
+					this.$message("信息格式有误，请检查");
+					return false;
+				}
+			});
+		},
+		getCaseDetail(id){
+			Request({
+				url: 'sceneController/pagedQuerySceneById',
+				method: 'post',
+				params: {
+					id: id
+				}
+			}).then((res) => {
+				if(res.respCode === '0000'){
+					this.caseData = res.sceneEntityList[0]
+					console.log('caseData',this.caseData)
+					this.getGroupNameById(this.caseData.groupId)
+					this.caseData.descShort = JSON.parse(this.caseData.descShort)
+					// this.$message.success("查询成功！")
+				}else {
+					this.$message.error("查询失败！")
+					console.log(res.respMsg)
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
 		},
 		getGroupNameById(id){
 			console.log(id)
@@ -138,74 +229,12 @@ export default {
 				console.log(err)
 			})
 		},
-		getInterfaceDetail(id){
+		delCase(id){
 			Request({
-				url: '/interfaceNewController/selectInterfaceById',
+				url: '/sceneController/deleteSingleScene',
 				method: 'post',
 				params: {
-					id: id
-				}
-			}).then((res) => {
-				if(res.respCode === '0000'){
-				}else {
-					this.$message.error("查询失败！")
-					console.log(res.respMsg)
-				}
-			}).catch((err) => {
-				console.log(err)
-			})
-		},
-		updateInterface() {
-			Request({
-				url: '/interfaceNewController/updateSingleInterface',
-				method: 'post',
-				params: this.interfaceData
-			}).then((res) => {
-				this.$message.success('更新成功')
-				this.dialogVisible = false
-				this.getInterfaceDetail(this.interfaceData.id)
-			}, (err) => {
-				this.$message.error(res.respMsg)
-				this.dialogVisible = false
-				console.log(err)
-			}).catch((err) => {
-				console.log(err)
-			})
-		},
-		copyInterface() {
-			this.interfaceData.transactId = localStorage.getItem('transactId')
-			if(typeof this.copyInterfaceGroup ==="number"){
-				this.copyInterfaceData.interfaceGroupId =this.interfaceGroup;
-			}else {
-				let length = this.copyInterfaceGroup.length
-				this.copyInterfaceData.interfaceGroupId = this.copyInterfaceGroup[length-1]
-			}
-			Request({
-				url: '/interfaceNewController/addNewInterface',
-				method: 'post',
-				params: this.copyInterfaceData
-			}).then((res) => {
-				this.$message.success('复制成功')
-				this.$confirm('是否进入此接口详情界面?', '提示', {
-					cancelButtonText: '取消',
-					confirmButtonText: '确定',
-					type: 'warning'
-				}).then(() => {
-					this.$router.back(); //返回上一界面
-				})
-			}, (err) => {
-				this.$message.error(res.respMsg)
-				console.log(err)
-			}).catch((err) => {
-				console.log(err)
-			})
-		},
-		delInterface(id){
-			Request({
-				url: '/interfaceNewController/deleteInterface',
-				method: 'post',
-				params: {
-					id :id
+					id:id
 				}
 			}).then((res) => {
 				if(res.respCode === '0000'){
@@ -245,6 +274,73 @@ export default {
 				console.log(err)
 			})
 		},
+		updateCase() {
+			this.tags = this.copyData.descShort.map((item)=>{
+				if (item.tagname != null){
+					return item.tagname
+				}else {
+					return item
+				}
+			})
+			Request({
+				url: '/sceneController/updateScene',
+				method: 'post',
+				params: {
+					modifierId: this.currentUserId,
+					id: this.copyData.id,
+					nameMedium: this.copyData.nameMedium,
+					descShort: JSON.stringify(this.tags),
+					groupId: this.copyData.groupId
+				}
+			}).then((res) => {
+				this.$message(res.respMsg)
+				this.dialogVisible = false
+				this.getCaseDetail(this.copyData.id)
+			},(err) => {
+				this.$message(res.respMsg)
+				this.dialogVisible = false
+				console.log(err)
+			}).catch((err) => {
+				console.log(err)
+			})
+		},
+		copyCase(){
+			this.tags = this.copyData.descShort.map((item)=>{
+				if (item.tagname != null){
+					return item.tagname
+				}else {
+					return item
+				}
+			})
+			Request({
+				url: '/sceneController/insertScene',
+				method: 'post',
+				params: {
+					nameMedium:this.copyData.nameMedium,
+					descShort:JSON.stringify(this.tags),
+					groupId: this.copyData.groupId,
+					caseLibId: this.copyData.caseLibId,
+					creatorId: this.copyData.creatorId
+				}
+			}).then((res) => {
+				this.$message.success('复制成功')
+				this.copyDialog = false
+				this.$confirm('是否返回流程用例管理界面?', '提示', {
+					cancelButtonText: '取消',
+					confirmButtonText: '确定',
+					type: 'warning'
+				}).then(() => {
+					this.$router.back(); //返回上一界面
+				})
+			},(err) => {
+				this.copyDialog = false;
+				console.log('error occur')
+				console.log(err)
+				this.$message.error(err)
+			}).catch((err) => {
+				console.log(err)
+			})
+		},
 	}
 }
 </script>
@@ -272,17 +368,14 @@ export default {
 	margin-top:5px;
 	height: 2px;
 }
-.divider-row {
-	background-color:#eef0f0;
-	width:100%;
-	margin-bottom: 10px;
-	margin-top: 20px;
-	padding: 0 !important;
-	font-size: 18px;
+.change-label-class /deep/ .el-form-item__label {
+	padding: 0;
+	margin-bottom: 0;
+	line-height: 30px;
 	font-weight: bold;
-	/*flex 布局*/
+}
+.dialogBottom{
 	display: flex;
-	/*实现垂直居中*/
-	align-items: center;
+	justify-content: center;
 }
 </style>

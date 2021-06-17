@@ -412,7 +412,7 @@ export default {
       this.environmentVisible = true;
     },
     copyEnvironmentButton(row) {
-      this.copyEnvironmentData = row;
+      this.copyEnvironmentData = {...row};
       this.copyEnvironmentData.environmentName = "副本-" + row.environmentName;
       this.copyDialog = true;
     },

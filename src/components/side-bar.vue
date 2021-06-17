@@ -44,7 +44,6 @@ export default {
         return {
             fullPath: '',
             isCollapse: false,
-            activedPath: this.$route.name,
             flag: true,
             urls: [],
             isDisplay: false,
@@ -64,12 +63,6 @@ export default {
         }
     },
     watch: {
-        // '$route'(newVal, oldVal) {
-        //     this.activedPath = this.$route.path
-        //     if(this.activedPath === '/testInfrastructure/interfacesManagement'){
-        //         this.isDisplay = true
-        //     }
-        // },
 				'$route': {
 					handler(to, from) {
 						if (from.name === 'testProject' || from.name === 'transact'|| to.name === 'InterfacesManagement') {
@@ -88,6 +81,7 @@ export default {
             		this.routesName.forEach(item =>{
             			if (this.activedPath === item){
 										this.isDisplay = true
+										this.isShow = false
 									}
 								})
             },
@@ -101,7 +95,7 @@ export default {
 						}
 					},
 					immediate: true
-				}
+				},
     },
     computed: {
         menuList() {
@@ -128,7 +122,10 @@ export default {
             }else {
                 return children
             }
-        }
+        },
+			activedPath(){
+        	return this.$route.name
+			}
     },
     methods: {
         /**
