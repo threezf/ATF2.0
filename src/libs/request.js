@@ -89,7 +89,7 @@ Promise.prototype.finally = function (callback) {
 const Request = function (options) {
     return new Promise((resolve, reject) => {
         let axiosParams = {
-            url:  '/atfcloud2.0a' + options.url,
+            url: options.url,
             method: options.method,
         }
 
